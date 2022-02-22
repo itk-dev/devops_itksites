@@ -224,9 +224,3 @@ jobs:
 
       - name: Check for changes in specifications (yaml)
         run: git diff --diff-filter=ACMRT --exit-code public/api-spec-v1.yaml
-
-      - name: Export specifications (json)
-        run: bin/console api:openapi:export --output=public/api-spec-v1.json --no-interaction
-
-      - name: Check for changes in specifications (json)
-        run: git diff --diff-filter=ACMRT --exit-code public/api-spec-v1.json
