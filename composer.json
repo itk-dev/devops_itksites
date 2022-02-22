@@ -1,6 +1,8 @@
 {
-    "license": "proprietary",
+    "license": "MIT",
     "type": "project",
+    "name": "ITK Sites",
+    "description": "ITK internal tooling",
     "require": {
         "php": ">=8.0",
         "ext-ctype": "*",
