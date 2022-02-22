@@ -21,7 +21,6 @@ final class DetectionResultDataPersister implements ContextAwareDataPersisterInt
 
     /**
      * @param $data
-     * @param array $context
      *
      * @return object
      */

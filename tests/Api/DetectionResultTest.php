@@ -15,7 +15,7 @@ class DetectionResultTest extends ApiTestCase
                           "data": [
                             "string"
                           ]
-                        }'
+                        }',
         ]);
 
         $this->assertResponseStatusCodeSame(401, 'Unauthenticated requests should be denied');
