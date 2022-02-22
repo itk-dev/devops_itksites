@@ -14,13 +14,16 @@ final class DetectionResultDataPersister implements ContextAwareDataPersisterInt
     {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function supports($data, array $context = []): bool
     {
         return $data instanceof DetectionResult;
     }
 
     /**
-     * @param $data
+     * {@inheritDoc}
      *
      * @return object
      */
@@ -34,13 +37,18 @@ final class DetectionResultDataPersister implements ContextAwareDataPersisterInt
         return $data;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function remove($data, array $context = [])
     {
         $this->entityManager->remove($data);
         $this->entityManager->flush();
     }
 
-    // Once called this data persister will resume to the next one
+    /**
+     * {@inheritDoc}
+     */
     public function resumable(array $context = []): bool
     {
         return true;
