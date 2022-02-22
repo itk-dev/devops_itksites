@@ -9,17 +9,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DetectionResultRepository::class)]
 #[ApiResource(collectionOperations: [
-    "post" => ["messenger" => true, "output" => false, "status" => 202]
+    'post' => ['messenger' => true, 'output' => false, 'status' => 202],
 ], itemOperations: [], denormalizationContext: ['groups' => ['write']]
 )]
 class DetectionResult extends AbstractBaseEntity
 {
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["write"])]
+    #[Groups(['write'])]
     private string $type;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["write"])]
+    #[Groups(['write'])]
     private string $rootDir;
 
     #[ORM\ManyToOne(targetEntity: Server::class, inversedBy: 'detectionResults')]
@@ -27,7 +27,7 @@ class DetectionResult extends AbstractBaseEntity
     private Server $server;
 
     #[ORM\Column(type: 'json')]
-    #[Groups(["write"])]
+    #[Groups(['write'])]
     private array $data = [];
 
     public function getType(): ?string

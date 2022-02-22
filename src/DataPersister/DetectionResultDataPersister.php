@@ -6,7 +6,6 @@ use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use ApiPlatform\Core\DataPersister\ResumableDataPersisterInterface;
 use App\Entity\DetectionResult;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\BlogPost;
 use Symfony\Component\Security\Core\Security;
 
 final class DetectionResultDataPersister implements ContextAwareDataPersisterInterface, ResumableDataPersisterInterface

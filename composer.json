@@ -1,7 +1,7 @@
 {
     "license": "MIT",
     "type": "project",
-    "name": "ITK Sites",
+    "name": "tk-dev/devops_itksites",
     "description": "ITK internal tooling",
     "require": {
         "php": ">=8.0",

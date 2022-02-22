@@ -39,6 +39,7 @@ abstract class AbstractBaseEntity
     {
         return $this->id;
     }
+
     /**
      * Set the Ulid.
      */
@@ -57,9 +58,10 @@ abstract class AbstractBaseEntity
     }
 
     #[ORM\PrePersist]
-    public function setCreatedAtValue() : self
+    public function setCreatedAtValue(): self
     {
         $this->createdAt = isset($this->id) ? $this->id->getDateTime() : new \DateTimeImmutable();
+
         return $this;
     }
 
@@ -70,9 +72,10 @@ abstract class AbstractBaseEntity
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function setModifiedAtValue() : self
+    public function setModifiedAtValue(): self
     {
         $this->modifiedAt = new \DateTimeImmutable();
+
         return $this;
     }
 
