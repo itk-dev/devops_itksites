@@ -303,6 +303,9 @@
     "symfony/asset": {
         "version": "v6.0.3"
     },
+    "symfony/browser-kit": {
+        "version": "v6.0.3"
+    },
     "symfony/cache": {
         "version": "v5.4.3"
     },
@@ -343,6 +346,9 @@
         "version": "v2.5.0"
     },
     "symfony/doctrine-bridge": {
+        "version": "v6.0.3"
+    },
+    "symfony/dom-crawler": {
         "version": "v6.0.3"
     },
     "symfony/dotenv": {
@@ -396,6 +402,12 @@
             "src/Controller/.gitignore",
             "src/Kernel.php"
         ]
+    },
+    "symfony/http-client": {
+        "version": "v6.0.3"
+    },
+    "symfony/http-client-contracts": {
+        "version": "v3.0.0"
     },
     "symfony/http-foundation": {
         "version": "v5.4.3"

@@ -19,6 +19,12 @@ final class DetectionResultDataPersister implements ContextAwareDataPersisterInt
         return $data instanceof DetectionResult;
     }
 
+    /**
+     * @param $data
+     * @param array $context
+     *
+     * @return object
+     */
     public function persist($data, array $context = [])
     {
         $server = $this->security->getUser();
