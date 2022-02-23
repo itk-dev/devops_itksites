@@ -28,9 +28,6 @@ class Server extends AbstractBaseEntity implements UserInterface
     #[ORM\Column(type: 'string', length: 15, nullable: true)]
     private ?string $externalIp;
 
-    #[ORM\Column(type: 'string', length: 15, nullable: true)]
-    private ?string $sshCert;
-
     #[ORM\Column(type: 'boolean')]
     private ?bool $veeam;
 
@@ -42,12 +39,6 @@ class Server extends AbstractBaseEntity implements UserInterface
 
     #[ORM\Column(type: 'string', length: 15)]
     private $sshUser;
-
-    #[ORM\Column(type: 'boolean')]
-    private $newRoot;
-
-    #[ORM\Column(type: 'string', length: 15, nullable: true)]
-    private $ri;
 
     #[ORM\Column(type: 'string', length: 5, nullable: true)]
     private $databaseVersion;
@@ -138,18 +129,6 @@ class Server extends AbstractBaseEntity implements UserInterface
         return $this;
     }
 
-    public function getSshCert(): ?string
-    {
-        return $this->sshCert;
-    }
-
-    public function setSshCert(?string $sshCert): self
-    {
-        $this->sshCert = $sshCert;
-
-        return $this;
-    }
-
     public function getVeeam(): ?bool
     {
         return $this->veeam;
@@ -194,30 +173,6 @@ class Server extends AbstractBaseEntity implements UserInterface
     public function setSshUser(string $sshUser): self
     {
         $this->sshUser = $sshUser;
-
-        return $this;
-    }
-
-    public function getNewRoot(): ?bool
-    {
-        return $this->newRoot;
-    }
-
-    public function setNewRoot(bool $newRoot): self
-    {
-        $this->newRoot = $newRoot;
-
-        return $this;
-    }
-
-    public function getRi(): ?string
-    {
-        return $this->ri;
-    }
-
-    public function setRi(?string $ri): self
-    {
-        $this->ri = $ri;
 
         return $this;
     }
