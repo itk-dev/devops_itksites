@@ -26,9 +26,9 @@ class DetectionResult extends AbstractBaseEntity
     #[ORM\JoinColumn(nullable: false)]
     private Server $server;
 
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: 'text')]
     #[Groups(['write'])]
-    private array $data = [];
+    private string $data = '';
 
     public function getType(): ?string
     {
@@ -66,12 +66,12 @@ class DetectionResult extends AbstractBaseEntity
         return $this;
     }
 
-    public function getData(): ?array
+    public function getData(): ?string
     {
         return $this->data;
     }
 
-    public function setData(array $data): self
+    public function setData(string $data): self
     {
         $this->data = $data;
 

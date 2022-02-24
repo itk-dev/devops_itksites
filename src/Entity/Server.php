@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ServerRepository::class)]
 class Server extends AbstractBaseEntity implements UserInterface
@@ -14,37 +15,45 @@ class Server extends AbstractBaseEntity implements UserInterface
     private const ROLES = ['ROLE_USER', 'ROLE_SERVER'];
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
-    private $apiKey;
+    #[Assert\Length(
+        min: 40,
+        max: 255,
+        minMessage: 'Api key must be at least {{ limit }} characters long',
+        maxMessage: 'Api key cannot be longer than {{ limit }} characters',
+    )]
+    private string $apiKey;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    private string $name = '';
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $hostingProviderName;
 
     #[ORM\Column(type: 'string', length: 15, nullable: true)]
+    #[Assert\Ip]
     private ?string $internalIp;
 
     #[ORM\Column(type: 'string', length: 15, nullable: true)]
+    #[Assert\Ip]
     private ?string $externalIp;
 
     #[ORM\Column(type: 'boolean')]
-    private ?bool $veeam;
+    private bool $aarhusSsl = false;
 
     #[ORM\Column(type: 'boolean')]
-    private $azureBackup;
+    private bool $letsEncryptSsl = false;
 
     #[ORM\Column(type: 'boolean')]
-    private $monitoring;
+    private bool $veeam = false;
 
-    #[ORM\Column(type: 'string', length: 15)]
-    private $sshUser;
+    #[ORM\Column(type: 'boolean')]
+    private bool $azureBackup = false;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $monitoring = false;
 
     #[ORM\Column(type: 'string', length: 5, nullable: true)]
     private $databaseVersion;
-
-    #[ORM\Column(type: 'string', length: 15)]
-    private $sslProvider;
 
     #[ORM\Column(type: 'string', length: 15)]
     private $system;
@@ -61,10 +70,23 @@ class Server extends AbstractBaseEntity implements UserInterface
     #[ORM\OneToMany(mappedBy: 'server', targetEntity: DetectionResult::class, orphanRemoval: true)]
     private $detectionResults;
 
+    #[ORM\Column(type: 'string', length: 25)]
+    private $hostingProvider;
+
+    /**
+     * @throws \Exception
+     */
     public function __construct()
     {
         $this->detectionResults = new ArrayCollection();
+        $this->apiKey = (sha1(\random_bytes(40)));
     }
+
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+
 
     public function getRoles(): array
     {
@@ -165,18 +187,6 @@ class Server extends AbstractBaseEntity implements UserInterface
         return $this;
     }
 
-    public function getSshUser(): ?string
-    {
-        return $this->sshUser;
-    }
-
-    public function setSshUser(string $sshUser): self
-    {
-        $this->sshUser = $sshUser;
-
-        return $this;
-    }
-
     public function getDatabaseVersion(): ?string
     {
         return $this->databaseVersion;
@@ -185,18 +195,6 @@ class Server extends AbstractBaseEntity implements UserInterface
     public function setDatabaseVersion(?string $databaseVersion): self
     {
         $this->databaseVersion = $databaseVersion;
-
-        return $this;
-    }
-
-    public function getSslProvider(): ?string
-    {
-        return $this->sslProvider;
-    }
-
-    public function setSslProvider(string $sslProvider): self
-    {
-        $this->sslProvider = $sslProvider;
 
         return $this;
     }
@@ -249,7 +247,7 @@ class Server extends AbstractBaseEntity implements UserInterface
         return $this;
     }
 
-    public function getApiKey(): ?string
+    public function getApiKey(): string
     {
         return $this->apiKey;
     }
@@ -287,6 +285,42 @@ class Server extends AbstractBaseEntity implements UserInterface
                 $detectionResult->setServer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAarhusSsl(): ?bool
+    {
+        return $this->aarhusSsl;
+    }
+
+    public function setAarhusSsl(bool $aarhusSsl): self
+    {
+        $this->aarhusSsl = $aarhusSsl;
+
+        return $this;
+    }
+
+    public function getLetsEncryptSsl(): ?bool
+    {
+        return $this->letsEncryptSsl;
+    }
+
+    public function setLetsEncryptSsl(bool $letsEncryptSsl): self
+    {
+        $this->letsEncryptSsl = $letsEncryptSsl;
+
+        return $this;
+    }
+
+    public function getHostingProvider(): ?string
+    {
+        return $this->hostingProvider;
+    }
+
+    public function setHostingProvider(string $hostingProvider): self
+    {
+        $this->hostingProvider = $hostingProvider;
 
         return $this;
     }
