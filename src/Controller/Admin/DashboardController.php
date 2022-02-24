@@ -41,4 +41,14 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Servers', 'fas fa-server', Server::class);
         yield MenuItem::linkToCrud('Detection Results', 'fas fa-upload', DetectionResult::class);
     }
+
+
+    public function configureCrud(): Crud
+    {
+        return Crud::new()
+            // this defines the pagination size for all CRUD controllers
+            // (each CRUD controller can override this value if needed)
+            ->setDateTimeFormat('yyyy-MM-dd HH:mm:ss')
+            ;
+    }
 }

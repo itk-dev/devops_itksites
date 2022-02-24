@@ -71,6 +71,17 @@ class DetectionResult extends AbstractBaseEntity
         return $this->data;
     }
 
+    public function getPrettyData(): ?string
+    {
+        try {
+            $json = json_decode($this->data, false, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            return $this->data;
+        }
+
+        return json_encode($json, JSON_PRETTY_PRINT);
+    }
+
     public function setData(string $data): self
     {
         $this->data = $data;

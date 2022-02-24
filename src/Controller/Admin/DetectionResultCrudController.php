@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -42,8 +43,7 @@ class DetectionResultCrudController extends AbstractCrudController
         yield TextField::new('type')->setColumns(4);
         yield TextField::new('rootDir')->setColumns(12);
         yield AssociationField::new('server');
-//        yield TextareaField::new('data')->hideOnIndex();
-        yield CodeEditorField::new('data')->hideOnIndex();
         yield DateTimeField::new('createdAt');
+        yield CodeEditorField::new('prettyData')->hideOnIndex()->setLabel('Data');
     }
 }
