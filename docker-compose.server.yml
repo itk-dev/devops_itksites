@@ -10,14 +10,14 @@ networks:
 
 services:
   phpfpm:
-    image: itkdev/php7.4-fpm:alpine
+    image: itkdev/php8.1-fpm:alpine
     restart: unless-stopped
     networks:
       - app
     environment:
       - PHP_MAX_EXECUTION_TIME=30
       - PHP_MEMORY_LIMIT=128M
-      - COMPOSER_VERSION=1
+      - COMPOSER_VERSION=2
     volumes:
       - .:/app:delegated
 
@@ -41,6 +41,10 @@ services:
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-http.entrypoints=web"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-http.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${COMPOSE_SERVER_DOMAIN}`)"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=websecure"     
-       #- "traefik.http.routers.${COMPOSE_PROJECT_NAME}.middlewares=ITKBasicAuth@file"
+
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-admin.rule=Host(`${COMPOSE_SERVER_DOMAIN}`) && PathPrefix(`/admin`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-admin.entrypoints=websecure"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-admin.middlewares=ITKBasicAuth@file"
+
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${COMPOSE_SERVER_DOMAIN}`) && PathPrefix(`/admin`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=websecure"
