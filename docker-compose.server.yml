@@ -46,5 +46,5 @@ services:
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-admin.entrypoints=websecure"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-admin.middlewares=ITKBasicAuth@file"
 
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${COMPOSE_SERVER_DOMAIN}`) && PathPrefix(`/admin`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${COMPOSE_SERVER_DOMAIN}`)"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=websecure"
