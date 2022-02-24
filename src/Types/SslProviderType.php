@@ -6,6 +6,6 @@ class SslProviderType
 {
     public const CHOICES = [
       'Aarhus' => 'aarhus',
-      'Let\'s Encrypt' => 'letsencrypt'
+      'Let\'s Encrypt' => 'letsencrypt',
     ];
 }

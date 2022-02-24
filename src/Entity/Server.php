@@ -87,7 +87,6 @@ class Server extends AbstractBaseEntity implements UserInterface
         return $this->getName();
     }
 
-
     public function getRoles(): array
     {
         return self::ROLES;
