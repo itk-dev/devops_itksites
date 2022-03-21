@@ -25,8 +25,6 @@ final class DetectionResultDataPersister implements ContextAwareDataPersisterInt
 
     /**
      * {@inheritDoc}
-     *
-     * @return object
      */
     public function persist($data, array $context = []): object
     {

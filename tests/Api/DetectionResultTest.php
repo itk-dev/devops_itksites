@@ -38,7 +38,7 @@ class DetectionResultTest extends ApiTestCase
         $response = $client->request('POST', '/api/detection_results', [
             'headers' => [
                 'content-type' => 'application/json',
-                ApiKeyAuthenticator::AUTH_HEADER => ApiKeyAuthenticator::AUTH_HEADER_PREFIX.$apikey
+                ApiKeyAuthenticator::AUTH_HEADER => ApiKeyAuthenticator::AUTH_HEADER_PREFIX.$apikey,
             ],
             'body' => '{
                           "type": "string",
@@ -66,7 +66,7 @@ class DetectionResultTest extends ApiTestCase
         $response = $client->request('POST', '/api/detection_results', [
             'headers' => [
                 'content-type' => 'application/json',
-                ApiKeyAuthenticator::AUTH_HEADER => ApiKeyAuthenticator::AUTH_HEADER_PREFIX.$apikey
+                ApiKeyAuthenticator::AUTH_HEADER => ApiKeyAuthenticator::AUTH_HEADER_PREFIX.$apikey,
             ],
             'body' => '{
                           "type": "string",
@@ -78,7 +78,7 @@ class DetectionResultTest extends ApiTestCase
         $response = $client->request('POST', '/api/detection_results', [
             'headers' => [
                 'content-type' => 'application/json',
-                ApiKeyAuthenticator::AUTH_HEADER => ApiKeyAuthenticator::AUTH_HEADER_PREFIX.$apikey
+                ApiKeyAuthenticator::AUTH_HEADER => ApiKeyAuthenticator::AUTH_HEADER_PREFIX.$apikey,
             ],
             'body' => '{
                           "type": "string1",
@@ -90,7 +90,7 @@ class DetectionResultTest extends ApiTestCase
         $response = $client->request('POST', '/api/detection_results', [
             'headers' => [
                 'content-type' => 'application/json',
-                ApiKeyAuthenticator::AUTH_HEADER => ApiKeyAuthenticator::AUTH_HEADER_PREFIX.$apikey
+                ApiKeyAuthenticator::AUTH_HEADER => ApiKeyAuthenticator::AUTH_HEADER_PREFIX.$apikey,
             ],
             'body' => '{
                           "type": "string",
