@@ -41,13 +41,13 @@ class DetectionResultTest extends ApiTestCase
                 ApiKeyAuthenticator::AUTH_HEADER => ApiKeyAuthenticator::AUTH_HEADER_PREFIX.$apikey,
             ],
             'body' => '{
-                          "type": "string",
-                          "rootDir": "string",
-                          "data": "string"
-                        }',
+                "type": "string",
+                "rootDir": "string",
+                "data": "string"
+            }',
         ]);
 
-        $this->assertResponseStatusCodeSame(201, 'Authenticated requests should be accepted');
+        $this->assertResponseStatusCodeSame(202, 'Authenticated requests should be accepted');
 
         $results = $em->getRepository(DetectionResult::class)->findAll();
 
