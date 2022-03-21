@@ -102,7 +102,7 @@ class DetectionResult extends AbstractBaseEntity
 
     public function generateHash(): self
     {
-        $this->hash = sha1($this->type.$this->server->getId().$this->data);
+        $this->hash = sha1($this->server->getId().$this->type.$this->rootDir.$this->data);
 
         return $this;
     }
