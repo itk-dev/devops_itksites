@@ -42,7 +42,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Detection Results', 'fas fa-upload', DetectionResult::class);
     }
 
-
     public function configureCrud(): Crud
     {
         return Crud::new()

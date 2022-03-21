@@ -1,0 +1,14 @@
+App\Entity\Server:
+  server_{1..10}:
+    apiKey: <password(40, 255)>
+    name: <domainName()>
+    hostingProvider: <randomElement(['Azure','DBC','IT Relation'])>
+    internalIp: <localIpv4()>
+    externalIp: <ipv4()>
+    aarhusSsl: <boolean()>
+    letsEncryptSsl: <boolean()>
+    veeam: <boolean()>
+    azureBackup: <boolean()>
+    monitoring: <boolean()>
+    databaseVersion: <randomElement(['5.5','5.7','10.3','10.5','10.6'])>
+    system: <randomElement(['Ubuntu 16.04','Ubuntu 18.04','Ubuntu 20.04'])>
