@@ -8,9 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DetectionResultRepository::class)]
-#[ApiResource(collectionOperations: [
-    'post' => ['messenger' => true, 'output' => false, 'status' => 202],
-], itemOperations: [], denormalizationContext: ['groups' => ['write']]
+#[ApiResource(
+//    collectionOperations: [
+//    'post' => ['messenger' => true, 'output' => false, 'status' => 202],
+//],
+//    itemOperations: [],
+//    denormalizationContext: ['groups' => ['write']]
 )]
 class DetectionResult extends AbstractBaseEntity
 {
@@ -29,6 +32,9 @@ class DetectionResult extends AbstractBaseEntity
     #[ORM\Column(type: 'text')]
     #[Groups(['write'])]
     private string $data = '';
+
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    private $hash;
 
     public function getType(): ?string
     {
@@ -85,6 +91,18 @@ class DetectionResult extends AbstractBaseEntity
     public function setData(string $data): self
     {
         $this->data = $data;
+
+        return $this;
+    }
+
+    public function getHash(): ?string
+    {
+        return $this->hash;
+    }
+
+    public function generateHash(): self
+    {
+        $this->hash = sha1($this->type.$this->server->getId().$this->data);
 
         return $this;
     }

@@ -5,6 +5,7 @@ namespace App\DataPersister;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use ApiPlatform\Core\DataPersister\ResumableDataPersisterInterface;
 use App\Entity\DetectionResult;
+use App\Entity\Server;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -27,12 +28,21 @@ final class DetectionResultDataPersister implements ContextAwareDataPersisterInt
      *
      * @return object
      */
-    public function persist($data, array $context = [])
+    public function persist($data, array $context = []): object
     {
         $server = $this->security->getUser();
-        $data->setServer($server);
-        $this->entityManager->persist($data);
-        $this->entityManager->flush();
+
+        if ($server instanceof Server && $data instanceof DetectionResult) {
+            $data->setServer($server);
+
+            $hash = $data->generateHash()->getHash();
+            $result = $this->entityManager->getRepository(DetectionResult::class)->findOneBy(['hash' => $hash]);
+
+            if (null === $result) {
+                $this->entityManager->persist($data);
+                $this->entityManager->flush();
+            }
+        }
 
         return $data;
     }
@@ -40,7 +50,7 @@ final class DetectionResultDataPersister implements ContextAwareDataPersisterInt
     /**
      * {@inheritDoc}
      */
-    public function remove($data, array $context = [])
+    public function remove($data, array $context = []): void
     {
         $this->entityManager->remove($data);
         $this->entityManager->flush();
