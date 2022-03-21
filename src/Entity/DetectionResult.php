@@ -9,11 +9,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DetectionResultRepository::class)]
 #[ApiResource(
-//    collectionOperations: [
-//    'post' => ['messenger' => true, 'output' => false, 'status' => 202],
-//],
-//    itemOperations: [],
-//    denormalizationContext: ['groups' => ['write']]
+    collectionOperations: [
+    'post' => ['messenger' => true, 'output' => false, 'status' => 202],
+],
+    itemOperations: [],
+    denormalizationContext: ['groups' => ['write']]
 )]
 class DetectionResult extends AbstractBaseEntity
 {
