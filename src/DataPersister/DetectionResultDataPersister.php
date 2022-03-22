@@ -34,15 +34,19 @@ final class DetectionResultDataPersister implements ContextAwareDataPersisterInt
             $data->setServer($server);
 
             $hash = $data->generateHash()->getHash();
-            $result = $this->entityManager->getRepository(DetectionResult::class)->findOneBy(['hash' => $hash]);
+            $result = $this->entityManager->getRepository(DetectionResult::class)->findOneBy(['server' => $server, 'hash' => $hash]);
 
             if (null === $result) {
                 $this->entityManager->persist($data);
-                $this->entityManager->flush();
+                $data->setLastContact();
+            } else {
+                $result->setLastContact();
             }
+
+            $this->entityManager->flush();
         }
 
-        return $data;
+        return $result ?? $data;
     }
 
     /**

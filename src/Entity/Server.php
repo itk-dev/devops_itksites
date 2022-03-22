@@ -73,6 +73,9 @@ class Server extends AbstractBaseEntity implements UserInterface
     #[ORM\Column(type: 'string', length: 25)]
     private $hostingProvider;
 
+    #[ORM\OneToMany(mappedBy: 'server', targetEntity: Installation::class, orphanRemoval: true)]
+    private $installations;
+
     /**
      * @throws \Exception
      */
@@ -80,6 +83,7 @@ class Server extends AbstractBaseEntity implements UserInterface
     {
         $this->detectionResults = new ArrayCollection();
         $this->apiKey = (sha1(\random_bytes(40)));
+        $this->installations = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -320,6 +324,36 @@ class Server extends AbstractBaseEntity implements UserInterface
     public function setHostingProvider(string $hostingProvider): self
     {
         $this->hostingProvider = $hostingProvider;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Installation>
+     */
+    public function getInstallations(): Collection
+    {
+        return $this->installations;
+    }
+
+    public function addInstallation(Installation $installation): self
+    {
+        if (!$this->installations->contains($installation)) {
+            $this->installations[] = $installation;
+            $installation->setServer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInstallation(Installation $installation): self
+    {
+        if ($this->installations->removeElement($installation)) {
+            // set the owning side to null (unless already changed)
+            if ($installation->getServer() === $this) {
+                $installation->setServer(null);
+            }
+        }
 
         return $this;
     }
