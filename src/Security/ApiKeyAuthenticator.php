@@ -1,7 +1,5 @@
 <?php
 
-// src/Security/ApiKeyAuthenticator.php
-
 namespace App\Security;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,9 +19,9 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
     public const AUTH_HEADER_PREFIX = 'Apikey ';
 
     /**
-     * Called on every request to decide if this authenticator should be
-     * used for the request. Returning `false` will cause this authenticator
-     * to be skipped.
+     * Called on every request to decide if this authenticator should be used for the request.
+     *
+     * Returning `false` will cause this authenticator to be skipped.
      */
     public function supports(Request $request): ?bool
     {
@@ -31,6 +29,9 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
             str_starts_with($request->headers->get(self::AUTH_HEADER), self::AUTH_HEADER_PREFIX);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function authenticate(Request $request): Passport
     {
         $apiKey = substr($request->headers->get(self::AUTH_HEADER), strlen(self::AUTH_HEADER_PREFIX));
@@ -43,12 +44,18 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
         return new SelfValidatingPassport(new UserBadge($apiKey));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         // on success, let the request continue
         return null;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         $data = [

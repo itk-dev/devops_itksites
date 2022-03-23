@@ -2,6 +2,11 @@
 
 namespace App\Types;
 
+/**
+ * Class SslProviderType.
+ *
+ * The different SSL providers available.
+ */
 class SslProviderType
 {
     public const CHOICES = [

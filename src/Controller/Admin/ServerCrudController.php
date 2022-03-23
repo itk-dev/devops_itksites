@@ -3,8 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Server;
+use App\Types\DatabaseVersionType;
 use App\Types\HostingProviderType;
-use App\Types\MariaDbVersionType;
 use App\Types\SystemType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -52,7 +52,7 @@ class ServerCrudController extends AbstractCrudController
         yield BooleanField::new('azureBackup')->setColumns(2)->hideOnIndex();
         yield BooleanField::new('monitoring')->setColumns(2)->hideOnIndex();
         yield FormField::addPanel('System Details');
-        yield ChoiceField::new('databaseVersion')->setChoices(MariaDbVersionType::CHOICES)->renderExpanded()->setColumns(6);
+        yield ChoiceField::new('databaseVersion')->setChoices(DatabaseVersionType::CHOICES)->renderExpanded()->setColumns(6);
         yield ChoiceField::new('system')->setChoices(SystemType::CHOICES)->renderExpanded()->setColumns(6);
         yield FormField::addPanel('Miscellaneous');
         yield TextField::new('serviceDeskTicket')->setColumns(12)->hideOnIndex();

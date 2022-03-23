@@ -15,8 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractDashboardController
 {
-    public function __construct(private AdminUrlGenerator $adminUrlGenerator)
-    {
+    public function __construct(
+        private AdminUrlGenerator $adminUrlGenerator
+    ) {
     }
 
     #[Route('/admin', name: 'admin')]
@@ -49,7 +50,6 @@ class DashboardController extends AbstractDashboardController
         return Crud::new()
             // this defines the pagination size for all CRUD controllers
             // (each CRUD controller can override this value if needed)
-            ->setDateTimeFormat('yyyy-MM-dd HH:mm:ss')
-            ;
+            ->setDateTimeFormat('yyyy-MM-dd HH:mm:ss');
     }
 }

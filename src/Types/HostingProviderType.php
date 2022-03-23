@@ -2,6 +2,9 @@
 
 namespace App\Types;
 
+/**
+ * Class HostingProviderType.
+ */
 class HostingProviderType
 {
     public const CHOICES = [

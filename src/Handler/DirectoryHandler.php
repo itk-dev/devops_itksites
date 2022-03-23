@@ -20,7 +20,9 @@ class DirectoryHandler implements DetectionResultHandlerInterface
     {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public function handleResult(DetectionResult $detectionResult): void
     {
         $installationRepository = $this->entityManager->getRepository(Installation::class);
@@ -41,7 +43,9 @@ class DirectoryHandler implements DetectionResultHandlerInterface
         $installation->setDetectionResult($detectionResult);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public function supportsType(string $type): bool
     {
         return 'dir' === $type;

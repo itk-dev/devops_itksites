@@ -11,7 +11,7 @@ final class DetectionResultHandler implements MessageHandlerInterface
     /**
      * DetectionResultHandler constructor.
      *
-     * @param iterable               $resultHandlers
+     * @param iterable $resultHandlers
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(private iterable $resultHandlers, private EntityManagerInterface $entityManager)

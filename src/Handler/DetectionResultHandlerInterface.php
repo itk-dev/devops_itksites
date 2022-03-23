@@ -21,7 +21,7 @@ interface DetectionResultHandlerInterface
      * Does the handler support the give detection result type.
      *
      * @param string $type
-     *                     The result type
+     *   The result type
      */
     public function supportsType(string $type): bool;
 }
