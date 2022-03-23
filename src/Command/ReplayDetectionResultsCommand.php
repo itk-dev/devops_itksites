@@ -19,15 +19,22 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 #[AsCommand(
     name: 'app:replay:detection-results',
-    description: 'Add a short description for your command',
+    description: 'Replay all detection results to trigger re-processing',
 )]
 class ReplayDetectionResultsCommand extends Command
 {
+    /**
+     * ReplayDetectionResultsCommand constructor
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param MessageBusInterface $messageBus
+     */
     public function __construct(private EntityManagerInterface $entityManager, private MessageBusInterface $messageBus)
     {
         parent::__construct();
     }
 
+    /** @inheritDoc */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -51,9 +58,16 @@ class ReplayDetectionResultsCommand extends Command
     }
 
     /**
-     * {@inheritdoc}
+     * Handle and dispatch the DetectionResult
+     *
+     * @param DetectionResult $result
+     * @param array $context
+     *
+     * @return mixed
+     *
+     * @throws \Throwable
      */
-    public function handle(DetectionResult $result, array $context = [])
+    private function handle(DetectionResult $result, array $context = []): mixed
     {
         $envelope = $this->dispatch(
             (new Envelope($result))
@@ -69,7 +83,11 @@ class ReplayDetectionResultsCommand extends Command
     }
 
     /**
+     * Dispatch message to the message bus
+     *
      * @param object|Envelope $message
+     *
+     * @throws \Throwable
      */
     private function dispatch($message)
     {
@@ -86,6 +104,13 @@ class ReplayDetectionResultsCommand extends Command
         }
     }
 
+    /**
+     * Build context for the envelope context stamp.
+     *
+     * Static values as passed in ApiPlatform\Core\Bridge\Symfony\Messenger\DataPersister.
+     *
+     * @return array
+     */
     private function contextBuilder(): array
     {
         return [
