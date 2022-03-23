@@ -24,17 +24,17 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 class ReplayDetectionResultsCommand extends Command
 {
     /**
-     * ReplayDetectionResultsCommand constructor
+     * ReplayDetectionResultsCommand constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param MessageBusInterface $messageBus
+     * @param MessageBusInterface    $messageBus
      */
     public function __construct(private EntityManagerInterface $entityManager, private MessageBusInterface $messageBus)
     {
         parent::__construct();
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -58,12 +58,7 @@ class ReplayDetectionResultsCommand extends Command
     }
 
     /**
-     * Handle and dispatch the DetectionResult
-     *
-     * @param DetectionResult $result
-     * @param array $context
-     *
-     * @return mixed
+     * Handle and dispatch the DetectionResult.
      *
      * @throws \Throwable
      */
@@ -83,7 +78,7 @@ class ReplayDetectionResultsCommand extends Command
     }
 
     /**
-     * Dispatch message to the message bus
+     * Dispatch message to the message bus.
      *
      * @param object|Envelope $message
      *
@@ -108,8 +103,6 @@ class ReplayDetectionResultsCommand extends Command
      * Build context for the envelope context stamp.
      *
      * Static values as passed in ApiPlatform\Core\Bridge\Symfony\Messenger\DataPersister.
-     *
-     * @return array
      */
     private function contextBuilder(): array
     {

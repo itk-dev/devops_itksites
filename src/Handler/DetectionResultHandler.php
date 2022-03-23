@@ -9,9 +9,9 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 final class DetectionResultHandler implements MessageHandlerInterface
 {
     /**
-     * DetectionResultHandler constructor
+     * DetectionResultHandler constructor.
      *
-     * @param iterable $resultHandlers
+     * @param iterable               $resultHandlers
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(private iterable $resultHandlers, private EntityManagerInterface $entityManager)
@@ -19,11 +19,7 @@ final class DetectionResultHandler implements MessageHandlerInterface
     }
 
     /**
-     * Invoke handler
-     * 
-     * @param DetectionResult $detectionResult
-     * 
-     * @return void
+     * Invoke handler.
      */
     public function __invoke(DetectionResult $detectionResult): void
     {

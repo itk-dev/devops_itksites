@@ -7,12 +7,12 @@ use App\Entity\Installation;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Handler for DetectionResult off type "dir"
+ * Handler for DetectionResult off type "dir".
  */
 class DirectoryHandler implements DetectionResultHandlerInterface
 {
     /**
-     * DirectoryHandler constructor
+     * DirectoryHandler constructor.
      *
      * @param EntityManagerInterface $entityManager
      */
@@ -20,7 +20,7 @@ class DirectoryHandler implements DetectionResultHandlerInterface
     {
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     public function handleResult(DetectionResult $detectionResult): void
     {
         $installationRepository = $this->entityManager->getRepository(Installation::class);
@@ -41,7 +41,7 @@ class DirectoryHandler implements DetectionResultHandlerInterface
         $installation->setDetectionResult($detectionResult);
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     public function supportsType(string $type): bool
     {
         return 'dir' === $type;
