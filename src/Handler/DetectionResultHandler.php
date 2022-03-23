@@ -8,14 +8,28 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 final class DetectionResultHandler implements MessageHandlerInterface
 {
-    public function __construct(private EntityManagerInterface $entityManager)
+    /**
+     * DetectionResultHandler constructor.
+     *
+     * @param iterable               $resultHandlers
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(private iterable $resultHandlers, private EntityManagerInterface $entityManager)
     {
     }
 
-    public function __invoke(DetectionResult $detectionResult)
+    /**
+     * Invoke handler.
+     */
+    public function __invoke(DetectionResult $detectionResult): void
     {
-        $d = 1;
+        /** @var DetectionResultHandlerInterface $handler */
+        foreach ($this->resultHandlers as $handler) {
+            if ($handler->supportsType($detectionResult->getType())) {
+                $handler->handleResult($detectionResult);
+            }
+        }
 
-        // @TODO process
+        $this->entityManager->flush();
     }
 }

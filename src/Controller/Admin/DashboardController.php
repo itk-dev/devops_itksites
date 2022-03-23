@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\DetectionResult;
+use App\Entity\Installation;
 use App\Entity\Server;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -38,6 +39,7 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToCrud('Installations', 'fas fa-folder', Installation::class);
         yield MenuItem::linkToCrud('Servers', 'fas fa-server', Server::class);
         yield MenuItem::linkToCrud('Detection Results', 'fas fa-upload', DetectionResult::class);
     }

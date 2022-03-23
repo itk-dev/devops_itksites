@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DetectionResultRepository::class)]
+#[ORM\UniqueConstraint(name: 'server_hash_idx', fields: ['server', 'hash'])]
 #[ApiResource(
     collectionOperations: [
     'post' => ['messenger' => true, 'output' => false, 'status' => 202],
@@ -19,11 +20,11 @@ class DetectionResult extends AbstractBaseEntity
 {
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['write'])]
-    private string $type;
+    private string $type = '';
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['write'])]
-    private string $rootDir;
+    private string $rootDir = '';
 
     #[ORM\ManyToOne(targetEntity: Server::class, inversedBy: 'detectionResults')]
     #[ORM\JoinColumn(nullable: false)]
@@ -36,7 +37,10 @@ class DetectionResult extends AbstractBaseEntity
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     private $hash;
 
-    public function getType(): ?string
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeImmutable $lastContact;
+
+    public function getType(): string
     {
         return $this->type;
     }
@@ -48,7 +52,7 @@ class DetectionResult extends AbstractBaseEntity
         return $this;
     }
 
-    public function getRootDir(): ?string
+    public function getRootDir(): string
     {
         return $this->rootDir;
     }
@@ -103,6 +107,18 @@ class DetectionResult extends AbstractBaseEntity
     public function generateHash(): self
     {
         $this->hash = sha1($this->server->getId().$this->type.$this->rootDir.$this->data);
+
+        return $this;
+    }
+
+    public function getLastContact(): ?\DateTimeImmutable
+    {
+        return $this->lastContact;
+    }
+
+    public function setLastContact(): self
+    {
+        $this->lastContact = new \DateTimeImmutable();
 
         return $this;
     }

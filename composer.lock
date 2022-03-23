@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "028079ed3577028ed3da26bde8208269",
+    "content-hash": "606e73c40b82b08dc7ed65207fbd718f",
     "packages": [
         {
             "name": "api-platform/core",
@@ -1980,6 +1980,68 @@
                 "source": "https://github.com/nelmio/NelmioCorsBundle/tree/2.2.0"
             },
             "time": "2021-12-01T09:34:27+00:00"
+        },
+        {
+            "name": "ocramius/doctrine-batch-utils",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Ocramius/DoctrineBatchUtils.git",
+                "reference": "f4e388a38bd86263b42b53c5e3ea16243a8f5c5a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Ocramius/DoctrineBatchUtils/zipball/f4e388a38bd86263b42b53c5e3ea16243a8f5c5a",
+                "reference": "f4e388a38bd86263b42b53c5e3ea16243a8f5c5a",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/orm": "^2.9.5",
+                "doctrine/persistence": "^2.2.2",
+                "php": "^7.4.0 || ^8.0"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^9.0.0",
+                "phpunit/phpunit": "^9.5.9",
+                "roave/infection-static-analysis-plugin": "^1.10.0",
+                "vimeo/psalm": "^4.10.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DoctrineBatchUtils\\": "src/DoctrineBatchUtils"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com",
+                    "homepage": "http://ocramius.github.io/"
+                }
+            ],
+            "description": "A set of utilities to operate with Doctrine ORM's batch processing functionality",
+            "homepage": "https://github.com/Ocramius/DoctrineBatchUtils",
+            "keywords": [
+                "batch processing",
+                "doctrine",
+                "doctrine2",
+                "orm"
+            ],
+            "support": {
+                "issues": "https://github.com/Ocramius/DoctrineBatchUtils/issues",
+                "source": "https://github.com/Ocramius/DoctrineBatchUtils/tree/2.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Ocramius",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-09-19T04:34:26+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",

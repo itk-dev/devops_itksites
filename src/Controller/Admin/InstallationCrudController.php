@@ -2,21 +2,20 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\DetectionResult;
+use App\Entity\Installation;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class DetectionResultCrudController extends AbstractCrudController
+class InstallationCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return DetectionResult::class;
+        return Installation::class;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -38,12 +37,10 @@ class DetectionResultCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('type')->setColumns(4);
         yield TextField::new('rootDir')->setColumns(12);
         yield AssociationField::new('server');
+        yield AssociationField::new('detectionResult')->hideOnIndex();
         yield DateTimeField::new('createdAt');
-        yield DateTimeField::new('modifiedAt');
-        yield DateTimeField::new('lastContact');
-        yield CodeEditorField::new('prettyData')->hideOnIndex()->setLabel('Data');
+        yield DateTimeField::new('detectionResult.lastContact')->hideOnIndex();
     }
 }
