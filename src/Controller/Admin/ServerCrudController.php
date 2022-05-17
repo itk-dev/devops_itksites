@@ -3,12 +3,16 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Server;
+use App\Form\Type\Admin\HostingProviderFilter;
+use App\Form\Type\Admin\MariaDbVersionFilter;
+use App\Form\Type\Admin\SystemFilter;
 use App\Types\DatabaseVersionType;
 use App\Types\HostingProviderType;
 use App\Types\SystemType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -39,7 +43,7 @@ class ServerCrudController extends AbstractCrudController
     {
         yield FormField::addPanel('Provider Details');
         yield TextField::new('name')->setColumns(8);
-        yield TextField::new('hostingProviderName')->setColumns(4);
+        yield TextField::new('hostingProviderName')->setColumns(4)->hideOnIndex();
         yield TextField::new('apiKey')->setColumns(8)->setFormTypeOptions(['disabled' => 'true'])->onlyOnDetail();
         yield ChoiceField::new('hostingProvider')->setChoices(HostingProviderType::CHOICES)->setColumns(4);
         yield FormField::addPanel('Network');
@@ -58,5 +62,15 @@ class ServerCrudController extends AbstractCrudController
         yield TextField::new('serviceDeskTicket')->setColumns(12)->hideOnIndex();
         yield TextareaField::new('note')->hideOnIndex()->setColumns(6);
         yield TextareaField::new('usedFor')->hideOnIndex()->setColumns(6);
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('name')
+            ->add(HostingProviderFilter::new('hostingProvider'))
+            ->add(MariaDbVersionFilter::new('databaseVersion'))
+            ->add(SystemFilter::new('system'))
+            ;
     }
 }

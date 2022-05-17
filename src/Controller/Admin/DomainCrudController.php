@@ -6,6 +6,7 @@ use App\Entity\Domain;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -43,5 +44,14 @@ class DomainCrudController extends AbstractCrudController
         yield AssociationField::new('detectionResult')->hideOnIndex();
         yield DateTimeField::new('createdAt');
         yield DateTimeField::new('detectionResult.lastContact')->hideOnIndex();
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('address')
+            ->add('site')
+            ->add('server')
+            ;
     }
 }

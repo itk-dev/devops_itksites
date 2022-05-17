@@ -3,9 +3,11 @@
 namespace App\Controller\Admin;
 
 use App\Entity\DetectionResult;
+use App\Form\Type\Admin\DetectionFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
@@ -40,9 +42,19 @@ class DetectionResultCrudController extends AbstractCrudController
         yield TextField::new('type')->setColumns(4);
         yield TextField::new('rootDir')->setColumns(12);
         yield AssociationField::new('server');
-        yield DateTimeField::new('createdAt');
-        yield DateTimeField::new('modifiedAt');
+        yield DateTimeField::new('createdAt')->hideOnIndex();
+        yield DateTimeField::new('modifiedAt')->hideOnIndex();
         yield DateTimeField::new('lastContact');
         yield CodeEditorField::new('prettyData')->hideOnIndex()->setLabel('Data');
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add(DetectionFilter::new('type'))
+            ->add('rootDir')
+            ->add('server')
+            ->add('lastContact')
+            ;
     }
 }
