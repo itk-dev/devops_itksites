@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Repository\InstallationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\MappedSuperclass]

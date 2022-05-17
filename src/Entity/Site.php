@@ -102,6 +102,4 @@ class Site extends AbstractHandlerResult
     {
         return $this->configFilePath;
     }
-
-
 }
