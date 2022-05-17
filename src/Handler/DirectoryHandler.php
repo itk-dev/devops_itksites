@@ -34,13 +34,11 @@ class DirectoryHandler implements DetectionResultHandlerInterface
 
         if (null === $installation) {
             $installation = new Installation();
-            $installation->setRootDir($detectionResult->getRootDir());
-            $installation->setServer($detectionResult->getServer());
-
             $this->entityManager->persist($installation);
         }
 
         $installation->setDetectionResult($detectionResult);
+        $this->entityManager->flush();
     }
 
     /**
