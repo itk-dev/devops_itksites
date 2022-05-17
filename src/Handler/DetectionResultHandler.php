@@ -29,7 +29,5 @@ final class DetectionResultHandler implements MessageHandlerInterface
                 $handler->handleResult($detectionResult);
             }
         }
-
-        $this->entityManager->flush();
     }
 }
