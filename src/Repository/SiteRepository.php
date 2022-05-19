@@ -20,7 +20,7 @@ class SiteRepository extends ServiceEntityRepository
         parent::__construct($registry, Site::class);
     }
 
-    public function findByRootDirAndServer(string $rootDir, Server $server)
+    public function findByRootDirAndServer(string $rootDir, Server $server): mixed
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.rootDir LIKE :rootDir')

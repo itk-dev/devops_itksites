@@ -89,7 +89,7 @@ class Site extends AbstractHandlerResult
             $domain->setSite($this);
         }
 
-        $this->setPrimaryDomain();
+        $this->updatePrimaryDomain();
 
         return $this;
     }
@@ -103,7 +103,7 @@ class Site extends AbstractHandlerResult
             }
         }
 
-        $this->setPrimaryDomain();
+        $this->updatePrimaryDomain();
 
         return $this;
     }
@@ -130,7 +130,18 @@ class Site extends AbstractHandlerResult
         return $this->primaryDomain;
     }
 
-    private function setPrimaryDomain(): self
+    /**
+     * Update primary domain for the site
+     *
+     * For sites with multiple domains we consider the domain with the
+     * lowest number of subdomains to be the primary domain. E.g. for
+     * the domains the first is the primary:
+     * - 360.aarhuskommune.dk
+     * - 360.aarhuskommune.dk.srvitkphp74.itkdev.dk
+     *
+     * @return void
+     */
+    private function updatePrimaryDomain(): void
     {
         $domainCount = count($this->domains);
 
