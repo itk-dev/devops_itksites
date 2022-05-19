@@ -40,7 +40,7 @@ class ReplayDetectionResultsCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $iterable = SimpleBatchIteratorAggregate::fromQuery(
-            $this->entityManager->createQuery('SELECT r FROM App\Entity\DetectionResult r'),
+            $this->entityManager->createQuery('SELECT r FROM App\Entity\DetectionResult r ORDER BY r.id ASC'),
             100 // flush/clear after 100 iterations
         );
 

@@ -6,6 +6,7 @@ use App\Entity\DetectionResult;
 use App\Entity\Domain;
 use App\Entity\Installation;
 use App\Entity\Server;
+use App\Entity\Site;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -42,6 +43,7 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Installations', 'fas fa-folder', Installation::class);
+        yield MenuItem::linkToCrud('Sites', 'fas fa-bookmark', Site::class);
         yield MenuItem::linkToCrud('Domains', 'fas fa-link', Domain::class);
         yield MenuItem::linkToCrud('Servers', 'fas fa-server', Server::class);
         yield MenuItem::linkToCrud('Detection Results', 'fas fa-upload', DetectionResult::class);

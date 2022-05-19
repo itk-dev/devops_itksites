@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Installation;
+use App\Entity\Site;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -12,11 +12,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class InstallationCrudController extends AbstractCrudController
+class SiteCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Installation::class;
+        return Site::class;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -37,18 +37,22 @@ class InstallationCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('rootDir')->setColumns(12);
-        yield AssociationField::new('sites');
+        yield TextField::new('primaryDomain')->setColumns(12);
+        yield TextField::new('configFilePath')->setColumns(12);
+        yield TextField::new('rootDir')->setColumns(12)->hideOnIndex();
+        yield TextField::new('phpVersion');
+        yield AssociationField::new('domains');
+        yield AssociationField::new('installation')->hideOnIndex();
         yield AssociationField::new('server');
         yield AssociationField::new('detectionResult')->hideOnIndex();
         yield DateTimeField::new('createdAt');
-        yield DateTimeField::new('detectionResult.lastContact')->hideOnIndex();
     }
 
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            ->add('rootDir')
+            ->add('configFilePath')
+            ->add('phpVersion')
             ->add('server')
             ;
     }

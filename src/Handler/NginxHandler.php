@@ -4,7 +4,9 @@ namespace App\Handler;
 
 use App\Entity\DetectionResult;
 use App\Entity\Domain;
+use App\Entity\Installation;
 use App\Entity\Site;
+use App\Types\DetectionType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -17,17 +19,20 @@ class NginxHandler implements DetectionResultHandlerInterface
      * DirectoryHandler constructor.
      *
      * @param EntityManagerInterface $entityManager
+     * @param ValidatorInterface $validator
      */
-    public function __construct(private EntityManagerInterface $entityManager, private ValidatorInterface $validator)
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly ValidatorInterface $validator)
     {
     }
 
-    /** {@inheritDoc}
+    /**
+     * {@inheritDoc}
      */
     public function handleResult(DetectionResult $detectionResult): void
     {
         $siteRepository = $this->entityManager->getRepository(Site::class);
         $domainRepository = $this->entityManager->getRepository(Domain::class);
+        $installationRepository = $this->entityManager->getRepository(Installation::class);
 
         try {
             $data = \json_decode($detectionResult->getData(), false, 512, JSON_THROW_ON_ERROR);
@@ -84,6 +89,6 @@ class NginxHandler implements DetectionResultHandlerInterface
     /** {@inheritDoc} */
     public function supportsType(string $type): bool
     {
-        return 'nginx' === $type;
+        return DetectionType::NGINX === $type;
     }
 }

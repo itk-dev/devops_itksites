@@ -4,6 +4,8 @@ namespace App\Handler;
 
 use App\Entity\DetectionResult;
 use App\Entity\Installation;
+use App\Entity\Site;
+use App\Types\DetectionType;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -26,6 +28,7 @@ class DirectoryHandler implements DetectionResultHandlerInterface
     public function handleResult(DetectionResult $detectionResult): void
     {
         $installationRepository = $this->entityManager->getRepository(Installation::class);
+        $siteRepository = $this->entityManager->getRepository(Site::class);
 
         $installation = $installationRepository->findOneBy([
             'rootDir' => $detectionResult->getRootDir(),
@@ -37,6 +40,12 @@ class DirectoryHandler implements DetectionResultHandlerInterface
             $this->entityManager->persist($installation);
         }
 
+        $sites = $siteRepository->findByRootDirAndServer($detectionResult->getRootDir(), $detectionResult->getServer());
+        foreach ($sites as $site) {
+            /* @var Site $site */
+            $installation->addSite($site);
+        }
+
         $installation->setDetectionResult($detectionResult);
         $this->entityManager->flush();
     }
@@ -46,6 +55,6 @@ class DirectoryHandler implements DetectionResultHandlerInterface
      */
     public function supportsType(string $type): bool
     {
-        return 'dir' === $type;
+        return DetectionType::DIRECTORY === $type;
     }
 }
