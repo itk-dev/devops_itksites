@@ -38,10 +38,10 @@ class SiteCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('primaryDomain')->setColumns(12);
+        yield AssociationField::new('domains');
         yield TextField::new('configFilePath')->setColumns(12);
         yield TextField::new('rootDir')->setColumns(12)->hideOnIndex();
         yield TextField::new('phpVersion');
-        yield AssociationField::new('domains');
         yield AssociationField::new('installation')->hideOnIndex();
         yield AssociationField::new('server');
         yield AssociationField::new('detectionResult')->hideOnIndex();
@@ -51,6 +51,7 @@ class SiteCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
+            ->add('primaryDomain')
             ->add('configFilePath')
             ->add('phpVersion')
             ->add('server')
