@@ -27,6 +27,12 @@ class Installation extends AbstractHandlerResult
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
     private string $frameworkVersion = FrameworkTypes::UNKNOWN;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $lts = false;
+
+    #[ORM\Column(type: 'string', length: 30)]
+    private string $eof = '';
+
     public function __construct()
     {
         $this->sites = new ArrayCollection();
@@ -122,5 +128,29 @@ class Installation extends AbstractHandlerResult
         }
 
         return null;
+    }
+
+    public function isLts(): ?bool
+    {
+        return $this->lts;
+    }
+
+    public function setLts(bool $lts): self
+    {
+        $this->lts = $lts;
+
+        return $this;
+    }
+
+    public function getEof(): ?string
+    {
+        return $this->eof;
+    }
+
+    public function setEof(string $eof): self
+    {
+        $this->eof = $eof;
+
+        return $this;
     }
 }
