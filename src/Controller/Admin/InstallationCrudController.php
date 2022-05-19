@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -38,9 +39,10 @@ class InstallationCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('domain');
         yield TextField::new('type');
         yield TextField::new('frameworkVersion', 'ver.');
+        yield BooleanField::new('lts')->renderAsSwitch(false);
+        yield TextField::new('eof');
         yield TextField::new('composerVersion', 'com.');
         yield AssociationField::new('sites');
         yield TextField::new('rootDir')->setColumns(12);
@@ -55,6 +57,8 @@ class InstallationCrudController extends AbstractCrudController
         return $filters
             ->add(FrameworkFilter::new('type'))
             ->add('frameworkVersion')
+            ->add('lts')
+            ->add('eof')
             ->add('composerVersion')
             ->add('rootDir')
             ->add('server')

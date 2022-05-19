@@ -44,6 +44,12 @@ class SymfonyHandler implements DetectionResultHandlerInterface
             if (isset($data->symfony->version)) {
                 $installation?->setFrameworkVersion($data->symfony->version);
             }
+            if (isset($data->symfony->eof)) {
+                $installation?->setEof($data->symfony->eof);
+            }
+            if (isset($data->symfony->lts)) {
+                $installation?->setLts($data->symfony->lts);
+            }
             if (isset($data->symfony->phpVersion)) {
                 $installation?->setPhpVersion($data->symfony->phpVersion);
             }
