@@ -3,13 +3,11 @@
 namespace App\Handler;
 
 use App\Entity\DetectionResult;
-use App\Entity\Domain;
 use App\Entity\Installation;
-use App\Entity\Site;
+use App\Service\PackageVersionFactory;
 use App\Types\DetectionType;
 use App\Types\FrameworkTypes;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Handler for DetectionResult off type "drupal".
@@ -20,9 +18,9 @@ class DrupalHandler implements DetectionResultHandlerInterface
      * DirectoryHandler constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param ValidatorInterface $validator
+     * @param PackageVersionFactory $packageVersionFactory
      */
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly ValidatorInterface $validator)
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly PackageVersionFactory $packageVersionFactory)
     {
     }
 
@@ -41,6 +39,10 @@ class DrupalHandler implements DetectionResultHandlerInterface
             $installation?->setComposerVersion($data->composerVersion);
             $installation?->setFrameworkVersion($data->version);
             $installation?->setType(FrameworkTypes::DRUPAL);
+
+            if (null !== $installation && isset($data->packages->installed)) {
+                $this->packageVersionFactory->setPackageVersions($installation, $data->packages->installed);
+            }
 
             $this->entityManager->flush();
         } catch (\JsonException $e) {

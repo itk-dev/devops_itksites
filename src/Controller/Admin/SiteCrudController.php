@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
 class SiteCrudController extends AbstractCrudController
 {
@@ -37,7 +38,7 @@ class SiteCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('primaryDomain')->setColumns(12);
+        yield UrlField::new('primaryDomain')->setColumns(12);
         yield AssociationField::new('domains');
         yield TextField::new('configFilePath')->setColumns(12);
         yield TextField::new('rootDir')->setColumns(12)->hideOnIndex();

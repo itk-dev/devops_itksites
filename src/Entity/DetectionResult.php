@@ -40,6 +40,11 @@ class DetectionResult extends AbstractBaseEntity
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $lastContact;
 
+    public function __toString(): string
+    {
+        return '['.$this->type.'] '.$this->server.$this->rootDir.' @ '.$this->lastContact->format(DATE_ATOM);
+    }
+
     public function getType(): string
     {
         return $this->type;
