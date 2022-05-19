@@ -2,7 +2,6 @@
 
 namespace App\Form\Type\Admin;
 
-use App\Types\DetectionType;
 use App\Types\FrameworkTypes;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

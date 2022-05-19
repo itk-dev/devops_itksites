@@ -3,13 +3,11 @@
 namespace App\Handler;
 
 use App\Entity\DetectionResult;
-use App\Entity\Domain;
 use App\Entity\Installation;
-use App\Entity\Site;
+use App\Service\PackageVersionFactory;
 use App\Types\DetectionType;
 use App\Types\FrameworkTypes;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Handler for DetectionResult off type "symfony".
@@ -20,9 +18,9 @@ class SymfonyHandler implements DetectionResultHandlerInterface
      * DirectoryHandler constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param ValidatorInterface $validator
+     * @param PackageVersionFactory $packageVersionFactory
      */
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly ValidatorInterface $validator)
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly PackageVersionFactory $packageVersionFactory)
     {
     }
 
@@ -48,12 +46,17 @@ class SymfonyHandler implements DetectionResultHandlerInterface
                 $installation?->setEof($data->symfony->eof);
             }
             if (isset($data->symfony->lts)) {
-                $installation?->setLts($data->symfony->lts);
+                $lts = 'Yes' === $data->symfony->lts;
+                $installation?->setLts($lts);
             }
             if (isset($data->symfony->phpVersion)) {
                 $installation?->setPhpVersion($data->symfony->phpVersion);
             }
             $installation?->setType(FrameworkTypes::SYMFONY);
+
+            if (null !== $installation && isset($data->packages->installed)) {
+                $this->packageVersionFactory->setPackageVersions($installation, $data->packages->installed);
+            }
 
             $this->entityManager->flush();
         } catch (\JsonException $e) {

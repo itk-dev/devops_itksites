@@ -16,16 +16,16 @@ class Installation extends AbstractHandlerResult
     private Collection $sites;
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
-    private string $type = 'unknown';
+    private ?string $type = 'unknown';
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
-    private string $phpVersion = 'unknown';
+    private ?string $phpVersion = 'unknown';
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
-    private string $composerVersion = 'unknown';
+    private ?string $composerVersion = 'unknown';
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
-    private string $frameworkVersion = FrameworkTypes::UNKNOWN;
+    private ?string $frameworkVersion = FrameworkTypes::UNKNOWN;
 
     #[ORM\Column(type: 'boolean')]
     private bool $lts = false;
@@ -33,9 +33,13 @@ class Installation extends AbstractHandlerResult
     #[ORM\Column(type: 'string', length: 30)]
     private string $eof = '';
 
+    #[ORM\ManyToMany(targetEntity: PackageVersion::class, mappedBy: 'installations')]
+    private Collection $packageVersions;
+
     public function __construct()
     {
         $this->sites = new ArrayCollection();
+        $this->packageVersions = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -150,6 +154,49 @@ class Installation extends AbstractHandlerResult
     public function setEof(string $eof): self
     {
         $this->eof = $eof;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PackageVersion>
+     */
+    public function getPackageVersions(): Collection
+    {
+        return $this->packageVersions;
+    }
+
+    public function setPackageVersions(Collection $newPackageVersions): self
+    {
+        foreach ($this->packageVersions as $packageVersion) {
+            if (!$newPackageVersions->contains($packageVersion)) {
+                $packageVersion->removeInstallation($packageVersion);
+                $this->packageVersions->removeElement($packageVersion);
+            }
+        }
+
+        foreach ($newPackageVersions as $newPackageVersion) {
+            $this->addPackageVersion($newPackageVersion);
+        }
+
+        return $this;
+    }
+
+    public function addPackageVersion(PackageVersion $packageVersion): self
+    {
+        if (!$this->packageVersions->contains($packageVersion)) {
+            $this->packageVersions[] = $packageVersion;
+            $packageVersion->addInstallation($this);
+        }
+
+        return $this;
+    }
+
+    public function removePackageVersion(PackageVersion $packageVersion): self
+    {
+        if ($this->packageVersions->removeElement($packageVersion)) {
+            $packageVersion->removeInstallation($this);
+        }
 
         return $this;
     }

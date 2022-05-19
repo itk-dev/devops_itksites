@@ -23,6 +23,11 @@ class Domain extends AbstractHandlerResult
     #[ORM\JoinColumn(nullable: false)]
     private Site $site;
 
+    public function __toString(): string
+    {
+        return $this->address;
+    }
+
     public function getAddress(): ?string
     {
         return $this->address;
