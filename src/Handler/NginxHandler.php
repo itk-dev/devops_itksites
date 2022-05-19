@@ -15,6 +15,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class NginxHandler implements DetectionResultHandlerInterface
 {
+    private const NGINX_DEFAULT = 'default';
+
     /**
      * DirectoryHandler constructor.
      *
@@ -32,10 +34,14 @@ class NginxHandler implements DetectionResultHandlerInterface
     {
         $siteRepository = $this->entityManager->getRepository(Site::class);
         $domainRepository = $this->entityManager->getRepository(Domain::class);
-        $installationRepository = $this->entityManager->getRepository(Installation::class);
 
         try {
             $data = \json_decode($detectionResult->getData(), false, 512, JSON_THROW_ON_ERROR);
+
+            // Nginx 'default' sites should not be indexed.
+            if (str_ends_with($data->config, self::NGINX_DEFAULT)) {
+                return;
+            }
 
             $site = $siteRepository->findOneBy([
                 'configFilePath' => $data->config,
