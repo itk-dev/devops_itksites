@@ -131,7 +131,7 @@ class Site extends AbstractHandlerResult
     }
 
     /**
-     * Update primary domain for the site
+     * Update primary domain for the site.
      *
      * For sites with multiple domains we consider the domain with the
      * lowest number of subdomains to be the primary domain. E.g. for
