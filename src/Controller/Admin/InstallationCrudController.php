@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Installation;
+use App\Form\Type\Admin\FrameworkFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -37,8 +38,12 @@ class InstallationCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('rootDir')->setColumns(12);
+        yield TextField::new('domain');
+        yield TextField::new('type');
+        yield TextField::new('frameworkVersion', 'ver.');
+        yield TextField::new('composerVersion', 'com.');
         yield AssociationField::new('sites');
+        yield TextField::new('rootDir')->setColumns(12);
         yield AssociationField::new('server');
         yield AssociationField::new('detectionResult')->hideOnIndex();
         yield DateTimeField::new('createdAt');
@@ -48,6 +53,9 @@ class InstallationCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
+            ->add(FrameworkFilter::new('type'))
+            ->add('frameworkVersion')
+            ->add('composerVersion')
             ->add('rootDir')
             ->add('server')
             ;
