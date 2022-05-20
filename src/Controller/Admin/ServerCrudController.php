@@ -5,9 +5,11 @@ namespace App\Controller\Admin;
 use App\Entity\Server;
 use App\Form\Type\Admin\HostingProviderFilter;
 use App\Form\Type\Admin\MariaDbVersionFilter;
+use App\Form\Type\Admin\ServerTypeFilter;
 use App\Form\Type\Admin\SystemFilter;
 use App\Types\DatabaseVersionType;
 use App\Types\HostingProviderType;
+use App\Types\ServerTypeType;
 use App\Types\SystemType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -59,6 +61,7 @@ class ServerCrudController extends AbstractCrudController
         yield ChoiceField::new('databaseVersion')->setChoices(DatabaseVersionType::CHOICES)->renderExpanded()->setColumns(6);
         yield ChoiceField::new('system')->setChoices(SystemType::CHOICES)->renderExpanded()->setColumns(6);
         yield FormField::addPanel('Miscellaneous');
+        yield ChoiceField::new('type')->setChoices(ServerTypeType::CHOICES)->renderExpanded()->setColumns(6);
         yield TextField::new('serviceDeskTicket')->setColumns(12)->hideOnIndex();
         yield TextareaField::new('note')->hideOnIndex()->setColumns(6);
         yield TextareaField::new('usedFor')->hideOnIndex()->setColumns(6);
@@ -70,6 +73,7 @@ class ServerCrudController extends AbstractCrudController
             ->add('name')
             ->add(HostingProviderFilter::new('hostingProvider'))
             ->add(MariaDbVersionFilter::new('databaseVersion'))
+            ->add(ServerTypeFilter::new('type'))
             ->add(SystemFilter::new('system'))
             ;
     }

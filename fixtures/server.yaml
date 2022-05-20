@@ -12,3 +12,4 @@ App\Entity\Server:
     monitoring: <boolean()>
     databaseVersion: <randomElement(['5.5','5.7','10.3','10.5','10.6'])>
     system: <randomElement(['Ubuntu 16.04','Ubuntu 18.04','Ubuntu 20.04'])>
+    type: <randomElement(['prod','stg','devops'])>
