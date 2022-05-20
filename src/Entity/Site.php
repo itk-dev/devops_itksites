@@ -39,6 +39,12 @@ class Site extends AbstractHandlerResult
     )]
     private Collection $domains;
 
+    #[ORM\ManyToOne(targetEntity: Installation::class, inversedBy: 'sites')]
+    private ?Installation $installation;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private string $primaryDomain;
+
     public function __construct()
     {
         $this->domains = new ArrayCollection();
@@ -83,6 +89,8 @@ class Site extends AbstractHandlerResult
             $domain->setSite($this);
         }
 
+        $this->updatePrimaryDomain();
+
         return $this;
     }
 
@@ -95,11 +103,61 @@ class Site extends AbstractHandlerResult
             }
         }
 
+        $this->updatePrimaryDomain();
+
         return $this;
     }
 
     public function __toString(): string
     {
         return $this->configFilePath;
+    }
+
+    public function getInstallation(): ?Installation
+    {
+        return $this->installation;
+    }
+
+    public function setInstallation(?Installation $installation): self
+    {
+        $this->installation = $installation;
+
+        return $this;
+    }
+
+    public function getPrimaryDomain(): ?string
+    {
+        return $this->primaryDomain;
+    }
+
+    /**
+     * Update primary domain for the site.
+     *
+     * For sites with multiple domains we consider the domain with the
+     * lowest number of subdomains to be the primary domain. E.g. for
+     * the domains the first is the primary:
+     * - 360.aarhuskommune.dk
+     * - 360.aarhuskommune.dk.srvitkphp74.itkdev.dk
+     *
+     * @return void
+     */
+    private function updatePrimaryDomain(): void
+    {
+        $domainCount = count($this->domains);
+
+        if ($domainCount >= 1) {
+            $address = $this->domains->first()->getAddress();
+            $segments = count(explode('.', $address));
+            $this->primaryDomain = $address;
+
+            if ($domainCount > 1) {
+                foreach ($this->domains as $domain) {
+                    if ($segments > count(explode('.', $domain->getAddress()))) {
+                        $segments = count(explode('.', $domain->getAddress()));
+                        $this->primaryDomain = $domain->getAddress();
+                    }
+                }
+            }
+        }
     }
 }
