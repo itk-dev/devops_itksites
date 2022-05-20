@@ -25,8 +25,7 @@ class DrupalHandler implements DetectionResultHandlerInterface
         private readonly EntityManagerInterface $entityManager,
         private readonly PackageVersionFactory $packageVersionFactory,
         private readonly ModuleVersionFactory $moduleVersionFactory
-    )
-    {
+    ) {
     }
 
     /**

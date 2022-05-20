@@ -5,8 +5,6 @@ namespace App\Service;
 use App\Entity\Installation;
 use App\Entity\Module;
 use App\Entity\ModuleVersion;
-use App\Entity\Package;
-use App\Entity\PackageVersion;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -35,7 +33,7 @@ class ModuleVersionFactory
                 if (isset($installed->display_name)) {
                     $module->setDisplayName($installed->display_name);
                 }
-                $module->setEnabled($installed->status === 'Enabled');
+                $module->setEnabled('Enabled' === $installed->status);
 
                 $this->entityManager->persist($module);
                 $this->entityManager->flush();

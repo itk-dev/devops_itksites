@@ -7,8 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-use function PHPUnit\Framework\throwException;
-
 #[ORM\Entity(repositoryClass: ModuleRepository::class)]
 class Module extends AbstractBaseEntity
 {
@@ -34,8 +32,7 @@ class Module extends AbstractBaseEntity
 
     public function __toString(): string
     {
-        
-        return $this->displayName ?? $this->package.'/'.$this->name;    
+        return $this->displayName ?? $this->package.'/'.$this->name;
     }
 
     public function getPackage(): ?string
