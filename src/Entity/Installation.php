@@ -36,10 +36,14 @@ class Installation extends AbstractHandlerResult
     #[ORM\ManyToMany(targetEntity: PackageVersion::class, mappedBy: 'installations')]
     private Collection $packageVersions;
 
+    #[ORM\ManyToMany(targetEntity: ModuleVersion::class, mappedBy: 'installations')]
+    private $moduleVersions;
+
     public function __construct()
     {
         $this->sites = new ArrayCollection();
         $this->packageVersions = new ArrayCollection();
+        $this->moduleVersions = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -182,6 +186,22 @@ class Installation extends AbstractHandlerResult
         return $this;
     }
 
+    public function setModuleVersions(Collection $newModuleVersions): self
+    {
+        foreach ($this->moduleVersions as $moduleVersion) {
+            if (!$newModuleVersions->contains($moduleVersion)) {
+                $moduleVersion->removeInstallation($moduleVersion);
+                $this->moduleVersions->removeElement($moduleVersion);
+            }
+        }
+
+        foreach ($newModuleVersions as $newModuleVersion) {
+            $this->addModuleVersion($newModuleVersion);
+        }
+
+        return $this;
+    }
+
     public function addPackageVersion(PackageVersion $packageVersion): self
     {
         if (!$this->packageVersions->contains($packageVersion)) {
@@ -196,6 +216,33 @@ class Installation extends AbstractHandlerResult
     {
         if ($this->packageVersions->removeElement($packageVersion)) {
             $packageVersion->removeInstallation($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ModuleVersion>
+     */
+    public function getModuleVersions(): Collection
+    {
+        return $this->moduleVersions;
+    }
+
+    public function addModuleVersion(ModuleVersion $moduleVersion): self
+    {
+        if (!$this->moduleVersions->contains($moduleVersion)) {
+            $this->moduleVersions[] = $moduleVersion;
+            $moduleVersion->addInstallation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModuleVersion(ModuleVersion $moduleVersion): self
+    {
+        if ($this->moduleVersions->removeElement($moduleVersion)) {
+            $moduleVersion->removeInstallation($this);
         }
 
         return $this;
