@@ -76,6 +76,9 @@ class Server extends AbstractBaseEntity implements UserInterface
     #[ORM\OneToMany(mappedBy: 'server', targetEntity: Installation::class, orphanRemoval: true)]
     private $installations;
 
+    #[ORM\Column(type: 'string', length: 10)]
+    private $env;
+
     /**
      * @throws \Exception
      */
@@ -88,7 +91,7 @@ class Server extends AbstractBaseEntity implements UserInterface
 
     public function __toString(): string
     {
-        return $this->getName();
+        return $this->getName().' ['.$this->env.']';
     }
 
     public function getRoles(): array
@@ -354,6 +357,18 @@ class Server extends AbstractBaseEntity implements UserInterface
                 $installation->setServer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEnv(): ?string
+    {
+        return $this->env;
+    }
+
+    public function setEnv(string $env): self
+    {
+        $this->env = $env;
 
         return $this;
     }
