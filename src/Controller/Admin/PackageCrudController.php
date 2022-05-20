@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Domain;
+use App\Entity\Package;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -10,13 +10,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
-class DomainCrudController extends AbstractCrudController
+class PackageCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Domain::class;
+        return Package::class;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -32,26 +33,28 @@ class DomainCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_INDEX, Action::EDIT)
             ->remove(Crud::PAGE_INDEX, Action::DELETE)
             ->remove(Crud::PAGE_DETAIL, Action::EDIT)
-            ->remove(Crud::PAGE_DETAIL, Action::DELETE)
-            ;
+            ->remove(Crud::PAGE_DETAIL, Action::DELETE);
     }
 
     public function configureFields(string $pageName): iterable
     {
-        yield UrlField::new('address')->setColumns(12);
-        yield AssociationField::new('site');
-        yield AssociationField::new('server');
-        yield AssociationField::new('detectionResult')->hideOnIndex();
+        yield TextField::new('vendor')->setColumns(6);
+        yield TextField::new('package')->setColumns(6);
+        yield UrlField::new('packagistUrl')->setColumns(6)->hideOnIndex();
+        yield AssociationField::new('packageVersions')->setColumns(6);
+        yield TextField::new('description')->setColumns(12)->hideOnIndex();
+        yield TextField::new('type');
+        yield TextField::new('license');
         yield DateTimeField::new('createdAt');
-        yield DateTimeField::new('detectionResult.lastContact')->hideOnIndex();
     }
 
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            ->add('address')
-            ->add('site')
-            ->add('server')
+            ->add('vendor')
+            ->add('package')
+            ->add('type')
+            ->add('license')
             ;
     }
 }

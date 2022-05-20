@@ -5,6 +5,8 @@ namespace App\Controller\Admin;
 use App\Entity\DetectionResult;
 use App\Entity\Domain;
 use App\Entity\Installation;
+use App\Entity\Package;
+use App\Entity\PackageVersion;
 use App\Entity\Server;
 use App\Entity\Site;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -47,6 +49,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Domains', 'fas fa-link', Domain::class);
         yield MenuItem::linkToCrud('Servers', 'fas fa-server', Server::class);
         yield MenuItem::linkToCrud('Detection Results', 'fas fa-upload', DetectionResult::class);
+        yield MenuItem::linkToCrud('Packages', 'fas fa-cube', Package::class);
+        yield MenuItem::linkToCrud('Package Versions', 'fas fa-cubes', PackageVersion::class);
     }
 
     public function configureCrud(): Crud
