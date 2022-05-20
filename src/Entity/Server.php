@@ -77,7 +77,7 @@ class Server extends AbstractBaseEntity implements UserInterface
     private $installations;
 
     #[ORM\Column(type: 'string', length: 10)]
-    private $env;
+    private $type;
 
     /**
      * @throws \Exception
@@ -91,7 +91,7 @@ class Server extends AbstractBaseEntity implements UserInterface
 
     public function __toString(): string
     {
-        return $this->getName().' ['.$this->env.']';
+        return $this->getName().' ['.$this->type.']';
     }
 
     public function getRoles(): array
@@ -361,14 +361,14 @@ class Server extends AbstractBaseEntity implements UserInterface
         return $this;
     }
 
-    public function getEnv(): ?string
+    public function getType(): ?string
     {
-        return $this->env;
+        return $this->type;
     }
 
-    public function setEnv(string $env): self
+    public function setType(string $type): self
     {
-        $this->env = $env;
+        $this->type = $type;
 
         return $this;
     }

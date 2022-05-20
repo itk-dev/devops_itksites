@@ -20,12 +20,12 @@ final class Version20220520095332 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE server ADD env VARCHAR(10) NOT NULL');
+        $this->addSql('ALTER TABLE server ADD type VARCHAR(10) NOT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE server DROP env');
+        $this->addSql('ALTER TABLE server DROP type');
     }
 }
