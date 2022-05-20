@@ -5,6 +5,8 @@ namespace App\Controller\Admin;
 use App\Entity\DetectionResult;
 use App\Entity\Domain;
 use App\Entity\Installation;
+use App\Entity\Module;
+use App\Entity\ModuleVersion;
 use App\Entity\Package;
 use App\Entity\PackageVersion;
 use App\Entity\Server;
@@ -51,6 +53,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Detection Results', 'fas fa-upload', DetectionResult::class);
         yield MenuItem::linkToCrud('Packages', 'fas fa-cube', Package::class);
         yield MenuItem::linkToCrud('Package Versions', 'fas fa-cubes', PackageVersion::class);
+        yield MenuItem::linkToCrud('Modules', 'fas fa-cube', Module::class);
+        yield MenuItem::linkToCrud('Modules Versions', 'fas fa-cubes', ModuleVersion::class);
     }
 
     public function configureCrud(): Crud

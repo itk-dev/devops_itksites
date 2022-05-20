@@ -4,6 +4,7 @@ namespace App\Handler;
 
 use App\Entity\DetectionResult;
 use App\Entity\Installation;
+use App\Service\ModuleVersionFactory;
 use App\Service\PackageVersionFactory;
 use App\Types\DetectionType;
 use App\Types\FrameworkTypes;
@@ -20,7 +21,11 @@ class DrupalHandler implements DetectionResultHandlerInterface
      * @param EntityManagerInterface $entityManager
      * @param PackageVersionFactory $packageVersionFactory
      */
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly PackageVersionFactory $packageVersionFactory)
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly PackageVersionFactory $packageVersionFactory,
+        private readonly ModuleVersionFactory $moduleVersionFactory
+    )
     {
     }
 
@@ -42,6 +47,10 @@ class DrupalHandler implements DetectionResultHandlerInterface
 
             if (null !== $installation && isset($data->packages->installed)) {
                 $this->packageVersionFactory->setPackageVersions($installation, $data->packages->installed);
+            }
+
+            if (null !== $installation && isset($data->modules)) {
+                $this->moduleVersionFactory->setModuleVersions($installation, $data->modules);
             }
 
             $this->entityManager->flush();
