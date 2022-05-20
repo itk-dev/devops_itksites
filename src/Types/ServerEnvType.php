@@ -5,7 +5,7 @@ namespace App\Types;
 /**
  * Class DatabaseVersionType.
  */
-class ServerEnvType
+class ServerTypeType
 {
     public const CHOICES = [
         'Prod' => 'prod',

@@ -9,7 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\FilterDataDto;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\FilterTrait;
 
-class ServerEnvFilter implements FilterInterface
+class ServerTypeFilter implements FilterInterface
 {
     use FilterTrait;
 
@@ -19,12 +19,12 @@ class ServerEnvFilter implements FilterInterface
             ->setFilterFqcn(__CLASS__)
             ->setProperty($propertyName)
             ->setLabel($label)
-            ->setFormType(ServerEnvFilterType::class);
+            ->setFormType(ServerTypeFilterType::class);
     }
 
     public function apply(QueryBuilder $queryBuilder, FilterDataDto $filterDataDto, ?FieldDto $fieldDto, EntityDto $entityDto): void
     {
-        $queryBuilder->andWhere(sprintf('%s.%s = :env', $filterDataDto->getEntityAlias(), $filterDataDto->getProperty()))
-            ->setParameter('env', $filterDataDto->getValue());
+        $queryBuilder->andWhere(sprintf('%s.%s = :type', $filterDataDto->getEntityAlias(), $filterDataDto->getProperty()))
+            ->setParameter('type', $filterDataDto->getValue());
     }
 }
