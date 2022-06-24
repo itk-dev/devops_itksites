@@ -11,7 +11,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
 class GitCrudController extends AbstractCrudController
 {
@@ -42,7 +41,7 @@ class GitCrudController extends AbstractCrudController
         yield TextField::new('rootDir')->setColumns(6);
         yield TextField::new('remote')->setColumns(6);
         yield TextField::new('tag')->setColumns(6);
-        yield TextField::new('changes')->setColumns(6);//->hideOnIndex();
+        yield TextField::new('changes')->setColumns(6); // ->hideOnIndex();
         yield DateTimeField::new('createdAt');
     }
     /*
@@ -65,5 +64,4 @@ class GitCrudController extends AbstractCrudController
             ->add('tag')
             ;
     }
-
 }

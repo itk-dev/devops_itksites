@@ -54,6 +54,7 @@ class ReplayDetectionResultsCommand extends Command
                     ->setParameter(1, $type);
             } else {
                 $io->error('Invalid type');
+
                 return Command::INVALID;
             }
         }
