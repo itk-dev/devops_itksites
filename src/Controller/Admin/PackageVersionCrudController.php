@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\VersionField;
 use App\Entity\PackageVersion;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -10,7 +11,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
 class PackageVersionCrudController extends AbstractCrudController
@@ -41,9 +41,9 @@ class PackageVersionCrudController extends AbstractCrudController
         yield AssociationField::new('package')->setColumns(6);
         yield UrlField::new('packagistUrl')->setColumns(6)->hideOnIndex();
         yield AssociationField::new('installations')->setColumns(6);
-        yield TextField::new('version')->setColumns(6);
-        yield TextField::new('latest')->setColumns(6);
-        yield TextField::new('latestStatus')->setColumns(6);
+        yield VersionField::new('version')->setColumns(6);
+        yield VersionField::new('latest')->setColumns(6);
+        yield VersionField::new('latestStatus')->setColumns(6);
         yield DateTimeField::new('createdAt');
     }
 

@@ -1,0 +1,20 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+
+{% set slicedDate = field.formattedValue | slice(0, 7) %}
+{% if ea.crud.currentAction == 'detail' %}
+    {% set outputValue = field.formattedValue %}
+{% else %}
+    {% set outputValue = slicedDate %}
+{% endif %}
+
+{% if field.formattedValue is empty %}
+    <span class="badge badge-secondary">?</span>
+{% elseif 'Expired' in field.formattedValue %}
+    <span class="badge badge-danger">{{ outputValue }}</span>
+{% elseif date('01/' ~ slicedDate) < date('+180days') %}
+    <span class="badge badge-warning">{{ outputValue }}</span>
+{% else %}
+    <span class="badge badge-success">{{ outputValue }}</span>
+{% endif %}

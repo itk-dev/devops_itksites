@@ -1,0 +1,14 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% if field.formattedValue is empty %}
+    <span class="badge badge-warning">?</span>
+{% elseif field.formattedValue ==  constant('App\\Types\\HostingProviderType::AZURE') %}
+    <span class="badge badge-light">{{ field.formattedValue }}</span>
+{% elseif field.formattedValue ==  constant('App\\Types\\HostingProviderType::IT_RELATION') %}
+    <span class="badge badge-secondary">{{ field.formattedValue }}</span>
+{% elseif field.formattedValue ==  constant('App\\Types\\HostingProviderType::DBC') %}
+    <span class="badge badge-dark">{{ field.formattedValue }}</span>
+{% else %}
+    <span class="badge badge-secondary">{{ field.formattedValue }}</span>
+{% endif %}

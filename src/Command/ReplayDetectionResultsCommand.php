@@ -4,12 +4,14 @@ namespace App\Command;
 
 use ApiPlatform\Core\Bridge\Symfony\Messenger\ContextStamp;
 use App\Entity\DetectionResult;
+use App\Types\DetectionType;
 use Doctrine\ORM\EntityManagerInterface;
 use DoctrineBatchUtils\BatchProcessing\SimpleBatchIteratorAggregate;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Messenger\Envelope;
@@ -29,8 +31,10 @@ class ReplayDetectionResultsCommand extends Command
      * @param EntityManagerInterface $entityManager
      * @param MessageBusInterface    $messageBus
      */
-    public function __construct(private EntityManagerInterface $entityManager, private MessageBusInterface $messageBus)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly MessageBusInterface $messageBus,
+    ) {
         parent::__construct();
     }
 
@@ -39,14 +43,33 @@ class ReplayDetectionResultsCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
+        $detectionResults = $this->entityManager->createQueryBuilder()
+            ->select('r')
+            ->from('App\Entity\DetectionResult', 'r')
+            ->orderBy('r.id', 'ASC');
+
+        $type = $input->getOption('type');
+        if ($type) {
+            if (in_array($type, DetectionType::CHOICES)) {
+                $detectionResults
+                    ->where('r.type = ?1')
+                    ->setParameter(1, $type);
+            } else {
+                $io->error('Invalid type');
+
+                return Command::INVALID;
+            }
+        }
+
         $iterable = SimpleBatchIteratorAggregate::fromQuery(
-            $this->entityManager->createQuery('SELECT r FROM App\Entity\DetectionResult r ORDER BY r.id ASC'),
-            100 // flush/clear after 100 iterations
+            $detectionResults->getQuery(),
+            10 // flush/clear after 100 iterations
         );
 
         $context = $this->contextBuilder();
 
         $progressBar = new ProgressBar($output);
+        $progressBar->setFormat('debug_nomax');
 
         foreach ($progressBar->iterate($iterable) as $result) {
             $this->handle($result, $context);
@@ -115,5 +138,16 @@ class ReplayDetectionResultsCommand extends Command
             'respond' => true,
             'persist' => true,
         ];
+    }
+
+    protected function configure(): void
+    {
+        $this
+            ->addOption(
+                'type',
+                't',
+                InputOption::VALUE_REQUIRED,
+                'Limit replay to this type. Options are ['.join(', ', DetectionType::CHOICES).']'
+            );
     }
 }

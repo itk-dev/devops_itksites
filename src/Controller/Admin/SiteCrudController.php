@@ -2,6 +2,12 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\ConfigFilePathField;
+use App\Admin\Field\DomainField;
+use App\Admin\Field\RootDirField;
+use App\Admin\Field\ServerTypeField;
+use App\Admin\Field\SiteTypeField;
+use App\Admin\Field\VersionField;
 use App\Entity\Site;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -10,8 +16,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
 class SiteCrudController extends AbstractCrudController
 {
@@ -38,12 +42,14 @@ class SiteCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield UrlField::new('primaryDomain')->setColumns(12);
+        yield DomainField::new('primaryDomain')->setColumns(12);
         yield AssociationField::new('domains');
-        yield TextField::new('configFilePath')->setColumns(12);
-        yield TextField::new('rootDir')->setColumns(12)->hideOnIndex();
-        yield TextField::new('phpVersion');
+        yield SiteTypeField::new('type')->setLabel('Stack');
+        yield ConfigFilePathField::new('configFilePath')->setColumns(12);
+        yield RootDirField::new('rootDir')->setColumns(12)->hideOnIndex();
+        yield VersionField::new('phpVersion')->setLabel('PHP');
         yield AssociationField::new('installation')->hideOnIndex();
+        yield ServerTypeField::new('server.type')->setLabel('Type');
         yield AssociationField::new('server');
         yield AssociationField::new('detectionResult')->hideOnIndex();
         yield DateTimeField::new('createdAt');

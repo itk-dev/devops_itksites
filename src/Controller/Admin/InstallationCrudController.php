@@ -2,6 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\EolTypeField;
+use App\Admin\Field\RootDirField;
+use App\Admin\Field\VersionField;
 use App\Entity\Installation;
 use App\Form\Type\Admin\FrameworkFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -12,7 +15,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class InstallationCrudController extends AbstractCrudController
 {
@@ -39,13 +41,13 @@ class InstallationCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('type');
-        yield TextField::new('frameworkVersion', 'ver.');
+        yield VersionField::new('type');
+        yield VersionField::new('frameworkVersion', 'ver.');
         yield BooleanField::new('lts')->renderAsSwitch(false);
-        yield TextField::new('eof');
-        yield TextField::new('composerVersion', 'com.');
+        yield EolTypeField::new('eol');
+        yield VersionField::new('composerVersion', 'Comp.');
         yield AssociationField::new('sites');
-        yield TextField::new('rootDir')->setColumns(12);
+        yield RootDirField::new('rootDir')->setColumns(12);
         yield AssociationField::new('server');
         yield AssociationField::new('detectionResult')->hideOnIndex();
         yield DateTimeField::new('createdAt');
@@ -58,7 +60,7 @@ class InstallationCrudController extends AbstractCrudController
             ->add(FrameworkFilter::new('type'))
             ->add('frameworkVersion')
             ->add('lts')
-            ->add('eof')
+            ->add('eol')
             ->add('composerVersion')
             ->add('rootDir')
             ->add('server')

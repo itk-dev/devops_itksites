@@ -1,0 +1,14 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% if field.value is empty %}
+    <span class="badge badge-secondary">?</span>
+{% elseif field.value == constant('App\\Types\\ServerTypeType::PROD') %}
+    <span class="badge badge-danger">{{ field.formattedValue }}</span>
+{% elseif field.value == constant('App\\Types\\ServerTypeType::STG') %}
+    <span class="badge badge-warning">{{ field.formattedValue }}</span>
+{% elseif field.value == constant('App\\Types\\ServerTypeType::DEVOPS') %}
+    <span class="badge badge-dark">{{ field.formattedValue }}</span>
+{% else %}
+    <span class="badge badge-secondary">{{ field.formattedValue }}</span>
+{% endif %}

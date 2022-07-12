@@ -2,6 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\DomainField;
+use App\Admin\Field\ServerTypeField;
+use App\Admin\Field\SiteTypeField;
 use App\Entity\Domain;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -10,7 +13,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
 class DomainCrudController extends AbstractCrudController
 {
@@ -38,9 +40,11 @@ class DomainCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield UrlField::new('address')->setColumns(12);
+        yield DomainField::new('address')->setColumns(12);
+        yield SiteTypeField::new('site.type');
         yield AssociationField::new('site');
         yield AssociationField::new('server');
+        yield ServerTypeField::new('server.type');
         yield AssociationField::new('detectionResult')->hideOnIndex();
         yield DateTimeField::new('createdAt');
         yield DateTimeField::new('detectionResult.lastContact')->hideOnIndex();
