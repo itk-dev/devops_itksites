@@ -43,8 +43,8 @@ class DomainCrudController extends AbstractCrudController
         yield DomainField::new('address')->setColumns(12);
         yield SiteTypeField::new('site.type');
         yield AssociationField::new('site');
+        yield ServerTypeField::new('server.type')->setLabel('Type');
         yield AssociationField::new('server');
-        yield ServerTypeField::new('server.type');
         yield AssociationField::new('detectionResult')->hideOnIndex();
         yield DateTimeField::new('createdAt');
         yield DateTimeField::new('detectionResult.lastContact')->hideOnIndex();

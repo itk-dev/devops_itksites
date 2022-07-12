@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Admin\Field\EolTypeField;
 use App\Admin\Field\RootDirField;
+use App\Admin\Field\ServerTypeField;
 use App\Admin\Field\VersionField;
 use App\Entity\Installation;
 use App\Form\Type\Admin\FrameworkFilter;
@@ -48,6 +49,7 @@ class InstallationCrudController extends AbstractCrudController
         yield VersionField::new('composerVersion', 'Comp.');
         yield AssociationField::new('sites');
         yield RootDirField::new('rootDir')->setColumns(12);
+        yield ServerTypeField::new('server.type')->setLabel('Type');
         yield AssociationField::new('server');
         yield AssociationField::new('detectionResult')->hideOnIndex();
         yield DateTimeField::new('createdAt');
