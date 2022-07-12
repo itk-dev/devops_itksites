@@ -7,9 +7,13 @@ namespace App\Types;
  */
 class ServerTypeType
 {
+    public const PROD = 'prod';
+    public const STG = 'stg';
+    public const DEVOPS = 'devops';
+    
     public const CHOICES = [
-        'Prod' => 'prod',
-        'Stg' => 'stg',
-        'DevOps' => 'devops',
+        'Prod' => self::PROD,
+        'Stg' => self::STG,
+        'DevOps' => self::DEVOPS,
     ];
 }

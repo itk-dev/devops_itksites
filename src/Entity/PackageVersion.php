@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PackageVersionRepository::class)]
+#[ORM\UniqueConstraint(name: 'package_version', columns: ['package_id', 'version'])]
 class PackageVersion extends AbstractBaseEntity
 {
     #[ORM\ManyToMany(targetEntity: Installation::class, inversedBy: 'packageVersions')]

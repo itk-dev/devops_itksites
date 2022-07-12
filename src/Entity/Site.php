@@ -3,13 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\SiteRepository;
+use App\Types\SiteType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SiteRepository::class)]
-#[ORM\UniqueConstraint(name: 'server_configfilepath_idx', fields: ['server', 'configFilePath'])]
+#[ORM\UniqueConstraint(name: 'server_rootDir_configFilePath_idx', fields: ['server', 'rootDir', 'configFilePath'])]
 class Site extends AbstractHandlerResult
 {
     #[ORM\Column(type: 'string', length: 10)]
@@ -40,14 +41,26 @@ class Site extends AbstractHandlerResult
     private Collection $domains;
 
     #[ORM\ManyToOne(targetEntity: Installation::class, inversedBy: 'sites')]
-    private ?Installation $installation;
+    private Installation $installation;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $primaryDomain;
 
+    #[ORM\Column(type: 'string', length: 25)]
+    private string $type = '';
+
     public function __construct()
     {
         $this->domains = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        if (SiteType::DOCKER === $this->type) {
+            return str_replace('/data/www', '.', $this->getRootDir());
+        }
+
+        return str_replace('/etc/nginx/sites-enabled', '.', $this->configFilePath);
     }
 
     public function getPhpVersion(): ?string
@@ -82,6 +95,28 @@ class Site extends AbstractHandlerResult
         return $this->domains;
     }
 
+    /**
+     * @param Collection<int, Domain> $newDomains
+     *
+     * @return $this
+     */
+    public function setDomains(Collection $newDomains): self
+    {
+        /** @var Domain $domain */
+        foreach ($this->domains as $domain) {
+            if (!$newDomains->contains($domain)) {
+                $this->domains->removeElement($domain);
+            }
+        }
+
+        /** @var Domain $newDomain */
+        foreach ($newDomains as $newDomain) {
+            $this->addDomain($newDomain);
+        }
+
+        return $this;
+    }
+
     public function addDomain(Domain $domain): self
     {
         if (!$this->domains->contains($domain)) {
@@ -92,25 +127,6 @@ class Site extends AbstractHandlerResult
         $this->updatePrimaryDomain();
 
         return $this;
-    }
-
-    public function removeDomain(Domain $domain): self
-    {
-        if ($this->domains->removeElement($domain)) {
-            // set the owning side to null (unless already changed)
-            if ($domain->getSite() === $this) {
-                $domain->setSite(null);
-            }
-        }
-
-        $this->updatePrimaryDomain();
-
-        return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->configFilePath;
     }
 
     public function getInstallation(): ?Installation
@@ -135,7 +151,7 @@ class Site extends AbstractHandlerResult
      *
      * For sites with multiple domains we consider the domain with the
      * lowest number of subdomains to be the primary domain. E.g. for
-     * the domains the first is the primary:
+     * these domains the first is the primary:
      * - 360.aarhuskommune.dk
      * - 360.aarhuskommune.dk.srvitkphp74.itkdev.dk
      *
@@ -159,5 +175,17 @@ class Site extends AbstractHandlerResult
                 }
             }
         }
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
     }
 }
