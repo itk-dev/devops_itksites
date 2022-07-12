@@ -33,7 +33,6 @@ class DomainFactory
         $domainStrings = explode(' ', $addressList);
 
         foreach ($domainStrings as $domainString) {
-
             if (empty($domainString)) {
                 continue;
             }
@@ -71,5 +70,4 @@ class DomainFactory
 
         return $domain;
     }
-
 }

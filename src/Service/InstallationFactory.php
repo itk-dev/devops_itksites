@@ -30,7 +30,7 @@ class InstallationFactory
         $installation->setDetectionResult($detectionResult);
 
         $this->entityManager->flush();
-        
+
         return $installation;
     }
 }

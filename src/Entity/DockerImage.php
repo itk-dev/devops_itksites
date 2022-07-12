@@ -40,7 +40,6 @@ class DockerImage extends AbstractBaseEntity
         return empty($name) ? $this->getId()->jsonSerialize() : $name;
     }
 
-
     public function getOrganization(): ?string
     {
         return $this->organization;

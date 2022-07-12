@@ -3,7 +3,6 @@
 namespace App\Handler;
 
 use App\Entity\DetectionResult;
-use App\Entity\Installation;
 use App\Service\InstallationFactory;
 use App\Service\PackageVersionFactory;
 use App\Types\DetectionType;

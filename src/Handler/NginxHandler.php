@@ -3,8 +3,6 @@
 namespace App\Handler;
 
 use App\Entity\DetectionResult;
-use App\Entity\Domain;
-use App\Entity\Site;
 use App\Service\DomainFactory;
 use App\Service\SiteFactory;
 use App\Types\DetectionType;

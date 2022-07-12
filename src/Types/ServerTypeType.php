@@ -10,7 +10,7 @@ class ServerTypeType
     public const PROD = 'prod';
     public const STG = 'stg';
     public const DEVOPS = 'devops';
-    
+
     public const CHOICES = [
         'Prod' => self::PROD,
         'Stg' => self::STG,
