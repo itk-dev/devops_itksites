@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220712081714 extends AbstractMigration
+final class Version20220712201614 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -27,6 +27,7 @@ final class Version20220712081714 extends AbstractMigration
         $this->addSql('ALTER TABLE docker_image_tag_installation ADD CONSTRAINT FK_2555E2DC30E50D4B FOREIGN KEY (docker_image_tag_id) REFERENCES docker_image_tag (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE docker_image_tag_installation ADD CONSTRAINT FK_2555E2DC167B88B4 FOREIGN KEY (installation_id) REFERENCES installation (id) ON DELETE CASCADE');
         $this->addSql('CREATE INDEX type_idx ON detection_result (type)');
+        $this->addSql('ALTER TABLE installation CHANGE eof eol VARCHAR(30) NOT NULL');
         $this->addSql('CREATE UNIQUE INDEX module_version ON module_version (module_id, version)');
         $this->addSql('CREATE UNIQUE INDEX package_version ON package_version (package_id, version)');
         $this->addSql('DROP INDEX server_configfilepath_idx ON site');
@@ -43,6 +44,7 @@ final class Version20220712081714 extends AbstractMigration
         $this->addSql('DROP TABLE docker_image_tag');
         $this->addSql('DROP TABLE docker_image_tag_installation');
         $this->addSql('DROP INDEX type_idx ON detection_result');
+        $this->addSql('ALTER TABLE installation CHANGE eol eof VARCHAR(30) NOT NULL');
         $this->addSql('DROP INDEX module_version ON module_version');
         $this->addSql('DROP INDEX package_version ON package_version');
         $this->addSql('DROP INDEX server_rootDir_configFilePath_idx ON site');
