@@ -18,7 +18,7 @@ class AbstractHandlerResult extends AbstractBaseEntity
     #[ORM\JoinColumn(nullable: false)]
     private DetectionResult $detectionResult;
 
-    public function getRootDir(): ?string
+    public function getRootDir(): string
     {
         return $this->rootDir;
     }

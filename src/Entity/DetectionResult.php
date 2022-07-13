@@ -9,6 +9,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DetectionResultRepository::class)]
 #[ORM\UniqueConstraint(name: 'server_hash_idx', fields: ['server', 'hash'])]
+#[ORM\Index(columns: ['type'], name: 'type_idx')]
 #[ApiResource(
     collectionOperations: [
     'post' => ['messenger' => true, 'output' => false, 'status' => 202],
@@ -81,12 +82,12 @@ class DetectionResult extends AbstractBaseEntity
         return $this;
     }
 
-    public function getData(): ?string
+    public function getData(): string
     {
         return $this->data;
     }
 
-    public function getPrettyData(): ?string
+    public function getPrettyData(): string
     {
         try {
             $json = json_decode($this->data, false, 512, JSON_THROW_ON_ERROR);

@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ModuleVersionRepository::class)]
+#[ORM\UniqueConstraint(name: 'module_version', columns: ['module_id', 'version'])]
 class ModuleVersion extends AbstractBaseEntity
 {
     #[ORM\ManyToOne(targetEntity: Module::class, inversedBy: 'moduleVersions')]
@@ -25,12 +26,12 @@ class ModuleVersion extends AbstractBaseEntity
         $this->installations = new ArrayCollection();
     }
 
-    public function getModule(): ?Module
+    public function getModule(): Module
     {
         return $this->module;
     }
 
-    public function setModule(?Module $module): self
+    public function setModule(Module $module): self
     {
         $this->module = $module;
 

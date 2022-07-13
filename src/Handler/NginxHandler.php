@@ -3,9 +3,10 @@
 namespace App\Handler;
 
 use App\Entity\DetectionResult;
-use App\Entity\Domain;
-use App\Entity\Site;
+use App\Service\DomainFactory;
+use App\Service\SiteFactory;
 use App\Types\DetectionType;
+use App\Types\SiteType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -20,10 +21,15 @@ class NginxHandler implements DetectionResultHandlerInterface
      * DirectoryHandler constructor.
      *
      * @param EntityManagerInterface $entityManager
+     * @param SiteFactory $siteFactory
      * @param ValidatorInterface $validator
      */
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly ValidatorInterface $validator)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly SiteFactory $siteFactory,
+        private readonly DomainFactory $domainFactory,
+        private readonly ValidatorInterface $validator,
+    ) {
     }
 
     /**
@@ -31,9 +37,6 @@ class NginxHandler implements DetectionResultHandlerInterface
      */
     public function handleResult(DetectionResult $detectionResult): void
     {
-        $siteRepository = $this->entityManager->getRepository(Site::class);
-        $domainRepository = $this->entityManager->getRepository(Domain::class);
-
         try {
             $data = \json_decode($detectionResult->getData(), false, 512, JSON_THROW_ON_ERROR);
 
@@ -42,41 +45,14 @@ class NginxHandler implements DetectionResultHandlerInterface
                 return;
             }
 
-            $site = $siteRepository->findOneBy([
-                'configFilePath' => $data->config,
-                'server' => $detectionResult->getServer(),
-            ]);
-
-            if (null === $site) {
-                $site = new Site();
-            }
-
-            $domainStrings = explode(' ', $data->domain);
-            foreach ($domainStrings as $domainString) {
-                $domain = $domainRepository->findOneBy([
-                    'address' => $domainString,
-                    'site' => $site,
-                ]);
-
-                if (null === $domain) {
-                    $domain = new Domain();
-                }
-
-                $domain->setDetectionResult($detectionResult);
-                $domain->setAddress($domainString);
-                $domain->setSite($site);
-
-                $errors = $this->validator->validate($domain);
-                if (count($errors) > 0) {
-                    // @TODO log validation error
-                } else {
-                    $site->addDomain($domain);
-                }
-            }
-
+            $site = $this->siteFactory->getSite($data->config, $detectionResult);
+            $site->setDetectionResult($detectionResult);
+            $site->setType(SiteType::NGINX);
             $site->setPhpVersion($data->phpVersion);
             $site->setConfigFilePath($data->config);
-            $site->setDetectionResult($detectionResult);
+
+            $domains = $this->domainFactory->getDomains($data->domain, $site, $detectionResult);
+            $site->setDomains($domains);
 
             $errors = $this->validator->validate($site);
 

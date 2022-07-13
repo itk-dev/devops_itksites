@@ -2,25 +2,21 @@
 
 namespace App\Controller\Admin;
 
-use App\Admin\Field\RootDirField;
-use App\Admin\Field\ServerTypeField;
-use App\Admin\Field\VersionField;
-use App\Entity\DetectionResult;
-use App\Form\Type\Admin\DetectionFilter;
+use App\Entity\DockerImage;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class DetectionResultCrudController extends AbstractCrudController
+class DockerImageCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return DetectionResult::class;
+        return DockerImage::class;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -41,23 +37,18 @@ class DetectionResultCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield VersionField::new('type')->setColumns(4);
-        yield RootDirField::new('rootDir')->setColumns(12);
-        yield ServerTypeField::new('server.type')->setLabel('Type');
-        yield AssociationField::new('server');
-        yield DateTimeField::new('createdAt')->hideOnIndex();
-        yield DateTimeField::new('modifiedAt')->hideOnIndex();
-        yield DateTimeField::new('lastContact');
-        yield CodeEditorField::new('prettyData')->hideOnIndex()->setLabel('Data');
+        yield TextField::new('organization')->setColumns(6);
+        yield TextField::new('repository')->setColumns(6);
+        yield AssociationField::new('dockerImageTags')->setColumns(6);
+        yield TextField::new('description')->setColumns(12)->hideOnIndex();
+        yield DateTimeField::new('createdAt');
     }
 
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            ->add(DetectionFilter::new('type'))
-            ->add('rootDir')
-            ->add('server')
-            ->add('lastContact')
+            ->add('organization')
+            ->add('repository')
             ;
     }
 }

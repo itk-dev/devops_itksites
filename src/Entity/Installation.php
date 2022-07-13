@@ -31,19 +31,23 @@ class Installation extends AbstractHandlerResult
     private bool $lts = false;
 
     #[ORM\Column(type: 'string', length: 30)]
-    private string $eof = '';
+    private string $eol = '';
 
     #[ORM\ManyToMany(targetEntity: PackageVersion::class, mappedBy: 'installations')]
     private Collection $packageVersions;
 
     #[ORM\ManyToMany(targetEntity: ModuleVersion::class, mappedBy: 'installations')]
-    private $moduleVersions;
+    private Collection $moduleVersions;
+
+    #[ORM\ManyToMany(targetEntity: DockerImageTag::class, mappedBy: 'installations')]
+    private Collection $dockerImageTags;
 
     public function __construct()
     {
         $this->sites = new ArrayCollection();
         $this->packageVersions = new ArrayCollection();
         $this->moduleVersions = new ArrayCollection();
+        $this->dockerImageTags = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -150,14 +154,14 @@ class Installation extends AbstractHandlerResult
         return $this;
     }
 
-    public function getEof(): ?string
+    public function getEol(): ?string
     {
-        return $this->eof;
+        return $this->eol;
     }
 
-    public function setEof(string $eof): self
+    public function setEol(string $eol): self
     {
-        $this->eof = $eof;
+        $this->eol = $eol;
 
         return $this;
     }
@@ -174,7 +178,7 @@ class Installation extends AbstractHandlerResult
     {
         foreach ($this->packageVersions as $packageVersion) {
             if (!$newPackageVersions->contains($packageVersion)) {
-                $packageVersion->removeInstallation($packageVersion);
+                $packageVersion->removeInstallation($this);
                 $this->packageVersions->removeElement($packageVersion);
             }
         }
@@ -190,13 +194,29 @@ class Installation extends AbstractHandlerResult
     {
         foreach ($this->moduleVersions as $moduleVersion) {
             if (!$newModuleVersions->contains($moduleVersion)) {
-                $moduleVersion->removeInstallation($moduleVersion);
+                $moduleVersion->removeInstallation($this);
                 $this->moduleVersions->removeElement($moduleVersion);
             }
         }
 
         foreach ($newModuleVersions as $newModuleVersion) {
             $this->addModuleVersion($newModuleVersion);
+        }
+
+        return $this;
+    }
+
+    public function setDockerImageTags(Collection $newDockerImageTags): self
+    {
+        foreach ($this->dockerImageTags as $dockerImageTag) {
+            if (!$newDockerImageTags->contains($dockerImageTag)) {
+                $dockerImageTag->removeInstallation($this);
+                $this->dockerImageTags->removeElement($dockerImageTag);
+            }
+        }
+
+        foreach ($newDockerImageTags as $newDockerImageTag) {
+            $this->addDockerImageTag($newDockerImageTag);
         }
 
         return $this;
@@ -243,6 +263,33 @@ class Installation extends AbstractHandlerResult
     {
         if ($this->moduleVersions->removeElement($moduleVersion)) {
             $moduleVersion->removeInstallation($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DockerImageTag>
+     */
+    public function getDockerImageTags(): Collection
+    {
+        return $this->dockerImageTags;
+    }
+
+    public function addDockerImageTag(DockerImageTag $dockerImageTag): self
+    {
+        if (!$this->dockerImageTags->contains($dockerImageTag)) {
+            $this->dockerImageTags[] = $dockerImageTag;
+            $dockerImageTag->addInstallation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDockerImageTag(DockerImageTag $dockerImageTag): self
+    {
+        if ($this->dockerImageTags->removeElement($dockerImageTag)) {
+            $dockerImageTag->removeInstallation($this);
         }
 
         return $this;
