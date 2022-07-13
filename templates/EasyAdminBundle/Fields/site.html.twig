@@ -1,0 +1,10 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% if field.formattedValue ==  constant('App\\Types\\SiteType::NGINX') %}
+    <span class="badge badge-secondary">{{ field.formattedValue }}</span>
+{% elseif field.formattedValue ==  constant('App\\Types\\SiteType::DOCKER') %}
+    <span class="badge badge-light">{{ field.formattedValue }}</span>
+{% else %}
+    <span class="badge badge-dark">{{ field.formattedValue }}</span>
+{% endif %}

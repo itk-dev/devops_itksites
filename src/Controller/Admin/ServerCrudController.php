@@ -44,13 +44,14 @@ class ServerCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield FormField::addPanel('Provider Details');
-        yield TextField::new('name')->setColumns(8);
+        yield TextField::new('name')->setColumns(8)->setTemplatePath('EasyAdminBundle/fields/ssh_link.html.twig');
         yield TextField::new('hostingProviderName')->setColumns(4)->hideOnIndex();
-        yield TextField::new('apiKey')->setColumns(8)->setFormTypeOptions(['disabled' => 'true'])->onlyOnDetail();
-        yield ChoiceField::new('hostingProvider')->setChoices(HostingProviderType::CHOICES)->setColumns(4);
+        yield ChoiceField::new('type')->setChoices(ServerTypeType::CHOICES)->renderExpanded()->setColumns(8)->setTemplatePath('EasyAdminBundle/fields/server.html.twig');
+        yield ChoiceField::new('hostingProvider')->setChoices(HostingProviderType::CHOICES)->setColumns(4)->setTemplatePath('EasyAdminBundle/fields/hosting_provider.html.twig')->setLabel('Host. Pro.');
+        yield TextField::new('apiKey')->setColumns(8)->setFormTypeOptions(['disabled' => 'true'])->onlyOnDetail()->setTemplatePath('EasyAdminBundle/fields/code.html.twig');
         yield FormField::addPanel('Network');
-        yield TextField::new('internalIp')->setColumns(6);
-        yield TextField::new('externalIp')->setColumns(6);
+        yield TextField::new('internalIp')->setColumns(6)->setTemplatePath('EasyAdminBundle/fields/code.html.twig');
+        yield TextField::new('externalIp')->setColumns(6)->setTemplatePath('EasyAdminBundle/fields/code.html.twig');
         yield FormField::addPanel('Options');
         yield BooleanField::new('aarhusSsl')->setColumns(3)->hideOnIndex();
         yield BooleanField::new('letsEncryptSsl')->setColumns(3)->hideOnIndex();
@@ -58,10 +59,9 @@ class ServerCrudController extends AbstractCrudController
         yield BooleanField::new('azureBackup')->setColumns(2)->hideOnIndex();
         yield BooleanField::new('monitoring')->setColumns(2)->hideOnIndex();
         yield FormField::addPanel('System Details');
-        yield ChoiceField::new('databaseVersion')->setChoices(DatabaseVersionType::CHOICES)->renderExpanded()->setColumns(6);
-        yield ChoiceField::new('system')->setChoices(SystemType::CHOICES)->renderExpanded()->setColumns(6);
+        yield ChoiceField::new('databaseVersion')->setChoices(DatabaseVersionType::CHOICES)->renderExpanded()->setColumns(6)->setTemplatePath('EasyAdminBundle/fields/db_version.html.twig')->setLabel('DB ver.');
+        yield ChoiceField::new('system')->setChoices(SystemType::CHOICES)->renderExpanded()->setColumns(6)->setTemplatePath('EasyAdminBundle/fields/version.html.twig');
         yield FormField::addPanel('Miscellaneous');
-        yield ChoiceField::new('type')->setChoices(ServerTypeType::CHOICES)->renderExpanded()->setColumns(6);
         yield TextField::new('serviceDeskTicket')->setColumns(12)->hideOnIndex();
         yield TextareaField::new('note')->hideOnIndex()->setColumns(6);
         yield TextareaField::new('usedFor')->hideOnIndex()->setColumns(6);

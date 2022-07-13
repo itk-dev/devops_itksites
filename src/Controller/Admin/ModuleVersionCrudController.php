@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\VersionField;
 use App\Entity\ModuleVersion;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -9,7 +10,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ModuleVersionCrudController extends AbstractCrudController
 {
@@ -37,7 +37,7 @@ class ModuleVersionCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield AssociationField::new('module')->setColumns(6);
-        yield TextField::new('version')->setColumns(6);
+        yield VersionField::new('version')->setColumns(6);
         yield AssociationField::new('installations')->setColumns(6);
     }
 

@@ -1,0 +1,12 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{# NOTE: the rel="noopener" attr is needed to avoid performance and security issues
+  (see https://web.dev/external-anchors-use-rel-noopener/) #}
+{% if field.formattedValue == 'unknown' %}
+    <span class="badge badge-secondary">?</span>
+{% elseif ea.crud.currentAction == 'detail' %}
+    <a target="_blank" rel="noopener" href="https://{{ field.value }}">{{ field.value }}</a>
+{% else %}
+    <a target="_blank" rel="noopener" href="https://{{ field.value }}">{{ field.formattedValue }}</a>
+{% endif %}
