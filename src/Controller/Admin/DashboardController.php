@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\DetectionResult;
 use App\Entity\Domain;
 use App\Entity\Git;
+use App\Entity\GitRemote;
 use App\Entity\Installation;
 use App\Entity\Module;
 use App\Entity\ModuleVersion;
@@ -53,6 +54,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Servers', 'fas fa-server', Server::class);
         yield MenuItem::linkToCrud('Detection Results', 'fas fa-upload', DetectionResult::class);
         yield MenuItem::linkToCrud('Git', 'fas fa-folder', Git::class);
+        yield MenuItem::linkToCrud('Git Remote', 'fas fa-folder', GitRemote::class);
         yield MenuItem::linkToCrud('Packages', 'fas fa-cube', Package::class);
         yield MenuItem::linkToCrud('Package Versions', 'fas fa-cubes', PackageVersion::class);
         yield MenuItem::linkToCrud('Modules', 'fas fa-cube', Module::class);

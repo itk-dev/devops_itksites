@@ -100,9 +100,6 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "apply-coding-standards": [
-            "vendor/bin/php-cs-fixer fix"
-        ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"

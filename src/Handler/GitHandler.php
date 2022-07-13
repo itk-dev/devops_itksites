@@ -4,8 +4,7 @@ namespace App\Handler;
 
 use App\Entity\DetectionResult;
 use App\Entity\Git;
-// use App\Entity\Installation;
-// use App\Entity\Site;
+use App\Entity\GitRemote;
 use App\Types\DetectionType;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -29,6 +28,7 @@ class GitHandler implements DetectionResultHandlerInterface
     public function handleResult(DetectionResult $detectionResult): void
     {
         $gitRepository = $this->entityManager->getRepository(Git::class);
+        $gitRemoteRepository = $this->entityManager->getRepository(GitRemote::class);
 
         $git = $gitRepository->findOneBy([
             'rootDir' => $detectionResult->getRootDir(),
@@ -44,24 +44,27 @@ class GitHandler implements DetectionResultHandlerInterface
 
         try {
             $data = \json_decode($detectionResult->getData(), false, 512, JSON_THROW_ON_ERROR);
-            if (isset($data->remotes)) {
-                switch (count($data->remotes)) {
-                    case 0:
-                        $git->setRemote('');
-                        break;
-                    case 1:
-                        $git->setRemote($data->remotes[0]);
-                        break;
-                    default:
-                        1;
-                        // @TODO sker det?
+
+            $git->clearRemotes();
+            foreach ($data->remotes as $remote) {
+                $gitRemote = $gitRemoteRepository->findOneBy([
+                    'url' => $remote,
+                ]);
+
+                if (null === $gitRemote) {
+                    $gitRemote = new GitRemote($remote);
+                    $this->entityManager->persist($gitRemote);
+                    $gitRemote->setUrl($remote);
                 }
+
+                $git->addRemote($gitRemote);
             }
             if (isset($data->tag)) {
                 $git->setTag($data->tag);
             }
             if (isset($data->changes)) {
                 $git->setChanges(join("\n", $data->changes));
+                $git->setChangesCount(count($data->changes));
             }
         } catch (\JsonException $e) {
             // @TODO log exceptions
