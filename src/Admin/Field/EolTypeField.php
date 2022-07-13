@@ -18,6 +18,6 @@ class EolTypeField implements FieldInterface
             ->setFormattedValue('test')
 
             // this template is used in 'index' and 'detail' pages
-            ->setTemplatePath('EasyAdminBundle/fields/eol.html.twig');
+            ->setTemplatePath('EasyAdminBundle/Fields/eol.html.twig');
     }
 }

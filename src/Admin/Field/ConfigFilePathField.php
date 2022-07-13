@@ -16,6 +16,6 @@ class ConfigFilePathField implements FieldInterface
             ->setLabel($label)
 
             // this template is used in 'index' and 'detail' pages
-            ->setTemplatePath('EasyAdminBundle/fields/config_file_path.html.twig');
+            ->setTemplatePath('EasyAdminBundle/Fields/config_file_path.html.twig');
     }
 }

@@ -18,6 +18,6 @@ class DomainField implements FieldInterface
             ->setFormattedValue('test')
 
             // this template is used in 'index' and 'detail' pages
-            ->setTemplatePath('EasyAdminBundle/fields/domain.html.twig');
+            ->setTemplatePath('EasyAdminBundle/Fields/domain.html.twig');
     }
 }

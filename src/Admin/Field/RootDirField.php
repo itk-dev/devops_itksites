@@ -16,6 +16,6 @@ class RootDirField implements FieldInterface
             ->setLabel($label)
 
             // this template is used in 'index' and 'detail' pages
-            ->setTemplatePath('EasyAdminBundle/fields/root_dir.html.twig');
+            ->setTemplatePath('EasyAdminBundle/Fields/root_dir.html.twig');
     }
 }

@@ -16,6 +16,6 @@ class VersionField implements FieldInterface
             ->setLabel($label)
 
             // this template is used in 'index' and 'detail' pages
-            ->setTemplatePath('EasyAdminBundle/fields/version.html.twig');
+            ->setTemplatePath('EasyAdminBundle/Fields/version.html.twig');
     }
 }

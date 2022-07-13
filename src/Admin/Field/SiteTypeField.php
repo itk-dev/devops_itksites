@@ -16,6 +16,6 @@ class SiteTypeField implements FieldInterface
             ->setLabel($label)
 
             // this template is used in 'index' and 'detail' pages
-            ->setTemplatePath('EasyAdminBundle/fields/site.html.twig');
+            ->setTemplatePath('EasyAdminBundle/Fields/site.html.twig');
     }
 }
