@@ -1,4 +1,4 @@
-# itk-version: 1.0.1
+# itk-version: 2.0.1
 version: "3"
 
 networks:
@@ -14,6 +14,8 @@ services:
     restart: unless-stopped
     networks:
       - app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       - PHP_MAX_EXECUTION_TIME=30
       - PHP_MEMORY_LIMIT=128M
@@ -44,7 +46,7 @@ services:
 
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-admin.rule=Host(`${COMPOSE_SERVER_DOMAIN}`) && PathPrefix(`/admin`)"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-admin.entrypoints=websecure"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-admin.middlewares=ITKBasicAuth@file"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-admin.middlewares=myDashAuth@file"
 
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${COMPOSE_SERVER_DOMAIN}`)"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=websecure"
