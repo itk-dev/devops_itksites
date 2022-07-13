@@ -2,6 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\RootDirField;
+use App\Admin\Field\ServerTypeField;
+use App\Admin\Field\VersionField;
 use App\Entity\DetectionResult;
 use App\Form\Type\Admin\DetectionFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -12,7 +15,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class DetectionResultCrudController extends AbstractCrudController
 {
@@ -39,8 +41,9 @@ class DetectionResultCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('type')->setColumns(4);
-        yield TextField::new('rootDir')->setColumns(12);
+        yield VersionField::new('type')->setColumns(4);
+        yield RootDirField::new('rootDir')->setColumns(12);
+        yield ServerTypeField::new('server.type')->setLabel('Type');
         yield AssociationField::new('server');
         yield DateTimeField::new('createdAt')->hideOnIndex();
         yield DateTimeField::new('modifiedAt')->hideOnIndex();

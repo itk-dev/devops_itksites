@@ -32,8 +32,10 @@ class ReplayDetectionResultsCommand extends Command
      * @param EntityManagerInterface $entityManager
      * @param MessageBusInterface    $messageBus
      */
-    public function __construct(private EntityManagerInterface $entityManager, private MessageBusInterface $messageBus)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly MessageBusInterface $messageBus,
+    ) {
         parent::__construct();
     }
 
@@ -79,6 +81,7 @@ class ReplayDetectionResultsCommand extends Command
         $context = $this->contextBuilder();
 
         $progressBar = new ProgressBar($output);
+        $progressBar->setFormat('debug_nomax');
 
         foreach ($progressBar->iterate($iterable) as $result) {
             $this->handle($result, $context);

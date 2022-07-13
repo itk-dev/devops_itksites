@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\DetectionResult;
+use App\Entity\DockerImage;
+use App\Entity\DockerImageTag;
 use App\Entity\Domain;
 use App\Entity\Git;
 use App\Entity\GitRemote;
@@ -48,17 +50,21 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToCrud('Servers', 'fas fa-server', Server::class);
         yield MenuItem::linkToCrud('Installations', 'fas fa-folder', Installation::class);
         yield MenuItem::linkToCrud('Sites', 'fas fa-bookmark', Site::class);
         yield MenuItem::linkToCrud('Domains', 'fas fa-link', Domain::class);
-        yield MenuItem::linkToCrud('Servers', 'fas fa-server', Server::class);
-        yield MenuItem::linkToCrud('Detection Results', 'fas fa-upload', DetectionResult::class);
-        yield MenuItem::linkToCrud('Git', 'fas fa-folder', Git::class);
-        yield MenuItem::linkToCrud('Git Remote', 'fas fa-folder', GitRemote::class);
+        yield MenuItem::section('Dependencies');
         yield MenuItem::linkToCrud('Packages', 'fas fa-cube', Package::class);
         yield MenuItem::linkToCrud('Package Versions', 'fas fa-cubes', PackageVersion::class);
         yield MenuItem::linkToCrud('Modules', 'fas fa-cube', Module::class);
         yield MenuItem::linkToCrud('Modules Versions', 'fas fa-cubes', ModuleVersion::class);
+        yield MenuItem::linkToCrud('Docker Images', 'fas fa-cube', DockerImage::class);
+        yield MenuItem::linkToCrud('Docker Image Tags', 'fas fa-cubes', DockerImageTag::class);
+        yield MenuItem::linkToCrud('Git', 'fas fa-folder', Git::class);
+        yield MenuItem::linkToCrud('Git Remote', 'fas fa-folder', GitRemote::class);
+        yield MenuItem::section('Results');
+        yield MenuItem::linkToCrud('Detection Results', 'fas fa-upload', DetectionResult::class);
     }
 
     public function configureCrud(): Crud

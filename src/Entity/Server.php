@@ -56,28 +56,28 @@ class Server extends AbstractBaseEntity implements UserInterface
     private $databaseVersion;
 
     #[ORM\Column(type: 'string', length: 15)]
-    private $system;
+    private string $system;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private $note;
+    private ?string $note;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $serviceDeskTicket;
+    private ?string $serviceDeskTicket;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $usedFor;
+    private ?string $usedFor;
 
     #[ORM\OneToMany(mappedBy: 'server', targetEntity: DetectionResult::class, orphanRemoval: true)]
-    private $detectionResults;
+    private Collection $detectionResults;
 
     #[ORM\Column(type: 'string', length: 25)]
-    private $hostingProvider;
+    private string $hostingProvider;
 
     #[ORM\OneToMany(mappedBy: 'server', targetEntity: Installation::class, orphanRemoval: true)]
-    private $installations;
+    private Collection $installations;
 
     #[ORM\Column(type: 'string', length: 10)]
-    private $type;
+    private string $type;
 
     /**
      * @throws \Exception
@@ -91,7 +91,7 @@ class Server extends AbstractBaseEntity implements UserInterface
 
     public function __toString(): string
     {
-        return $this->getName().' ['.$this->type.']';
+        return $this->getName();
     }
 
     public function getRoles(): array

@@ -40,12 +40,12 @@ class Domain extends AbstractHandlerResult
         return $this;
     }
 
-    public function getSite(): ?Site
+    public function getSite(): Site
     {
         return $this->site;
     }
 
-    public function setSite(?Site $site): self
+    public function setSite(Site $site): self
     {
         $this->site = $site;
 

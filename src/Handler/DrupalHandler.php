@@ -3,7 +3,7 @@
 namespace App\Handler;
 
 use App\Entity\DetectionResult;
-use App\Entity\Installation;
+use App\Service\InstallationFactory;
 use App\Service\ModuleVersionFactory;
 use App\Service\PackageVersionFactory;
 use App\Types\DetectionType;
@@ -19,10 +19,13 @@ class DrupalHandler implements DetectionResultHandlerInterface
      * DirectoryHandler constructor.
      *
      * @param EntityManagerInterface $entityManager
+     * @param InstallationFactory $installationFactory
      * @param PackageVersionFactory $packageVersionFactory
+     * @param ModuleVersionFactory $moduleVersionFactory
      */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly InstallationFactory $installationFactory,
         private readonly PackageVersionFactory $packageVersionFactory,
         private readonly ModuleVersionFactory $moduleVersionFactory
     ) {
@@ -33,22 +36,20 @@ class DrupalHandler implements DetectionResultHandlerInterface
      */
     public function handleResult(DetectionResult $detectionResult): void
     {
-        $installationRepository = $this->entityManager->getRepository(Installation::class);
-
         try {
             $data = \json_decode($detectionResult->getData(), false, 512, JSON_THROW_ON_ERROR);
 
-            $installation = $installationRepository->findByRootDirAndServer($detectionResult->getRootDir(), $detectionResult->getServer());
+            $installation = $this->installationFactory->getInstallation($detectionResult);
 
-            $installation?->setComposerVersion($data->composerVersion);
-            $installation?->setFrameworkVersion($data->version);
-            $installation?->setType(FrameworkTypes::DRUPAL);
+            $installation->setComposerVersion($data->composerVersion);
+            $installation->setFrameworkVersion($data->version);
+            $installation->setType(FrameworkTypes::DRUPAL);
 
-            if (null !== $installation && isset($data->packages->installed)) {
+            if (isset($data->packages->installed)) {
                 $this->packageVersionFactory->setPackageVersions($installation, $data->packages->installed);
             }
 
-            if (null !== $installation && isset($data->modules)) {
+            if (isset($data->modules)) {
                 $this->moduleVersionFactory->setModuleVersions($installation, $data->modules);
             }
 

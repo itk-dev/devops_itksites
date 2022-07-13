@@ -7,9 +7,13 @@ namespace App\Types;
  */
 class HostingProviderType
 {
+    public const AZURE = 'Azure';
+    public const DBC = 'DBC';
+    public const IT_RELATION = 'It Relation';
+
     public const CHOICES = [
-        'Azure' => 'Azure',
-        'DBC' => 'DBC',
-        'IT Relation' => 'It Relation',
+        'Azure' => self::AZURE,
+        'DBC' => self::DBC,
+        'IT Relation' => self::IT_RELATION,
     ];
 }
