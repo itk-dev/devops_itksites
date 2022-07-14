@@ -36,7 +36,7 @@ class DetectionResult extends AbstractBaseEntity
     private string $data = '';
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
-    private $hash;
+    private string $hash;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $lastContact;
