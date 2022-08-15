@@ -1,0 +1,14 @@
+#App\Entity\Domain:
+#  domain_{1..10}:
+#    address: test
+#    rootDir: test2
+#    server: '@server*'
+#    DetectionResult: 
+
+App\Entity\DetectionResult:
+    detection_result_{1..10}:
+      rootDir: Test2
+      server: '@server*'
+      hash: <password(40, 255)>
+
+       
