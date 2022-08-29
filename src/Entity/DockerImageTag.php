@@ -29,6 +29,11 @@ class DockerImageTag extends AbstractBaseEntity
         $this->installations = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->dockerImage.':'.$this->getTag();
+    }
+
     /**
      * @return Collection<int, Installation>
      */

@@ -46,22 +46,29 @@ class GitHandler implements DetectionResultHandlerInterface
             $data = \json_decode($detectionResult->getData(), false, 512, JSON_THROW_ON_ERROR);
 
             $git->clearRemotes();
+            $this->entityManager->flush();
             foreach ($data->remotes as $remote) {
+                $this->entityManager->flush();
                 $gitRemote = $gitRemoteRepository->findOneBy([
                     'url' => $remote,
                 ]);
 
                 if (null === $gitRemote) {
                     $gitRemote = new GitRemote($remote);
-                    $this->entityManager->persist($gitRemote);
-                    $gitRemote->setUrl($remote);
+                    try {
+                        $this->entityManager->persist($gitRemote);
+                        $gitRemote->setUrl($remote);
+                    } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
+                        var_dump($e);
+                        continue;
+                    } catch (\Exception $e) {
+                        var_dump($e);
+                    }
                 }
-
                 $git->addRemote($gitRemote);
             }
-            if (isset($data->tag)) {
-                $git->setTag($data->tag);
-            }
+            $tag = (isset($data->tag) && '' !== $data->tag) ? $data->tag : 'unknown';
+            $git->setTag($tag);
             if (isset($data->changes)) {
                 $git->setChanges(join("\n", $data->changes));
                 $git->setChangesCount(count($data->changes));

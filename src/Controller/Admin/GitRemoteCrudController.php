@@ -20,7 +20,9 @@ class GitRemoteCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
-        return $crud->showEntityActionsInlined();
+        return $crud->showEntityActionsInlined()
+            ->setDefaultSort(['url' => 'ASC'])
+            ;
     }
 
     public function configureActions(Actions $actions): Actions

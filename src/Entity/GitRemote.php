@@ -13,7 +13,7 @@ class GitRemote extends AbstractBaseEntity
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     private $url;
 
-    #[ORM\ManyToMany(targetEntity: Git::class, mappedBy: 'remotes')]
+    #[ORM\ManyToMany(targetEntity: Git::class, mappedBy: 'remotes', orphanRemoval: true, cascade: ['persist'])]
     private $gits;
 
     public function __construct($url)
@@ -24,7 +24,7 @@ class GitRemote extends AbstractBaseEntity
 
     public function __toString(): string
     {
-        return '"'.$this->getUrl().'"';
+        return $this->getUrl();
     }
 
     public function getUrl(): ?string

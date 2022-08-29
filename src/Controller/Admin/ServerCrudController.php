@@ -46,7 +46,7 @@ class ServerCrudController extends AbstractCrudController
         yield FormField::addPanel('Provider Details');
         yield TextField::new('name')->setColumns(8)->setTemplatePath('EasyAdminBundle/Fields/ssh_link.html.twig');
         yield TextField::new('hostingProviderName')->setColumns(4)->hideOnIndex();
-        yield ChoiceField::new('type')->setChoices(ServerTypeType::CHOICES)->renderExpanded()->setColumns(8)->setTemplatePath('EasyAdminBundle/Fields/server.html.twig');
+        yield ChoiceField::new('type')->setChoices(ServerTypeType::CHOICES)->renderExpanded()->setColumns(8)->setTemplatePath('EasyAdminBundle/Fields/server_type.html.twig');
         yield ChoiceField::new('hostingProvider')->setChoices(HostingProviderType::CHOICES)->setColumns(4)->setTemplatePath('EasyAdminBundle/Fields/hosting_provider.html.twig')->setLabel('Host. Pro.');
         yield TextField::new('apiKey')->setColumns(8)->setFormTypeOptions(['disabled' => 'true'])->onlyOnDetail()->setTemplatePath('EasyAdminBundle/Fields/code.html.twig');
         yield FormField::addPanel('Network');

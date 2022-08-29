@@ -6,6 +6,7 @@ use App\Repository\ModuleVersionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 #[ORM\Entity(repositoryClass: ModuleVersionRepository::class)]
 #[ORM\UniqueConstraint(name: 'module_version', columns: ['module_id', 'version'])]
@@ -20,6 +21,25 @@ class ModuleVersion extends AbstractBaseEntity
 
     #[ORM\ManyToMany(targetEntity: Installation::class, inversedBy: 'moduleVersions')]
     private Collection $installations;
+
+    public function __toString(): string
+    {
+        return $this->getVersion();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function display(int $style): string
+    {
+        switch ($style) {
+            case 0:
+                return $this->getVersion();
+            case 1:
+                return $this->getModule().':'.$this->getVersion();
+        }
+        throw new Exception('Unknown style');
+    }
 
     public function __construct()
     {
@@ -38,9 +58,9 @@ class ModuleVersion extends AbstractBaseEntity
         return $this;
     }
 
-    public function getVersion(): ?string
+    public function getVersion(): string
     {
-        return $this->version;
+        return $this->version ?? 'Unknown';
     }
 
     public function setVersion(?string $version): self

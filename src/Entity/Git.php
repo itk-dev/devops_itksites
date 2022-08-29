@@ -20,8 +20,13 @@ class Git extends AbstractHandlerResult
     #[ORM\Column(type: 'integer')]
     private int $changesCount = 0;
 
-    #[ORM\ManyToMany(targetEntity: GitRemote::class, inversedBy: 'gits')]
+    #[ORM\ManyToMany(targetEntity: GitRemote::class, inversedBy: 'gits', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private $remotes;
+
+    public function __toString(): string
+    {
+        return $this->getServer().':'.$this->getRootDir();
+    }
 
     public function __construct()
     {

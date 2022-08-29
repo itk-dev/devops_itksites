@@ -2,6 +2,8 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\RootDirField;
+use App\Admin\Field\ServerTypeField;
 use App\Entity\Git;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -10,7 +12,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -23,7 +24,10 @@ class GitCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
-        return $crud->showEntityActionsInlined();
+        return $crud
+            ->showEntityActionsInlined()
+            ->setDefaultSort(['server.name' => 'ASC', 'rootDir' => 'ASC'])
+            ;
     }
 
     public function configureActions(Actions $actions): Actions
@@ -39,14 +43,14 @@ class GitCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield AssociationField::new('server')->setColumns(6);
-        yield TextField::new('rootDir')->setColumns(12);
-        yield AssociationField::new('remotes')->setColumns(1)->setCrudController(GitRemoteCrudController::class)->autocomplete();
-        yield TextField::new('tag')->setColumns(2);
-        yield FormField::addRow();
-        yield IntegerField::new('changesCount')->setColumns(1);
-        yield TextField::new('changes')->setColumns(1)->hideOnIndex();
-        yield DateTimeField::new('createdAt');
+        yield AssociationField::new('server');
+        yield ServerTypeField::new('server.type')->setLabel('Type');
+        yield RootDirField::new('rootDir');
+        yield AssociationField::new('remotes')->setSortable(false);
+        yield TextField::new('tag');
+        yield IntegerField::new('changesCount', 'Changes');
+        yield TextField::new('changes')->hideOnIndex();
+        yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -54,6 +58,7 @@ class GitCrudController extends AbstractCrudController
         return $filters
             ->add('server')
             ->add('rootDir')
+            ->add('remotes')
             ->add('tag')
             ->add('changesCount')
             ;

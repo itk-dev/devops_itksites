@@ -44,7 +44,7 @@ class ReplayDetectionResultsCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $detectionResults = $this->entityManager->createQueryBuilder()
+        $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('r')
             ->from('App\Entity\DetectionResult', 'r')
             ->orderBy('r.id', 'ASC');
@@ -63,7 +63,7 @@ class ReplayDetectionResultsCommand extends Command
                 $output->writeln('You have just selected: '.$type);
             }
             if (in_array($type, DetectionType::CHOICES)) {
-                $detectionResults
+                $queryBuilder
                     ->where('r.type = ?1')
                     ->setParameter(1, $type);
             } else {
@@ -74,8 +74,8 @@ class ReplayDetectionResultsCommand extends Command
         }
 
         $iterable = SimpleBatchIteratorAggregate::fromQuery(
-            $detectionResults->getQuery(),
-            10 // flush/clear after 100 iterations
+            $queryBuilder->getQuery(),
+            10 // flush/clear after 10 iterations
         );
 
         $context = $this->contextBuilder();
