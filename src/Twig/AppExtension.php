@@ -23,17 +23,17 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFunction('admin_detail_url', [$this, 'url']),
-            new TwigFunction('entity_display', [$this, 'entity_display']),
-            new TwigFunction('has_display', [$this, 'has_display']),
+            new TwigFunction('entity_display', [$this, 'entityDisplay']),
+            new TwigFunction('has_display', [$this, 'hasDisplay']),
         ];
     }
 
-    public function has_display(AbstractBaseEntity $entity): bool
+    public function hasDisplay(AbstractBaseEntity $entity): bool
     {
         return method_exists($entity, 'display');
     }
 
-    public function entity_display(AbstractBaseEntity $entity, string $action): string
+    public function entityDisplay(AbstractBaseEntity $entity, string $action): string
     {
         if (method_exists($entity, 'display')) {
             if ('detail' == $action) {
