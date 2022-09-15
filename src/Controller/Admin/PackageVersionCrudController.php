@@ -54,6 +54,6 @@ class PackageVersionCrudController extends AbstractCrudController
             ->add('version')
             ->add('latest')
             ->add('latestStatus')
-            ;
+        ;
     }
 }

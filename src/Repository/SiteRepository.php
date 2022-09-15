@@ -29,7 +29,7 @@ class SiteRepository extends ServiceEntityRepository
             ->setParameter('server', $server->getId()->toBinary())
             ->getQuery()
             ->getResult()
-            ;
+        ;
     }
 
     // /**

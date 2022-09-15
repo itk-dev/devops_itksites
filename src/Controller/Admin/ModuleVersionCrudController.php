@@ -46,6 +46,6 @@ class ModuleVersionCrudController extends AbstractCrudController
         return $filters
             ->add('module')
             ->add('version')
-            ;
+        ;
     }
 }

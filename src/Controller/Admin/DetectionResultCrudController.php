@@ -58,6 +58,6 @@ class DetectionResultCrudController extends AbstractCrudController
             ->add('rootDir')
             ->add('server')
             ->add('lastContact')
-            ;
+        ;
     }
 }

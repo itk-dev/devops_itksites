@@ -48,6 +48,6 @@ class DockerImageTagCrudController extends AbstractCrudController
         return $filters
             ->add('dockerImage')
             ->add('tag')
-            ;
+        ;
     }
 }
