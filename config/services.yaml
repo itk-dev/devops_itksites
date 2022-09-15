@@ -22,3 +22,13 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    _instanceof:
+        App\Handler\DetectionResultHandlerInterface:
+            tags: [ app.handler.detection_result_handler ]
+
+    App\Handler\DetectionResultHandler:
+        arguments:
+            - !tagged_iterator app.handler.detection_result_handler
+
+    App\DataPersister\DetectionResultDataPersister: ~

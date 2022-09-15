@@ -5,14 +5,30 @@ security:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory: { memory: null }
+        app_server_provider:
+            entity:
+                class: App\Entity\Server
+                property: apiKey
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        api:
+            pattern: ^/api
+            custom_authenticators:
+                - App\Security\ApiKeyAuthenticator
+
         main:
-            lazy: true
-            provider: users_in_memory
+            custom_authenticators:
+                - App\Security\AzureOIDCAuthenticator
+                - ItkDev\OpenIdConnectBundle\Security\CliLoginTokenAuthenticator
+            entry_point: App\Security\AzureOIDCAuthenticator
+            logout:
+                path: /logout
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -23,7 +39,9 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/api/docs, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: ROLE_SERVER }
+        - { path: ^/admin, roles: ROLE_ADMIN  }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

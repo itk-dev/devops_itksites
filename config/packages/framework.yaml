@@ -4,6 +4,8 @@ framework:
     #csrf_protection: true
     http_method_override: false
 
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
     session:
@@ -11,6 +13,9 @@ framework:
         cookie_secure: auto
         cookie_samesite: lax
         storage_factory_id: session.storage.factory.native
+
+    router:
+        default_uri: '%env(string:DEFAULT_URI)%'
 
     #esi: true
     #fragments: true
