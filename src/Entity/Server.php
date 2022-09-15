@@ -85,7 +85,7 @@ class Server extends AbstractBaseEntity implements UserInterface
     public function __construct()
     {
         $this->detectionResults = new ArrayCollection();
-        $this->apiKey = (sha1(\random_bytes(40)));
+        $this->apiKey = sha1(\random_bytes(40));
         $this->installations = new ArrayCollection();
     }
 

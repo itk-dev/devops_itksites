@@ -35,7 +35,7 @@ class DomainCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_INDEX, Action::DELETE)
             ->remove(Crud::PAGE_DETAIL, Action::EDIT)
             ->remove(Crud::PAGE_DETAIL, Action::DELETE)
-            ;
+        ;
     }
 
     public function configureFields(string $pageName): iterable
@@ -56,6 +56,6 @@ class DomainCrudController extends AbstractCrudController
             ->add('address')
             ->add('site')
             ->add('server')
-            ;
+        ;
     }
 }

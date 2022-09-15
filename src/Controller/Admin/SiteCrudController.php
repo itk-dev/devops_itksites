@@ -62,6 +62,6 @@ class SiteCrudController extends AbstractCrudController
             ->add('configFilePath')
             ->add('phpVersion')
             ->add('server')
-            ;
+        ;
     }
 }

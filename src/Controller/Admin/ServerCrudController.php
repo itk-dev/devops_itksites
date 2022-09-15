@@ -21,9 +21,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ServerCrudController extends AbstractCrudController
 {
+    public function __construct(
+        private readonly RequestStack $requestStack
+    ) {
+    }
+
     public static function getEntityFqcn(): string
     {
         return Server::class;
@@ -31,14 +37,20 @@ class ServerCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
-        return $crud->showEntityActionsInlined();
+        if ($this->requestStack->getSession()->remove('confetti')) {
+            $crud->overrideTemplate('layout', 'EasyAdminBundle/layout.html.twig');
+        }
+
+        $crud->showEntityActionsInlined();
+
+        return $crud;
     }
 
     public function configureActions(Actions $actions): Actions
     {
         return $actions
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ;
+        ;
     }
 
     public function configureFields(string $pageName): iterable
@@ -75,6 +87,6 @@ class ServerCrudController extends AbstractCrudController
             ->add(MariaDbVersionFilter::new('databaseVersion'))
             ->add(ServerTypeFilter::new('type'))
             ->add(SystemFilter::new('system'))
-            ;
+        ;
     }
 }
