@@ -6,6 +6,8 @@ use App\Entity\DetectionResult;
 use App\Entity\DockerImage;
 use App\Entity\DockerImageTag;
 use App\Entity\Domain;
+use App\Entity\Git;
+use App\Entity\GitRemote;
 use App\Entity\Installation;
 use App\Entity\Module;
 use App\Entity\ModuleVersion;
@@ -59,6 +61,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Modules Versions', 'fas fa-cubes', ModuleVersion::class);
         yield MenuItem::linkToCrud('Docker Images', 'fas fa-cube', DockerImage::class);
         yield MenuItem::linkToCrud('Docker Image Tags', 'fas fa-cubes', DockerImageTag::class);
+        yield MenuItem::linkToCrud('Git', 'fa-brands fa-git-alt', Git::class);
+        yield MenuItem::linkToCrud('Git Remote', 'fa-brands fa-github', GitRemote::class);
         yield MenuItem::section('Results');
         yield MenuItem::linkToCrud('Detection Results', 'fas fa-upload', DetectionResult::class);
     }
@@ -68,6 +72,8 @@ class DashboardController extends AbstractDashboardController
         return Crud::new()
             // this defines the pagination size for all CRUD controllers
             // (each CRUD controller can override this value if needed)
-            ->setDateTimeFormat('yyyy-MM-dd HH:mm:ss');
+            ->setDateTimeFormat('yyyy-MM-dd HH:mm:ss')
+            ->setPageTitle('detail', '%entity_label_singular%: %entity_as_string%')
+            ;
     }
 }

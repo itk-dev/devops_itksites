@@ -13,6 +13,7 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
@@ -43,15 +44,26 @@ class ReplayDetectionResultsCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $detectionResults = $this->entityManager->createQueryBuilder()
+        $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('r')
             ->from('App\Entity\DetectionResult', 'r')
             ->orderBy('r.id', 'ASC');
 
         $type = $input->getOption('type');
-        if ($type) {
+        if (false !== $type) { // option passed
+            if (null === $type) { // option passed but no value specified
+                $helper = $this->getHelper('question');
+                $question = new ChoiceQuestion(
+                    'Select type to replay ',
+                    array_flip(DetectionType::CHOICES),
+                );
+                $question->setErrorMessage('Type %s is invalid.');
+
+                $type = $helper->ask($input, $output, $question);
+                $output->writeln('You have just selected: '.$type);
+            }
             if (in_array($type, DetectionType::CHOICES)) {
-                $detectionResults
+                $queryBuilder
                     ->where('r.type = ?1')
                     ->setParameter(1, $type);
             } else {
@@ -62,8 +74,8 @@ class ReplayDetectionResultsCommand extends Command
         }
 
         $iterable = SimpleBatchIteratorAggregate::fromQuery(
-            $detectionResults->getQuery(),
-            10 // flush/clear after 100 iterations
+            $queryBuilder->getQuery(),
+            10 // flush/clear after 10 iterations
         );
 
         $context = $this->contextBuilder();
@@ -143,11 +155,10 @@ class ReplayDetectionResultsCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addOption(
-                'type',
+            ->addOption('type',
                 't',
-                InputOption::VALUE_REQUIRED,
-                'Limit replay to this type. Options are ['.join(', ', DetectionType::CHOICES).']'
-            );
+                InputOption::VALUE_OPTIONAL,
+                'Limit replay to this type. Options are ['.join(', ', DetectionType::CHOICES).']',
+                false);
     }
 }

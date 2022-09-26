@@ -17,7 +17,7 @@ class ServerTypeField implements FieldInterface
             ->setLabel($label)
 
             // this template is used in 'index' and 'detail' pages
-            ->setTemplatePath('EasyAdminBundle/Fields/server.html.twig')
+            ->setTemplatePath('EasyAdminBundle/Fields/server_type.html.twig')
 
             // this is used in 'edit' and 'new' pages to edit the field contents
             // you can use your own form types too
