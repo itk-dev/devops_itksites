@@ -1,0 +1,22 @@
+itkdev_openid_connect:
+  cache_options:
+    cache_pool: 'cache.app' # Cache item pool for caching discovery document and CLI login tokens
+  cli_login_options:
+    route: '%env(OIDC_CLI_LOGIN_ROUTE)%' # Route for CLI login
+  user_provider: 'security.user.provider.concrete.app_user_provider'
+  openid_providers:
+    # Define one or more providers
+    # [providerKey]:
+    #   options:
+    #     metadata_url: …
+    #     …
+    azure_az:
+      options:
+        metadata_url: '%env(string:AZURE_AZ_OIDC_METADATA_URL)%'
+        client_id: '%env(string:AZURE_AZ_OIDC_CLIENT_ID)%'
+        client_secret: '%env(string:AZURE_AZ_OIDC_CLIENT_SECRET)%'
+        # Specify redirect URI
+        redirect_uri: '%env(string:AZURE_AZ_OIDC_REDIRECT_URI)%'
+        # Optional: Specify leeway (seconds) to account for clock skew between provider and hosting
+        #           Defaults to 10
+        leeway: '%env(int:AZURE_AZ_OIDC_LEEWAY)%'

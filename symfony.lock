@@ -173,6 +173,9 @@
             "fixtures/.gitignore"
         ]
     },
+    "itk-dev/openid-connect-bundle": {
+        "version": "dev-develop"
+    },
     "justinrainbow/json-schema": {
         "version": "5.2.11"
     },

@@ -14,6 +14,9 @@ framework:
         cookie_samesite: lax
         storage_factory_id: session.storage.factory.native
 
+    router:
+        default_uri: '%env(string:DEFAULT_URI)%'
+
     #esi: true
     #fragments: true
     php_errors:

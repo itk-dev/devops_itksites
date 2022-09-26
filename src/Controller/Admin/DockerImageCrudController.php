@@ -49,6 +49,6 @@ class DockerImageCrudController extends AbstractCrudController
         return $filters
             ->add('organization')
             ->add('repository')
-            ;
+        ;
     }
 }

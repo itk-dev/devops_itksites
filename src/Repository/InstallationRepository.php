@@ -29,7 +29,7 @@ class InstallationRepository extends ServiceEntityRepository
             ->setParameter('server', $server->getId()->toBinary())
             ->getQuery()
             ->getOneOrNullResult()
-            ;
+        ;
     }
 
     // /**

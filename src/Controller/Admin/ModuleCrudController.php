@@ -48,6 +48,6 @@ class ModuleCrudController extends AbstractCrudController
         return $filters
             ->add('package')
             ->add('name')
-            ;
+        ;
     }
 }

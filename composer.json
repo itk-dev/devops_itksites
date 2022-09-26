@@ -13,6 +13,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.11",
         "easycorp/easyadmin-bundle": "^4.0",
+        "itk-dev/openid-connect-bundle": "^3.0",
         "nelmio/cors-bundle": "^2.2",
         "ocramius/doctrine-batch-utils": "^2.3",
         "phpdocumentor/reflection-docblock": "^5.3",

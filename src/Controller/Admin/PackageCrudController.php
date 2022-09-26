@@ -55,6 +55,6 @@ class PackageCrudController extends AbstractCrudController
             ->add('package')
             ->add('type')
             ->add('license')
-            ;
+        ;
     }
 }

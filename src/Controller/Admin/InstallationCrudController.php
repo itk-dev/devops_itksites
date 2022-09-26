@@ -66,6 +66,6 @@ class InstallationCrudController extends AbstractCrudController
             ->add('composerVersion')
             ->add('rootDir')
             ->add('server')
-            ;
+        ;
     }
 }
