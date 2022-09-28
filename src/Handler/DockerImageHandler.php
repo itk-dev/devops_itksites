@@ -60,8 +60,6 @@ class DockerImageHandler implements DetectionResultHandlerInterface
 
             $installation = $this->installationFactory->getInstallation($detectionResult);
             $this->dockerImageTagFactory->setDockerImageTags($installation, $data->containers);
-
-            $this->entityManager->flush();
         } catch (\JsonException $e) {
             // @TODO log exceptions
         }

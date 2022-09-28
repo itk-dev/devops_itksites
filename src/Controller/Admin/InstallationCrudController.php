@@ -44,15 +44,15 @@ class InstallationCrudController extends AbstractCrudController
     {
         yield VersionField::new('type');
         yield VersionField::new('frameworkVersion', 'ver.');
-        yield BooleanField::new('lts')->renderAsSwitch(false);
-        yield EolTypeField::new('eol');
+        yield BooleanField::new('lts')->renderAsSwitch(false)->hideOnIndex();
+        yield EolTypeField::new('eol')->hideOnIndex();
         yield VersionField::new('composerVersion', 'Comp.');
-        yield AssociationField::new('sites');
+        yield AssociationField::new('sites')->hideOnIndex();
         yield RootDirField::new('rootDir')->setColumns(12);
         yield ServerTypeField::new('server.type')->setLabel('Type');
         yield AssociationField::new('server');
         yield AssociationField::new('detectionResult')->hideOnIndex();
-        yield DateTimeField::new('createdAt');
+        yield DateTimeField::new('createdAt')->hideOnIndex();
         yield DateTimeField::new('detectionResult.lastContact')->hideOnIndex();
     }
 

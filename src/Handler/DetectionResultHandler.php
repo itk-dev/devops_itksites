@@ -3,6 +3,7 @@
 namespace App\Handler;
 
 use App\Entity\DetectionResult;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 final class DetectionResultHandler implements MessageHandlerInterface
@@ -14,6 +15,7 @@ final class DetectionResultHandler implements MessageHandlerInterface
      */
     public function __construct(
         private readonly iterable $resultHandlers,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -28,5 +30,8 @@ final class DetectionResultHandler implements MessageHandlerInterface
                 $handler->handleResult($detectionResult);
             }
         }
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
     }
 }

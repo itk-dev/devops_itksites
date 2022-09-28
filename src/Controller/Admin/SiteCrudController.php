@@ -43,16 +43,16 @@ class SiteCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield DomainField::new('primaryDomain')->setColumns(12);
-        yield AssociationField::new('domains');
+        yield AssociationField::new('domains')->hideOnIndex();
         yield SiteTypeField::new('type')->setLabel('Stack');
-        yield ConfigFilePathField::new('configFilePath')->setColumns(12);
+        yield ConfigFilePathField::new('configFilePath')->setColumns(12)->hideOnIndex();
         yield RootDirField::new('rootDir')->setColumns(12)->hideOnIndex();
         yield VersionField::new('phpVersion')->setLabel('PHP');
         yield AssociationField::new('installation')->hideOnIndex();
         yield ServerTypeField::new('server.type')->setLabel('Type');
         yield AssociationField::new('server');
         yield AssociationField::new('detectionResult')->hideOnIndex();
-        yield DateTimeField::new('createdAt');
+        yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 
     public function configureFilters(Filters $filters): Filters

@@ -41,7 +41,6 @@ class DirectoryHandler implements DetectionResultHandlerInterface
         }
 
         $installation->setDetectionResult($detectionResult);
-        $this->entityManager->flush();
     }
 
     /**

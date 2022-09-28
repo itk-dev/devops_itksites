@@ -64,8 +64,8 @@ class ReplayDetectionResultsCommand extends Command
             }
             if (in_array($type, DetectionType::CHOICES)) {
                 $queryBuilder
-                    ->where('r.type = ?1')
-                    ->setParameter(1, $type);
+                    ->where('r.type = :type')
+                    ->setParameter('type', $type);
             } else {
                 $io->error('Invalid type');
 
@@ -115,11 +115,13 @@ class ReplayDetectionResultsCommand extends Command
     /**
      * Dispatch message to the message bus.
      *
-     * @param object|Envelope $message
+     * @param Envelope $message
+     *
+     * @return Envelope
      *
      * @throws \Throwable
      */
-    private function dispatch($message)
+    private function dispatch(Envelope $message): Envelope
     {
         try {
             return $this->messageBus->dispatch($message);
@@ -155,10 +157,12 @@ class ReplayDetectionResultsCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addOption('type',
+            ->addOption(
+                'type',
                 't',
                 InputOption::VALUE_OPTIONAL,
                 'Limit replay to this type. Options are ['.join(', ', DetectionType::CHOICES).']',
-                false);
+                false
+            );
     }
 }

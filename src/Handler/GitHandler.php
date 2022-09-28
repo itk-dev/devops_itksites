@@ -76,8 +76,6 @@ class GitHandler implements DetectionResultHandlerInterface
         } catch (\JsonException $e) {
             // @TODO log exceptions
         }
-
-        $this->entityManager->flush();
     }
 
     /**
