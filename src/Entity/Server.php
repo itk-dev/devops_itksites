@@ -352,7 +352,6 @@ class Server extends AbstractBaseEntity implements UserInterface
         }
 
         return $this;
-
     }
 
     public function addInstallation(Installation $installation): self
