@@ -339,6 +339,22 @@ class Server extends AbstractBaseEntity implements UserInterface
         return $this->installations;
     }
 
+    public function setInstallations(Collection $collection): self
+    {
+        foreach ($this->installations as $installation) {
+            if (!$collection->contains($installation)) {
+                $this->removeInstallation($installation);
+            }
+        }
+
+        foreach ($collection as $item) {
+            $this->addInstallation($item);
+        }
+
+        return $this;
+
+    }
+
     public function addInstallation(Installation $installation): self
     {
         if (!$this->installations->contains($installation)) {

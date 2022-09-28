@@ -24,6 +24,9 @@ class TruncateDerivedDataCommand extends Command
         'docker_image_tag',
         'docker_image_tag_installation',
         'domain',
+        'git',
+        'git_git_remote',
+        'git_remote',
         'installation',
         'module',
         'module_version',
@@ -53,6 +56,8 @@ class TruncateDerivedDataCommand extends Command
             foreach (self::DERIVED_TABLES as $TABLE) {
                 $sql = $dbPlatform->getTruncateTableSQL($TABLE);
                 $connection->prepare($sql)->executeQuery();
+
+                $io->note('Truncated table: '.$TABLE);
             }
 
             $connection->prepare('SET FOREIGN_KEY_CHECKS=1')->executeQuery();

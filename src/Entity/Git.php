@@ -9,19 +9,19 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GitRepository::class)]
 #[ORM\UniqueConstraint(name: 'server_rootDir', columns: ['server_id', 'root_dir'])]
-class Git extends AbstractHandlerResult
+class Git extends AbstractBaseEntity
 {
     #[ORM\Column(type: 'string', length: 255)]
     private string $tag = '';
 
     #[ORM\Column(type: 'text')]
-    private $changes = '';
+    private string $changes = '';
 
     #[ORM\Column(type: 'integer')]
     private int $changesCount = 0;
 
     #[ORM\ManyToMany(targetEntity: GitRemote::class, inversedBy: 'gits', orphanRemoval: true, cascade: ['persist', 'remove'])]
-    private $remotes;
+    private Collection $remotes;
 
     public function __toString(): string
     {

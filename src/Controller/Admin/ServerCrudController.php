@@ -41,7 +41,7 @@ class ServerCrudController extends AbstractCrudController
             $crud->overrideTemplate('layout', 'EasyAdminBundle/layout.html.twig');
         }
 
-        $crud->showEntityActionsInlined();
+//        $crud->showEntityActionsInlined();
 
         return $crud;
     }
@@ -62,8 +62,8 @@ class ServerCrudController extends AbstractCrudController
         yield ChoiceField::new('hostingProvider')->setChoices(HostingProviderType::CHOICES)->setColumns(4)->setTemplatePath('EasyAdminBundle/Fields/hosting_provider.html.twig')->setLabel('Host. Pro.');
         yield TextField::new('apiKey')->setColumns(8)->setFormTypeOptions(['disabled' => 'true'])->onlyOnDetail()->setTemplatePath('EasyAdminBundle/Fields/code.html.twig');
         yield FormField::addPanel('Network');
-        yield TextField::new('internalIp')->setColumns(6)->setTemplatePath('EasyAdminBundle/Fields/code.html.twig');
-        yield TextField::new('externalIp')->setColumns(6)->setTemplatePath('EasyAdminBundle/Fields/code.html.twig');
+        yield TextField::new('internalIp')->setColumns(6)->setTemplatePath('EasyAdminBundle/Fields/code.html.twig')->hideOnIndex();
+        yield TextField::new('externalIp')->setColumns(6)->setTemplatePath('EasyAdminBundle/Fields/code.html.twig')->hideOnIndex();
         yield FormField::addPanel('Options');
         yield BooleanField::new('aarhusSsl')->setColumns(3)->hideOnIndex();
         yield BooleanField::new('letsEncryptSsl')->setColumns(3)->hideOnIndex();

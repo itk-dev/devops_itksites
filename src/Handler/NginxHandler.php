@@ -58,9 +58,6 @@ class NginxHandler implements DetectionResultHandlerInterface
 
             if (count($errors) > 0) {
                 // @TODO log validation error
-            } else {
-                $this->entityManager->persist($site);
-                $this->entityManager->flush();
             }
         } catch (\JsonException $e) {
             // @TODO log exceptions

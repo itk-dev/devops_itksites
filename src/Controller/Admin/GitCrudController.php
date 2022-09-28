@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -27,7 +28,7 @@ class GitCrudController extends AbstractCrudController
         return $crud
             ->showEntityActionsInlined()
             ->setDefaultSort(['server.name' => 'ASC', 'rootDir' => 'ASC'])
-            ;
+        ;
     }
 
     public function configureActions(Actions $actions): Actions
@@ -43,14 +44,16 @@ class GitCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield AssociationField::new('server');
-        yield ServerTypeField::new('server.type')->setLabel('Type');
         yield RootDirField::new('rootDir');
-        yield AssociationField::new('remotes')->setSortable(false);
+        yield AssociationField::new('remotes')->hideOnIndex();
         yield TextField::new('tag');
-        yield IntegerField::new('changesCount', 'Changes');
-        yield TextField::new('changes')->hideOnIndex();
+        yield IntegerField::new('changesCount', 'Changes')->hideOnDetail();
+        yield CodeEditorField::new('changes')->hideOnIndex();
+        yield ServerTypeField::new('server.type')->setLabel('Type');
+        yield AssociationField::new('server');
+        yield AssociationField::new('detectionResult')->hideOnIndex();
         yield DateTimeField::new('createdAt')->hideOnIndex();
+        yield DateTimeField::new('detectionResult.lastContact')->hideOnIndex();
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -61,6 +64,6 @@ class GitCrudController extends AbstractCrudController
             ->add('remotes')
             ->add('tag')
             ->add('changesCount')
-            ;
+        ;
     }
 }
