@@ -14,6 +14,8 @@ class SystemType
         'Ubuntu 18.04' => 'ubuntu1804',
         'Ubuntu 20.04' => 'ubuntu2004',
         'Ubuntu 21.04' => 'ubuntu2104',
+        'Ubuntu 22.04' => 'ubuntu2204',
+        'Ubuntu 23.04' => 'ubuntu2304',
         'Debian 9' => 'deb9',
         'Debian 10' => 'deb10',
     ];
