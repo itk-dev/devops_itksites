@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\DetectionResult;
-use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -23,13 +22,13 @@ class DetectionResultRepository extends ServiceEntityRepository
     /**
      * Remove detection results base on last contact.
      *
-     * @param dateTime $date
+     * @param \dateTime $date
      *   The date to delete before
      *
      * @return mixed
      *   Number of records removed or false
      */
-    public function remove(DateTime $date): mixed
+    public function remove(\DateTime $date): mixed
     {
         return $this->createQueryBuilder('d')
             ->delete(DetectionResult::class, 's')
