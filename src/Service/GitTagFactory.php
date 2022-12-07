@@ -2,11 +2,11 @@
 
 namespace App\Service;
 
-use App\Entity\GitTag;
 use App\Entity\GitRepo;
+use App\Entity\GitTag;
 use App\Entity\Installation;
-use App\Repository\GitTagRepository;
 use App\Repository\GitRepoRepository;
+use App\Repository\GitTagRepository;
 use App\Types\GitClonedByType;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -114,7 +114,7 @@ class GitTagFactory
     private function cleanupGitTag(?GitTag $gitTag): void
     {
         $installations = $gitTag?->getInstallations();
-        $d=1;
+        $d = 1;
 
         if (null !== $gitTag && $gitTag->getInstallations()->isEmpty()) {
             $gitRepo = $gitTag->getRepo();

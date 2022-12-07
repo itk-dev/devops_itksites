@@ -59,6 +59,6 @@ class AppExtension extends AbstractExtension
             ->setAction('detail')
             ->setEntityId($id)
             ->generateUrl()
-            ;
+        ;
     }
 }

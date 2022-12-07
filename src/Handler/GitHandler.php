@@ -3,14 +3,9 @@
 namespace App\Handler;
 
 use App\Entity\DetectionResult;
-use App\Entity\GitTag;
-use App\Entity\GitRepo;
-use App\Repository\GitTagRepository;
-use App\Repository\GitRepoRepository;
 use App\Service\GitTagFactory;
 use App\Service\InstallationFactory;
 use App\Types\DetectionType;
-use App\Types\GitClonedByType;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -41,8 +36,8 @@ class GitHandler implements DetectionResultHandlerInterface
                 return;
             }
 
-            if ($detectionResult->getRootDir() === '/data/www/cfiaarhus_dk/htdocs') {
-                $d=1;
+            if ('/data/www/cfiaarhus_dk/htdocs' === $detectionResult->getRootDir()) {
+                $d = 1;
             }
 
             $installation = $this->installationFactory->getInstallation($detectionResult);
@@ -62,7 +57,7 @@ class GitHandler implements DetectionResultHandlerInterface
     }
 
     /**
-     * Get data if remotes are set
+     * Get data if remotes are set.
      *
      * The git harvester will send an empty result even for
      * "fatal: not a git repository (or any parent up to mount point /)"
@@ -81,7 +76,7 @@ class GitHandler implements DetectionResultHandlerInterface
 
         $data = \json_decode($result->getData(), false, 512, JSON_THROW_ON_ERROR);
 
-        if (empty($data->remotes) || strtolower($data->remotes[0]) === 'unknown') {
+        if (empty($data->remotes) || 'unknown' === strtolower($data->remotes[0])) {
             return null;
         }
 

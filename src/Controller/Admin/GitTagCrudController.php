@@ -2,9 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Admin\Field\ChangesField;
-use App\Admin\Field\ClonedByField;
-use App\Admin\Field\ServerTypeField;
 use App\Admin\Field\VersionField;
 use App\Entity\GitTag;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -13,9 +10,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class GitTagCrudController extends AbstractCrudController
 {

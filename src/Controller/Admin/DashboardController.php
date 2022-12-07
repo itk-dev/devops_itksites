@@ -6,8 +6,8 @@ use App\Entity\DetectionResult;
 use App\Entity\DockerImage;
 use App\Entity\DockerImageTag;
 use App\Entity\Domain;
-use App\Entity\GitTag;
 use App\Entity\GitRepo;
+use App\Entity\GitTag;
 use App\Entity\Installation;
 use App\Entity\Module;
 use App\Entity\ModuleVersion;
@@ -74,6 +74,6 @@ class DashboardController extends AbstractDashboardController
             // (each CRUD controller can override this value if needed)
             ->setDateTimeFormat('yyyy-MM-dd HH:mm:ss')
             ->setPageTitle('detail', '%entity_label_singular%: %entity_as_string%')
-            ;
+        ;
     }
 }
