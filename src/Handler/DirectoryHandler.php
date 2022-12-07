@@ -4,12 +4,13 @@ namespace App\Handler;
 
 use App\Entity\DetectionResult;
 use App\Entity\Site;
+use App\Repository\SiteRepository;
 use App\Service\InstallationFactory;
 use App\Types\DetectionType;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Handler for DetectionResult off type "dir".
+ * Handler for DetectionResult off type "dir" (Installations).
  */
 class DirectoryHandler implements DetectionResultHandlerInterface
 {
@@ -21,6 +22,7 @@ class DirectoryHandler implements DetectionResultHandlerInterface
      */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly SiteRepository $siteRepository,
         private readonly InstallationFactory $factory,
     ) {
     }
@@ -30,11 +32,9 @@ class DirectoryHandler implements DetectionResultHandlerInterface
      */
     public function handleResult(DetectionResult $detectionResult): void
     {
-        $siteRepository = $this->entityManager->getRepository(Site::class);
-
         $installation = $this->factory->getInstallation($detectionResult);
 
-        $sites = $siteRepository->findByRootDirAndServer($detectionResult->getRootDir(), $detectionResult->getServer());
+        $sites = $this->siteRepository->findByRootDirAndServer($detectionResult->getRootDir(), $detectionResult->getServer());
         foreach ($sites as $site) {
             /* @var Site $site */
             $installation->addSite($site);

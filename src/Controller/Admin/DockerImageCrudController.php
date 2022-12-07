@@ -41,7 +41,7 @@ class DockerImageCrudController extends AbstractCrudController
         yield TextField::new('repository')->setColumns(6);
         yield AssociationField::new('dockerImageTags')->setColumns(6);
         yield TextField::new('description')->setColumns(12)->hideOnIndex();
-        yield DateTimeField::new('createdAt');
+        yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 
     public function configureFilters(Filters $filters): Filters

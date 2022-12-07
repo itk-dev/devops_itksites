@@ -2,27 +2,29 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\GitRemote;
+use App\Entity\GitRepo;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
-class GitRemoteCrudController extends AbstractCrudController
+class GitRepoCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return GitRemote::class;
+        return GitRepo::class;
     }
 
     public function configureCrud(Crud $crud): Crud
     {
-        return $crud->showEntityActionsInlined()
-            ->setDefaultSort(['url' => 'ASC'])
-            ;
+        return $crud
+            ->showEntityActionsInlined()
+            ->setDefaultSort(['organization' => 'ASC', 'repo' => 'ASC'])
+        ;
     }
 
     public function configureActions(Actions $actions): Actions
@@ -38,14 +40,18 @@ class GitRemoteCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield UrlField::new('url');
-        yield AssociationField::new('gits');
+        yield TextField::new('provider')->setColumns(6);
+        yield TextField::new('organization')->setColumns(6);
+        yield TextField::new('repo')->setColumns(6);
+        yield AssociationField::new('gitTags');
     }
 
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            ->add('url')
-            ;
+            ->add('provider')
+            ->add('organization')
+            ->add('repo')
+        ;
     }
 }

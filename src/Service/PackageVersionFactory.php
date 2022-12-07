@@ -5,25 +5,27 @@ namespace App\Service;
 use App\Entity\Installation;
 use App\Entity\Package;
 use App\Entity\PackageVersion;
+use App\Repository\PackageRepository;
+use App\Repository\PackageVersionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PackageVersionFactory
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly PackageRepository $packageRepository,
+        private readonly PackageVersionRepository $packageVersionRepository,
+    ) {
     }
 
     public function setPackageVersions(Installation $installation, array $installedPackages): void
     {
-        $packageRepository = $this->entityManager->getRepository(Package::class);
-        $packageVersionRepository = $this->entityManager->getRepository(PackageVersion::class);
-
         $packageVersions = new ArrayCollection();
         foreach ($installedPackages as $installed) {
             [$vendor, $name] = explode('/', $installed->name);
 
-            $package = $packageRepository->findOneBy([
+            $package = $this->packageRepository->findOneBy([
                 'vendor' => $vendor,
                 'package' => $name,
             ]);
@@ -38,7 +40,7 @@ class PackageVersionFactory
                 $this->entityManager->flush();
             }
 
-            $packageVersion = $packageVersionRepository->findOneBy([
+            $packageVersion = $this->packageVersionRepository->findOneBy([
                 'package' => $package,
                 'version' => $installed->version,
             ]);

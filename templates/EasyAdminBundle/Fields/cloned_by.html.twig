@@ -1,0 +1,10 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% if field.formattedValue == 'unknown' %}
+    <span class="badge badge-warning">?</span>
+{% elseif field.formattedValue starts with 'ssh' %}
+    <span class="badge badge-secondary">{{ field.formattedValue }}</span>
+{% else %}
+    <span class="badge badge-dark">{{ field.formattedValue }}</span>
+{% endif %}
