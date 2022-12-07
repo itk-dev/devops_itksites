@@ -2,32 +2,27 @@
 
 namespace App\Controller\Admin;
 
-use App\Admin\Field\RootDirField;
-use App\Admin\Field\ServerTypeField;
-use App\Entity\Git;
+use App\Admin\Field\VersionField;
+use App\Entity\GitTag;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class GitCrudController extends AbstractCrudController
+class GitTagCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Git::class;
+        return GitTag::class;
     }
 
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
             ->showEntityActionsInlined()
-            ->setDefaultSort(['server.name' => 'ASC', 'rootDir' => 'ASC'])
+            ->setDefaultSort(['repo.organization' => 'ASC', 'repo.repo' => 'ASC'])
         ;
     }
 
@@ -44,26 +39,16 @@ class GitCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield RootDirField::new('rootDir');
-        yield AssociationField::new('remotes')->hideOnIndex();
-        yield TextField::new('tag');
-        yield IntegerField::new('changesCount', 'Changes')->hideOnDetail();
-        yield CodeEditorField::new('changes')->hideOnIndex();
-        yield ServerTypeField::new('server.type')->setLabel('Type');
-        yield AssociationField::new('server');
-        yield AssociationField::new('detectionResult')->hideOnIndex();
-        yield DateTimeField::new('createdAt')->hideOnIndex();
-        yield DateTimeField::new('detectionResult.lastContact')->hideOnIndex();
+        yield AssociationField::new('repo')->setColumns(6);
+        yield AssociationField::new('installations')->setColumns(6);
+        yield VersionField::new('tag')->setColumns(6);
     }
 
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            ->add('server')
-            ->add('rootDir')
-            ->add('remotes')
+            ->add('repo')
             ->add('tag')
-            ->add('changesCount')
         ;
     }
 }

@@ -18,7 +18,7 @@ class PackageVersion extends AbstractBaseEntity
     #[ORM\JoinColumn(nullable: false)]
     private Package $package;
 
-    #[ORM\Column(type: 'string', length: 25)]
+    #[ORM\Column(type: 'string', length: 255)]
     private string $version;
 
     #[ORM\Column(type: 'string', length: 25, nullable: true)]

@@ -45,7 +45,7 @@ class PackageCrudController extends AbstractCrudController
         yield TextField::new('description')->setColumns(12)->hideOnIndex();
         yield TextField::new('type');
         yield TextField::new('license');
-        yield DateTimeField::new('createdAt');
+        yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 
     public function configureFilters(Filters $filters): Filters

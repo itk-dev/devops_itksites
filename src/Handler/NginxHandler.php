@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Handler for DetectionResult off type "nginx".
+ * Handler for DetectionResult off type "nginx" (Sites, Domains).
  */
 class NginxHandler implements DetectionResultHandlerInterface
 {

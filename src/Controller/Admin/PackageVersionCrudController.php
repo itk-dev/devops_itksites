@@ -44,7 +44,7 @@ class PackageVersionCrudController extends AbstractCrudController
         yield VersionField::new('version')->setColumns(6);
         yield VersionField::new('latest')->setColumns(6);
         yield VersionField::new('latestStatus')->setColumns(6);
-        yield DateTimeField::new('createdAt');
+        yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 
     public function configureFilters(Filters $filters): Filters

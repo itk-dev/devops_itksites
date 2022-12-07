@@ -3,8 +3,8 @@
 namespace App\Handler;
 
 use App\Entity\DetectionResult;
-use App\Entity\Git;
-use App\Entity\GitRemote;
+use App\Service\GitTagFactory;
+use App\Service\InstallationFactory;
 use App\Types\DetectionType;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -18,8 +18,10 @@ class GitHandler implements DetectionResultHandlerInterface
      *
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private readonly InstallationFactory $installationFactory,
+        private readonly GitTagFactory $gitCloneFactory,
+    ) {
     }
 
     /**
@@ -27,52 +29,20 @@ class GitHandler implements DetectionResultHandlerInterface
      */
     public function handleResult(DetectionResult $detectionResult): void
     {
-        $gitRepository = $this->entityManager->getRepository(Git::class);
-        $gitRemoteRepository = $this->entityManager->getRepository(GitRemote::class);
-
-        $git = $gitRepository->findOneBy([
-            'rootDir' => $detectionResult->getRootDir(),
-            'server' => $detectionResult->getServer(),
-        ]);
-
-        if (null === $git) {
-            $git = new Git();
-            $this->entityManager->persist($git);
-        }
-
-        $git->setDetectionResult($detectionResult);
-
         try {
-            $data = \json_decode($detectionResult->getData(), false, 512, JSON_THROW_ON_ERROR);
+            $data = $this->getData($detectionResult);
 
-            $git->clearRemotes();
-            $this->entityManager->flush();
-            foreach ($data->remotes as $remote) {
-                $this->entityManager->flush();
-                $gitRemote = $gitRemoteRepository->findOneBy([
-                    'url' => $remote,
-                ]);
+            if (null === $data) {
+                return;
+            }
 
-                if (null === $gitRemote) {
-                    $gitRemote = new GitRemote($remote);
-                    try {
-                        $this->entityManager->persist($gitRemote);
-                        $gitRemote->setUrl($remote);
-                    } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
-                        var_dump($e);
-                        continue;
-                    } catch (\Exception $e) {
-                        var_dump($e);
-                    }
-                }
-                $git->addRemote($gitRemote);
+            if ('/data/www/cfiaarhus_dk/htdocs' === $detectionResult->getRootDir()) {
+                $d = 1;
             }
-            $tag = (isset($data->tag) && '' !== $data->tag) ? $data->tag : 'unknown';
-            $git->setTag($tag);
-            if (isset($data->changes)) {
-                $git->setChanges(join("\n", $data->changes));
-                $git->setChangesCount(count($data->changes));
-            }
+
+            $installation = $this->installationFactory->getInstallation($detectionResult);
+
+            $this->gitCloneFactory->setGitCloneData($installation, $data);
         } catch (\JsonException $e) {
             // @TODO log exceptions
         }
@@ -84,5 +54,32 @@ class GitHandler implements DetectionResultHandlerInterface
     public function supportsType(string $type): bool
     {
         return DetectionType::GIT === $type;
+    }
+
+    /**
+     * Get data if remotes are set.
+     *
+     * The git harvester will send an empty result even for
+     * "fatal: not a git repository (or any parent up to mount point /)"
+     *
+     * @param DetectionResult $result
+     *
+     * @return object|null
+     *
+     * @throws \JsonException
+     */
+    private function getData(DetectionResult $result): ?object
+    {
+        if (empty($result->getData())) {
+            return null;
+        }
+
+        $data = \json_decode($result->getData(), false, 512, JSON_THROW_ON_ERROR);
+
+        if (empty($data->remotes) || 'unknown' === strtolower($data->remotes[0])) {
+            return null;
+        }
+
+        return $data;
     }
 }

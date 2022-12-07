@@ -16,7 +16,7 @@ class ModuleVersion extends AbstractBaseEntity
     #[ORM\JoinColumn(nullable: false)]
     private Module $module;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $version;
 
     #[ORM\ManyToMany(targetEntity: Installation::class, inversedBy: 'moduleVersions')]
