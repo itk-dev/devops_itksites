@@ -1,0 +1,72 @@
+App\Entity\DetectionResult:
+  detection_result/dev.example.com:
+    server: '@server_1'
+    type: 'nginx'
+    rootDir: '/data/www/dev.example.com/htdocs/public'
+    data: |
+      {
+        "domain": "dev.example.com",
+        "phpVersion": "8.2",
+        "config": "/etc/nginx/sites-enabled/dev.example.com"
+      }
+    __calls:
+      - generateHash: []
+      - setLastContact: []
+
+  detection_result/test.example.com:
+    server: '@server_1'
+    type: 'nginx'
+    rootDir: '/data/www/test.example.com/htdocs/public'
+    data: |
+      {
+        "domain": "test.example.com",
+        "phpVersion": "8.2",
+        "config": "/etc/nginx/sites-enabled/test.example.com"
+      }
+    __calls:
+      - generateHash: []
+      - setLastContact: []
+
+  detection_result/prod.example.com:
+    server: '@server_1'
+    type: 'nginx'
+    rootDir: '/data/www/prod.example.com/htdocs/public'
+    data: |
+      {
+        "domain": "prod.example.com",
+        "phpVersion": "8.2",
+        "config": "/etc/nginx/sites-enabled/prod.example.com"
+      }
+    __calls:
+      - generateHash: []
+      - setLastContact: []
+
+App\Entity\Domain:
+  domain/dev.example.com:
+    rootDir: '/tmp'
+    address: 'dev.example.com'
+    detectionResult: '@detection_result/dev.example.com'
+  domain/test.example.com:
+    rootDir: '/tmp'
+    address: 'test.example.com'
+    detectionResult: '@detection_result/test.example.com'
+  domain/prod.example.com:
+    rootDir: '/tmp'
+    address: 'prod.example.com'
+    detectionResult: '@detection_result/prod.example.com'
+
+App\Entity\Site:
+  site/dev.example.com:
+    server: '@server_1'
+    detectionResult: '@detection_result/dev.example.com'
+    rootDir: '/data/www/dev.example.com/htdocs/public'
+    __calls:
+      - addDomain: ['@domain/dev.example.com']
+
+  site/prod.example.com:
+    server: '@server_1'
+    detectionResult: '@detection_result/prod.example.com'
+    rootDir: '/data/www/prod.example.com/htdocs/public'
+    __calls:
+      - addDomain: ['@domain/prod.example.com']
+      - addDomain: ['@domain/test.example.com']
