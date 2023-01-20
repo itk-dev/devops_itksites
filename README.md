@@ -20,24 +20,39 @@ docker compose exec phpfpm composer install
 docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interaction
 ```
 
-Define stuff in `.env.local`:
+### Load fixtures
 
-```dotenv
-# .env.local
-…
-
-OIDC_CLI_LOGIN_ROUTE=admin
-
-# JSON list of string, e.g '["Digital post", "CPR-opslag"]'
-SERVICE_CERTIFICATE_SERVICES='["Digital post", "CPR-opslag"]'
+```sh
+docker compose exec phpfpm composer fixtures
 ```
+
+After loading fixtures you can sign in as an admin user:
 
 ```sh
 docker compose exec phpfpm bin/console itk-dev:openid-connect:login admin@example.com
 ```
 
-### Load fixtures
+## Assets
+
+We use [Webpack
+Encore]()https://symfony.com/doc/current/frontend.html#webpack-encore) to build
+assets:
 
 ```sh
-docker compose exec phpfpm composer fixtures
+docker compose run --rm node yarn install
+docker compose run --rm node yarn build
+```
+
+Use
+
+```sh
+docker compose run --rm node yarn watch
+```
+
+during development to automatically rebuild assets when source files change.
+
+### Coding standards
+
+```sh
+docker compose run --rm node yarn coding-standards-check
 ```

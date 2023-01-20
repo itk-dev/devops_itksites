@@ -41,7 +41,7 @@ security:
     access_control:
         - { path: ^/api/docs, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: ROLE_SERVER }
-        - { path: ^/admin, roles: ROLE_ADMIN  }
+        # - { path: ^/admin, roles: ROLE_ADMIN  }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
