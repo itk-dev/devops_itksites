@@ -22,7 +22,7 @@ class Module extends AbstractBaseEntity
     #[ORM\Column(type: 'boolean')]
     private bool $enabled;
 
-    #[ORM\OneToMany(mappedBy: 'module', targetEntity: ModuleVersion::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'module', targetEntity: ModuleVersion::class)]
     private Collection $moduleVersions;
 
     public function __construct()

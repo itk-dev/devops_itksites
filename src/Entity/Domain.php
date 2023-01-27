@@ -20,7 +20,7 @@ class Domain extends AbstractHandlerResult
     private string $address;
 
     #[ORM\ManyToOne(targetEntity: Site::class, inversedBy: 'domains')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Site $site;
 
     public function __toString(): string

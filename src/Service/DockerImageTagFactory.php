@@ -19,52 +19,56 @@ class DockerImageTagFactory
     ) {
     }
 
-    public function setDockerImageTags(Installation $installation, array $dockerImages): void
+    public function setDockerImageTags(Installation $installation, array $containers): void
     {
         $dockerImageTags = new ArrayCollection();
-        foreach ($dockerImages as $image) {
-            $parts = explode('/', $image->image);
+        $images = [];
+        foreach ($containers as $container) {
+            $parts = explode('/', $container->image);
             $organization = $parts[0] ?? '';
             $repository = $parts[1] ?? '';
 
-            $dockerImage = $this->dockerImageRepository->findOneBy([
-                'organization' => $organization,
-                'repository' => $repository,
-            ]);
+            $dockerImage = array_key_exists($container->image, $images) ? $images[$container->image] : null;
 
             if (null === $dockerImage) {
-                $dockerImage = new DockerImage();
-                $dockerImage->setOrganization($organization);
-                $dockerImage->setRepository($repository);
+                $dockerImage = $this->dockerImageRepository->findOneBy([
+                    'organization' => $organization,
+                    'repository' => $repository,
+                ]);
 
-                $this->entityManager->persist($dockerImage);
+                if (null === $dockerImage) {
+                    $dockerImage = new DockerImage();
+                    $this->entityManager->persist($dockerImage);
+
+                    $dockerImage->setOrganization($organization);
+                    $dockerImage->setRepository($repository);
+                }
+
+                $images[$container->image] = $dockerImage;
             }
 
-            $tag = $image->version ?? '';
+            $tag = $container->version ?? '';
 
             $dockerImageTag = $this->dockerImageTagRepository->findOneBy([
                 'dockerImage' => $dockerImage,
-                'name' => $image->name,
+                'name' => $container->name,
                 'tag' => $tag,
             ]);
 
             if (null === $dockerImageTag) {
                 $dockerImageTag = new DockerImageTag();
+                $this->entityManager->persist($dockerImageTag);
+
                 $dockerImage->addDockerImageTag($dockerImageTag);
                 $installation->addDockerImageTag($dockerImageTag);
-
-                $this->entityManager->persist($dockerImageTag);
             }
 
-            $dockerImageTag->setName($image->name);
+            $dockerImageTag->setName($container->name);
             $dockerImageTag->setTag($tag);
 
             $dockerImageTags->add($dockerImageTag);
-            $this->entityManager->flush();
         }
 
         $installation->setDockerImageTags($dockerImageTags);
-
-        $this->entityManager->flush();
     }
 }

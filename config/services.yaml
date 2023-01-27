@@ -32,3 +32,9 @@ services:
             - !tagged_iterator app.handler.detection_result_handler
 
     App\DataPersister\DetectionResultDataPersister: ~
+
+    App\EventListener\RemovedRelationsListener:
+        tags:
+            -
+                name: 'doctrine.event_listener'
+                event: 'postFlush'

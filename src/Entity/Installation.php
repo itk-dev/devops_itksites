@@ -12,7 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\UniqueConstraint(name: 'server_rootdir_idx', fields: ['server', 'rootDir'])]
 class Installation extends AbstractHandlerResult
 {
-    #[ORM\OneToMany(mappedBy: 'installation', targetEntity: Site::class, orphanRemoval: true)]
+    #[ORM\ManyToOne(targetEntity: Server::class, inversedBy: 'installations')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    protected ?Server $server;
+
+    #[ORM\OneToMany(mappedBy: 'installation', targetEntity: Site::class)]
     private Collection $sites;
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
@@ -42,16 +46,16 @@ class Installation extends AbstractHandlerResult
     #[ORM\Column(length: 10)]
     private ?string $gitClonedScheme = '';
 
-    #[ORM\ManyToMany(targetEntity: PackageVersion::class, mappedBy: 'installations', orphanRemoval: true)]
+    #[ORM\ManyToMany(targetEntity: PackageVersion::class, inversedBy: 'installations', cascade: ['persist'])]
     private Collection $packageVersions;
 
-    #[ORM\ManyToMany(targetEntity: ModuleVersion::class, mappedBy: 'installations', orphanRemoval: true)]
+    #[ORM\ManyToMany(targetEntity: ModuleVersion::class, inversedBy: 'installations', cascade: ['persist'])]
     private Collection $moduleVersions;
 
-    #[ORM\ManyToMany(targetEntity: DockerImageTag::class, mappedBy: 'installations', orphanRemoval: true)]
+    #[ORM\ManyToMany(targetEntity: DockerImageTag::class, inversedBy: 'installations', cascade: ['persist'])]
     private Collection $dockerImageTags;
 
-    #[ORM\ManyToOne(inversedBy: 'installations')]
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'installations')]
     private ?GitTag $gitTag = null;
 
     public function __construct()

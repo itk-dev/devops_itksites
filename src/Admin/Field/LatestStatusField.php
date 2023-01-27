@@ -5,7 +5,7 @@ namespace App\Admin\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
 
-class DomainField implements FieldInterface
+class LatestStatusField implements FieldInterface
 {
     use FieldTrait;
 
@@ -16,6 +16,6 @@ class DomainField implements FieldInterface
             ->setLabel($label)
 
             // this template is used in 'index' and 'detail' pages
-            ->setTemplatePath('EasyAdminBundle/Fields/domain.html.twig');
+            ->setTemplatePath('EasyAdminBundle/Fields/latest-status.html.twig');
     }
 }

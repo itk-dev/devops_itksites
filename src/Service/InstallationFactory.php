@@ -5,6 +5,8 @@ namespace App\Service;
 use App\Entity\DetectionResult;
 use App\Entity\Installation;
 use App\Repository\InstallationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class InstallationFactory
@@ -15,10 +17,30 @@ class InstallationFactory
     ) {
     }
 
-    public function getInstallation(DetectionResult $detectionResult): Installation
+    public function getInstallations(DetectionResult $detectionResult): Collection
     {
+        try {
+            $rootDirs = \json_decode($detectionResult->getData(), false, 512, JSON_THROW_ON_ERROR);
+
+            $installations = new ArrayCollection();
+            foreach ($rootDirs as $rootDir) {
+                $installations[] = $this->getInstallation($detectionResult, $rootDir);
+            }
+
+            return $installations;
+        } catch (\JsonException $e) {
+            // @TODO log exceptions
+
+            return new ArrayCollection();
+        }
+    }
+
+    public function getInstallation(DetectionResult $detectionResult, ?string $rootDir = null): Installation
+    {
+        $rootDir = $rootDir ?? $detectionResult->getRootDir();
+
         $installation = $this->repository->findOneBy([
-            'rootDir' => $detectionResult->getRootDir(),
+            'rootDir' => $rootDir,
             'server' => $detectionResult->getServer(),
         ]);
 
@@ -28,8 +50,7 @@ class InstallationFactory
         }
 
         $installation->setDetectionResult($detectionResult);
-
-        $this->entityManager->flush();
+        $installation->setRootDir($rootDir);
 
         return $installation;
     }

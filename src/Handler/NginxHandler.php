@@ -22,6 +22,7 @@ class NginxHandler implements DetectionResultHandlerInterface
      *
      * @param EntityManagerInterface $entityManager
      * @param SiteFactory $siteFactory
+     * @param DomainFactory $domainFactory
      * @param ValidatorInterface $validator
      */
     public function __construct(

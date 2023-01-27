@@ -1,0 +1,14 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% if field.formattedValue == 'unknown' %}
+    <span class="badge badge-secondary">?</span>
+{% elseif field.formattedValue == 'up-to-date' %}
+    <span class="badge badge-light">{{ field.formattedValue }}</span>
+{% elseif field.formattedValue == 'semver-safe-update' %}
+    <span class="badge badge-success">{{ field.formattedValue }}</span>
+{% elseif field.formattedValue == 'update-possible' %}
+    <span class="badge badge-info">{{ field.formattedValue }}</span>
+{% else %}
+    <span class="badge badge-info">{{ field.formattedValue }}</span>
+{% endif %}

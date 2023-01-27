@@ -16,19 +16,19 @@ abstract class AbstractBaseEntity
     #[ORM\Column(type: 'ulid', unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
-    private Ulid $id;
+    protected Ulid $id;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
-    private \DateTimeImmutable $createdAt;
+    protected \DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
-    private \DateTimeImmutable $modifiedAt;
+    protected \DateTimeImmutable $modifiedAt;
 
     #[ORM\Column(type: 'string', nullable: false, options: ['default' => ''])]
-    private string $createdBy = '';
+    protected string $createdBy = '';
 
     #[ORM\Column(type: 'string', nullable: false, options: ['default' => ''])]
-    private string $modifiedBy = '';
+    protected string $modifiedBy = '';
 
     /**
      * Get the Ulid.

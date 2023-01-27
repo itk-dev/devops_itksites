@@ -28,7 +28,7 @@ class DetectionResult extends AbstractBaseEntity
     private string $rootDir = '';
 
     #[ORM\ManyToOne(targetEntity: Server::class, inversedBy: 'detectionResults')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Server $server;
 
     #[ORM\Column(type: 'text')]
@@ -75,7 +75,7 @@ class DetectionResult extends AbstractBaseEntity
         return $this->server;
     }
 
-    public function setServer(Server $server): self
+    public function setServer(?Server $server): self
     {
         $this->server = $server;
 

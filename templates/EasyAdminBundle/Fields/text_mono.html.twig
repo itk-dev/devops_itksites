@@ -1,8 +1,8 @@
 {# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
 {# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
-{% if ea.crud.currentAction == 'detail' %}
-    <code class="text-dark">{{ field.formattedValue }}</code>
+{% if field.formattedValue is null %}
+    <span class="badge badge-secondary">{{ 'label.null'|trans(domain = 'EasyAdminBundle') }}</span>
 {% else %}
-    <code class="text-dark">{{ field.formattedValue | replace({'/data/www/': './'}) }}</code>
+    <code class="text-dark">{{ field.formattedValue }}</code>
 {% endif %}

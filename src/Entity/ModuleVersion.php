@@ -12,13 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
 class ModuleVersion extends AbstractBaseEntity
 {
     #[ORM\ManyToOne(targetEntity: Module::class, inversedBy: 'moduleVersions')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Module $module;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $version;
 
-    #[ORM\ManyToMany(targetEntity: Installation::class, inversedBy: 'moduleVersions')]
+    #[ORM\ManyToMany(targetEntity: Installation::class, mappedBy: 'moduleVersions')]
     private Collection $installations;
 
     public function __toString(): string

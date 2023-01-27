@@ -10,12 +10,12 @@ class AbstractHandlerResult extends AbstractBaseEntity
     #[ORM\Column(type: 'string', length: 255)]
     private string $rootDir;
 
-    #[ORM\ManyToOne(targetEntity: Server::class, inversedBy: 'installations')]
-    #[ORM\JoinColumn(nullable: false)]
-    private Server $server;
+    #[ORM\ManyToOne(targetEntity: Server::class)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    protected ?Server $server;
 
-    #[ORM\ManyToOne(targetEntity: DetectionResult::class, cascade: ['persist', 'remove'], fetch: 'EAGER')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: DetectionResult::class, fetch: 'EAGER')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private DetectionResult $detectionResult;
 
     public function getRootDir(): string
@@ -35,14 +35,14 @@ class AbstractHandlerResult extends AbstractBaseEntity
         return $this->server;
     }
 
-    public function setServer(Server $server): self
+    public function setServer(?Server $server): self
     {
         $this->server = $server;
 
         return $this;
     }
 
-    public function getDetectionResult(): ?DetectionResult
+    public function getDetectionResult(): DetectionResult
     {
         return $this->detectionResult;
     }
