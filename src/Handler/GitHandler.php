@@ -36,10 +36,6 @@ class GitHandler implements DetectionResultHandlerInterface
                 return;
             }
 
-            if ('/data/www/cfiaarhus_dk/htdocs' === $detectionResult->getRootDir()) {
-                $d = 1;
-            }
-
             $installation = $this->installationFactory->getInstallation($detectionResult);
 
             $this->gitCloneFactory->setGitCloneData($installation, $data);

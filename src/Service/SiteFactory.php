@@ -11,7 +11,8 @@ class SiteFactory
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly SiteRepository $repository
+        private readonly SiteRepository $repository,
+        private readonly InstallationFactory $installationFactory,
     ) {
     }
 
@@ -27,11 +28,11 @@ class SiteFactory
             $site = new Site();
             $this->entityManager->persist($site);
 
+            $installation = $this->installationFactory->getInstallation($detectionResult);
+            $site->setInstallation($installation);
             $site->setDetectionResult($detectionResult);
             $site->setConfigFilePath($configFilePath);
         }
-
-        $this->entityManager->flush();
 
         return $site;
     }

@@ -32,12 +32,17 @@ class PackageVersionFactory
 
             if (null === $package) {
                 $package = new Package();
+                $this->entityManager->persist($package);
+
                 $package->setVendor($vendor);
                 $package->setPackage($name);
                 $package->setDescription($installed->description);
-
-                $this->entityManager->persist($package);
-                $this->entityManager->flush();
+                if (isset($installed->warning)) {
+                    $package->setWarning($installed->warning);
+                }
+                if (isset($installed->abandoned)) {
+                    $package->isAbandoned($installed->abandoned);
+                }
             }
 
             $packageVersion = $this->packageVersionRepository->findOneBy([
@@ -47,10 +52,10 @@ class PackageVersionFactory
 
             if (null === $packageVersion) {
                 $packageVersion = new PackageVersion();
+                $this->entityManager->persist($packageVersion);
+
                 $package->addPackageVersion($packageVersion);
                 $installation->addPackageVersion($packageVersion);
-
-                $this->entityManager->persist($packageVersion);
             }
 
             $packageVersion->setVersion($installed->version);
@@ -60,12 +65,13 @@ class PackageVersionFactory
             if (isset($installed->{'latest-status'})) {
                 $packageVersion->setLatestStatus($installed->{'latest-status'});
             }
+            if (isset($installed->{'latest-status'})) {
+                $packageVersion->setLatestStatus($installed->{'latest-status'});
+            }
 
             $packageVersions->add($packageVersion);
         }
 
         $installation->setPackageVersions($packageVersions);
-
-        $this->entityManager->flush();
     }
 }

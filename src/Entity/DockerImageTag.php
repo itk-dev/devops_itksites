@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\UniqueConstraint(name: 'dockerImage_name_tag', columns: ['docker_image_id', 'name', 'tag'])]
 class DockerImageTag extends AbstractBaseEntity
 {
-    #[ORM\ManyToMany(targetEntity: Installation::class, inversedBy: 'dockerImageTags')]
+    #[ORM\ManyToMany(targetEntity: Installation::class, mappedBy: 'dockerImageTags')]
     private Collection $installations;
 
     #[ORM\Column(type: 'string', length: 50)]
@@ -21,7 +21,7 @@ class DockerImageTag extends AbstractBaseEntity
     private string $tag = '';
 
     #[ORM\ManyToOne(targetEntity: DockerImage::class, inversedBy: 'dockerImageTags')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private DockerImage $dockerImage;
 
     public function __construct()

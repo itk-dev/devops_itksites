@@ -18,12 +18,13 @@ class DirectoryHandler implements DetectionResultHandlerInterface
      * DirectoryHandler constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param InstallationFactory $factory
+     * @param SiteRepository $siteRepository
+     * @param InstallationFactory $installationFactory
      */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly SiteRepository $siteRepository,
-        private readonly InstallationFactory $factory,
+        private readonly InstallationFactory $installationFactory,
     ) {
     }
 
@@ -32,15 +33,20 @@ class DirectoryHandler implements DetectionResultHandlerInterface
      */
     public function handleResult(DetectionResult $detectionResult): void
     {
-        $installation = $this->factory->getInstallation($detectionResult);
+        $installations = $this->installationFactory->getInstallations($detectionResult);
 
-        $sites = $this->siteRepository->findByRootDirAndServer($detectionResult->getRootDir(), $detectionResult->getServer());
-        foreach ($sites as $site) {
-            /* @var Site $site */
-            $installation->addSite($site);
+        foreach ($installations as $installation) {
+            $sites = $this->siteRepository->findByRootDirAndServer(
+                $detectionResult->getRootDir(),
+                $detectionResult->getServer()
+            );
+            foreach ($sites as $site) {
+                /* @var Site $site */
+                $installation->addSite($site);
+            }
         }
 
-        $installation->setDetectionResult($detectionResult);
+        $detectionResult->getServer()->setInstallations($installations);
     }
 
     /**

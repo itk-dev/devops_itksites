@@ -11,17 +11,18 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\UniqueConstraint(name: 'package_version', columns: ['package_id', 'version'])]
 class PackageVersion extends AbstractBaseEntity
 {
-    #[ORM\ManyToMany(targetEntity: Installation::class, inversedBy: 'packageVersions')]
+    #[ORM\ManyToMany(targetEntity: Installation::class, mappedBy: 'packageVersions')]
+    #[ORM\JoinColumn(nullable: false)]
     private Collection $installations;
 
     #[ORM\ManyToOne(targetEntity: Package::class, inversedBy: 'packageVersions')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Package $package;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $version;
 
-    #[ORM\Column(type: 'string', length: 25, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $latest;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]

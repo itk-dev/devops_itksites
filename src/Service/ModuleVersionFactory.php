@@ -30,15 +30,14 @@ class ModuleVersionFactory
 
             if (null === $module) {
                 $module = new Module();
+                $this->entityManager->persist($module);
+
                 $module->setPackage($installed->package);
                 $module->setName($name);
                 if (isset($installed->display_name)) {
                     $module->setDisplayName($installed->display_name);
                 }
                 $module->setEnabled('Enabled' === $installed->status);
-
-                $this->entityManager->persist($module);
-                $this->entityManager->flush();
             }
 
             $moduleVersion = $this->moduleVersionRepository->findOneBy([
@@ -48,11 +47,10 @@ class ModuleVersionFactory
 
             if (null === $moduleVersion) {
                 $moduleVersion = new ModuleVersion();
+                $this->entityManager->persist($moduleVersion);
 
                 $module->addModuleVersion($moduleVersion);
                 $installation->addModuleVersion($moduleVersion);
-
-                $this->entityManager->persist($moduleVersion);
             }
 
             $moduleVersion->setVersion($installed->version);
@@ -61,7 +59,5 @@ class ModuleVersionFactory
         }
 
         $installation->setModuleVersions($moduleVersions);
-
-        $this->entityManager->flush();
     }
 }

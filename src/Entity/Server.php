@@ -67,13 +67,13 @@ class Server extends AbstractBaseEntity implements UserInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $usedFor;
 
-    #[ORM\OneToMany(mappedBy: 'server', targetEntity: DetectionResult::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'server', targetEntity: DetectionResult::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $detectionResults;
 
     #[ORM\Column(type: 'string', length: 25)]
     private string $hostingProvider;
 
-    #[ORM\OneToMany(mappedBy: 'server', targetEntity: Installation::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'server', targetEntity: Installation::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $installations;
 
     #[ORM\Column(type: 'string', length: 10)]

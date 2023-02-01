@@ -21,7 +21,6 @@ class GitTagFactory
 
     public function setGitCloneData(Installation $installation, object $data): void
     {
-        $oldTag = $installation->getGitTag();
         $tag = (isset($data->tag) && '' !== $data->tag) ? $data->tag : 'unknown';
 
         // @TODO handle more than one remote
@@ -39,10 +38,11 @@ class GitTagFactory
 
         if (null === $gitRepo) {
             $gitRepo = new GitRepo();
+            $this->entityManager->persist($gitRepo);
+
             $gitRepo->setProvider($provider);
             $gitRepo->setOrganization($org);
             $gitRepo->setRepo($repo);
-            $this->entityManager->persist($gitRepo);
         }
 
         $gitTag = $this->gitTagRepository->findOneBy([
@@ -52,12 +52,12 @@ class GitTagFactory
 
         if (null === $gitTag) {
             $gitTag = new GitTag();
+            $this->entityManager->persist($gitTag);
+
             $gitTag->addInstallation($installation);
             $gitTag->setTag($tag);
 
             $gitRepo->addGitTag($gitTag);
-
-            $this->entityManager->persist($gitTag);
         }
 
         $installation->setGitClonedScheme($this->getClonedScheme($remote));
@@ -68,8 +68,6 @@ class GitTagFactory
             $installation->setGitChanges('');
             $installation->setGitChangesCount(0);
         }
-
-        $this->cleanupGitTag($oldTag);
     }
 
     private function parseRemoteUrl(string $remote): array
@@ -109,21 +107,5 @@ class GitTagFactory
         }
 
         return GitClonedByType::UNKNOWN;
-    }
-
-    private function cleanupGitTag(?GitTag $gitTag): void
-    {
-        $installations = $gitTag?->getInstallations();
-        $d = 1;
-
-        if (null !== $gitTag && $gitTag->getInstallations()->isEmpty()) {
-            $gitRepo = $gitTag->getRepo();
-            $gitRepo->removeGitTag($gitTag);
-            $this->entityManager->remove($gitTag);
-
-            if (empty($gitRepo->getGitTags())) {
-                $this->entityManager->remove($gitRepo);
-            }
-        }
     }
 }

@@ -51,7 +51,8 @@ class InstallationCrudController extends AbstractCrudController
         yield EolTypeField::new('eol')->hideOnIndex();
         yield VersionField::new('composerVersion', 'Comp.');
         yield ChangesField::new('gitChangesCount')->hideOnDetail()->setLabel('Git');
-        yield AssociationField::new('gitTag');
+        yield VersionField::new('gitTag.tag')->hideOnDetail()->setLabel('Tag');
+        yield AssociationField::new('gitTag')->hideOnIndex();
         yield ChangesField::new('gitChangesCount')->hideOnIndex();
         yield CodeEditorField::new('gitChanges')->hideOnIndex();
         yield AssociationField::new('sites')->hideOnIndex();

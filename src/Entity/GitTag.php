@@ -14,10 +14,10 @@ class GitTag extends AbstractBaseEntity
     private string $tag = '';
 
     #[ORM\ManyToOne(targetEntity: GitRepo::class, inversedBy: 'gitTags')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private GitRepo $repo;
 
-    #[ORM\OneToMany(mappedBy: 'gitTag', targetEntity: Installation::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'gitTag', targetEntity: Installation::class)]
     private Collection $installations;
 
     public function __toString(): string

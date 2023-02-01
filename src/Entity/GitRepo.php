@@ -20,7 +20,7 @@ class GitRepo extends AbstractBaseEntity
     #[ORM\Column(length: 255)]
     private string $repo = '';
 
-    #[ORM\OneToMany(mappedBy: 'repo', targetEntity: GitTag::class, cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'repo', targetEntity: GitTag::class, cascade: ['persist'])]
     private Collection $gitTags;
 
     public function __construct()
@@ -35,7 +35,7 @@ class GitRepo extends AbstractBaseEntity
 
     public function getUrl(): string
     {
-        return 'https://'.$this->getProvider().'/'.$this->getOrganization().'/'.$this->getRepository();
+        return 'https://'.$this->getProvider().'/'.$this->getOrganization().'/'.$this->getRepo();
     }
 
     /**

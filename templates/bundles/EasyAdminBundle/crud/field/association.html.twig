@@ -5,7 +5,7 @@
     {% if field.value.count == 0 %}
         <span class="badge badge-warning">None</span>
     {% elseif not has_display(field.value[0]) and ea.crud.currentAction != 'detail'%}
-        <span class="badge badge-warning">{{ field.value | length }}</span>
+        <span class="badge badge-light">{{ field.value | length }}</span>
     {% else %}
         {% for value in field.value %}
             {% if ea.crud.currentAction == 'detail' %}

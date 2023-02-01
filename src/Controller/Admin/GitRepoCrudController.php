@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\TextMonospaceField;
 use App\Entity\GitRepo;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -10,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
 class GitRepoCrudController extends AbstractCrudController
 {
@@ -40,8 +42,9 @@ class GitRepoCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('provider')->setColumns(6);
-        yield TextField::new('organization')->setColumns(6);
-        yield TextField::new('repo')->setColumns(6);
+        yield UrlField::new('url')->setColumns(6)->hideOnIndex();
+        yield TextMonospaceField::new('organization')->setColumns(6);
+        yield TextMonospaceField::new('repo')->setColumns(6);
         yield AssociationField::new('gitTags');
     }
 

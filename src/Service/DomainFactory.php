@@ -66,8 +66,6 @@ class DomainFactory
         $domain->setAddress($address);
         $domain->setDetectionResult($detectionResult);
 
-        $this->entityManager->flush();
-
         return $domain;
     }
 }

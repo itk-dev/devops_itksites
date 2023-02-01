@@ -29,7 +29,13 @@ class Package extends AbstractBaseEntity
     #[ORM\Column(type: 'string', length: 25, nullable: true)]
     private ?string $license;
 
-    #[ORM\OneToMany(mappedBy: 'package', targetEntity: PackageVersion::class, orphanRemoval: true)]
+    #[ORM\Column(nullable: true)]
+    private ?bool $abandoned = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $warning = null;
+
+    #[ORM\OneToMany(mappedBy: 'package', targetEntity: PackageVersion::class)]
     private Collection $packageVersions;
 
     public function __construct()
@@ -110,6 +116,30 @@ class Package extends AbstractBaseEntity
     public function setLicense(?string $license): self
     {
         $this->license = $license;
+
+        return $this;
+    }
+
+    public function isAbandoned(): ?bool
+    {
+        return $this->abandoned;
+    }
+
+    public function setAbandoned(bool $abandoned): self
+    {
+        $this->abandoned = $abandoned;
+
+        return $this;
+    }
+
+    public function getWarning(): ?string
+    {
+        return $this->warning;
+    }
+
+    public function setWarning(?string $warning): self
+    {
+        $this->warning = $warning;
 
         return $this;
     }
