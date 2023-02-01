@@ -1,0 +1,10 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% if field.formattedValue is null %}
+    <span class="badge badge-secondary"></span>
+{% else %}
+    <span class="text-warning text-center">
+        <i class="fa fa-warning"></i>
+    </span>
+{% endif %}

@@ -40,7 +40,7 @@ class DockerImageTagCrudController extends AbstractCrudController
         yield AssociationField::new('dockerImage')->setColumns(6);
         yield AssociationField::new('installations')->setColumns(6);
         yield VersionField::new('tag')->setColumns(6);
-        yield DateTimeField::new('createdAt');
+        yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 
     public function configureFilters(Filters $filters): Filters

@@ -52,8 +52,6 @@ class DrupalHandler implements DetectionResultHandlerInterface
             if (isset($data->modules)) {
                 $this->moduleVersionFactory->setModuleVersions($installation, $data->modules);
             }
-
-            $this->entityManager->flush();
         } catch (\JsonException $e) {
             // @TODO log exceptions
         }

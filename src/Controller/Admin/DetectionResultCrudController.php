@@ -25,7 +25,7 @@ class DetectionResultCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
-        return $crud->showEntityActionsInlined();
+        return $crud->showEntityActionsInlined()->setDefaultSort(['lastContact' => 'DESC']);
     }
 
     public function configureActions(Actions $actions): Actions

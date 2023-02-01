@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Handler for DetectionResult off type "nginx".
+ * Handler for DetectionResult off type "nginx" (Sites, Domains).
  */
 class NginxHandler implements DetectionResultHandlerInterface
 {
@@ -22,6 +22,7 @@ class NginxHandler implements DetectionResultHandlerInterface
      *
      * @param EntityManagerInterface $entityManager
      * @param SiteFactory $siteFactory
+     * @param DomainFactory $domainFactory
      * @param ValidatorInterface $validator
      */
     public function __construct(
@@ -58,9 +59,6 @@ class NginxHandler implements DetectionResultHandlerInterface
 
             if (count($errors) > 0) {
                 // @TODO log validation error
-            } else {
-                $this->entityManager->persist($site);
-                $this->entityManager->flush();
             }
         } catch (\JsonException $e) {
             // @TODO log exceptions

@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.0.0
 info:
   title: ''
   description: ''
@@ -50,6 +50,7 @@ components:
   schemas:
     DetectionResult-write:
       type: object
+      description: ''
       properties:
         type:
           type: string
@@ -59,6 +60,7 @@ components:
           type: string
     DetectionResult.jsonld-write:
       type: object
+      description: ''
       properties:
         '@context':
           readOnly: true

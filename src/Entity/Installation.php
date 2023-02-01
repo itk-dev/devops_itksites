@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\UniqueConstraint(name: 'server_rootdir_idx', fields: ['server', 'rootDir'])]
 class Installation extends AbstractHandlerResult
 {
+    #[ORM\ManyToOne(targetEntity: Server::class, inversedBy: 'installations')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    protected ?Server $server;
+
     #[ORM\OneToMany(mappedBy: 'installation', targetEntity: Site::class)]
     private Collection $sites;
 
@@ -33,14 +37,26 @@ class Installation extends AbstractHandlerResult
     #[ORM\Column(type: 'string', length: 30)]
     private string $eol = '';
 
-    #[ORM\ManyToMany(targetEntity: PackageVersion::class, mappedBy: 'installations')]
+    #[ORM\Column(type: 'text')]
+    private string $gitChanges = '';
+
+    #[ORM\Column(type: 'integer')]
+    private int $gitChangesCount = 0;
+
+    #[ORM\Column(length: 10)]
+    private ?string $gitClonedScheme = '';
+
+    #[ORM\ManyToMany(targetEntity: PackageVersion::class, inversedBy: 'installations', cascade: ['persist'])]
     private Collection $packageVersions;
 
-    #[ORM\ManyToMany(targetEntity: ModuleVersion::class, mappedBy: 'installations')]
+    #[ORM\ManyToMany(targetEntity: ModuleVersion::class, inversedBy: 'installations', cascade: ['persist'])]
     private Collection $moduleVersions;
 
-    #[ORM\ManyToMany(targetEntity: DockerImageTag::class, mappedBy: 'installations')]
+    #[ORM\ManyToMany(targetEntity: DockerImageTag::class, inversedBy: 'installations', cascade: ['persist'])]
     private Collection $dockerImageTags;
+
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'installations')]
+    private ?GitTag $gitTag = null;
 
     public function __construct()
     {
@@ -55,9 +71,6 @@ class Installation extends AbstractHandlerResult
         return $this->getServer().$this->getRootDir();
     }
 
-    /**
-     * @return Collection<int, Site>
-     */
     public function getSites(): Collection
     {
         return $this->sites;
@@ -166,9 +179,6 @@ class Installation extends AbstractHandlerResult
         return $this;
     }
 
-    /**
-     * @return Collection<int, PackageVersion>
-     */
     public function getPackageVersions(): Collection
     {
         return $this->packageVersions;
@@ -241,9 +251,6 @@ class Installation extends AbstractHandlerResult
         return $this;
     }
 
-    /**
-     * @return Collection<int, ModuleVersion>
-     */
     public function getModuleVersions(): Collection
     {
         return $this->moduleVersions;
@@ -268,9 +275,6 @@ class Installation extends AbstractHandlerResult
         return $this;
     }
 
-    /**
-     * @return Collection<int, DockerImageTag>
-     */
     public function getDockerImageTags(): Collection
     {
         return $this->dockerImageTags;
@@ -291,6 +295,54 @@ class Installation extends AbstractHandlerResult
         if ($this->dockerImageTags->removeElement($dockerImageTag)) {
             $dockerImageTag->removeInstallation($this);
         }
+
+        return $this;
+    }
+
+    public function getGitChanges(): string
+    {
+        return $this->gitChanges;
+    }
+
+    public function setGitChanges(string $gitChanges): self
+    {
+        $this->gitChanges = $gitChanges;
+
+        return $this;
+    }
+
+    public function getGitChangesCount(): int
+    {
+        return $this->gitChangesCount;
+    }
+
+    public function setGitChangesCount(int $gitChangesCount): self
+    {
+        $this->gitChangesCount = $gitChangesCount;
+
+        return $this;
+    }
+
+    public function getGitClonedScheme(): ?string
+    {
+        return $this->gitClonedScheme;
+    }
+
+    public function setGitClonedScheme(?string $gitClonedScheme): self
+    {
+        $this->gitClonedScheme = $gitClonedScheme;
+
+        return $this;
+    }
+
+    public function getGitTag(): ?GitTag
+    {
+        return $this->gitTag;
+    }
+
+    public function setGitTag(?GitTag $gitTag): self
+    {
+        $this->gitTag = $gitTag;
 
         return $this;
     }

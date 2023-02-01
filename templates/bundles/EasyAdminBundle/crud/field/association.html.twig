@@ -1,0 +1,28 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% if 'toMany' == field.customOptions.get('associationType') %}
+    {% if field.value.count == 0 %}
+        <span class="badge badge-warning">None</span>
+    {% elseif not has_display(field.value[0]) and ea.crud.currentAction != 'detail'%}
+        <span class="badge badge-light">{{ field.value | length }}</span>
+    {% else %}
+        {% for value in field.value %}
+            {% if ea.crud.currentAction == 'detail' %}
+                <div><a href="{{ admin_detail_url(value) }}"><code>{{ entity_display(value, ea.crud.currentAction) }}</code></a></div>
+            {% elseif has_display(value) %}
+                <a href="{{ admin_detail_url(value) }}"><code>{{ entity_display(value, ea.crud.currentAction) }}</code></a>
+            {% else %}
+                <span class="badge badge-warning">None</span>
+            {% endif %}
+        {% else %}
+            <span class="badge badge-warning">None</span>
+        {% endfor %}
+    {% endif %}
+{% else %}
+    {% if field.customOptions.get('relatedUrl') is not null %}
+        <a href="{{ field.customOptions.get('relatedUrl') }}">{{ field.formattedValue }}</a>
+    {% else %}
+        {{ field.formattedValue }}
+    {% endif %}
+{% endif %}

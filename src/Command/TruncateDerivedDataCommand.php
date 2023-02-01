@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'app:truncate:derived-data',
+    name: 'app:data:truncate-derived',
     description: 'Truncate all tables that hold derived data',
 )]
 class TruncateDerivedDataCommand extends Command
@@ -22,15 +22,17 @@ class TruncateDerivedDataCommand extends Command
     private const DERIVED_TABLES = [
         'docker_image',
         'docker_image_tag',
-        'docker_image_tag_installation',
         'domain',
+        'git_repo',
+        'git_tag',
         'installation',
+        'installation_docker_image_tag',
+        'installation_module_version',
+        'installation_package_version',
         'module',
         'module_version',
-        'module_version_installation',
         'package',
         'package_version',
-        'package_version_installation',
         'site',
     ];
 
@@ -53,11 +55,15 @@ class TruncateDerivedDataCommand extends Command
             foreach (self::DERIVED_TABLES as $TABLE) {
                 $sql = $dbPlatform->getTruncateTableSQL($TABLE);
                 $connection->prepare($sql)->executeQuery();
+
+                $io->writeln('Truncated table: '.$TABLE);
             }
 
             $connection->prepare('SET FOREIGN_KEY_CHECKS=1')->executeQuery();
         } catch (Exception $e) {
             $io->error($e->getMessage());
+
+            return Command::FAILURE;
         }
 
         $io->success('Derived tables/data truncated');

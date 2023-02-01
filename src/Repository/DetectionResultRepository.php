@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\DetectionResult;
-use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -23,13 +22,13 @@ class DetectionResultRepository extends ServiceEntityRepository
     /**
      * Remove detection results base on last contact.
      *
-     * @param dateTime $date
+     * @param \dateTime $date
      *   The date to delete before
      *
      * @return mixed
      *   Number of records removed or false
      */
-    public function remove(DateTime $date): mixed
+    public function remove(\DateTime $date): mixed
     {
         return $this->createQueryBuilder('d')
             ->delete(DetectionResult::class, 's')
@@ -38,33 +37,4 @@ class DetectionResultRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
-    // /**
-    //  * @return DetectionResult[] Returns an array of DetectionResult objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?DetectionResult
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

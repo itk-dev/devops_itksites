@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\LatestStatusField;
 use App\Admin\Field\VersionField;
 use App\Entity\PackageVersion;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -22,7 +23,9 @@ class PackageVersionCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
-        return $crud->showEntityActionsInlined();
+        return $crud
+            ->showEntityActionsInlined()
+            ->setDefaultSort(['package' => 'ASC']);
     }
 
     public function configureActions(Actions $actions): Actions
@@ -43,8 +46,8 @@ class PackageVersionCrudController extends AbstractCrudController
         yield AssociationField::new('installations')->setColumns(6);
         yield VersionField::new('version')->setColumns(6);
         yield VersionField::new('latest')->setColumns(6);
-        yield VersionField::new('latestStatus')->setColumns(6);
-        yield DateTimeField::new('createdAt');
+        yield LatestStatusField::new('latestStatus')->setColumns(6);
+        yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 
     public function configureFilters(Filters $filters): Filters

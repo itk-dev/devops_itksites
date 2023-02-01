@@ -8,7 +8,7 @@
 {% elseif field.value == constant('App\\Types\\ServerTypeType::STG') %}
     <span class="badge badge-warning">{{ field.formattedValue }}</span>
 {% elseif field.value == constant('App\\Types\\ServerTypeType::DEVOPS') %}
-    <span class="badge badge-dark">{{ field.formattedValue }}</span>
+    <span class="badge badge-primary">{{ field.formattedValue }}</span>
 {% else %}
     <span class="badge badge-secondary">{{ field.formattedValue }}</span>
 {% endif %}

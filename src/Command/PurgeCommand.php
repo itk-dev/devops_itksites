@@ -17,7 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class PurgeCommand extends Command
 {
     public function __construct(
-        private readonly DetectionResultRepository $repository
+        private readonly DetectionResultRepository $detectionResultRepository
     ) {
         parent::__construct();
     }
@@ -42,7 +42,7 @@ class PurgeCommand extends Command
 
             return Command::FAILURE;
         }
-        $rows = $this->repository->remove($dateTime);
+        $rows = $this->detectionResultRepository->remove($dateTime);
 
         $io->success('Removed '.$rows.' detection results from the database.');
 

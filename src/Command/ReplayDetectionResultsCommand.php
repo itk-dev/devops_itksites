@@ -6,18 +6,19 @@ use ApiPlatform\Core\Bridge\Symfony\Messenger\ContextStamp;
 use App\Entity\DetectionResult;
 use App\Types\DetectionType;
 use Doctrine\ORM\EntityManagerInterface;
-use DoctrineBatchUtils\BatchProcessing\SimpleBatchIteratorAggregate;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
+use Symfony\Component\Uid\Ulid;
 
 #[AsCommand(
     name: 'app:replay:detection-results',
@@ -38,22 +39,63 @@ class ReplayDetectionResultsCommand extends Command
         parent::__construct();
     }
 
+    protected function configure(): void
+    {
+        $this
+            ->addOption(
+                'id',
+                'id',
+                InputOption::VALUE_OPTIONAL,
+                'Limit replay to this ID',
+                false
+            )
+            ->addOption(
+                'type',
+                't',
+                InputOption::VALUE_OPTIONAL,
+                'Limit replay to this type. Options are ['.join(', ', DetectionType::CHOICES).']',
+                false
+            )
+            ->addOption(
+                'limit',
+                'l',
+                InputOption::VALUE_OPTIONAL,
+                'Limit number of results to replay',
+                false
+            )
+        ;
+    }
+
     /** {@inheritDoc} */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $detectionResults = $this->entityManager->createQueryBuilder()
+        $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('r')
             ->from('App\Entity\DetectionResult', 'r')
             ->orderBy('r.id', 'ASC');
 
+        $criteria = [];
+
         $type = $input->getOption('type');
-        if ($type) {
+        if (false !== $type) { // option passed
+            if (null === $type) { // option passed but no value specified
+                $helper = $this->getHelper('question');
+                $question = new ChoiceQuestion(
+                    'Select type to replay ',
+                    array_flip(DetectionType::CHOICES),
+                );
+                $question->setErrorMessage('Type %s is invalid.');
+
+                $type = $helper->ask($input, $output, $question);
+                $output->writeln('You have just selected: '.$type);
+            }
             if (in_array($type, DetectionType::CHOICES)) {
-                $detectionResults
-                    ->where('r.type = ?1')
-                    ->setParameter(1, $type);
+                $queryBuilder
+                    ->where('r.type = :type')
+                    ->setParameter('type', $type);
+                $criteria = ['type' => $type];
             } else {
                 $io->error('Invalid type');
 
@@ -61,21 +103,47 @@ class ReplayDetectionResultsCommand extends Command
             }
         }
 
-        $iterable = SimpleBatchIteratorAggregate::fromQuery(
-            $detectionResults->getQuery(),
-            10 // flush/clear after 100 iterations
-        );
+        $id = $input->getOption('id');
+        if (false !== $id && null !== $id) {
+            $ulid = self::fromRfc4122($id);
+            $queryBuilder
+                ->where('r.id = :id')
+                ->setParameter('id', $ulid->toBinary());
+            $criteria = ['id' => $ulid];
+        }
+
+        $count = $this->entityManager->getRepository(DetectionResult::class)->count($criteria);
+
+        $this->entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
+        $iterable = $queryBuilder->getQuery()->toIterable();
+
+        $limit = intval($input->getOption('limit'));
+        if (0 !== $limit) {
+            $queryBuilder->setMaxResults($limit);
+            $max = min($count, $limit);
+        } else {
+            $max = $count;
+        }
 
         $context = $this->contextBuilder();
 
         $progressBar = new ProgressBar($output);
-        $progressBar->setFormat('debug_nomax');
+        $progressBar->setFormat('debug');
 
-        foreach ($progressBar->iterate($iterable) as $result) {
+        $count = 0;
+
+        /** @var DetectionResult $result */
+        foreach ($progressBar->iterate($iterable, $max) as $result) {
             $this->handle($result, $context);
+
+            $this->entityManager->flush();
+            $this->entityManager->clear();
+            \gc_collect_cycles();
+
+            ++$count;
         }
 
-        $io->success('DetectionResults replayed');
+        $io->success($count.' DetectionResults replayed');
 
         return Command::SUCCESS;
     }
@@ -103,11 +171,13 @@ class ReplayDetectionResultsCommand extends Command
     /**
      * Dispatch message to the message bus.
      *
-     * @param object|Envelope $message
+     * @param Envelope $message
+     *
+     * @return Envelope
      *
      * @throws \Throwable
      */
-    private function dispatch($message)
+    private function dispatch(Envelope $message): Envelope
     {
         try {
             return $this->messageBus->dispatch($message);
@@ -140,14 +210,24 @@ class ReplayDetectionResultsCommand extends Command
         ];
     }
 
-    protected function configure(): void
+    /**
+     * Get a Ulid from a Rfc4122 string with/without dashes.
+     *
+     * @param string $ulid
+     *
+     * @return Ulid
+     */
+    private static function fromRfc4122(string $ulid): Ulid
     {
-        $this
-            ->addOption(
-                'type',
-                't',
-                InputOption::VALUE_REQUIRED,
-                'Limit replay to this type. Options are ['.join(', ', DetectionType::CHOICES).']'
-            );
+        if (32 === strlen($ulid)) {
+            $ulid = substr($ulid, 0, 8)
+                .'-'.substr($ulid, 8, 4)
+                .'-'.substr($ulid, 12, 4)
+                .'-'.substr($ulid, 16, 4)
+                .'-'.substr($ulid, 20)
+            ;
+        }
+
+        return Ulid::fromRfc4122($ulid);
     }
 }

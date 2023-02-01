@@ -41,12 +41,12 @@ class DomainCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield DomainField::new('address')->setColumns(12);
-        yield SiteTypeField::new('site.type');
-        yield AssociationField::new('site');
+        yield SiteTypeField::new('site.type')->hideOnIndex();
+        yield AssociationField::new('site')->hideOnIndex();
         yield ServerTypeField::new('server.type')->setLabel('Type');
         yield AssociationField::new('server');
         yield AssociationField::new('detectionResult')->hideOnIndex();
-        yield DateTimeField::new('createdAt');
+        yield DateTimeField::new('createdAt')->hideOnIndex();
         yield DateTimeField::new('detectionResult.lastContact')->hideOnIndex();
     }
 

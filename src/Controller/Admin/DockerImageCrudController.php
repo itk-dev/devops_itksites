@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\TextMonospaceField;
 use App\Entity\DockerImage;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -37,11 +38,11 @@ class DockerImageCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('organization')->setColumns(6);
-        yield TextField::new('repository')->setColumns(6);
+        yield TextMonospaceField::new('organization')->setColumns(6);
+        yield TextMonospaceField::new('repository')->setColumns(6);
         yield AssociationField::new('dockerImageTags')->setColumns(6);
         yield TextField::new('description')->setColumns(12)->hideOnIndex();
-        yield DateTimeField::new('createdAt');
+        yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 
     public function configureFilters(Filters $filters): Filters

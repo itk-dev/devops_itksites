@@ -15,8 +15,6 @@ class DomainField implements FieldInterface
             ->setProperty($propertyName)
             ->setLabel($label)
 
-            ->setFormattedValue('test')
-
             // this template is used in 'index' and 'detail' pages
             ->setTemplatePath('EasyAdminBundle/Fields/domain.html.twig');
     }

@@ -33,7 +33,7 @@ class Site extends AbstractHandlerResult
     #[Assert\NotNull]
     private string $configFilePath = '';
 
-    #[ORM\OneToMany(mappedBy: 'site', targetEntity: Domain::class, cascade: ['persist'], fetch: 'EAGER', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'site', targetEntity: Domain::class, cascade: ['persist'])]
     #[Assert\Count(
         min: 1,
         minMessage: 'A site must have at least one domain'
@@ -41,6 +41,7 @@ class Site extends AbstractHandlerResult
     private Collection $domains;
 
     #[ORM\ManyToOne(targetEntity: Installation::class, inversedBy: 'sites')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Installation $installation;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -129,12 +130,12 @@ class Site extends AbstractHandlerResult
         return $this;
     }
 
-    public function getInstallation(): ?Installation
+    public function getInstallation(): Installation
     {
         return $this->installation;
     }
 
-    public function setInstallation(?Installation $installation): self
+    public function setInstallation(Installation $installation): self
     {
         $this->installation = $installation;
 

@@ -12,14 +12,33 @@ use Doctrine\ORM\Mapping as ORM;
 class ModuleVersion extends AbstractBaseEntity
 {
     #[ORM\ManyToOne(targetEntity: Module::class, inversedBy: 'moduleVersions')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Module $module;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $version;
 
-    #[ORM\ManyToMany(targetEntity: Installation::class, inversedBy: 'moduleVersions')]
+    #[ORM\ManyToMany(targetEntity: Installation::class, mappedBy: 'moduleVersions')]
     private Collection $installations;
+
+    public function __toString(): string
+    {
+        return $this->getVersion();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function display(int $style): string
+    {
+        switch ($style) {
+            case 0:
+                return $this->getVersion();
+            case 1:
+                return $this->getModule().':'.$this->getVersion();
+        }
+        throw new \Exception('Unknown style');
+    }
 
     public function __construct()
     {
@@ -38,9 +57,9 @@ class ModuleVersion extends AbstractBaseEntity
         return $this;
     }
 
-    public function getVersion(): ?string
+    public function getVersion(): string
     {
-        return $this->version;
+        return $this->version ?? 'Unknown';
     }
 
     public function setVersion(?string $version): self

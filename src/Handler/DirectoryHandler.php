@@ -4,12 +4,13 @@ namespace App\Handler;
 
 use App\Entity\DetectionResult;
 use App\Entity\Site;
+use App\Repository\SiteRepository;
 use App\Service\InstallationFactory;
 use App\Types\DetectionType;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Handler for DetectionResult off type "dir".
+ * Handler for DetectionResult off type "dir" (Installations).
  */
 class DirectoryHandler implements DetectionResultHandlerInterface
 {
@@ -17,11 +18,13 @@ class DirectoryHandler implements DetectionResultHandlerInterface
      * DirectoryHandler constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param InstallationFactory $factory
+     * @param SiteRepository $siteRepository
+     * @param InstallationFactory $installationFactory
      */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly InstallationFactory $factory,
+        private readonly SiteRepository $siteRepository,
+        private readonly InstallationFactory $installationFactory,
     ) {
     }
 
@@ -30,18 +33,20 @@ class DirectoryHandler implements DetectionResultHandlerInterface
      */
     public function handleResult(DetectionResult $detectionResult): void
     {
-        $siteRepository = $this->entityManager->getRepository(Site::class);
+        $installations = $this->installationFactory->getInstallations($detectionResult);
 
-        $installation = $this->factory->getInstallation($detectionResult);
-
-        $sites = $siteRepository->findByRootDirAndServer($detectionResult->getRootDir(), $detectionResult->getServer());
-        foreach ($sites as $site) {
-            /* @var Site $site */
-            $installation->addSite($site);
+        foreach ($installations as $installation) {
+            $sites = $this->siteRepository->findByRootDirAndServer(
+                $detectionResult->getRootDir(),
+                $detectionResult->getServer()
+            );
+            foreach ($sites as $site) {
+                /* @var Site $site */
+                $installation->addSite($site);
+            }
         }
 
-        $installation->setDetectionResult($detectionResult);
-        $this->entityManager->flush();
+        $detectionResult->getServer()->setInstallations($installations);
     }
 
     /**

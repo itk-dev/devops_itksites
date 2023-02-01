@@ -2,7 +2,7 @@
 {# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
 {% if ea.crud.currentAction == 'detail' %}
-    <code>{{ field.formattedValue }}</code>
+    <code class="text-dark">{{ field.formattedValue }}</code>
 {% else %}
-    <code>{{ field.formattedValue | replace({'/data/www/': './'}) }}</code>
+    <code class="text-dark">{{ field.formattedValue | replace({'/data/www/': './'}) }}</code>
 {% endif %}

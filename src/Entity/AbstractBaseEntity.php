@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
-use DateTimeImmutable;
-use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
@@ -18,19 +16,19 @@ abstract class AbstractBaseEntity
     #[ORM\Column(type: 'ulid', unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
-    private Ulid $id;
+    protected Ulid $id;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
-    private DateTimeImmutable $createdAt;
+    protected \DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
-    private DateTimeImmutable $modifiedAt;
+    protected \DateTimeImmutable $modifiedAt;
 
     #[ORM\Column(type: 'string', nullable: false, options: ['default' => ''])]
-    private string $createdBy = '';
+    protected string $createdBy = '';
 
     #[ORM\Column(type: 'string', nullable: false, options: ['default' => ''])]
-    private string $modifiedBy = '';
+    protected string $modifiedBy = '';
 
     /**
      * Get the Ulid.
@@ -52,7 +50,7 @@ abstract class AbstractBaseEntity
         return $this;
     }
 
-    public function getCreatedAt(): DateTimeInterface
+    public function getCreatedAt(): \DateTimeInterface
     {
         return $this->createdAt;
     }
@@ -65,7 +63,7 @@ abstract class AbstractBaseEntity
         return $this;
     }
 
-    public function getModifiedAt(): DateTimeInterface
+    public function getModifiedAt(): \DateTimeInterface
     {
         return $this->modifiedAt;
     }
