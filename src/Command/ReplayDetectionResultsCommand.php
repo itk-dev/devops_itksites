@@ -105,7 +105,7 @@ class ReplayDetectionResultsCommand extends Command
 
         $id = $input->getOption('id');
         if (false !== $id && null !== $id) {
-            $ulid = self::fromRfc4122($id);
+            $ulid = self::fromString($id);
             $queryBuilder
                 ->where('r.id = :id')
                 ->setParameter('id', $ulid->toBinary());
@@ -135,10 +135,6 @@ class ReplayDetectionResultsCommand extends Command
         /** @var DetectionResult $result */
         foreach ($progressBar->iterate($iterable, $max) as $result) {
             $this->handle($result, $context);
-
-            $this->entityManager->flush();
-            $this->entityManager->clear();
-            \gc_collect_cycles();
 
             ++$count;
         }
@@ -211,13 +207,13 @@ class ReplayDetectionResultsCommand extends Command
     }
 
     /**
-     * Get a Ulid from a Rfc4122 string with/without dashes.
+     * Get a Ulid from a string with/without dashes.
      *
      * @param string $ulid
      *
      * @return Ulid
      */
-    private static function fromRfc4122(string $ulid): Ulid
+    private static function fromString(string $ulid): Ulid
     {
         if (32 === strlen($ulid)) {
             $ulid = substr($ulid, 0, 8)
@@ -228,6 +224,6 @@ class ReplayDetectionResultsCommand extends Command
             ;
         }
 
-        return Ulid::fromRfc4122($ulid);
+        return Ulid::fromString($ulid);
     }
 }

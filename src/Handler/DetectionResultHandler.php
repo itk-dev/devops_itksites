@@ -4,11 +4,14 @@ namespace App\Handler;
 
 use App\Entity\DetectionResult;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Exception\RetryableException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 final class DetectionResultHandler implements MessageHandlerInterface
 {
+    private const MAX_RETRIES = 3;
+
     /**
      * DetectionResultHandler constructor.
      *
@@ -25,26 +28,41 @@ final class DetectionResultHandler implements MessageHandlerInterface
      * Invoke handler.
      *
      * @throws Exception
+     * @throws RetryableException
      */
     public function __invoke(DetectionResult $detectionResult): void
     {
-        try {
+        $retries = 0;
+
+        do {
             $this->entityManager->getConnection()->beginTransaction();
 
-            /** @var DetectionResultHandlerInterface $handler */
-            foreach ($this->resultHandlers as $handler) {
-                if ($handler->supportsType($detectionResult->getType())) {
-                    $handler->handleResult($detectionResult);
+            try {
+                /** @var DetectionResultHandlerInterface $handler */
+                foreach ($this->resultHandlers as $handler) {
+                    if ($handler->supportsType($detectionResult->getType())) {
+                        $handler->handleResult($detectionResult);
+                    }
                 }
+
+                $this->entityManager->flush();
+                $this->entityManager->commit();
+
+                break;
+            } catch (Exception\RetryableException $retryableException) {
+                $this->entityManager->getConnection()->rollBack();
+                ++$retries;
+
+                if ($retries === self::MAX_RETRIES) {
+                    throw $retryableException;
+                }
+            } catch (\Exception $exception) {
+                $this->entityManager->getConnection()->rollBack();
+
+                throw $exception;
             }
+        } while ($retries < self::MAX_RETRIES);
 
-            $this->entityManager->flush();
-            $this->entityManager->clear();
-
-            $this->entityManager->commit();
-        } catch (Exception $e) {
-            $this->entityManager->getConnection()->rollBack();
-            throw $e;
-        }
+        $this->entityManager->clear();
     }
 }
