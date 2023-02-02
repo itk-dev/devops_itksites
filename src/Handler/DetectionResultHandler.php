@@ -56,6 +56,8 @@ final class DetectionResultHandler implements MessageHandlerInterface
                 if (self::MAX_RETRIES === $retries) {
                     throw $retryableException;
                 }
+
+                \usleep(100000);
             } catch (\Exception $exception) {
                 $this->entityManager->getConnection()->rollBack();
 
