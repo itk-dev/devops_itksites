@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Admin\Field\RootDirField;
 use App\Admin\Field\ServerTypeField;
+use App\Admin\Field\TextMonospaceField;
 use App\Admin\Field\VersionField;
 use App\Entity\DetectionResult;
 use App\Form\Type\Admin\DetectionFilter;
@@ -41,6 +42,7 @@ class DetectionResultCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        yield TextMonospaceField::new('id')->hideOnIndex();
         yield VersionField::new('type')->setColumns(4);
         yield RootDirField::new('rootDir')->setColumns(12);
         yield ServerTypeField::new('server.type')->setLabel('Type');
