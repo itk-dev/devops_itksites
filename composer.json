@@ -18,9 +18,11 @@
         "ocramius/doctrine-batch-utils": "^2.3",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.2",
+        "symfony/amqp-messenger": "6.2.*",
         "symfony/asset": "^6.1",
         "symfony/browser-kit": "^6.1",
         "symfony/console": "^6.1",
+        "symfony/doctrine-messenger": "6.2.*",
         "symfony/dotenv": "^6.1",
         "symfony/expression-language": "^6.1",
         "symfony/flex": "^2",
@@ -114,6 +116,9 @@
         ],
         "fixtures-load": [
             "bin/console hautelook:fixtures:load --no-interaction"
+        ],
+        "queues": [
+            "bin/console messenger:consume async --failure-limit=1 -vvv"
         ],
         "tests": [
             "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",
