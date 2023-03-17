@@ -55,11 +55,21 @@ App\Entity\Domain:
     address: 'prod.example.com'
     detectionResult: '@detection_result/prod.example.com'
 
+App\Entity\Installation:
+  installation/dev.example.com:
+    rootDir: '/tmp'
+    detectionResult: '@detection_result/dev.example.com'
+
+  installation/prod.example.com:
+    rootDir: '/tmp'
+    detectionResult: '@detection_result/prod.example.com'
+
 App\Entity\Site:
   site/dev.example.com:
     server: '@server_1'
     detectionResult: '@detection_result/dev.example.com'
     rootDir: '/data/www/dev.example.com/htdocs/public'
+    installation: '@installation/dev.example.com'
     __calls:
       - addDomain: ['@domain/dev.example.com']
 
@@ -67,6 +77,7 @@ App\Entity\Site:
     server: '@server_1'
     detectionResult: '@detection_result/prod.example.com'
     rootDir: '/data/www/prod.example.com/htdocs/public'
+    installation: '@installation/prod.example.com'
     __calls:
       - addDomain: ['@domain/prod.example.com']
       - addDomain: ['@domain/test.example.com']
