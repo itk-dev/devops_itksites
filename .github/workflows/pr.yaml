@@ -224,3 +224,26 @@ jobs:
 
       - name: Check for changes in specifications (yaml)
         run: git diff --diff-filter=ACMRT --exit-code public/api-spec-v1.yaml
+
+  fixtures:
+    runs-on: ubuntu-latest
+    name: Load fixtures
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Install site
+        run: |
+          docker network create frontend
+          docker compose pull
+          docker compose up --detach
+          docker compose exec phpfpm composer install
+          docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interaction
+
+      - name: Load fixtures
+        run: |
+          docker compose exec phpfpm composer fixtures
