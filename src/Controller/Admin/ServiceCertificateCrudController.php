@@ -3,9 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ServiceCertificate;
-use App\Entity\Site;
 use App\Form\Type\ServiceCertificate\ServiceType;
-use Doctrine\Common\Collections\Criteria;
+use App\Repository\SiteRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
@@ -21,6 +20,10 @@ use Symfony\Component\Translation\TranslatableMessage;
 
 class ServiceCertificateCrudController extends AbstractCrudController
 {
+    public function __construct(private readonly SiteRepository $siteRepository)
+    {
+    }
+
     public static function getEntityFqcn(): string
     {
         return ServiceCertificate::class;
@@ -48,10 +51,7 @@ class ServiceCertificateCrudController extends AbstractCrudController
     {
         // Select domain from existing server primary domains on forms.
         if (in_array($pageName, [Crud::PAGE_NEW, Crud::PAGE_EDIT], true)) {
-            $domains = array_map(
-                static fn (Site $site) => $site->getPrimaryDomain(),
-                $this->container->get('doctrine')->getRepository(Site::class)
-                    ->findBy([], ['primaryDomain' => Criteria::ASC]));
+            $domains = $this->siteRepository->getPrimaryDomains();
             yield ChoiceField::new('domain')
                 ->setChoices(array_combine($domains, $domains))
             ;
