@@ -7,6 +7,7 @@ use App\Entity\DetectionResult;
 use App\Entity\Server;
 use App\Security\ApiKeyAuthenticator;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+use Symfony\Component\HttpFoundation\Response;
 
 class DetectionResultTest extends ApiTestCase
 {
@@ -24,7 +25,7 @@ class DetectionResultTest extends ApiTestCase
                         }',
         ]);
 
-        $this->assertResponseStatusCodeSame(401, 'Unauthenticated requests should be denied');
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED, 'Unauthenticated requests should be denied');
     }
 
     public function testAuthenticationOk(): void
@@ -34,6 +35,9 @@ class DetectionResultTest extends ApiTestCase
         $em = $this->getContainer()->get('doctrine')->getManager();
         $servers = $em->getRepository(Server::class)->findAll();
         $apikey = $servers[0]->getApiKey();
+
+        $results = $em->getRepository(DetectionResult::class)->findAll();
+        $beforeCount = \count($results);
 
         $response = $client->request('POST', '/api/detection_results', [
             'headers' => [
@@ -47,13 +51,13 @@ class DetectionResultTest extends ApiTestCase
             }',
         ]);
 
-        $this->assertResponseStatusCodeSame(202, 'Authenticated requests should be accepted');
-
-        $results = $em->getRepository(DetectionResult::class)->findAll();
-        $this->assertCount(1, $results);
+        $this->assertResponseStatusCodeSame(Response::HTTP_ACCEPTED, 'Authenticated requests should be accepted');
 
         $transport = $this->getContainer()->get('messenger.transport.async');
         $this->assertCount(1, $transport->getSent());
+
+        $results = $em->getRepository(DetectionResult::class)->findAll();
+        $this->assertCount($beforeCount + 1, $results);
     }
 
     public function testNoDuplicatesForSameHash(): void
@@ -65,7 +69,8 @@ class DetectionResultTest extends ApiTestCase
         $servers = $em->getRepository(Server::class)->findAll();
         $apikey = $servers[0]->getApiKey();
 
-        $beforeCount = $em->getRepository(DetectionResult::class)->findAll();
+        $results = $em->getRepository(DetectionResult::class)->findAll();
+        $beforeCount = \count($results);
 
         $response = $client->request('POST', '/api/detection_results', [
             'headers' => [
@@ -103,9 +108,8 @@ class DetectionResultTest extends ApiTestCase
                         }',
         ]);
 
-        $afterCount = $em->getRepository(DetectionResult::class)->findAll();
-        $diff = \count($afterCount) - \count($beforeCount);
+        $results = $em->getRepository(DetectionResult::class)->findAll()->;
 
-        $this->assertSame(2, $diff, 'Identical POST\s should not write more rows to the DB');
+        $this->assertCount($beforeCount + 2, $results, 'Identical POST\s should not write more rows to the DB');
     }
 }
