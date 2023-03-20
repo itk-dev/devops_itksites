@@ -108,7 +108,7 @@ class DetectionResultTest extends ApiTestCase
                         }',
         ]);
 
-        $results = $em->getRepository(DetectionResult::class)->findAll()->;
+        $results = $em->getRepository(DetectionResult::class)->findAll();
 
         $this->assertCount($beforeCount + 2, $results, 'Identical POST\s should not write more rows to the DB');
     }
