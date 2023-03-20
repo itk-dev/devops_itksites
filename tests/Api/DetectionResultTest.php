@@ -50,8 +50,10 @@ class DetectionResultTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(202, 'Authenticated requests should be accepted');
 
         $results = $em->getRepository(DetectionResult::class)->findAll();
-
         $this->assertCount(1, $results);
+
+        $transport = $this->getContainer()->get('messenger.transport.async');
+        $this->assertCount(1, $transport->getSent());
     }
 
     public function testNoDuplicatesForSameHash(): void
@@ -62,6 +64,8 @@ class DetectionResultTest extends ApiTestCase
         $em = $this->getContainer()->get('doctrine')->getManager();
         $servers = $em->getRepository(Server::class)->findAll();
         $apikey = $servers[0]->getApiKey();
+
+        $beforeCount = $em->getRepository(DetectionResult::class)->findAll();
 
         $response = $client->request('POST', '/api/detection_results', [
             'headers' => [
@@ -99,8 +103,9 @@ class DetectionResultTest extends ApiTestCase
                         }',
         ]);
 
-        $results = $em->getRepository(DetectionResult::class)->findAll();
+        $afterCount = $em->getRepository(DetectionResult::class)->findAll();
+        $diff = \count($afterCount) - \count($beforeCount);
 
-        $this->assertCount(2, $results, 'Identical POST\s should not write more rows to the DB');
+        $this->assertSame(2, $diff, 'Identical POST\s should not write more rows to the DB');
     }
 }
