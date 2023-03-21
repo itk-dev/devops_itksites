@@ -1,0 +1,19 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{% if ea.crud.currentPage == constant('EasyCorp\\Bundle\\EasyAdminBundle\\Config\\Crud::PAGE_INDEX') %}
+    {% for service in field.value -%}
+        {{ loop.index0 > 0 ? ', ' }}{{ service }}
+    {%- endfor %}
+{% else %}
+    {% for service in field.value %}
+        <dl>
+            <dt>{{ 'Type'|trans }}</dt>
+            <dd>{{ service.type }}</dd>
+
+            <dt>{{ 'System uui'|trans }}</dt>
+            <dd>{{ service.systemUuid }}</dd>
+
+            <dt>{{ '1Password url'|trans }}</dt>
+            <dd><a href="{{ service.onePasswordUrl }}">{{ service.onePasswordUrl }}</a></dd>
+        </dl>
+    {% endfor %}
+{% endif %}

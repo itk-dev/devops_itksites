@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Server;
 use App\Entity\Site;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -30,5 +31,20 @@ class SiteRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    /**
+     * Get unique primary domains from existing sites.
+     *
+     * @return array
+     */
+    public function getPrimaryDomains(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s.primaryDomain')
+            ->orderBy('s.primaryDomain')
+            ->distinct()
+            ->getQuery()
+            ->getResult(AbstractQuery::HYDRATE_SCALAR_COLUMN);
     }
 }

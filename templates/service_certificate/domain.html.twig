@@ -1,0 +1,12 @@
+{# https://symfony.com/bundles/EasyAdminBundle/current/crud.html#generating-admin-urls #}
+{% set url = ea_url()
+               .unsetAll()
+               .setController('App\\Controller\\Admin\\SiteCrudController')
+               .setAction('index')
+               .set('filters', {
+                   primaryDomain: {
+                       comparison: '=',
+                       value: field.value
+                   }
+               }) %}
+<a href="{{ url }}">{{ field.value }}</a>

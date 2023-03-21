@@ -1,0 +1,8 @@
+{# @see https://symfony.com/bundles/EasyAdminBundle/current/design.html#form-field-templates #}
+{% block textautocomplete_widget %}
+    {% if form.vars.tom_select_options|default() %}
+        {{ form_widget(form, {attr: {'data-tom-select-settings': form.vars.tom_select_options|json_encode}}) }}
+    {% else %}
+        {{ form_widget(form) }}
+    {% endif %}
+{% endblock %}

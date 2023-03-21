@@ -21,6 +21,8 @@ services:
       - MYSQL_PASSWORD=db
       - MYSQL_DATABASE=db
       #- ENCRYPT=1 # Uncomment to enable database encryption.
+    labels:
+      com.symfony.server.service-prefix: 'DATABASE'
 
   phpfpm:
     image: itkdev/php8.1-fpm:latest
@@ -59,3 +61,9 @@ services:
 #      HTTPS config - uncomment to enable redirect from :80 to :443
 #      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.middlewares=redirect-to-https"
 #      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+  node:
+    image: node:18
+    volumes:
+      - .:/app:delegated
+    working_dir: /app

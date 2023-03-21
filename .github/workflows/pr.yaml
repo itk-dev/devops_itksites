@@ -247,3 +247,20 @@ jobs:
       - name: Load fixtures
         run: |
           docker compose exec phpfpm composer fixtures
+
+  build-assets:
+    runs-on: ubuntu-latest
+    name: Build assets
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Build assets
+        run: |
+          docker network create frontend
+          docker compose run --rm node yarn install
+          docker compose run --rm node yarn build

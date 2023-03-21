@@ -1,0 +1,32 @@
+# @see https://fakerphp.github.io/formatters/
+App\Entity\ServiceCertificate:
+  service_certificate/dev.example.com:
+    domain: 'dev.example.com'
+    name: 'CPR-opslag'
+    description: |
+      Bruges til opslag af CPR-numre.
+    onePasswordUrl: 'https://example.com/1password'
+    expirationTime: <(new DateTimeImmutable('+2 years'))>
+    usageDocumentationUrl: https://example.com/example.com/README.md#certificates
+
+  service_certificate/prod.example.com:
+    domain: 'prod.example.com'
+    name: 'CVR-opslag'
+    description: |
+      Bruges til opslag af CVR-numre.
+    onePasswordUrl: 'https://example.com/1password'
+    expirationTime: <(new DateTimeImmutable('+4 years'))>
+    usageDocumentationUrl: https://example.com/example.com/README.md#certificates
+
+App\Entity\ServiceCertificate\Service:
+  service/dev.example.com/service_certificate/digital-post:
+    certificate: '@service_certificate/dev.example.com'
+    type: 'digital post'
+    systemUuid: '<(Symfony\Component\Uid\Uuid::v4())>'
+    onePasswordUrl: 'https://example.com/1password'
+
+  service/dev.example.com/service_certificate/cpr-lookup:
+    certificate: '@service_certificate/dev.example.com'
+    type: 'cpr lookup'
+    systemUuid: '<(Symfony\Component\Uid\Uuid::v4())>'
+    onePasswordUrl: 'https://example.com/1password'
