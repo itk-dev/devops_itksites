@@ -15,6 +15,7 @@ use App\Entity\OIDC;
 use App\Entity\Package;
 use App\Entity\PackageVersion;
 use App\Entity\Server;
+use App\Entity\ServiceCertificate;
 use App\Entity\Site;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -56,6 +57,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Sites', 'fas fa-bookmark', Site::class);
         yield MenuItem::linkToCrud('Domains', 'fas fa-link', Domain::class);
         yield MenuItem::linkToCrud('OIDC', 'fas fa-key', OIDC::class);
+        yield MenuItem::linkToCrud('Service certificates', 'fas fa-lock', ServiceCertificate::class);
         yield MenuItem::section('Dependencies');
         yield MenuItem::linkToCrud('Packages', 'fas fa-cube', Package::class);
         yield MenuItem::linkToCrud('Package Versions', 'fas fa-cubes', PackageVersion::class);
