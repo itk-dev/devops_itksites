@@ -11,6 +11,7 @@ use App\Entity\GitTag;
 use App\Entity\Installation;
 use App\Entity\Module;
 use App\Entity\ModuleVersion;
+use App\Entity\OIDC;
 use App\Entity\Package;
 use App\Entity\PackageVersion;
 use App\Entity\Server;
@@ -55,6 +56,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Installations', 'fas fa-folder', Installation::class);
         yield MenuItem::linkToCrud('Sites', 'fas fa-bookmark', Site::class);
         yield MenuItem::linkToCrud('Domains', 'fas fa-link', Domain::class);
+        yield MenuItem::linkToCrud('OIDC', 'fas fa-key', OIDC::class);
         yield MenuItem::linkToCrud('Service certificates', 'fas fa-lock', ServiceCertificate::class);
         yield MenuItem::section('Dependencies');
         yield MenuItem::linkToCrud('Packages', 'fas fa-cube', Package::class);
