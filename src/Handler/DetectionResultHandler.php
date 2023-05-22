@@ -6,9 +6,10 @@ use App\Entity\DetectionResult;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Exception\RetryableException;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-final class DetectionResultHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+final class DetectionResultHandler
 {
     private const MAX_RETRIES = 3;
 

@@ -6,7 +6,6 @@ use App\Entity\DetectionResult;
 use App\Service\GitTagFactory;
 use App\Service\InstallationFactory;
 use App\Types\DetectionType;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Handler for DetectionResult off type "git".
@@ -16,7 +15,8 @@ class GitHandler implements DetectionResultHandlerInterface
     /**
      * DirectoryHandler constructor.
      *
-     * @param EntityManagerInterface $entityManager
+     * @param InstallationFactory $installationFactory
+     * @param GitTagFactory $gitCloneFactory
      */
     public function __construct(
         private readonly InstallationFactory $installationFactory,

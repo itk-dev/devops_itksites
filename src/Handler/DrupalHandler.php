@@ -8,7 +8,6 @@ use App\Service\ModuleVersionFactory;
 use App\Service\PackageVersionFactory;
 use App\Types\DetectionType;
 use App\Types\FrameworkTypes;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Handler for DetectionResult off type "drupal".
@@ -18,13 +17,11 @@ class DrupalHandler implements DetectionResultHandlerInterface
     /**
      * DirectoryHandler constructor.
      *
-     * @param EntityManagerInterface $entityManager
      * @param InstallationFactory $installationFactory
      * @param PackageVersionFactory $packageVersionFactory
      * @param ModuleVersionFactory $moduleVersionFactory
      */
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
         private readonly InstallationFactory $installationFactory,
         private readonly PackageVersionFactory $packageVersionFactory,
         private readonly ModuleVersionFactory $moduleVersionFactory

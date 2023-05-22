@@ -7,7 +7,6 @@ use App\Service\InstallationFactory;
 use App\Service\PackageVersionFactory;
 use App\Types\DetectionType;
 use App\Types\FrameworkTypes;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Handler for DetectionResult off type "symfony".
@@ -17,12 +16,10 @@ class SymfonyHandler implements DetectionResultHandlerInterface
     /**
      * DirectoryHandler constructor.
      *
-     * @param EntityManagerInterface $entityManager
      * @param PackageVersionFactory $packageVersionFactory
      * @param InstallationFactory $installationFactory
      */
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
         private readonly PackageVersionFactory $packageVersionFactory,
         private readonly InstallationFactory $installationFactory,
     ) {
