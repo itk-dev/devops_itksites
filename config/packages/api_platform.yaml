@@ -4,11 +4,15 @@ api_platform:
     patch_formats:
         json: ['application/merge-patch+json']
 
-    # Enable the Swagger documentation and export.
+    # OpenApi (Swagger).
     enable_swagger: true
-
-    # Enable Swagger UI.
     enable_swagger_ui: true
+    swagger:
+        versions: [ 3 ]
+        api_keys:
+            apiKey:
+                name: Authorization
+                type: header
 
     show_webby: false
     graphql:

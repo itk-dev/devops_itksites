@@ -1,5 +1,5 @@
 {
-    "openapi": "3.0.3",
+    "openapi": "3.0.0",
     "info": {
         "title": "",
         "description": "",
@@ -14,7 +14,7 @@
     "paths": {
         "/api/detection_results": {
             "post": {
-                "operationId": "postDetectionResultCollection",
+                "operationId": "api_detection_results_post",
                 "tags": [
                     "DetectionResult"
                 ],
@@ -68,12 +68,47 @@
                 "deprecated": false
             },
             "parameters": []
+        },
+        "/api/detection_results/{id}": {
+            "get": {
+                "operationId": "api_detection_results_id_get",
+                "tags": [
+                    "DetectionResult"
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Resource not found"
+                    }
+                },
+                "summary": "Retrieves a DetectionResult resource.",
+                "description": "Retrieves a DetectionResult resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "DetectionResult identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
+            },
+            "parameters": []
         }
     },
     "components": {
         "schemas": {
             "DetectionResult-write": {
                 "type": "object",
+                "description": "",
+                "deprecated": false,
                 "properties": {
                     "type": {
                         "type": "string"
@@ -82,15 +117,14 @@
                         "type": "string"
                     },
                     "data": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "type": "string"
                     }
                 }
             },
             "DetectionResult.jsonld-write": {
                 "type": "object",
+                "description": "",
+                "deprecated": false,
                 "properties": {
                     "@context": {
                         "readOnly": true,
@@ -134,10 +168,7 @@
                         "type": "string"
                     },
                     "data": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "type": "string"
                     }
                 }
             }
