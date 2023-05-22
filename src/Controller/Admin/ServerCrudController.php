@@ -42,7 +42,7 @@ class ServerCrudController extends AbstractCrudController
             $crud->overrideTemplate('layout', 'EasyAdminBundle/layout.html.twig');
         }
 
-//        $crud->showEntityActionsInlined();
+        //        $crud->showEntityActionsInlined();
 
         return $crud;
     }

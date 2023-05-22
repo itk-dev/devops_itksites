@@ -2,21 +2,21 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
 use App\Repository\DetectionResultRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource(
+    operations: [
+        new Post(status: 202, output: false, messenger: true),
+    ],
+    denormalizationContext: ['groups' => ['write']],
+)]
 #[ORM\Entity(repositoryClass: DetectionResultRepository::class)]
 #[ORM\UniqueConstraint(name: 'server_hash_idx', fields: ['server', 'hash'])]
 #[ORM\Index(columns: ['type'], name: 'type_idx')]
-#[ApiResource(
-    collectionOperations: [
-    'post' => ['messenger' => true, 'output' => false, 'status' => 202],
-],
-    itemOperations: [],
-    denormalizationContext: ['groups' => ['write']]
-)]
 class DetectionResult extends AbstractBaseEntity
 {
     #[ORM\Column(type: 'string', length: 255)]

@@ -6,15 +6,12 @@ use App\Entity\DetectionResult;
 use App\Entity\Installation;
 use App\Service\DockerImageTagFactory;
 use App\Service\DomainFactory;
-use App\Service\InstallationFactory;
 use App\Service\ModuleVersionFactory;
 use App\Service\PackageVersionFactory;
 use App\Service\SiteFactory;
 use App\Types\DetectionType;
 use App\Types\FrameworkTypes;
 use App\Types\SiteType;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Handler for DetectionResult off type "symfony".
@@ -26,20 +23,18 @@ class DockerImageHandler implements DetectionResultHandlerInterface
     /**
      * DirectoryHandler constructor.
      *
-     * @param EntityManagerInterface $entityManager
      * @param DockerImageTagFactory $dockerImageTagFactory
-     * @param InstallationFactory $installationFactory
-     * @param ValidatorInterface $validator
+     * @param ModuleVersionFactory $moduleVersionFactory
+     * @param PackageVersionFactory $packageVersionFactory
+     * @param SiteFactory $siteFactory
+     * @param DomainFactory $domainFactory
      */
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
         private readonly DockerImageTagFactory $dockerImageTagFactory,
-        private readonly InstallationFactory $installationFactory,
         private readonly ModuleVersionFactory $moduleVersionFactory,
         private readonly PackageVersionFactory $packageVersionFactory,
         private readonly SiteFactory $siteFactory,
         private readonly DomainFactory $domainFactory,
-        private readonly ValidatorInterface $validator
     ) {
     }
 
@@ -91,9 +86,9 @@ class DockerImageHandler implements DetectionResultHandlerInterface
 
     private function getPhpVersionFromContainers(array $containers): string
     {
+        $matches = [];
         foreach ($containers as $container) {
             if (self::PHP_CONTAINER === $container->name) {
-                $matches = [];
                 \preg_match('/\d.+\d/', $container->image, $matches);
             }
         }

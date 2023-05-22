@@ -1,5 +1,5 @@
 {
-    "openapi": "3.0.3",
+    "openapi": "3.0.0",
     "info": {
         "title": "",
         "description": "",
@@ -14,7 +14,7 @@
     "paths": {
         "/api/detection_results": {
             "post": {
-                "operationId": "postDetectionResultCollection",
+                "operationId": "api_detection_results_post",
                 "tags": [
                     "DetectionResult"
                 ],
@@ -74,6 +74,8 @@
         "schemas": {
             "DetectionResult-write": {
                 "type": "object",
+                "description": "",
+                "deprecated": false,
                 "properties": {
                     "type": {
                         "type": "string"
@@ -82,51 +84,15 @@
                         "type": "string"
                     },
                     "data": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "type": "string"
                     }
                 }
             },
             "DetectionResult.jsonld-write": {
                 "type": "object",
+                "description": "",
+                "deprecated": false,
                 "properties": {
-                    "@context": {
-                        "readOnly": true,
-                        "oneOf": [
-                            {
-                                "type": "string"
-                            },
-                            {
-                                "type": "object",
-                                "properties": {
-                                    "@vocab": {
-                                        "type": "string"
-                                    },
-                                    "hydra": {
-                                        "type": "string",
-                                        "enum": [
-                                            "http://www.w3.org/ns/hydra/core#"
-                                        ]
-                                    }
-                                },
-                                "required": [
-                                    "@vocab",
-                                    "hydra"
-                                ],
-                                "additionalProperties": true
-                            }
-                        ]
-                    },
-                    "@id": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
-                    "@type": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
                     "type": {
                         "type": "string"
                     },
@@ -134,10 +100,7 @@
                         "type": "string"
                     },
                     "data": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "type": "string"
                     }
                 }
             }
