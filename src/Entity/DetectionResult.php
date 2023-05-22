@@ -2,9 +2,7 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Action\NotFoundAction;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\Repository\DetectionResultRepository;
 use Doctrine\ORM\Mapping as ORM;
