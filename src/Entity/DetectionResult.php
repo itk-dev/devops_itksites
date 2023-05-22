@@ -12,10 +12,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     operations: [
-        new Get(status: 404, controller: NotFoundAction::class, read: false),
         new Post(status: 202, output: false, messenger: true),
     ],
-    normalizationContext: ['groups' => ['write']],
     denormalizationContext: ['groups' => ['write']],
 )]
 #[ORM\Entity(repositoryClass: DetectionResultRepository::class)]
