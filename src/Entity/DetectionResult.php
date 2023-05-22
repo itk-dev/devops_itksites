@@ -15,7 +15,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Get(status: 404, controller: NotFoundAction::class, read: false),
         new Post(status: 202, output: false, messenger: true),
     ],
-    denormalizationContext: ['groups' => ['write']]
+    normalizationContext: ['groups' => ['write']],
+    denormalizationContext: ['groups' => ['write']],
 )]
 #[ORM\Entity(repositoryClass: DetectionResultRepository::class)]
 #[ORM\UniqueConstraint(name: 'server_hash_idx', fields: ['server', 'hash'])]

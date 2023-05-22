@@ -10,7 +10,7 @@ servers:
 paths:
   /api/detection_results:
     post:
-      operationId: postDetectionResultCollection
+      operationId: api_detection_results_post
       tags:
         - DetectionResult
       responses:
@@ -46,11 +46,37 @@ paths:
         required: true
       deprecated: false
     parameters: []
+  '/api/detection_results/{id}':
+    get:
+      operationId: api_detection_results_id_get
+      tags:
+        - DetectionResult
+      responses:
+        404:
+          description: 'Resource not found'
+      summary: 'Retrieves a DetectionResult resource.'
+      description: 'Retrieves a DetectionResult resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'DetectionResult identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    parameters: []
 components:
   schemas:
     DetectionResult-write:
       type: object
       description: ''
+      deprecated: false
       properties:
         type:
           type: string
@@ -61,6 +87,7 @@ components:
     DetectionResult.jsonld-write:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@context':
           readOnly: true
@@ -96,13 +123,6 @@ components:
   examples: {  }
   requestBodies: {  }
   headers: {  }
-  securitySchemes:
-    apiKey:
-      type: apiKey
-      description: 'Value for the Authorization header parameter.'
-      name: Authorization
-      in: header
-security:
-  -
-    apiKey: []
+  securitySchemes: {  }
+security: []
 tags: []
