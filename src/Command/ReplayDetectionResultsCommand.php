@@ -2,8 +2,8 @@
 
 namespace App\Command;
 
-use ApiPlatform\Core\Bridge\Symfony\Messenger\ContextStamp;
 use App\Entity\DetectionResult;
+use App\Message\ProcessDetectionResult;
 use App\Types\DetectionType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -17,7 +17,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Uid\Ulid;
 
 #[AsCommand(
@@ -72,7 +71,7 @@ class ReplayDetectionResultsCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $queryBuilder = $this->entityManager->createQueryBuilder()
-            ->select('r')
+            ->select('r.id')
             ->from('App\Entity\DetectionResult', 'r')
             ->orderBy('r.id', 'ASC');
 
@@ -104,7 +103,7 @@ class ReplayDetectionResultsCommand extends Command
         }
 
         $id = $input->getOption('id');
-        if (false !== $id && null !== $id) {
+        if (is_string($id)) {
             $ulid = self::fromString($id);
             $queryBuilder
                 ->where('r.id = :id')
@@ -125,16 +124,13 @@ class ReplayDetectionResultsCommand extends Command
             $max = $count;
         }
 
-        $context = $this->contextBuilder();
-
         $progressBar = new ProgressBar($output);
         $progressBar->setFormat('debug');
 
         $count = 0;
 
-        /** @var DetectionResult $result */
         foreach ($progressBar->iterate($iterable, $max) as $result) {
-            $this->handle($result, $context);
+            $this->dispatch($result['id']);
 
             ++$count;
         }
@@ -145,37 +141,19 @@ class ReplayDetectionResultsCommand extends Command
     }
 
     /**
-     * Handle and dispatch the DetectionResult.
-     *
-     * @throws \Throwable
-     */
-    private function handle(DetectionResult $result, array $context = []): mixed
-    {
-        $envelope = $this->dispatch(
-            (new Envelope($result))
-                ->with(new ContextStamp($context))
-        );
-
-        $handledStamp = $envelope->last(HandledStamp::class);
-        if (!$handledStamp instanceof HandledStamp) {
-            return $result;
-        }
-
-        return $handledStamp->getResult();
-    }
-
-    /**
      * Dispatch message to the message bus.
      *
-     * @param Envelope $message
+     * @param Ulid $detectionResultID
      *
      * @return Envelope
      *
      * @throws \Throwable
      */
-    private function dispatch(Envelope $message): Envelope
+    private function dispatch(Ulid $detectionResultID): Envelope
     {
         try {
+            $message = new ProcessDetectionResult($detectionResultID);
+
             return $this->messageBus->dispatch($message);
         } catch (HandlerFailedException $e) {
             // unwrap the exception thrown in handler for Symfony Messenger >= 4.3
@@ -186,24 +164,6 @@ class ReplayDetectionResultsCommand extends Command
 
             throw $e;
         }
-    }
-
-    /**
-     * Build context for the envelope context stamp.
-     *
-     * Static values as passed in ApiPlatform\Core\Bridge\Symfony\Messenger\DataPersister.
-     */
-    private function contextBuilder(): array
-    {
-        return [
-            'resource_class' => DetectionResult::class,
-            'has_composite_identifier' => false,
-            'identifiers' => [],
-            'collection_operation_name' => 'post',
-            'receive' => true,
-            'respond' => true,
-            'persist' => true,
-        ];
     }
 
     /**

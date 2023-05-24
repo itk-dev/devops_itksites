@@ -64,6 +64,18 @@ services:
   #      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.middlewares=redirect-to-https"
   #      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
+  rabbit:
+    image: rabbitmq:3.11-management
+    networks:
+      - app
+      - frontend
+    ports:
+      - "15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+      - RABBITMQ_ERLANG_COOKIE='d53f219cd9376f8f440aaf9889f315ab'
+
   node:
     image: node:18
     volumes:
