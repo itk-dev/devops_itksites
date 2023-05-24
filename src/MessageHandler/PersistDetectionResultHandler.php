@@ -3,10 +3,12 @@
 namespace App\MessageHandler;
 
 use App\Message\PersistDetectionResult;
+use App\Message\ProcessDetectionResult;
 use App\Repository\DetectionResultRepository;
 use App\Repository\ServerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 #[AsMessageHandler]
 final class PersistDetectionResultHandler
@@ -15,6 +17,7 @@ final class PersistDetectionResultHandler
         private readonly ServerRepository $serverRepository,
         private readonly DetectionResultRepository $detectionResultRepository,
         private readonly EntityManagerInterface $entityManager,
+        private readonly MessageBusInterface $messageBus,
     ) {
     }
 
@@ -36,6 +39,17 @@ final class PersistDetectionResultHandler
         }
 
         $this->entityManager->flush();
+
+        // New DetectionResults should be sent to processing
+        if (null === $result) {
+            $id = $detectionResult->getId();
+            if (null !== $id) {
+                $this->messageBus->dispatch(
+                    new ProcessDetectionResult($id)
+                );
+            }
+        }
+
         $this->entityManager->clear();
     }
 }
