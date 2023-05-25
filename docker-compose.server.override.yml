@@ -1,7 +1,6 @@
 services:
   rabbit:
     image: rabbitmq:3.11-management-alpine
-    hostname: "${COMPOSE_PROJECT_NAME}"
     networks:
       - app
       - frontend
