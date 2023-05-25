@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.2.1] - 2023-05-25
+
+- Fixed hostname for rabbit in docker compose
+
 ## [1.2.0] - 2023-05-25
 
 - [#32](https://github.com/itk-dev/devops_itksites/pull/32)
