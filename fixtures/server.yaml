@@ -1,5 +1,7 @@
 App\Entity\Server:
   server_{1..10}:
+    # A server id is needed by App\Entity\DetectionResult::generateHash().
+    id: '<(new Symfony\Component\Uid\Ulid())>'
     apiKey: <password(40, 255)>
     name: <domainName()>
     hostingProvider: <randomElement(['Azure','DBC','IT Relation'])>

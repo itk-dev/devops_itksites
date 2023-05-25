@@ -7,7 +7,6 @@ use App\Service\DomainFactory;
 use App\Service\SiteFactory;
 use App\Types\DetectionType;
 use App\Types\SiteType;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -20,13 +19,11 @@ class NginxHandler implements DetectionResultHandlerInterface
     /**
      * DirectoryHandler constructor.
      *
-     * @param EntityManagerInterface $entityManager
      * @param SiteFactory $siteFactory
      * @param DomainFactory $domainFactory
      * @param ValidatorInterface $validator
      */
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
         private readonly SiteFactory $siteFactory,
         private readonly DomainFactory $domainFactory,
         private readonly ValidatorInterface $validator,

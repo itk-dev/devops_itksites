@@ -7,8 +7,8 @@
         "php": ">=8.1",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "api-platform/core": "^2.6",
-        "doctrine/annotations": "^1.0",
+        "api-platform/core": "^3.0",
+        "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^2.5",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.11",
@@ -18,14 +18,16 @@
         "ocramius/doctrine-batch-utils": "^2.3",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.2",
+        "symfony/amqp-messenger": "^6.2",
         "symfony/asset": "^6.1",
-        "symfony/browser-kit": "^6.1",
+        "symfony/browser-kit": "^6.2",
         "symfony/console": "^6.1",
+        "symfony/doctrine-messenger": "^6.2",
         "symfony/dotenv": "^6.1",
         "symfony/expression-language": "^6.1",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "^6.1",
-        "symfony/http-client": "^6.1",
+        "symfony/http-client": "^6.2",
         "symfony/messenger": "^6.1",
         "symfony/monolog-bundle": "^3.0",
         "symfony/property-access": "^6.1",
@@ -37,6 +39,7 @@
         "symfony/twig-bundle": "^6.1",
         "symfony/uid": "^6.1",
         "symfony/validator": "^6.1",
+        "symfony/webpack-encore-bundle": "^1.16",
         "symfony/yaml": "^6.1"
     },
     "require-dev": {
@@ -45,7 +48,7 @@
         "hautelook/alice-bundle": "^2.10",
         "justinrainbow/json-schema": "^5.2",
         "phpunit/phpunit": "^9.5",
-        "psalm/plugin-symfony": "^3.1",
+        "psalm/plugin-symfony": "^5.1",
         "symfony/css-selector": "^6.1",
         "symfony/debug-bundle": "^6.1",
         "symfony/maker-bundle": "^1.37",
@@ -53,7 +56,7 @@
         "symfony/stopwatch": "^6.1",
         "symfony/var-dumper": "^6.1",
         "symfony/web-profiler-bundle": "^6.1",
-        "vimeo/psalm": "^4.21",
+        "vimeo/psalm": "^5.0",
         "weirdan/doctrine-psalm-plugin": "^2.2"
     },
     "replace": {
@@ -115,6 +118,9 @@
         "fixtures-load": [
             "bin/console hautelook:fixtures:load --no-interaction"
         ],
+        "queues": [
+            "bin/console messenger:consume async --failure-limit=1 -vvv"
+        ],
         "tests": [
             "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",
             "bin/console --env=test doctrine:database:create --no-interaction --if-not-exists --quiet",
@@ -122,7 +128,8 @@
             "vendor/bin/phpunit --stop-on-failure"
         ],
         "update-api-spec": [
-            "bin/console api:openapi:export --output=public/api-spec-v1.yaml --yaml --no-interaction"
+            "bin/console api:openapi:export --output=public/api-spec-v1.yaml --yaml --no-interaction",
+            "bin/console api:openapi:export --output=public/api-spec-v1.json --no-interaction"
         ]
     }
 }

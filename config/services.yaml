@@ -27,11 +27,9 @@ services:
         App\Handler\DetectionResultHandlerInterface:
             tags: [ app.handler.detection_result_handler ]
 
-    App\Handler\DetectionResultHandler:
+    App\MessageHandler\ProcessDetectionResultHandler:
         arguments:
-            - !tagged_iterator app.handler.detection_result_handler
-
-    App\DataPersister\DetectionResultDataPersister: ~
+            $resultHandlers: !tagged_iterator app.handler.detection_result_handler
 
     App\EventListener\RemovedRelationsListener:
         tags:

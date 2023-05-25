@@ -7,7 +7,6 @@ use App\Entity\Site;
 use App\Repository\SiteRepository;
 use App\Service\InstallationFactory;
 use App\Types\DetectionType;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Handler for DetectionResult off type "dir" (Installations).
@@ -17,12 +16,10 @@ class DirectoryHandler implements DetectionResultHandlerInterface
     /**
      * DirectoryHandler constructor.
      *
-     * @param EntityManagerInterface $entityManager
      * @param SiteRepository $siteRepository
      * @param InstallationFactory $installationFactory
      */
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
         private readonly SiteRepository $siteRepository,
         private readonly InstallationFactory $installationFactory,
     ) {
