@@ -118,6 +118,9 @@
         "fixtures-load": [
             "bin/console hautelook:fixtures:load --no-interaction"
         ],
+        "queues": [
+            "bin/console messenger:consume async --failure-limit=1 -vvv"
+        ],
         "tests": [
             "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",
             "bin/console --env=test doctrine:database:create --no-interaction --if-not-exists --quiet",
