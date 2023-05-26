@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.2.2] - 2023-05-26
+
+- Added Debian 11 to OS selections
+
 ## [1.2.1] - 2023-05-25
 
 - Fixed hostname for rabbit in docker compose
