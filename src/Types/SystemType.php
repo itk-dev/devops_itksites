@@ -18,5 +18,6 @@ class SystemType
         'Ubuntu 23.04' => 'ubuntu2304',
         'Debian 9' => 'deb9',
         'Debian 10' => 'deb10',
+        'Debian 11' => 'deb11',
     ];
 }
