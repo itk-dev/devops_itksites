@@ -35,7 +35,7 @@ class PackageVersionFactory
                 $this->entityManager->persist($package);
 
                 $package->setVendor($vendor);
-                $package->setPackage($name);
+                $package->setName($name);
                 $package->setDescription($installed->description);
                 if (isset($installed->warning)) {
                     $package->setWarning($installed->warning);

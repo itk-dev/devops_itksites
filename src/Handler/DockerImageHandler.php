@@ -4,6 +4,7 @@ namespace App\Handler;
 
 use App\Entity\DetectionResult;
 use App\Entity\Installation;
+use App\Service\AdvisoryFactory;
 use App\Service\DockerImageTagFactory;
 use App\Service\DomainFactory;
 use App\Service\ModuleVersionFactory;
@@ -33,6 +34,7 @@ class DockerImageHandler implements DetectionResultHandlerInterface
         private readonly DockerImageTagFactory $dockerImageTagFactory,
         private readonly ModuleVersionFactory $moduleVersionFactory,
         private readonly PackageVersionFactory $packageVersionFactory,
+        private readonly AdvisoryFactory $advisoryFactory,
         private readonly SiteFactory $siteFactory,
         private readonly DomainFactory $domainFactory,
     ) {
@@ -64,6 +66,9 @@ class DockerImageHandler implements DetectionResultHandlerInterface
             foreach ($data->containers as $container) {
                 if (isset($container->packages) && is_object($container->packages)) {
                     $this->packageVersionFactory->setPackageVersions($site->getInstallation(), $container->packages->installed);
+                }
+                if (isset($container->audit) && is_object($container->audit)) {
+                    $this->advisoryFactory->setAdvisories($site->getInstallation(), $container->audit);
                 }
                 if (isset($container->drupal) && is_object($container->drupal)) {
                     $this->moduleVersionFactory->setModuleVersions($site->getInstallation(), $container->drupal);
