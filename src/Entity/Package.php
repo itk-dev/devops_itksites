@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\UniqueConstraint(name: 'vendor_name', columns: ['vendor', 'name'])]
 class Package extends AbstractBaseEntity
 {
+    private const PACKAGIST_URL_PATTERN = 'https://packagist.org/packages/%s/%s';
+
     #[ORM\Column(type: 'string', length: 255)]
     private string $vendor;
 
@@ -38,8 +40,11 @@ class Package extends AbstractBaseEntity
     #[ORM\OneToMany(mappedBy: 'package', targetEntity: PackageVersion::class)]
     private Collection $packageVersions;
 
-    #[ORM\OneToMany(mappedBy: 'package', targetEntity: Advisory::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'package', targetEntity: Advisory::class)]
     private Collection $advisories;
+
+    #[ORM\Column]
+    private int $advisoryCount = 0;
 
     public function __construct()
     {
@@ -180,7 +185,7 @@ class Package extends AbstractBaseEntity
 
     public function getPackagistUrl(): string
     {
-        return 'https://packagist.org/packages/'.$this->vendor.'/'.$this->name;
+        return \sprintf(self::PACKAGIST_URL_PATTERN, $this->vendor, $this->name);
     }
 
     /**
@@ -198,6 +203,8 @@ class Package extends AbstractBaseEntity
             $advisory->setPackage($this);
         }
 
+        $this->advisoryCount = $this->advisories->count();
+
         return $this;
     }
 
@@ -209,6 +216,20 @@ class Package extends AbstractBaseEntity
                 $advisory->setPackage(null);
             }
         }
+
+        $this->advisoryCount = $this->advisories->count();
+
+        return $this;
+    }
+
+    public function getAdvisoryCount(): int
+    {
+        return $this->advisoryCount;
+    }
+
+    private function setAdvisoryCount(int $advisoryCount): self
+    {
+        $this->advisoryCount = $advisoryCount;
 
         return $this;
     }

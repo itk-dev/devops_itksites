@@ -70,7 +70,7 @@ services:
       - app
       - frontend
     ports:
-      - "5672"
+      - "15672"
     environment:
       - RABBITMQ_DEFAULT_USER=user
       - RABBITMQ_DEFAULT_PASS=password

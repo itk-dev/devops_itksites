@@ -40,7 +40,8 @@
         "symfony/uid": "^6.1",
         "symfony/validator": "^6.1",
         "symfony/webpack-encore-bundle": "^1.16",
-        "symfony/yaml": "^6.1"
+        "symfony/yaml": "^6.1",
+        "z4kn4fein/php-semver": "^2.0"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.23",

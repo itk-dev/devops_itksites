@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\AdvisoryCountField;
 use App\Admin\Field\LatestStatusField;
 use App\Admin\Field\VersionField;
 use App\Entity\PackageVersion;
@@ -25,7 +26,7 @@ class PackageVersionCrudController extends AbstractCrudController
     {
         return $crud
             ->showEntityActionsInlined()
-            ->setDefaultSort(['package' => 'ASC']);
+            ->setDefaultSort(['advisoryCount' => 'DESC', 'package' => 'ASC']);
     }
 
     public function configureActions(Actions $actions): Actions
@@ -42,11 +43,13 @@ class PackageVersionCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield AssociationField::new('package')->setColumns(6);
-        yield UrlField::new('packagistUrl')->setColumns(6)->hideOnIndex();
-        yield AssociationField::new('installations')->setColumns(6);
         yield VersionField::new('version')->setColumns(6);
         yield VersionField::new('latest')->setColumns(6);
+        yield AdvisoryCountField::new('advisoryCount')->onlyOnIndex()->setLabel('Adv.')->setCssClass('text-center');
+        yield UrlField::new('packagistUrl')->setColumns(6)->hideOnIndex();
+        yield AssociationField::new('installations')->setColumns(6);
         yield LatestStatusField::new('latestStatus')->setColumns(6);
+        yield AssociationField::new('advisories')->onlyOnDetail();
         yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 

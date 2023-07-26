@@ -3,22 +3,26 @@
 namespace App\Entity;
 
 use App\Repository\AdvisoryRepository;
-use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdvisoryRepository::class)]
 class Advisory extends AbstractBaseEntity
 {
-    #[ORM\Column(length: 255)]
+    private const GITHUB_ADVISORY_URL_PATTERN = 'https://github.com/advisories/%s';
+    private const FRIENDS_OF_PHP_ADVISORY_URL_PATTERN = 'https://github.com/FriendsOfPHP/security-advisories/blob/master/%s';
+
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $advisoryId = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 500)]
     private ?string $affectedVersions = null;
 
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $cve = null;
 
     #[ORM\Column(length: 255)]
@@ -30,9 +34,24 @@ class Advisory extends AbstractBaseEntity
     #[ORM\Column]
     private array $sources = [];
 
+    #[ORM\ManyToMany(targetEntity: PackageVersion::class, mappedBy: 'advisories')]
+    private Collection $packageVersions;
+
     #[ORM\ManyToOne(inversedBy: 'advisories')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Package $package = null;
+
+    public function __construct()
+    {
+        $this->packageVersions = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        $id = $this->cve ?? $this->advisoryId;
+
+        return $id.' | '.$this->title;
+    }
 
     public function getAdvisoryId(): ?string
     {
@@ -111,9 +130,59 @@ class Advisory extends AbstractBaseEntity
         return $this->sources;
     }
 
+    public function getSourceLinks(): array
+    {
+        $links = [];
+
+        foreach ($this->getSources() as $source) {
+            $links[] = match ($source['name']) {
+                'GitHub' => sprintf(self::GITHUB_ADVISORY_URL_PATTERN, $source['remoteId']),
+                'FriendsOfPHP/security-advisories' => sprintf(self::FRIENDS_OF_PHP_ADVISORY_URL_PATTERN, $source['remoteId']),
+                default => $source['name'].' / '.$source['remoteId'],
+            };
+        }
+
+        return $links;
+    }
+
     public function setSources(array $sources): self
     {
         $this->sources = $sources;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PackageVersion>
+     */
+    public function getPackageVersions(): Collection
+    {
+        return $this->packageVersions;
+    }
+
+    public function addPackageVersion(PackageVersion $packageVersion): self
+    {
+        if (null === $this->package) {
+            $packageVersion->getPackage()->addAdvisory($this);
+        } else {
+            if ($this->package !== $packageVersion->getPackage()) {
+                throw new \InvalidArgumentException('All packageVersions for an advisory must belong to the same package');
+            }
+        }
+
+        if (!$this->packageVersions->contains($packageVersion)) {
+            $this->packageVersions->add($packageVersion);
+            $packageVersion->addAdvisory($this);
+        }
+
+        return $this;
+    }
+
+    public function removePackageVersion(PackageVersion $packageVersion): self
+    {
+        if ($this->packageVersions->removeElement($packageVersion)) {
+            $packageVersion->removeAdvisory($this);
+        }
 
         return $this;
     }
