@@ -28,9 +28,16 @@ class PackageVersion extends AbstractBaseEntity
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private ?string $latestStatus;
 
+    #[ORM\ManyToMany(targetEntity: Advisory::class, inversedBy: 'packageVersions')]
+    private Collection $advisories;
+
+    #[ORM\Column]
+    private int $advisoryCount = 0;
+
     public function __construct()
     {
         $this->installations = new ArrayCollection();
+        $this->advisories = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -113,5 +120,38 @@ class PackageVersion extends AbstractBaseEntity
     public function getPackagistUrl(): string
     {
         return $this->package->getPackagistUrl();
+    }
+
+    /**
+     * @return Collection<int, Advisory>
+     */
+    public function getAdvisories(): Collection
+    {
+        return $this->advisories;
+    }
+
+    public function addAdvisory(Advisory $advisory): self
+    {
+        if (!$this->advisories->contains($advisory)) {
+            $this->advisories->add($advisory);
+        }
+
+        $this->advisoryCount = $this->advisories->count();
+
+        return $this;
+    }
+
+    public function removeAdvisory(Advisory $advisory): self
+    {
+        $this->advisories->removeElement($advisory);
+
+        $this->advisoryCount = $this->advisories->count();
+
+        return $this;
+    }
+
+    public function getAdvisoryCount(): int
+    {
+        return $this->advisoryCount;
     }
 }

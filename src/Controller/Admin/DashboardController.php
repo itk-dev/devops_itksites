@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Advisory;
 use App\Entity\DetectionResult;
 use App\Entity\DockerImage;
 use App\Entity\DockerImageTag;
@@ -17,6 +18,8 @@ use App\Entity\PackageVersion;
 use App\Entity\Server;
 use App\Entity\ServiceCertificate;
 use App\Entity\Site;
+use App\Repository\AdvisoryRepository;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -28,7 +31,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class DashboardController extends AbstractDashboardController
 {
     public function __construct(
-        private readonly AdminUrlGenerator $adminUrlGenerator
+        private readonly AdminUrlGenerator $adminUrlGenerator,
+        private readonly AdvisoryRepository $advisoryRepository,
     ) {
     }
 
@@ -45,7 +49,8 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('ITK Sites')
+            ->setTitle('<img src="/img/itk-sites-logo.png" width="170px" alt="ITK sites">')
+            ->setFaviconPath('img/favicon.ico')
             ->renderContentMaximized();
     }
 
@@ -61,6 +66,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Dependencies');
         yield MenuItem::linkToCrud('Packages', 'fas fa-cube', Package::class);
         yield MenuItem::linkToCrud('Package Versions', 'fas fa-cubes', PackageVersion::class);
+        yield MenuItem::linkToCrud('Advisories', 'fas fa-skull-crossbones', Advisory::class)->setBadge($this->advisoryRepository->count([]), 'dark');
         yield MenuItem::linkToCrud('Modules', 'fas fa-cube', Module::class);
         yield MenuItem::linkToCrud('Modules Versions', 'fas fa-cubes', ModuleVersion::class);
         yield MenuItem::linkToCrud('Docker Images', 'fas fa-cube', DockerImage::class);
@@ -79,5 +85,10 @@ class DashboardController extends AbstractDashboardController
             ->setDateTimeFormat('yyyy-MM-dd HH:mm:ss')
             ->setPageTitle('detail', '%entity_label_singular%: %entity_as_string%')
         ;
+    }
+
+    public function configureAssets(): Assets
+    {
+        return Assets::new()->addCssFile('css/admin.css');
     }
 }

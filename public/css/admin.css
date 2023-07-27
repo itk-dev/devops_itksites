@@ -1,0 +1,15 @@
+:root {
+    --body-max-width: 100%;
+    --sidebar-bg: #fff;
+    /* make the base font size smaller */
+    --button-primary-bg: rgb(0,123,166);
+    --pagination-active-bg: rgb(0,123,166);
+    --link-color: rgb(0,123,166);
+    --sidebar-menu-active-item-color: rgb(0,123,166);
+    --badge-boolean-true-bg: rgb(0,123,166);
+    --badge-boolean-false-bg: rgb(228, 73, 48);
+    --badge-boolean-false-color: var(--white);
+    --sidebar-menu-color: rgb(66,66,66);
+    --text-color-dark: rgb(66,66,66);
+    --bs-danger-rgb: 228, 73, 48;
+}
