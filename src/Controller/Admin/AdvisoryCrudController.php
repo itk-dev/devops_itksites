@@ -53,13 +53,13 @@ class AdvisoryCrudController extends AbstractCrudController
         yield SourcesField::new('sourceLinks')->setColumns(6)->onlyOnDetail();
     }
 
-//    public function configureFilters(Filters $filters): Filters
-//    {
-//        return $filters
-//            ->add('vendor')
-//            ->add('name')
-//            ->add('type')
-//            ->add('license')
-//        ;
-//    }
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('package')
+            ->add('advisoryId')
+            ->add('cve')
+            ->add('reportedAt')
+        ;
+    }
 }

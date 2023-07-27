@@ -66,6 +66,8 @@ class ModuleVersionFactory
 
             $module->setName($name);
             $module->setPackage($package);
+
+            $this->createdModules[] = $module;
         }
 
         return $module;
@@ -93,6 +95,8 @@ class ModuleVersionFactory
 
             $module->addModuleVersion($moduleVersion);
             $moduleVersion->setVersion($version);
+
+            $this->createdModuleVersions[] = $moduleVersion;
         }
 
         return $moduleVersion;
