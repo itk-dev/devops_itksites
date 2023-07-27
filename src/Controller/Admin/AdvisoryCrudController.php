@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
@@ -49,6 +50,7 @@ class AdvisoryCrudController extends AbstractCrudController
         yield TextMonospaceField::new('cve')->setColumns(6)->setLabel('CVE');
         yield TextField::new('title')->setColumns(6);
         yield UrlField::new('link')->setColumns(6)->onlyOnDetail();
+        yield DateField::new('reportedAt')->setColumns(6)->onlyOnIndex();
         yield DateTimeField::new('reportedAt')->setColumns(6)->onlyOnDetail();
         yield SourcesField::new('sourceLinks')->setColumns(6)->onlyOnDetail();
     }
