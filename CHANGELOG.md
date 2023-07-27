@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Added advisory handler and UI
+- Fixed "Integrity constraint violation: 1062 Duplicate entry" errors
+- Minor UI styling updates
+- Added logo and favicon
 
 ## [1.2.2] - 2023-05-26
 

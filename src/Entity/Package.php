@@ -8,14 +8,16 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PackageRepository::class)]
-#[ORM\UniqueConstraint(name: 'vendor_package', columns: ['vendor', 'package'])]
+#[ORM\UniqueConstraint(name: 'vendor_name', columns: ['vendor', 'name'])]
 class Package extends AbstractBaseEntity
 {
+    private const PACKAGIST_URL_PATTERN = 'https://packagist.org/packages/%s/%s';
+
     #[ORM\Column(type: 'string', length: 255)]
     private string $vendor;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private string $package;
+    private string $name;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description;
@@ -38,14 +40,21 @@ class Package extends AbstractBaseEntity
     #[ORM\OneToMany(mappedBy: 'package', targetEntity: PackageVersion::class)]
     private Collection $packageVersions;
 
+    #[ORM\OneToMany(mappedBy: 'package', targetEntity: Advisory::class)]
+    private Collection $advisories;
+
+    #[ORM\Column]
+    private int $advisoryCount = 0;
+
     public function __construct()
     {
         $this->packageVersions = new ArrayCollection();
+        $this->advisories = new ArrayCollection();
     }
 
     public function __toString(): string
     {
-        return $this->vendor.'/'.$this->package;
+        return $this->vendor.'/'.$this->name;
     }
 
     public function getVendor(): ?string
@@ -60,14 +69,14 @@ class Package extends AbstractBaseEntity
         return $this;
     }
 
-    public function getPackage(): ?string
+    public function getName(): ?string
     {
-        return $this->package;
+        return $this->name;
     }
 
-    public function setPackage(string $package): self
+    public function setName(string $name): self
     {
-        $this->package = $package;
+        $this->name = $name;
 
         return $this;
     }
@@ -176,6 +185,52 @@ class Package extends AbstractBaseEntity
 
     public function getPackagistUrl(): string
     {
-        return 'https://packagist.org/packages/'.$this->vendor.'/'.$this->package;
+        return \sprintf(self::PACKAGIST_URL_PATTERN, $this->vendor, $this->name);
+    }
+
+    /**
+     * @return Collection<int, Advisory>
+     */
+    public function getAdvisories(): Collection
+    {
+        return $this->advisories;
+    }
+
+    public function addAdvisory(Advisory $advisory): self
+    {
+        if (!$this->advisories->contains($advisory)) {
+            $this->advisories->add($advisory);
+            $advisory->setPackage($this);
+        }
+
+        $this->advisoryCount = $this->advisories->count();
+
+        return $this;
+    }
+
+    public function removeAdvisory(Advisory $advisory): self
+    {
+        if ($this->advisories->removeElement($advisory)) {
+            // set the owning side to null (unless already changed)
+            if ($advisory->getPackage() === $this) {
+                $advisory->setPackage(null);
+            }
+        }
+
+        $this->advisoryCount = $this->advisories->count();
+
+        return $this;
+    }
+
+    public function getAdvisoryCount(): int
+    {
+        return $this->advisoryCount;
+    }
+
+    private function setAdvisoryCount(int $advisoryCount): self
+    {
+        $this->advisoryCount = $advisoryCount;
+
+        return $this;
     }
 }

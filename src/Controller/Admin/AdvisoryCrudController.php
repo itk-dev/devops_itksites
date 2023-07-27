@@ -2,10 +2,9 @@
 
 namespace App\Controller\Admin;
 
-use App\Admin\Field\AdvisoryCountField;
-use App\Admin\Field\LatestStatusField;
-use App\Admin\Field\VersionField;
-use App\Entity\PackageVersion;
+use App\Admin\Field\SourcesField;
+use App\Admin\Field\TextMonospaceField;
+use App\Entity\Advisory;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -13,20 +12,21 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
-class PackageVersionCrudController extends AbstractCrudController
+class AdvisoryCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return PackageVersion::class;
+        return Advisory::class;
     }
 
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
             ->showEntityActionsInlined()
-            ->setDefaultSort(['advisoryCount' => 'DESC', 'package' => 'ASC']);
+            ->setDefaultSort(['package.vendor' => 'ASC', 'package.name' => 'ASC']);
     }
 
     public function configureActions(Actions $actions): Actions
@@ -42,24 +42,24 @@ class PackageVersionCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield AssociationField::new('package')->setColumns(6);
-        yield VersionField::new('version')->setColumns(6);
-        yield VersionField::new('latest')->setColumns(6);
-        yield AdvisoryCountField::new('advisoryCount')->onlyOnIndex()->setLabel('Adv.')->setCssClass('text-center');
-        yield UrlField::new('packagistUrl')->setColumns(6)->hideOnIndex();
-        yield AssociationField::new('installations')->setColumns(6);
-        yield LatestStatusField::new('latestStatus')->setColumns(6);
-        yield AssociationField::new('advisories')->onlyOnDetail();
-        yield DateTimeField::new('createdAt')->hideOnIndex();
+        yield TextMonospaceField::new('advisoryId')->setColumns(6)->onlyOnDetail();
+        yield AssociationField::new('package');
+        yield TextMonospaceField::new('affectedVersions')->setColumns(6)->onlyOnDetail();
+        yield AssociationField::new('packageVersions')->setLabel('Versions');
+        yield TextMonospaceField::new('cve')->setColumns(6)->setLabel('CVE');
+        yield TextField::new('title')->setColumns(6);
+        yield UrlField::new('link')->setColumns(6)->onlyOnDetail();
+        yield DateTimeField::new('reportedAt')->setColumns(6)->onlyOnDetail();
+        yield SourcesField::new('sourceLinks')->setColumns(6)->onlyOnDetail();
     }
 
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
             ->add('package')
-            ->add('version')
-            ->add('latest')
-            ->add('latestStatus')
+            ->add('advisoryId')
+            ->add('cve')
+            ->add('reportedAt')
         ;
     }
 }

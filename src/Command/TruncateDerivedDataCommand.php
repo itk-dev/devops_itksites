@@ -20,6 +20,7 @@ class TruncateDerivedDataCommand extends Command
     // Following tables and join tables only contain data that can be
     // fully recreated from detection results.
     private const DERIVED_TABLES = [
+        'advisory',
         'docker_image',
         'docker_image_tag',
         'domain',
@@ -33,6 +34,7 @@ class TruncateDerivedDataCommand extends Command
         'module_version',
         'package',
         'package_version',
+        'package_version_advisory',
         'site',
     ];
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\AdvisoryCountField;
 use App\Admin\Field\TextMonospaceField;
 use App\Admin\Field\WarningField;
 use App\Entity\Package;
@@ -26,7 +27,7 @@ class PackageCrudController extends AbstractCrudController
     {
         return $crud
             ->showEntityActionsInlined()
-            ->setDefaultSort(['vendor' => 'ASC', 'package' => 'ASC']);
+            ->setDefaultSort(['advisoryCount' => 'DESC', 'warning' => 'DESC', 'vendor' => 'ASC', 'name' => 'ASC']);
     }
 
     public function configureActions(Actions $actions): Actions
@@ -43,14 +44,15 @@ class PackageCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield TextMonospaceField::new('vendor')->setColumns(6);
-        yield TextMonospaceField::new('package')->setColumns(6);
+        yield TextMonospaceField::new('name')->setColumns(6);
         yield UrlField::new('packagistUrl')->setColumns(6)->hideOnIndex();
-        yield AssociationField::new('packageVersions')->setColumns(6);
+        yield AssociationField::new('packageVersions')->setColumns(6)->setLabel('Versions');
+        yield AdvisoryCountField::new('advisoryCount')->onlyOnIndex()->setLabel('Adv.')->setCssClass('text-center');
+        yield WarningField::new('warning')->onlyOnIndex()->setLabel('War.')->setCssClass('text-center');
         yield TextField::new('description')->setColumns(12)->hideOnIndex();
-        yield WarningField::new('warning')->hideOnDetail();
-        yield TextMonospaceField::new('warning')->hideOnIndex();
-        yield TextMonospaceField::new('type');
-        yield TextMonospaceField::new('license');
+        yield WarningField::new('warning')->onlyOnDetail();
+        yield AssociationField::new('advisories')->onlyOnDetail();
+        yield TextField::new('description')->setColumns(12)->hideOnDetail();
         yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 
@@ -58,7 +60,7 @@ class PackageCrudController extends AbstractCrudController
     {
         return $filters
             ->add('vendor')
-            ->add('package')
+            ->add('name')
             ->add('type')
             ->add('license')
         ;
