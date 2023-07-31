@@ -13,8 +13,8 @@ class OIDC extends AbstractBaseEntity
     #[ORM\Column(length: 255)]
     private ?string $site = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $expirationDate = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $expirationTime = null;
 
     #[ORM\Column(length: 255)]
     private ?string $discoveryUrl = null;
@@ -39,14 +39,14 @@ class OIDC extends AbstractBaseEntity
         return $this;
     }
 
-    public function getExpirationDate(): ?\DateTimeInterface
+    public function getExpirationTime(): ?\DateTimeInterface
     {
-        return $this->expirationDate;
+        return $this->expirationTime;
     }
 
-    public function setExpirationDate(\DateTimeInterface $expirationDate): self
+    public function setExpirationTime(\DateTimeInterface $expirationTime): self
     {
-        $this->expirationDate = $expirationDate;
+        $this->expirationTime = $expirationTime;
 
         return $this;
     }
