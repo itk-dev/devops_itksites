@@ -22,6 +22,11 @@ class OIDC extends AbstractBaseEntity
     #[Assert\Url]
     private ?string $onePasswordUrl = null;
 
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Url]
+    private ?string $usageDocumentationUrl = null;
+
     public function getDomain(): ?string
     {
         return $this->domain;
@@ -54,6 +59,18 @@ class OIDC extends AbstractBaseEntity
     public function setOnePasswordUrl(string $onePasswordUrl): self
     {
         $this->onePasswordUrl = $onePasswordUrl;
+
+        return $this;
+    }
+
+    public function getUsageDocumentationUrl(): ?string
+    {
+        return $this->usageDocumentationUrl;
+    }
+
+    public function setUsageDocumentationUrl(string $usageDocumentationUrl): self
+    {
+        $this->usageDocumentationUrl = $usageDocumentationUrl;
 
         return $this;
     }

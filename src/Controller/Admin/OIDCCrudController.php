@@ -51,6 +51,9 @@ class OIDCCrudController extends AbstractCrudController
 
         yield UrlField::new('onePasswordUrl')
             ->setLabel(new TranslatableMessage('1Password url'));
+        yield UrlField::new('usageDocumentationUrl')->hideOnIndex()
+            ->setHelp(new TranslatableMessage('Tell where to find documentation on how OpenID Connect is used on the site and
+how to configure the use.'));
         yield DateTimeField::new('expirationTime');
     }
 }
