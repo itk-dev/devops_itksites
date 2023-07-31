@@ -1,7 +1,6 @@
 # devops_itksites
 
-
-# Fixtures
+## Fixtures
 
 There are not implemented on
 
@@ -9,7 +8,9 @@ There are not implemented on
 * installations
 * domains
 
-This is due to automated processes and scripts that listen from sites and data is therefore not relevant to have. The architecture makes it posible to delete all the above data.
+This is due to automated processes and scripts that listen from sites and data
+is therefore not relevant to have. The architecture makes it posible to delete
+all the above data.
 
 ## Development
 
@@ -35,7 +36,7 @@ docker compose exec phpfpm bin/console itk-dev:openid-connect:login admin@exampl
 ## Assets
 
 We use [Webpack
-Encore]()https://symfony.com/doc/current/frontend.html#webpack-encore) to build
+Encore](https://symfony.com/doc/current/frontend.html#webpack-encore) to build
 assets:
 
 ```sh
