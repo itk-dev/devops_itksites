@@ -57,7 +57,7 @@ class ServiceCertificateCrudController extends AbstractCrudController
             ;
         } else {
             yield TextField::new('domain')
-                ->setTemplatePath('service_certificate/domain.html.twig');
+                ->setTemplatePath('admin/domain.html.twig');
         }
 
         yield TextField::new('name');

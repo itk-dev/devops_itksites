@@ -11,7 +11,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class OIDC extends AbstractBaseEntity
 {
     #[ORM\Column(length: 255)]
-    private ?string $site = null;
+    #[Assert\NotBlank]
+    private ?string $domain = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $expirationTime = null;
@@ -21,14 +22,14 @@ class OIDC extends AbstractBaseEntity
     #[Assert\Url]
     private ?string $onePasswordUrl = null;
 
-    public function getSite(): ?string
+    public function getDomain(): ?string
     {
-        return $this->site;
+        return $this->domain;
     }
 
-    public function setSite(string $site): self
+    public function setDomain(string $domain): self
     {
-        $this->site = $site;
+        $this->domain = $domain;
 
         return $this;
     }
