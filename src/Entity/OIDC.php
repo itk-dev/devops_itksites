@@ -16,12 +16,6 @@ class OIDC extends AbstractBaseEntity
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $expirationDate = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $claims = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $ad = null;
-
     #[ORM\Column(length: 255)]
     private ?string $discoveryUrl = null;
 
@@ -53,30 +47,6 @@ class OIDC extends AbstractBaseEntity
     public function setExpirationDate(\DateTimeInterface $expirationDate): self
     {
         $this->expirationDate = $expirationDate;
-
-        return $this;
-    }
-
-    public function getClaims(): ?string
-    {
-        return $this->claims;
-    }
-
-    public function setClaims(string $claims): self
-    {
-        $this->claims = $claims;
-
-        return $this;
-    }
-
-    public function getAd(): ?string
-    {
-        return $this->ad;
-    }
-
-    public function setAd(string $ad): self
-    {
-        $this->ad = $ad;
 
         return $this;
     }

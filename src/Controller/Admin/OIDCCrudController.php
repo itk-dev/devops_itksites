@@ -35,8 +35,6 @@ class OIDCCrudController extends AbstractCrudController
     {
         yield TextField::new('site');
         yield DateField::new('expirationDate');
-        yield TextareaField::new('claims');
-        yield TextareaField::new('ad')->setLabel('AD');
         yield TextField::new('discoveryUrl');
         yield TextField::new('graph');
         yield UrlField::new('onePasswordUrl')
