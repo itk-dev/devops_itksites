@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\OIDCRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OIDCRepository::class)]
 class OIDC extends AbstractBaseEntity
@@ -26,6 +27,11 @@ class OIDC extends AbstractBaseEntity
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $graph = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Url]
+    private ?string $onePasswordUrl = null;
 
     public function getSite(): ?string
     {
@@ -95,6 +101,18 @@ class OIDC extends AbstractBaseEntity
     public function setGraph(?string $graph): self
     {
         $this->graph = $graph;
+
+        return $this;
+    }
+
+    public function getOnePasswordUrl(): ?string
+    {
+        return $this->onePasswordUrl;
+    }
+
+    public function setOnePasswordUrl(string $onePasswordUrl): self
+    {
+        $this->onePasswordUrl = $onePasswordUrl;
 
         return $this;
     }
