@@ -33,9 +33,9 @@ class OIDCCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('site');
+        yield UrlField::new('site');
         yield DateField::new('expirationDate');
-        yield TextField::new('discoveryUrl');
+        yield UrlField::new('discoveryUrl');
         yield TextField::new('graph');
         yield UrlField::new('onePasswordUrl')
             ->setLabel(new TranslatableMessage('1Password url'));
