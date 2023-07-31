@@ -17,12 +17,6 @@ class OIDC extends AbstractBaseEntity
     private ?\DateTimeInterface $expirationTime = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $discoveryUrl = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $graph = null;
-
-    #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Url]
     private ?string $onePasswordUrl = null;
@@ -47,30 +41,6 @@ class OIDC extends AbstractBaseEntity
     public function setExpirationTime(\DateTimeInterface $expirationTime): self
     {
         $this->expirationTime = $expirationTime;
-
-        return $this;
-    }
-
-    public function getDiscoveryUrl(): ?string
-    {
-        return $this->discoveryUrl;
-    }
-
-    public function setDiscoveryUrl(string $discoveryUrl): self
-    {
-        $this->discoveryUrl = $discoveryUrl;
-
-        return $this;
-    }
-
-    public function getGraph(): ?string
-    {
-        return $this->graph;
-    }
-
-    public function setGraph(?string $graph): self
-    {
-        $this->graph = $graph;
 
         return $this;
     }

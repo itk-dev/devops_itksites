@@ -3,5 +3,4 @@ App\Entity\OIDC:
   oidcservice_certificate/dev.example.com:
     site: 'dev.example.com'
     expirationTime: <(new DateTimeImmutable('+2 years'))>
-    discoveryUrl: https://example.com/.well-known/openid-configuration
     onePasswordUrl: 'https://example.com/1password'

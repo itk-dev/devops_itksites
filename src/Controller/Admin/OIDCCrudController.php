@@ -8,8 +8,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use Symfony\Component\Translation\TranslatableMessage;
 
@@ -35,8 +33,6 @@ class OIDCCrudController extends AbstractCrudController
     {
         yield UrlField::new('site');
         yield DateTimeField::new('expirationTime');
-        yield UrlField::new('discoveryUrl');
-        yield TextField::new('graph');
         yield UrlField::new('onePasswordUrl')
             ->setLabel(new TranslatableMessage('1Password url'));
     }
