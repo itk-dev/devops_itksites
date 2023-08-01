@@ -6,7 +6,6 @@ use App\Entity\AbstractBaseEntity;
 use App\Entity\ServiceCertificate;
 use App\Repository\ServiceCertificate\ServiceRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
@@ -20,10 +19,6 @@ class Service extends AbstractBaseEntity
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     private ?string $type = null;
-
-    #[ORM\Column(type: 'uuid')]
-    #[Assert\Uuid]
-    private ?Uuid $systemUuid = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
@@ -55,18 +50,6 @@ class Service extends AbstractBaseEntity
     public function setType(string $type): self
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    public function getSystemUuid(): ?Uuid
-    {
-        return $this->systemUuid;
-    }
-
-    public function setSystemUuid(Uuid $systemUuid): self
-    {
-        $this->systemUuid = $systemUuid;
 
         return $this;
     }
