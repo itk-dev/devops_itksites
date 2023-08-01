@@ -5,15 +5,12 @@
     {%- endfor %}
 {% else %}
     {% for service in field.value %}
-        <dl>
-            <dt>{{ 'Type'|trans }}</dt>
-            <dd>{{ service.type }}</dd>
+        <dl class="row">
+            <dt class="col-sm-2">{{ 'Type'|trans }}</dt>
+            <dd class="col-sm-10">{{ service.type }}</dd>
 
-            <dt>{{ 'System uui'|trans }}</dt>
-            <dd>{{ service.systemUuid }}</dd>
-
-            <dt>{{ '1Password url'|trans }}</dt>
-            <dd><a href="{{ service.onePasswordUrl }}">{{ service.onePasswordUrl }}</a></dd>
+            <dt class="col-sm-2">{{ '1Password url'|trans }}</dt>
+            <dd class="col-sm-10"><a href="{{ service.onePasswordUrl }}">{{ service.onePasswordUrl }}</a></dd>
         </dl>
     {% endfor %}
 {% endif %}

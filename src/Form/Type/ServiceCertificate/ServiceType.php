@@ -7,7 +7,6 @@ use App\Form\Type\Admin\TextAutocompleteType;
 use App\Repository\ServiceCertificate\ServiceRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
-use Symfony\Component\Form\Extension\Core\Type\UuidType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatableMessage;
@@ -31,7 +30,6 @@ class ServiceType extends AbstractType
                 ],
                 'help' => new TranslatableMessage('Select an existing type or create a new one.'),
             ])
-            ->add('systemUuid', UuidType::class)
             ->add('onePasswordUrl', UrlType::class, [
                 'label' => new TranslatableMessage('1Password url'),
             ])

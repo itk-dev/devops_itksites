@@ -5,96 +5,72 @@ namespace App\Entity;
 use App\Repository\OIDCRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OIDCRepository::class)]
 class OIDC extends AbstractBaseEntity
 {
     #[ORM\Column(length: 255)]
-    private ?string $site = null;
+    #[Assert\NotBlank]
+    private ?string $domain = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $expirationDate = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $claims = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $ad = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $expirationTime = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $discoveryUrl = null;
+    #[Assert\NotBlank]
+    #[Assert\Url]
+    private ?string $onePasswordUrl = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $graph = null;
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Url]
+    private ?string $usageDocumentationUrl = null;
 
-    public function getSite(): ?string
+    public function getDomain(): ?string
     {
-        return $this->site;
+        return $this->domain;
     }
 
-    public function setSite(string $site): self
+    public function setDomain(string $domain): self
     {
-        $this->site = $site;
+        $this->domain = $domain;
 
         return $this;
     }
 
-    public function getExpirationDate(): ?\DateTimeInterface
+    public function getExpirationTime(): ?\DateTimeInterface
     {
-        return $this->expirationDate;
+        return $this->expirationTime;
     }
 
-    public function setExpirationDate(\DateTimeInterface $expirationDate): self
+    public function setExpirationTime(\DateTimeInterface $expirationTime): self
     {
-        $this->expirationDate = $expirationDate;
+        $this->expirationTime = $expirationTime;
 
         return $this;
     }
 
-    public function getClaims(): ?string
+    public function getOnePasswordUrl(): ?string
     {
-        return $this->claims;
+        return $this->onePasswordUrl;
     }
 
-    public function setClaims(string $claims): self
+    public function setOnePasswordUrl(string $onePasswordUrl): self
     {
-        $this->claims = $claims;
+        $this->onePasswordUrl = $onePasswordUrl;
 
         return $this;
     }
 
-    public function getAd(): ?string
+    public function getUsageDocumentationUrl(): ?string
     {
-        return $this->ad;
+        return $this->usageDocumentationUrl;
     }
 
-    public function setAd(string $ad): self
+    public function setUsageDocumentationUrl(string $usageDocumentationUrl): self
     {
-        $this->ad = $ad;
-
-        return $this;
-    }
-
-    public function getDiscoveryUrl(): ?string
-    {
-        return $this->discoveryUrl;
-    }
-
-    public function setDiscoveryUrl(string $discoveryUrl): self
-    {
-        $this->discoveryUrl = $discoveryUrl;
-
-        return $this;
-    }
-
-    public function getGraph(): ?string
-    {
-        return $this->graph;
-    }
-
-    public function setGraph(?string $graph): self
-    {
-        $this->graph = $graph;
+        $this->usageDocumentationUrl = $usageDocumentationUrl;
 
         return $this;
     }
