@@ -22,11 +22,9 @@ App\Entity\ServiceCertificate\Service:
   service/dev.example.com/service_certificate/digital-post:
     certificate: '@service_certificate/dev.example.com'
     type: 'digital post'
-    systemUuid: '<(Symfony\Component\Uid\Uuid::v4())>'
     onePasswordUrl: 'https://example.com/1password'
 
   service/dev.example.com/service_certificate/cpr-lookup:
     certificate: '@service_certificate/dev.example.com'
     type: 'cpr lookup'
-    systemUuid: '<(Symfony\Component\Uid\Uuid::v4())>'
     onePasswordUrl: 'https://example.com/1password'
