@@ -10,7 +10,6 @@ use ItkDev\OpenIdConnectBundle\Security\OpenIdConfigurationProviderManager;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdLoginAuthenticator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -19,24 +18,25 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationExc
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class AzureOIDCAuthenticator extends OpenIdLoginAuthenticator
 {
+    use TargetPathTrait;
+
     /**
      * AzureOIDCAuthenticator constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param RequestStack $requestStack
      * @param UrlGeneratorInterface $router
      * @param OpenIdConfigurationProviderManager $providerManager
      */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly RequestStack $requestStack,
         private readonly UrlGeneratorInterface $router,
-        private readonly OpenIdConfigurationProviderManager $providerManager
+        OpenIdConfigurationProviderManager $providerManager
     ) {
-        parent::__construct($providerManager, $requestStack);
+        parent::__construct($providerManager);
     }
 
     /** {@inheritDoc} */
@@ -74,7 +74,9 @@ class AzureOIDCAuthenticator extends OpenIdLoginAuthenticator
     /** {@inheritDoc} */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        return new RedirectResponse($this->router->generate('admin'));
+        $targetUrl = $this->getTargetPath($request->getSession(), $firewallName) ?? $this->router->generate('admin');
+
+        return new RedirectResponse($targetUrl);
     }
 
     /** {@inheritDoc} */
