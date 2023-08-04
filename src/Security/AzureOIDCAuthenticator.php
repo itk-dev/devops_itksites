@@ -10,7 +10,6 @@ use ItkDev\OpenIdConnectBundle\Security\OpenIdConfigurationProviderManager;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdLoginAuthenticator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -26,17 +25,15 @@ class AzureOIDCAuthenticator extends OpenIdLoginAuthenticator
      * AzureOIDCAuthenticator constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param RequestStack $requestStack
      * @param UrlGeneratorInterface $router
      * @param OpenIdConfigurationProviderManager $providerManager
      */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly RequestStack $requestStack,
         private readonly UrlGeneratorInterface $router,
-        private readonly OpenIdConfigurationProviderManager $providerManager
+        OpenIdConfigurationProviderManager $providerManager
     ) {
-        parent::__construct($providerManager, $requestStack);
+        parent::__construct($providerManager);
     }
 
     /** {@inheritDoc} */
