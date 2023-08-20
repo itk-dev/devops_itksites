@@ -341,14 +341,10 @@ class Server extends AbstractBaseEntity implements UserInterface
 
     public function setInstallations(Collection $collection): self
     {
-        foreach ($this->installations as $installation) {
-            if (!$collection->contains($installation)) {
-                $this->removeInstallation($installation);
-            }
-        }
+        $this->installations->clear();
 
         foreach ($collection as $item) {
-            $this->addInstallation($item);
+            $this->installations->add($item);
         }
 
         return $this;

@@ -4,5 +4,15 @@
 {% if ea.crud.currentAction == 'detail' %}
     <code class="text-dark">{{ field.formattedValue }}</code>
 {% else %}
-    <code class="text-dark">{{ field.formattedValue | replace({'/data/www/': './'}) }}</code>
+    <code class="text-dark">
+        <span title="{{ field.formattedValue }}">
+        {% if field.formattedValue starts with '/data/www/' %}
+            {{ field.formattedValue | replace({'/data/www/': './'}) }}
+        {% elseif field.formattedValue starts with '/home/www/' %}
+            <code class="text-dark">{{ field.formattedValue | replace({'/home/www/': './'}) }}</code>
+        {% else %}
+            <code class="text-dark">{{ field.formattedValue }}</code>
+        {% endif %}
+        </span>
+    </code>
 {% endif %}
