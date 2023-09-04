@@ -6,7 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- [#37](https://github.com/itk-dev/devops_itksites/pull/37)
+- [#39](https://github.com/itk-dev/devops_itksites/pull/39)
+  Added OIDC description to Readme, added server type field to OIDC.
+- [#38](https://github.com/itk-dev/devops_itksites/pull/38)
   Added "rootDir" normalizer to ensure they match between different types of DetectionResults. Fixes missing sites and domains.
 
 ## [1.4.1] - 2023-08-04
