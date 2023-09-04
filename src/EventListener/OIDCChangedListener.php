@@ -19,8 +19,10 @@ class OIDCChangedListener
     public function preFlush(OIDC $oidc, PreFlushEventArgs $event): void
     {
         $site = $this->siteRepository->findOneBy(['primaryDomain' => $oidc->getDomain()]);
-        $type = $site->getServer()->getType();
 
-        $oidc->setType($type);
+        if (null !== $site) {
+            $type = $site->getServer()->getType();
+            $oidc->setType($type);
+        }
     }
 }
