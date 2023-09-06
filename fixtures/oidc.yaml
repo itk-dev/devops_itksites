@@ -5,3 +5,4 @@ App\Entity\OIDC:
     expirationTime: <(new DateTimeImmutable('+2 years'))>
     onePasswordUrl: 'https://example.com/1password'
     usageDocumentationUrl: https://example.com/example.com/README.md#oidc
+    type: 'stg'

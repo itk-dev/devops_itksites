@@ -37,6 +37,9 @@ class DomainFactory
                 continue;
             }
 
+            // Remove ' and " from beginning and end of domain string if present along with the default "blanks"
+            $domainString = \trim($domainString, " \n\r\t\v\x00'\"");
+
             $domain = $this->getDomain($domainString, $site, $detectionResult);
 
             $errors = $this->validator->validate($domain);
