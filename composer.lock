@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "api-platform/core",
-            "version": "v3.1.17",
+            "version": "v3.1.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "850f7356b6732d0edccf3ee773113c457afc771e"
+                "reference": "198ca0f1f1c9f730a15e85762b04af43eb43424e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/850f7356b6732d0edccf3ee773113c457afc771e",
-                "reference": "850f7356b6732d0edccf3ee773113c457afc771e",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/198ca0f1f1c9f730a15e85762b04af43eb43424e",
+                "reference": "198ca0f1f1c9f730a15e85762b04af43eb43424e",
                 "shasum": ""
             },
             "require": {
@@ -44,11 +44,10 @@
                 "elasticsearch/elasticsearch": ">=8.0",
                 "phpspec/prophecy": "<1.15",
                 "phpunit/phpunit": "<9.5",
-                "symfony/service-contracts": "<3",
                 "symfony/var-exporter": "<6.1.1"
             },
             "require-dev": {
-                "behat/behat": "^3.1",
+                "behat/behat": "^3.11",
                 "behat/mink": "^1.9",
                 "doctrine/cache": "^1.11 || ^2.1",
                 "doctrine/common": "^3.2.2",
@@ -166,7 +165,7 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v3.1.17"
+                "source": "https://github.com/api-platform/core/tree/v3.1.18"
             },
             "funding": [
                 {
@@ -174,7 +173,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-09-08T14:11:23+00:00"
+            "time": "2023-09-15T13:45:54+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -2132,16 +2131,16 @@
         },
         {
             "name": "itk-dev/openid-connect",
-            "version": "3.2.0",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/itk-dev/openid-connect.git",
-                "reference": "d420b17c4d9c0433146e46d55f09d4c9f66ae879"
+                "reference": "7bea58e5d8b338a1e0d260653ccf3f72fc2a4c2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itk-dev/openid-connect/zipball/d420b17c4d9c0433146e46d55f09d4c9f66ae879",
-                "reference": "d420b17c4d9c0433146e46d55f09d4c9f66ae879",
+                "url": "https://api.github.com/repos/itk-dev/openid-connect/zipball/7bea58e5d8b338a1e0d260653ccf3f72fc2a4c2d",
+                "reference": "7bea58e5d8b338a1e0d260653ccf3f72fc2a4c2d",
                 "shasum": ""
             },
             "require": {
@@ -2189,9 +2188,9 @@
             "description": "OpenID connect configuration package",
             "support": {
                 "issues": "https://github.com/itk-dev/openid-connect/issues",
-                "source": "https://github.com/itk-dev/openid-connect/tree/3.2.0"
+                "source": "https://github.com/itk-dev/openid-connect/tree/3.2.1"
             },
-            "time": "2023-09-11T11:24:55+00:00"
+            "time": "2023-09-18T10:24:50+00:00"
         },
         {
             "name": "itk-dev/openid-connect-bundle",
@@ -9449,16 +9448,16 @@
         },
         {
             "name": "ergebnis/composer-normalize",
-            "version": "2.36.0",
+            "version": "2.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/composer-normalize.git",
-                "reference": "a8ac2c507de9166652cd76f4c336e9c7c0dd1456"
+                "reference": "25d0fa13545452208fe21216608ed62b637e40f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/a8ac2c507de9166652cd76f4c336e9c7c0dd1456",
-                "reference": "a8ac2c507de9166652cd76f4c336e9c7c0dd1456",
+                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/25d0fa13545452208fe21216608ed62b637e40f0",
+                "reference": "25d0fa13545452208fe21216608ed62b637e40f0",
                 "shasum": ""
             },
             "require": {
@@ -9472,15 +9471,15 @@
                 "php": "~8.1.0 || ~8.2.0"
             },
             "require-dev": {
-                "composer/composer": "^2.6.2",
-                "ergebnis/license": "^2.1.0",
-                "ergebnis/php-cs-fixer-config": "^5.14.1",
+                "composer/composer": "^2.6.3",
+                "ergebnis/license": "^2.2.0",
+                "ergebnis/php-cs-fixer-config": "^5.15.1",
                 "ergebnis/phpunit-slow-test-detector": "^2.3.0",
                 "fakerphp/faker": "^1.23.0",
                 "infection/infection": "~0.27.0",
-                "phpunit/phpunit": "^10.3.2",
+                "phpunit/phpunit": "^10.3.4",
                 "psalm/plugin-phpunit": "~0.18.4",
-                "rector/rector": "~0.18.1",
+                "rector/rector": "~0.18.3",
                 "symfony/filesystem": "^6.0.13",
                 "vimeo/psalm": "^5.15.0"
             },
@@ -9521,7 +9520,7 @@
                 "security": "https://github.com/ergebnis/composer-normalize/blob/main/.github/SECURITY.md",
                 "source": "https://github.com/ergebnis/composer-normalize"
             },
-            "time": "2023-09-04T10:00:36+00:00"
+            "time": "2023-09-15T09:25:45+00:00"
         },
         {
             "name": "ergebnis/json",
@@ -10073,16 +10072,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.26.1",
+            "version": "v3.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "d023ba6684055f6ea1da1352d8a02baca0426983"
+                "reference": "e73ccaae1208f017bb7860986eebb3da48bd25d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/d023ba6684055f6ea1da1352d8a02baca0426983",
-                "reference": "d023ba6684055f6ea1da1352d8a02baca0426983",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/e73ccaae1208f017bb7860986eebb3da48bd25d6",
+                "reference": "e73ccaae1208f017bb7860986eebb3da48bd25d6",
                 "shasum": ""
             },
             "require": {
@@ -10156,7 +10155,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.26.1"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.27.0"
             },
             "funding": [
                 {
@@ -10164,7 +10163,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-09-08T19:09:07+00:00"
+            "time": "2023-09-17T14:37:54+00:00"
         },
         {
             "name": "hautelook/alice-bundle",
