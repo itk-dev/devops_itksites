@@ -38,7 +38,7 @@ class InstallationFactory
         }
     }
 
-    public function getInstallation(DetectionResult $detectionResult, ?string $rootDir = null): Installation
+    public function getInstallation(DetectionResult $detectionResult, string $rootDir = null): Installation
     {
         $rootDir = $rootDir ?? $detectionResult->getRootDir();
         $rootDir = RootDirNormalizer::normalize($rootDir);

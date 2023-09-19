@@ -25,8 +25,8 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
      */
     public function supports(Request $request): ?bool
     {
-        return $request->headers->has(self::AUTH_HEADER) &&
-            str_starts_with($request->headers->get(self::AUTH_HEADER), self::AUTH_HEADER_PREFIX);
+        return $request->headers->has(self::AUTH_HEADER)
+            && str_starts_with($request->headers->get(self::AUTH_HEADER), self::AUTH_HEADER_PREFIX);
     }
 
     /**
