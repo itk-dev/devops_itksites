@@ -9,6 +9,8 @@ doctrine:
     orm:
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        # Opt-in to new mapping driver mode as of Doctrine ORM 2.16, https://github.com/doctrine/orm/pull/10455
+        report_fields_where_declared: true
         auto_mapping: true
         mappings:
             App:
