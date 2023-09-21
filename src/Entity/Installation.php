@@ -9,13 +9,17 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: InstallationRepository::class)]
+#[ORM\AssociationOverrides([
+    new ORM\AssociationOverride('server', [
+        'joinColumns' => new ORM\JoinColumn(
+            nullable: false, onDelete: 'CASCADE'
+        )],
+        inversedBy: 'installations',
+    ),
+])]
 #[ORM\UniqueConstraint(name: 'server_rootdir_idx', fields: ['server', 'rootDir'])]
 class Installation extends AbstractHandlerResult
 {
-    #[ORM\ManyToOne(targetEntity: Server::class, inversedBy: 'installations')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    protected ?Server $server;
-
     #[ORM\OneToMany(mappedBy: 'installation', targetEntity: Site::class)]
     private Collection $sites;
 

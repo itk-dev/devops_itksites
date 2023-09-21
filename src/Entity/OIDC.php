@@ -27,6 +27,9 @@ class OIDC extends AbstractBaseEntity
     #[Assert\Url]
     private ?string $usageDocumentationUrl = null;
 
+    #[ORM\Column(length: 10)]
+    private ?string $type = null;
+
     public function getDomain(): ?string
     {
         return $this->domain;
@@ -71,6 +74,18 @@ class OIDC extends AbstractBaseEntity
     public function setUsageDocumentationUrl(string $usageDocumentationUrl): self
     {
         $this->usageDocumentationUrl = $usageDocumentationUrl;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

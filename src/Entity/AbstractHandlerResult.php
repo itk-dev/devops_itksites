@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Utils\RootDirNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\MappedSuperclass]
@@ -25,7 +26,7 @@ class AbstractHandlerResult extends AbstractBaseEntity
 
     public function setRootDir(string $rootDir): self
     {
-        $this->rootDir = $rootDir;
+        $this->rootDir = RootDirNormalizer::normalize($rootDir);
 
         return $this;
     }
@@ -51,8 +52,8 @@ class AbstractHandlerResult extends AbstractBaseEntity
     {
         $this->detectionResult = $detectionResult;
 
-        $this->rootDir = $detectionResult->getRootDir();
-        $this->server = $detectionResult->getServer();
+        $this->setRootDir($detectionResult->getRootDir());
+        $this->setServer($detectionResult->getServer());
 
         return $this;
     }

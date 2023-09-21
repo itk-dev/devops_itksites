@@ -7,8 +7,6 @@ use App\Entity\Installation;
 use App\Entity\Package;
 use App\Entity\PackageVersion;
 use App\Repository\AdvisoryRepository;
-use App\Repository\PackageRepository;
-use App\Repository\PackageVersionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use z4kn4fein\SemVer\SemverException;
 use z4kn4fein\SemVer\Version;
@@ -17,8 +15,6 @@ class AdvisoryFactory
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly PackageRepository $packageRepository,
-        private readonly PackageVersionRepository $packageVersionRepository,
         private readonly AdvisoryRepository $advisoryRepository,
     ) {
     }
@@ -105,8 +101,8 @@ class AdvisoryFactory
     private function constraintConverter(string $constraint): string
     {
         // @see https://github.com/z4kn4fein/php-semver#conditions
-        $constraint = str_replace(',', ' ', $constraint);
-        $constraint = str_replace('|', ' || ', $constraint);
+        $constraint = \str_replace(',', ' ', $constraint);
+        $constraint = \str_replace('|', ' || ', $constraint);
 
         return $constraint;
     }

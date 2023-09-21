@@ -61,8 +61,12 @@ class ServiceCertificateCrudController extends AbstractCrudController
         }
 
         yield TextField::new('name');
-        yield TextEditorField::new('description')->hideOnIndex()
+        yield TextEditorField::new('description')->onlyOnForms()
             ->setHelp(new TranslatableMessage('Tell what this certificate is used for.'));
+        yield TextField::new('description')->onlyOnDetail()
+            ->setHelp(new TranslatableMessage('Tell what this certificate is used for.'))->renderAsHtml();
+        yield TextField::new('description')->onlyOnIndex()
+            ->setHelp(new TranslatableMessage('Tell what this certificate is used for.'))->setMaxLength(33)->stripTags();
         yield UrlField::new('onePasswordUrl')
             ->setLabel(new TranslatableMessage('1Password url'));
         yield UrlField::new('usageDocumentationUrl')->hideOnIndex()
