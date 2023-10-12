@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#42](https://github.com/itk-dev/devops_itksites/pull/42)
+  Add and apply CS fixer rule to enforce strict types on all files.
+
 ## [1.5.0] - 2023-09-20
 
 - [#40](https://github.com/itk-dev/devops_itksites/pull/40)
