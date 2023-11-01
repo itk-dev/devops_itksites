@@ -9,6 +9,8 @@ use App\Form\Type\Admin\HostingProviderFilter;
 use App\Form\Type\Admin\MariaDbVersionFilter;
 use App\Form\Type\Admin\ServerTypeFilter;
 use App\Form\Type\Admin\SystemFilter;
+use App\Service\Exporter;
+use App\Trait\ExportCrudControllerTrait;
 use App\Types\DatabaseVersionType;
 use App\Types\HostingProviderType;
 use App\Types\ServerTypeType;
@@ -28,9 +30,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ServerCrudController extends AbstractCrudController
 {
+    use ExportCrudControllerTrait;
+
     public function __construct(
+        Exporter $exporter,
         private readonly RequestStack $requestStack
     ) {
+        $this->setExporter($exporter);
     }
 
     public static function getEntityFqcn(): string
@@ -53,6 +59,7 @@ class ServerCrudController extends AbstractCrudController
     {
         return $actions
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_INDEX, $this->createExportAction())
         ;
     }
 

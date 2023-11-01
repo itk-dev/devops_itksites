@@ -6,6 +6,9 @@ namespace App\Controller\Admin;
 
 use App\Entity\OIDC;
 use App\Repository\SiteRepository;
+use App\Service\Exporter;
+use App\Trait\ExportCrudControllerTrait;
+use App\Types\ServerTypeType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -19,8 +22,13 @@ use Symfony\Component\Translation\TranslatableMessage;
 
 class OIDCCrudController extends AbstractCrudController
 {
-    public function __construct(private readonly SiteRepository $siteRepository)
+    use ExportCrudControllerTrait;
+
+    public function __construct(
+        Exporter $exporter,
+        private readonly SiteRepository $siteRepository)
     {
+        $this->setExporter($exporter);
     }
 
     public static function getEntityFqcn(): string
@@ -36,7 +44,9 @@ class OIDCCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
-            ->add(Crud::PAGE_INDEX, Action::DETAIL);
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_INDEX, $this->createExportAction())
+        ;
     }
 
     public function configureFields(string $pageName): iterable
