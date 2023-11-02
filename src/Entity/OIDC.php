@@ -17,7 +17,7 @@ class OIDC extends AbstractBaseEntity
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Groups(['export'])]
-    #[SerializedName('Domian')]
+    #[SerializedName('Domain')]
     private ?string $domain = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
