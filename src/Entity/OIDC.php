@@ -100,7 +100,7 @@ class OIDC extends AbstractBaseEntity
         return $this->notes;
     }
 
-    public function setNotes(?string $notes): static
+    public function setNotes(?string $notes): self
     {
         $this->notes = $notes;
 
