@@ -32,6 +32,9 @@ class OIDC extends AbstractBaseEntity
     #[ORM\Column(length: 10)]
     private ?string $type = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $notes = null;
+
     public function getDomain(): ?string
     {
         return $this->domain;
@@ -88,6 +91,18 @@ class OIDC extends AbstractBaseEntity
     public function setType(string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(?string $notes): static
+    {
+        $this->notes = $notes;
 
         return $this;
     }
