@@ -40,11 +40,11 @@ class OIDC extends AbstractBaseEntity
     private ?string $usageDocumentationUrl = null;
 
     #[ORM\Column(length: 10)]
-    #[Groups(['export'])]
-    #[SerializedName('Type')]
     private ?string $type = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['export'])]
+    #[SerializedName('Notes')]
     private ?string $notes = null;
 
     public function getDomain(): ?string

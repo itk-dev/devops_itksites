@@ -8,7 +8,6 @@ use App\Entity\OIDC;
 use App\Repository\SiteRepository;
 use App\Service\Exporter;
 use App\Trait\ExportCrudControllerTrait;
-use App\Types\ServerTypeType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -66,8 +65,7 @@ class OIDCCrudController extends AbstractCrudController
         yield UrlField::new('onePasswordUrl')
             ->setLabel(new TranslatableMessage('1Password url'));
         yield UrlField::new('usageDocumentationUrl')->hideOnIndex()
-            ->setHelp(new TranslatableMessage('Tell where to find documentation on how OpenID Connect is used on the site and
-how to configure the use.'));
+            ->setHelp(new TranslatableMessage('Tell where to find documentation on how OpenID Connect is used on the site and how to configure the use.'));
         yield DateField::new('expirationTime')->setFormat('yyyy-MM-dd')->setLabel('Expiration Date');
 
         yield TextareaField::new('notes');
