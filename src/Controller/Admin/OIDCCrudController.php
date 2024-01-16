@@ -6,6 +6,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\OIDC;
 use App\Repository\SiteRepository;
+use App\Service\Exporter;
+use App\Trait\ExportCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -19,8 +21,13 @@ use Symfony\Component\Translation\TranslatableMessage;
 
 class OIDCCrudController extends AbstractCrudController
 {
-    public function __construct(private readonly SiteRepository $siteRepository)
+    use ExportCrudControllerTrait;
+
+    public function __construct(
+        Exporter $exporter,
+        private readonly SiteRepository $siteRepository)
     {
+        $this->setExporter($exporter);
     }
 
     public static function getEntityFqcn(): string
@@ -36,7 +43,9 @@ class OIDCCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
-            ->add(Crud::PAGE_INDEX, Action::DETAIL);
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_INDEX, $this->createExportAction())
+        ;
     }
 
     public function configureFields(string $pageName): iterable
@@ -56,8 +65,7 @@ class OIDCCrudController extends AbstractCrudController
         yield UrlField::new('onePasswordUrl')
             ->setLabel(new TranslatableMessage('1Password url'));
         yield UrlField::new('usageDocumentationUrl')->hideOnIndex()
-            ->setHelp(new TranslatableMessage('Tell where to find documentation on how OpenID Connect is used on the site and
-how to configure the use.'));
+            ->setHelp(new TranslatableMessage('Tell where to find documentation on how OpenID Connect is used on the site and how to configure the use.'));
         yield DateField::new('expirationTime')->setFormat('yyyy-MM-dd')->setLabel('Expiration Date');
 
         yield TextareaField::new('notes');

@@ -9,6 +9,8 @@ use App\Types\SiteType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SiteRepository::class)]
@@ -23,6 +25,8 @@ class Site extends AbstractHandlerResult
         maxMessage: 'Your php version string cannot be longer than {{ limit }} characters',
     )]
     #[Assert\NotNull]
+    #[Groups(['export'])]
+    #[SerializedName('PHP version')]
     private string $phpVersion = '';
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -47,9 +51,13 @@ class Site extends AbstractHandlerResult
     private Installation $installation;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['export'])]
+    #[SerializedName('Primary domain')]
     private string $primaryDomain;
 
     #[ORM\Column(type: 'string', length: 25)]
+    #[Groups(['export'])]
+    #[SerializedName('Type')]
     private string $type = '';
 
     public function __construct()
