@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2024-01-16
+
 - [#43](https://github.com/itk-dev/devops_itksites/pull/43)
   Added CSV export
 - [#42](https://github.com/itk-dev/devops_itksites/pull/42)
@@ -59,7 +61,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.4.1...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.6.0...HEAD
+[1.6.0]: https://github.com/itk-dev/devops_itksites/compare/1.5.0...1.6.0
 [1.5.0]: https://github.com/itk-dev/devops_itksites/compare/1.4.1...1.5.0
 [1.4.1]: https://github.com/itk-dev/devops_itksites/compare/1.4.0...1.4.1
 [1.4.0]: https://github.com/itk-dev/devops_itksites/compare/1.3.0...1.4.0
