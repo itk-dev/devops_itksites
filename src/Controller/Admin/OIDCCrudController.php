@@ -6,13 +6,13 @@ namespace App\Controller\Admin;
 
 use App\Entity\OIDC;
 use App\Repository\SiteRepository;
-use App\Types\ServerTypeType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use Symfony\Component\Translation\TranslatableMessage;
@@ -53,17 +53,13 @@ class OIDCCrudController extends AbstractCrudController
                 ->setLabel('Site');
         }
 
-        yield ChoiceField::new('type')
-            ->hideOnForm()
-            ->setChoices(ServerTypeType::CHOICES)
-            ->renderExpanded()->setColumns(8)
-            ->setTemplatePath('EasyAdminBundle/Fields/server_type.html.twig');
-
         yield UrlField::new('onePasswordUrl')
             ->setLabel(new TranslatableMessage('1Password url'));
         yield UrlField::new('usageDocumentationUrl')->hideOnIndex()
             ->setHelp(new TranslatableMessage('Tell where to find documentation on how OpenID Connect is used on the site and
 how to configure the use.'));
         yield DateField::new('expirationTime')->setFormat('yyyy-MM-dd')->setLabel('Expiration Date');
+
+        yield TextareaField::new('notes');
     }
 }
