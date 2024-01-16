@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Admin\Field\ConfigFilePathField;
@@ -9,6 +11,8 @@ use App\Admin\Field\ServerTypeField;
 use App\Admin\Field\SiteTypeField;
 use App\Admin\Field\VersionField;
 use App\Entity\Site;
+use App\Service\Exporter;
+use App\Trait\ExportCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -19,6 +23,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 
 class SiteCrudController extends AbstractCrudController
 {
+    use ExportCrudControllerTrait;
+
+    public function __construct(Exporter $exporter)
+    {
+        $this->setExporter($exporter);
+    }
+
     public static function getEntityFqcn(): string
     {
         return Site::class;
@@ -33,6 +44,7 @@ class SiteCrudController extends AbstractCrudController
     {
         return $actions
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_INDEX, $this->createExportAction())
             ->remove(Crud::PAGE_INDEX, Action::NEW)
             ->remove(Crud::PAGE_INDEX, Action::EDIT)
             ->remove(Crud::PAGE_INDEX, Action::DELETE)
@@ -61,7 +73,6 @@ class SiteCrudController extends AbstractCrudController
             ->add('primaryDomain')
             ->add('configFilePath')
             ->add('phpVersion')
-            ->add('server')
-        ;
+            ->add('server');
     }
 }
