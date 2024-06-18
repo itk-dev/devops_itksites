@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Updated composer setup
+- Added new GPU hosts and Hetzner
+
 ## [1.6.0] - 2024-01-16
 
 - [#43](https://github.com/itk-dev/devops_itksites/pull/43)
