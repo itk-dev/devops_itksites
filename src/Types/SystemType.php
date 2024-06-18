@@ -18,6 +18,7 @@ class SystemType
         'Ubuntu 21.04' => 'ubuntu2104',
         'Ubuntu 22.04' => 'ubuntu2204',
         'Ubuntu 23.04' => 'ubuntu2304',
+        'Ubuntu 24.04' => 'ubuntu2404',
         'Debian 9' => 'deb9',
         'Debian 10' => 'deb10',
         'Debian 11' => 'deb11',
