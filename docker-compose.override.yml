@@ -1,6 +1,6 @@
 services:
   rabbit:
-    image: rabbitmq:3.11-management
+    image: rabbitmq:3.13-management
     networks:
        - app
        - frontend
@@ -12,7 +12,7 @@ services:
       - RABBITMQ_ERLANG_COOKIE='d53f219cd9376f8f440aaf9889f315ab'
 
   node:
-    image: node:18
+    image: node:20
     volumes:
       - .:/app:delegated
     working_dir: /app
