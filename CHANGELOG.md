@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.1] - 2024-06-18
+
 - Updated composer setup
 - Added new GPU hosts and Hetzner
 
