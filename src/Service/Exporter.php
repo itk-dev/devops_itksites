@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 class Exporter
 {
     public function __construct(
-        private readonly SerializerInterface $serializer
+        private readonly SerializerInterface $serializer,
     ) {
     }
 
@@ -21,7 +21,7 @@ class Exporter
     {
         $contentType = match ($format) {
             CsvEncoder::FORMAT => 'text/csv; charset=utf-8',
-            default => throw new \InvalidArgumentException(sprintf('Invalid format: %s', $format))
+            default => throw new \InvalidArgumentException(sprintf('Invalid format: %s', $format)),
         };
 
         $entities = $query->execute();
@@ -38,11 +38,11 @@ class Exporter
         );
 
         return new Response($content, Response::HTTP_OK, [
-                'content-type' => $contentType,
-                'content-disposition' => HeaderUtils::makeDisposition(
-                    HeaderUtils::DISPOSITION_ATTACHMENT,
-                    $filename
-                ),
+            'content-type' => $contentType,
+            'content-disposition' => HeaderUtils::makeDisposition(
+                HeaderUtils::DISPOSITION_ATTACHMENT,
+                $filename
+            ),
         ]);
     }
 }

@@ -124,7 +124,7 @@ class DetectionResult extends AbstractBaseEntity
         return $this->lastContact;
     }
 
-    public function setLastContact(\DateTimeImmutable $lastContact = null): self
+    public function setLastContact(?\DateTimeImmutable $lastContact = null): self
     {
         $this->lastContact = (null === $lastContact) ? new \DateTimeImmutable() : $lastContact;
 

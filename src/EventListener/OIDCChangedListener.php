@@ -14,7 +14,7 @@ use Doctrine\ORM\Events;
 class OIDCChangedListener
 {
     public function __construct(
-        private readonly SiteRepository $siteRepository
+        private readonly SiteRepository $siteRepository,
     ) {
     }
 

@@ -34,7 +34,7 @@ class ServerCrudController extends AbstractCrudController
 
     public function __construct(
         Exporter $exporter,
-        private readonly RequestStack $requestStack
+        private readonly RequestStack $requestStack,
     ) {
         $this->setExporter($exporter);
     }
