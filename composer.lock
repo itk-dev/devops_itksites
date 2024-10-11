@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "11dde998164872d82dcd0a713e314d58",
+    "content-hash": "390b717954fbbf988926d6e6b8018dd5",
     "packages": [
         {
             "name": "api-platform/core",
@@ -2323,6 +2323,111 @@
             "time": "2023-08-03T12:08:33+00:00"
         },
         {
+            "name": "itk-dev/vault",
+            "version": "0.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/itk-dev/vault-library.git",
+                "reference": "2b574c16ebd0960520a902c2089a42cb30145a2e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/itk-dev/vault-library/zipball/2b574c16ebd0960520a902c2089a42cb30145a2e",
+                "reference": "2b574c16ebd0960520a902c2089a42cb30145a2e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.1",
+                "psr/simple-cache": "^3.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.64",
+                "phpunit/phpunit": "^11.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ItkDev\\Vault\\": "src/Vault"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jesper Kristensen",
+                    "email": "cableman@linuxdev.dk",
+                    "homepage": "https://linuxdev.dk",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Library to communicate with Hashicorp Vault",
+            "homepage": "https://github.com/itk-dev",
+            "keywords": [
+                "approle",
+                "e",
+                "hashicorp",
+                "vault"
+            ],
+            "support": {
+                "issues": "https://github.com/itk-dev/vault-library/issues",
+                "source": "https://github.com/itk-dev/vault-library/tree/0.0.4"
+            },
+            "time": "2024-10-08T14:07:43+00:00"
+        },
+        {
+            "name": "itk-dev/vault-bundle",
+            "version": "0.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/itk-dev/vault-bundle.git",
+                "reference": "54018b006f1a3bab063d86a2caa95e5e76ccc1d2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/itk-dev/vault-bundle/zipball/54018b006f1a3bab063d86a2caa95e5e76ccc1d2",
+                "reference": "54018b006f1a3bab063d86a2caa95e5e76ccc1d2",
+                "shasum": ""
+            },
+            "require": {
+                "itk-dev/vault": "^0.0.4",
+                "nyholm/psr7": "^1.8",
+                "php": "^8.0",
+                "symfony/dependency-injection": "^6.4|^7.0|^7.1|^7.2",
+                "symfony/http-client": "^6.4|^7.0|^7.1|^7.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.64"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "ItkDev\\VaultBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jesper Kristensen",
+                    "email": "cableman@linuxdev.dk",
+                    "homepage": "https://linuxdev.dk",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Symfony bundle for vault",
+            "support": {
+                "issues": "https://github.com/itk-dev/vault-bundle/issues",
+                "source": "https://github.com/itk-dev/vault-bundle/tree/0.0.2"
+            },
+            "time": "2024-10-11T09:51:13+00:00"
+        },
+        {
             "name": "laminas/laminas-code",
             "version": "4.14.0",
             "source": {
@@ -2684,6 +2789,84 @@
                 "source": "https://github.com/nelmio/NelmioCorsBundle/tree/2.5.0"
             },
             "time": "2024-06-24T21:25:28+00:00"
+        },
+        {
+            "name": "nyholm/psr7",
+            "version": "1.8.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nyholm/psr7.git",
+                "reference": "a71f2b11690f4b24d099d6b16690a90ae14fc6f3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/a71f2b11690f4b24d099d6b16690a90ae14fc6f3",
+                "reference": "a71f2b11690f4b24d099d6b16690a90ae14fc6f3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.1 || ^2.0"
+            },
+            "provide": {
+                "php-http/message-factory-implementation": "1.0",
+                "psr/http-factory-implementation": "1.0",
+                "psr/http-message-implementation": "1.0"
+            },
+            "require-dev": {
+                "http-interop/http-factory-tests": "^0.9",
+                "php-http/message-factory": "^1.0",
+                "php-http/psr7-integration-tests": "^1.0",
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.4",
+                "symfony/error-handler": "^4.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nyholm\\Psr7\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com"
+                },
+                {
+                    "name": "Martijn van der Ven",
+                    "email": "martijn@vanderven.se"
+                }
+            ],
+            "description": "A fast PHP7 implementation of PSR-7",
+            "homepage": "https://tnyholm.se",
+            "keywords": [
+                "psr-17",
+                "psr-7"
+            ],
+            "support": {
+                "issues": "https://github.com/Nyholm/psr7/issues",
+                "source": "https://github.com/Nyholm/psr7/tree/1.8.2"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Zegnat",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nyholm",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-09-09T07:06:30+00:00"
         },
         {
             "name": "ocramius/doctrine-batch-utils",
@@ -3487,6 +3670,57 @@
                 "source": "https://github.com/php-fig/log/tree/3.0.2"
             },
             "time": "2024-09-11T13:17:53+00:00"
+        },
+        {
+            "name": "psr/simple-cache",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/simple-cache.git",
+                "reference": "764e0b3939f5ca87cb904f570ef9be2d78a07865"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/simple-cache/zipball/764e0b3939f5ca87cb904f570ef9be2d78a07865",
+                "reference": "764e0b3939f5ca87cb904f570ef9be2d78a07865",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\SimpleCache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for simple caching",
+            "keywords": [
+                "cache",
+                "caching",
+                "psr",
+                "psr-16",
+                "simple-cache"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/simple-cache/tree/3.0.0"
+            },
+            "time": "2021-10-29T13:26:27+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
