@@ -52,7 +52,7 @@ jobs:
   validate-doctrine-schema:
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: mysql://db:db@127.0.0.1:3306/db?serverVersion=mariadb-10.5.0
+      DATABASE_URL: mysql://db:db@127.0.0.1:3306/db?serverVersion=10.11.0-mariadb
     strategy:
       fail-fast: false
       matrix:
@@ -60,7 +60,7 @@ jobs:
     name: Validate Doctrine Schema (PHP ${{ matrix.php}})
     services:
       mariadb:
-        image: mariadb:10.5
+        image: mariadb:10.11
         env:
           MYSQL_USER: db
           MYSQL_PASSWORD: db
