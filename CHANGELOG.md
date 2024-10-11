@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Upgraded to Symfony 6.4
 - Updated composer setup
 - Added new GPU hosts and Hetzner
 

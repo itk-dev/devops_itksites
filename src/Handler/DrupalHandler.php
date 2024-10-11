@@ -26,7 +26,7 @@ class DrupalHandler implements DetectionResultHandlerInterface
     public function __construct(
         private readonly InstallationFactory $installationFactory,
         private readonly PackageVersionFactory $packageVersionFactory,
-        private readonly ModuleVersionFactory $moduleVersionFactory
+        private readonly ModuleVersionFactory $moduleVersionFactory,
     ) {
     }
 

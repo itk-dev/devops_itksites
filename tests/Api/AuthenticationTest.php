@@ -16,7 +16,10 @@ class AuthenticationTest extends ApiTestCase
 
     public function testAuthenticationDenied(): void
     {
-        $response = static::createClient()->request('POST', '/api/detection_results', [
+        static::createClient()->request('POST', '/api/detection_results', [
+            'headers' => [
+                'content-type' => 'application/json',
+            ],
             'body' => '{
                           "type": "string",
                           "rootDir": "string",
@@ -28,7 +31,7 @@ class AuthenticationTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED, 'Unauthenticated requests should be denied');
 
-        $response = static::createClient()->request('POST', '/api/detection_results', [
+        static::createClient()->request('POST', '/api/detection_results', [
             'headers' => [
                 'content-type' => 'application/json',
                 ApiKeyAuthenticator::AUTH_HEADER => ApiKeyAuthenticator::AUTH_HEADER_PREFIX.'123456789',

@@ -41,7 +41,7 @@ class TruncateDerivedDataCommand extends Command
     ];
 
     public function __construct(
-        private readonly ManagerRegistry $managerRegistry
+        private readonly ManagerRegistry $managerRegistry,
     ) {
         parent::__construct();
     }
