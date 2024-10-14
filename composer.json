@@ -14,7 +14,7 @@
         "doctrine/orm": "^2.11",
         "easycorp/easyadmin-bundle": "^4.0",
         "itk-dev/openid-connect-bundle": "^3.0",
-        "itk-dev/vault-bundle": "^0.0.2",
+        "itk-dev/vault-bundle": "^0.0.4",
         "nelmio/cors-bundle": "^2.2",
         "ocramius/doctrine-batch-utils": "^2.3",
         "phpdocumentor/reflection-docblock": "^5.3",

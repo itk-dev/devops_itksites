@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "30f4577d22a26885017b003635fe69f0",
+    "content-hash": "34584e2e86130264c1fc11bb5e84d7ce",
     "packages": [
         {
             "name": "api-platform/core",
@@ -2324,16 +2324,16 @@
         },
         {
             "name": "itk-dev/vault",
-            "version": "0.0.4",
+            "version": "0.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/itk-dev/vault-library.git",
-                "reference": "2b574c16ebd0960520a902c2089a42cb30145a2e"
+                "reference": "dbffe8a9e20fc1a0474afca826ef61c696ccb725"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itk-dev/vault-library/zipball/2b574c16ebd0960520a902c2089a42cb30145a2e",
-                "reference": "2b574c16ebd0960520a902c2089a42cb30145a2e",
+                "url": "https://api.github.com/repos/itk-dev/vault-library/zipball/dbffe8a9e20fc1a0474afca826ef61c696ccb725",
+                "reference": "dbffe8a9e20fc1a0474afca826ef61c696ccb725",
                 "shasum": ""
             },
             "require": {
@@ -2374,30 +2374,32 @@
             ],
             "support": {
                 "issues": "https://github.com/itk-dev/vault-library/issues",
-                "source": "https://github.com/itk-dev/vault-library/tree/0.0.4"
+                "source": "https://github.com/itk-dev/vault-library/tree/0.0.5"
             },
-            "time": "2024-10-08T14:07:43+00:00"
+            "time": "2024-10-14T14:39:18+00:00"
         },
         {
             "name": "itk-dev/vault-bundle",
-            "version": "0.0.2",
+            "version": "0.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/itk-dev/vault-bundle.git",
-                "reference": "54018b006f1a3bab063d86a2caa95e5e76ccc1d2"
+                "reference": "df3ff216fe428fd3182f506d30f519eedbefee40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itk-dev/vault-bundle/zipball/54018b006f1a3bab063d86a2caa95e5e76ccc1d2",
-                "reference": "54018b006f1a3bab063d86a2caa95e5e76ccc1d2",
+                "url": "https://api.github.com/repos/itk-dev/vault-bundle/zipball/df3ff216fe428fd3182f506d30f519eedbefee40",
+                "reference": "df3ff216fe428fd3182f506d30f519eedbefee40",
                 "shasum": ""
             },
             "require": {
-                "itk-dev/vault": "^0.0.4",
+                "itk-dev/vault": "^0.0.5",
                 "nyholm/psr7": "^1.8",
                 "php": "^8.0",
+                "symfony/config": "^6.4|^7.0|^7.1|^7.2",
                 "symfony/dependency-injection": "^6.4|^7.0|^7.1|^7.2",
-                "symfony/http-client": "^6.4|^7.0|^7.1|^7.2"
+                "symfony/http-client": "^6.4|^7.0|^7.1|^7.2",
+                "symfony/http-kernel": "^6.4|^7.0|^7.1|^7.2"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.64"
@@ -2423,9 +2425,9 @@
             "description": "Symfony bundle for vault",
             "support": {
                 "issues": "https://github.com/itk-dev/vault-bundle/issues",
-                "source": "https://github.com/itk-dev/vault-bundle/tree/0.0.2"
+                "source": "https://github.com/itk-dev/vault-bundle/tree/0.0.4"
             },
-            "time": "2024-10-11T09:51:13+00:00"
+            "time": "2024-10-14T15:19:26+00:00"
         },
         {
             "name": "laminas/laminas-code",
