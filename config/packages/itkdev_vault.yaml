@@ -1,0 +1,4 @@
+itkdev_vault:
+    role_id: '%env(VAULT_ROLE_ID)%'
+    secret_id: '%env(VAULT_SECRET_ID)%'
+    url: '%env(VAULT_URL)%'

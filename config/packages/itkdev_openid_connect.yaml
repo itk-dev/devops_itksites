@@ -13,8 +13,8 @@ itkdev_openid_connect:
     azure_az:
       options:
         metadata_url: '%env(string:AZURE_AZ_OIDC_METADATA_URL)%'
-        client_id: '%env(string:AZURE_AZ_OIDC_CLIENT_ID)%'
-        client_secret: '%env(string:AZURE_AZ_OIDC_CLIENT_SECRET)%'
+        client_id: '%env(vault:AZURE_AZ_OIDC_CLIENT_ID)%'
+        client_secret: '%env(vault:AZURE_AZ_OIDC_CLIENT_SECRET)%'
         # Specify redirect URI
         redirect_uri: '%env(string:AZURE_AZ_OIDC_REDIRECT_URI)%'
         allow_http: '%env(bool:AZURE_AZ_OIDC_ALLOW_HTTP)%'

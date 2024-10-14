@@ -22,7 +22,7 @@ trait ExportCrudControllerTrait
         $this->exporter = $exporter;
     }
 
-    protected function createExportAction(string|TranslatableMessage $label = null): Action
+    protected function createExportAction(string|TranslatableMessage|null $label = null): Action
     {
         return Action::new('export', $label ?? new TranslatableMessage('Export'))
             ->createAsGlobalAction()

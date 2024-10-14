@@ -19,7 +19,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class PurgeCommand extends Command
 {
     public function __construct(
-        private readonly DetectionResultRepository $detectionResultRepository
+        private readonly DetectionResultRepository $detectionResultRepository,
     ) {
         parent::__construct();
     }

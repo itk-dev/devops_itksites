@@ -33,7 +33,7 @@ class Advisory extends AbstractBaseEntity
     #[ORM\Column]
     private ?\DateTimeImmutable $reportedAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'json')]
     private array $sources = [];
 
     #[ORM\ManyToMany(targetEntity: PackageVersion::class, mappedBy: 'advisories')]
