@@ -23,6 +23,8 @@ jobs:
           docker network create frontend
           docker compose run --rm --user=root --env APP_ENV=prod phpfpm composer install --no-dev -o --classmap-authoritative
           docker compose run --rm --user=root --env APP_ENV=prod phpfpm composer clear-cache
+          docker compose run --rm node yarn install
+          docker compose run --rm node yarn build
 
       - name: Make assets dir
         run: |
