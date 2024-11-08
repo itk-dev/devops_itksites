@@ -1,0 +1,41 @@
+when:
+  - event: release
+
+skip_clone: true
+
+steps:
+  - name: Ansible playbook
+    image: itkdev/ansible-plugin:1
+    pull: true
+    settings:
+      id:
+        from_secret: id
+      secret:
+        from_secret: secret
+      host:
+        from_secret: host
+      path:
+        from_secret: path
+      user:
+        from_secret: user
+      keep: 4
+      playbook: 'release'
+      pre_up:
+        - itkdev-docker-compose-server run phpfpm bin/console doctrine:migrations:migrate --no-interaction
+
+  - name: Run post deploy
+    image: itkdev/ansible-plugin:1
+    pull: true
+    settings:
+      id:
+        from_secret: id
+      secret:
+        from_secret: secret
+      host:
+        from_secret: host
+      path:
+        from_secret: path
+      user:
+        from_secret: user
+      actions:
+        - itkdev-docker-compose-server exec phpfpm bin/console cache:clear
