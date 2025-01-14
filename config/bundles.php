@@ -21,4 +21,6 @@ return [
     ItkDev\OpenIdConnectBundle\ItkDevOpenIdConnectBundle::class => ['all' => true],
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
     ItkDev\VaultBundle\ItkDevVaultBundle::class => ['all' => true],
+    Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
+    Symfony\UX\TwigComponent\TwigComponentBundle::class => ['all' => true],
 ];

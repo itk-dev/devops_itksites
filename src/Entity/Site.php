@@ -111,7 +111,7 @@ class Site extends AbstractHandlerResult
      *
      * @return $this
      */
-    public function setDomains(Collection $newDomains): self
+    public function setDomains(Collection $newDomains): static
     {
         /** @var Domain $domain */
         foreach ($this->domains as $domain) {

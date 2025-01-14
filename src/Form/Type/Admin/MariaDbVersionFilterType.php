@@ -11,14 +11,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MariaDbVersionFilterType extends AbstractType
 {
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'choices' => DatabaseVersionType::CHOICES,
         ]);
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return ChoiceType::class;
     }
