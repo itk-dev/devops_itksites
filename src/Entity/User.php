@@ -32,7 +32,6 @@ class User extends AbstractBaseEntity implements UserInterface
         return $this->name;
     }
 
-
     public function getEmail(): ?string
     {
         return $this->email;

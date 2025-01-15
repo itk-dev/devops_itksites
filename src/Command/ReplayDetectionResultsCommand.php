@@ -75,7 +75,7 @@ class ReplayDetectionResultsCommand extends Command
 
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('r.id')
-            ->from(\App\Entity\DetectionResult::class, 'r')
+            ->from(DetectionResult::class, 'r')
             ->orderBy('r.id', 'ASC');
 
         $criteria = [];
@@ -83,7 +83,6 @@ class ReplayDetectionResultsCommand extends Command
         $type = $input->getOption('type');
         if (false !== $type) { // option passed
             if (null === $type) { // option passed but no value specified
-
                 /** @var QuestionHelper $helper */
                 $helper = $this->getHelper('question');
                 $question = new ChoiceQuestion(

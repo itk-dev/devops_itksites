@@ -21,7 +21,7 @@ class InstallationFactory
     }
 
     /**
-     * Get Installations from detection result
+     * Get Installations from detection result.
      *
      * @param DetectionResult $detectionResult
      *

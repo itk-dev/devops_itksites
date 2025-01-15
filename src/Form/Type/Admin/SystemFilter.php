@@ -16,7 +16,7 @@ class SystemFilter implements FilterInterface
 {
     use FilterTrait;
 
-    public static function new(string $propertyName, false|null|string|TranslatableInterface $label = null): self
+    public static function new(string $propertyName, false|string|TranslatableInterface|null $label = null): self
     {
         return (new self())
             ->setFilterFqcn(self::class)

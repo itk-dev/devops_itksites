@@ -16,11 +16,12 @@ use Symfony\Component\Translation\TranslatableMessage;
 
 trait ExportCrudControllerTrait
 {
-    private \EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory $filterFactory;
+    private FilterFactory $filterFactory;
+
     /**
      * @required
      */
-    public function autowireExportCrudControllerTrait(\EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory $filterFactory): void
+    public function autowireExportCrudControllerTrait(FilterFactory $filterFactory): void
     {
         $this->filterFactory = $filterFactory;
     }

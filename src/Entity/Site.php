@@ -39,7 +39,7 @@ class Site extends AbstractHandlerResult implements \Stringable
     #[Assert\NotNull]
     private string $configFilePath = '';
 
-    /** @var Collection<Domain>  */
+    /** @var Collection<Domain> */
     #[ORM\OneToMany(mappedBy: 'site', targetEntity: Domain::class, cascade: ['persist'])]
     #[Assert\Count(
         min: 1,
