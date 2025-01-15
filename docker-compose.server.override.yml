@@ -1,6 +1,6 @@
 services:
   rabbit:
-    image: rabbitmq:3.11-management-alpine
+    image: rabbitmq:4-management-alpine
     networks:
       - app
       - frontend
