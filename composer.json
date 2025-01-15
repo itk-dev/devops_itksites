@@ -48,11 +48,16 @@
         "friendsofphp/php-cs-fixer": "^3.6",
         "hautelook/alice-bundle": "^2.10",
         "justinrainbow/json-schema": "^6.0",
-        "phpunit/phpunit": "^11.0",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-doctrine": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpstan/phpstan-symfony": "^2.0",
+        "phpunit/phpunit": "^11.3",
+        "rector/rector": "^2.0",
         "symfony/css-selector": "^7.2",
         "symfony/debug-bundle": "^7.2",
         "symfony/maker-bundle": "^1.37",
-        "symfony/phpunit-bridge": "^7.2",
         "symfony/stopwatch": "^7.2",
         "symfony/var-dumper": "^7.2",
         "symfony/web-profiler-bundle": "^7.2"
@@ -81,6 +86,7 @@
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
             "ergebnis/composer-normalize": true,
+            "phpstan/extension-installer": true,
             "symfony/flex": true,
             "symfony/runtime": true
         },
