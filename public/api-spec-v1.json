@@ -22,9 +22,6 @@
                     "202": {
                         "description": "DetectionResult resource created",
                         "content": {
-                            "application/ld+json": {
-                                "schema": {}
-                            },
                             "application/json": {
                                 "schema": {}
                             }
@@ -44,11 +41,6 @@
                 "requestBody": {
                     "description": "The new DetectionResult resource",
                     "content": {
-                        "application/ld+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/DetectionResult.jsonld-write"
-                            }
-                        },
                         "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/DetectionResult-write"
@@ -64,22 +56,6 @@
     "components": {
         "schemas": {
             "DetectionResult-write": {
-                "type": "object",
-                "description": "",
-                "deprecated": false,
-                "properties": {
-                    "type": {
-                        "type": "string"
-                    },
-                    "rootDir": {
-                        "type": "string"
-                    },
-                    "data": {
-                        "type": "string"
-                    }
-                }
-            },
-            "DetectionResult.jsonld-write": {
                 "type": "object",
                 "description": "",
                 "deprecated": false,
