@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ServiceCertificateRepository::class)]
-class ServiceCertificate extends AbstractBaseEntity
+class ServiceCertificate extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
@@ -53,7 +53,7 @@ class ServiceCertificate extends AbstractBaseEntity
 
     public function __toString(): string
     {
-        return $this->name;
+        return (string) $this->name;
     }
 
     public function getDomain(): ?string

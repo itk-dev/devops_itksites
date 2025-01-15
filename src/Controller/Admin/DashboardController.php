@@ -38,7 +38,8 @@ class DashboardController extends AbstractDashboardController
     ) {
     }
 
-    #[Route('/admin', name: 'admin')]
+    #[\Symfony\Component\Routing\Attribute\Route('/admin', name: 'admin')]
+    #[\Override]
     public function index(): Response
     {
         $d = $this->adminUrlGenerator
@@ -48,6 +49,7 @@ class DashboardController extends AbstractDashboardController
         return $this->redirect($d);
     }
 
+    #[\Override]
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
@@ -56,6 +58,7 @@ class DashboardController extends AbstractDashboardController
             ->renderContentMaximized();
     }
 
+    #[\Override]
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
@@ -79,6 +82,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Detection Results', 'fas fa-upload', DetectionResult::class);
     }
 
+    #[\Override]
     public function configureCrud(): Crud
     {
         return Crud::new()
@@ -89,6 +93,7 @@ class DashboardController extends AbstractDashboardController
         ;
     }
 
+    #[\Override]
     public function configureAssets(): Assets
     {
         return Assets::new()->addCssFile('css/admin.css');

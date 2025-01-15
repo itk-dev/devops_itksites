@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class NginxHandler implements DetectionResultHandlerInterface
 {
-    private const NGINX_DEFAULT = 'default';
+    private const string NGINX_DEFAULT = 'default';
 
     /**
      * DirectoryHandler constructor.
@@ -59,7 +59,7 @@ class NginxHandler implements DetectionResultHandlerInterface
             if (count($errors) > 0) {
                 // @TODO log validation error
             }
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             // @TODO log exceptions
         }
     }

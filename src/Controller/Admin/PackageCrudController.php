@@ -25,6 +25,7 @@ class PackageCrudController extends AbstractCrudController
         return Package::class;
     }
 
+    #[\Override]
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
@@ -32,6 +33,7 @@ class PackageCrudController extends AbstractCrudController
             ->setDefaultSort(['advisoryCount' => 'DESC', 'warning' => 'DESC', 'vendor' => 'ASC', 'name' => 'ASC']);
     }
 
+    #[\Override]
     public function configureActions(Actions $actions): Actions
     {
         return $actions
@@ -43,6 +45,7 @@ class PackageCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_DETAIL, Action::DELETE);
     }
 
+    #[\Override]
     public function configureFields(string $pageName): iterable
     {
         yield TextMonospaceField::new('vendor')->setColumns(6);
@@ -58,6 +61,7 @@ class PackageCrudController extends AbstractCrudController
         yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 
+    #[\Override]
     public function configureFilters(Filters $filters): Filters
     {
         return $filters

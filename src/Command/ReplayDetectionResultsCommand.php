@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -74,7 +75,7 @@ class ReplayDetectionResultsCommand extends Command
 
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('r.id')
-            ->from('App\Entity\DetectionResult', 'r')
+            ->from(\App\Entity\DetectionResult::class, 'r')
             ->orderBy('r.id', 'ASC');
 
         $criteria = [];
@@ -82,6 +83,8 @@ class ReplayDetectionResultsCommand extends Command
         $type = $input->getOption('type');
         if (false !== $type) { // option passed
             if (null === $type) { // option passed but no value specified
+
+                /** @var QuestionHelper $helper */
                 $helper = $this->getHelper('question');
                 $question = new ChoiceQuestion(
                     'Select type to replay ',

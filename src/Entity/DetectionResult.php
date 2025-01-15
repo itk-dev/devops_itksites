@@ -19,7 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: DetectionResultRepository::class)]
 #[ORM\UniqueConstraint(name: 'server_hash_idx', fields: ['server', 'hash'])]
 #[ORM\Index(columns: ['type'], name: 'type_idx')]
-class DetectionResult extends AbstractBaseEntity
+class DetectionResult extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['write'])]
@@ -93,7 +93,7 @@ class DetectionResult extends AbstractBaseEntity
     {
         try {
             $json = json_decode($this->data, false, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             return $this->data;
         }
 
@@ -126,7 +126,7 @@ class DetectionResult extends AbstractBaseEntity
 
     public function setLastContact(?\DateTimeImmutable $lastContact = null): self
     {
-        $this->lastContact = (null === $lastContact) ? new \DateTimeImmutable() : $lastContact;
+        $this->lastContact = $lastContact ?? new \DateTimeImmutable();
 
         return $this;
     }

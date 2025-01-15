@@ -6,10 +6,10 @@ namespace App\Message;
 
 use Symfony\Component\Uid\Ulid;
 
-final class ProcessDetectionResult
+final readonly class ProcessDetectionResult
 {
     public function __construct(
-        public readonly Ulid $detectionResultId,
+        public Ulid $detectionResultId,
     ) {
     }
 }

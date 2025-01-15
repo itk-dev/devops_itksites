@@ -53,17 +53,17 @@ class AzureOIDCAuthenticator extends OpenIdLoginAuthenticator
             $email = $claims['upn'];
 
             // Check if user exists already - if not create a user
-            $user = $this->entityManager->getRepository(User::class)
-                ->findOneBy(['email' => $email]);
+            $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+
             if (null === $user) {
                 // Create the new user and persist it
-                $user = new User();
+                $user = new User($name, $email, ['ROLE_ADMIN']);
                 $this->entityManager->persist($user);
+            } else {
+                // Update/set user properties
+                $user->setName($name);
+                $user->setEmail($email);
             }
-            // Update/set user properties
-            $user->setName($name);
-            $user->setEmail($email);
-            $user->setRoles(['ROLE_ADMIN']);
 
             $this->entityManager->flush();
 

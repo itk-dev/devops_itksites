@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DockerImageRepository::class)]
 #[ORM\UniqueConstraint(name: 'organization_repository', columns: ['organization', 'repository'])]
-class DockerImage extends AbstractBaseEntity
+class DockerImage extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\Column(type: 'string', length: 255)]
     private string $organization = '';

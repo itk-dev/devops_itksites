@@ -58,7 +58,7 @@ class SymfonyHandler implements DetectionResultHandlerInterface
             if (isset($data->packages->installed)) {
                 $this->packageVersionFactory->setPackageVersions($installation, $data->packages->installed);
             }
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             // @TODO log exceptions
         }
     }

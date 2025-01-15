@@ -14,9 +14,9 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ServerRepository::class)]
-class Server extends AbstractBaseEntity implements UserInterface
+class Server extends AbstractBaseEntity implements UserInterface, \Stringable
 {
-    private const ROLES = ['ROLE_USER', 'ROLE_SERVER'];
+    private const array ROLES = ['ROLE_USER', 'ROLE_SERVER'];
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     #[Assert\Length(
@@ -33,15 +33,15 @@ class Server extends AbstractBaseEntity implements UserInterface
     private string $name = '';
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $hostingProviderName;
+    private ?string $hostingProviderName = null;
 
     #[ORM\Column(type: 'string', length: 15, nullable: true)]
     #[Assert\Ip]
-    private ?string $internalIp;
+    private ?string $internalIp = null;
 
     #[ORM\Column(type: 'string', length: 15, nullable: true)]
     #[Assert\Ip]
-    private ?string $externalIp;
+    private ?string $externalIp = null;
 
     #[ORM\Column(type: 'boolean')]
     private bool $aarhusSsl = false;
@@ -59,19 +59,19 @@ class Server extends AbstractBaseEntity implements UserInterface
     private bool $monitoring = false;
 
     #[ORM\Column(type: 'string', length: 5, nullable: true)]
-    private $databaseVersion;
+    private ?string $databaseVersion;
 
     #[ORM\Column(type: 'string', length: 15)]
     private string $system;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $note;
+    private ?string $note = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $serviceDeskTicket;
+    private ?string $serviceDeskTicket = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $usedFor;
+    private ?string $usedFor = null;
 
     #[ORM\OneToMany(mappedBy: 'server', targetEntity: DetectionResult::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $detectionResults;
@@ -97,7 +97,7 @@ class Server extends AbstractBaseEntity implements UserInterface
 
     public function __toString(): string
     {
-        return $this->getName();
+        return (string) $this->getName();
     }
 
     public function getRoles(): array

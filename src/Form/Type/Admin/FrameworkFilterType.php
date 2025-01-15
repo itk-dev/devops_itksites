@@ -18,6 +18,7 @@ class FrameworkFilterType extends AbstractType
         ]);
     }
 
+    #[\Override]
     public function getParent(): ?string
     {
         return ChoiceType::class;

@@ -19,7 +19,7 @@ class AbstractHandlerResult extends AbstractBaseEntity
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[Groups(['export'])]
     #[SerializedName('Server')]
-    protected ?Server $server;
+    protected ?Server $server = null;
 
     #[ORM\ManyToOne(targetEntity: DetectionResult::class, fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]

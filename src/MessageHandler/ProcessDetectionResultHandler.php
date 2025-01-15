@@ -11,12 +11,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-final class ProcessDetectionResultHandler
+final readonly class ProcessDetectionResultHandler
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly DetectionResultRepository $detectionResultRepository,
-        private readonly iterable $resultHandlers,
+        private EntityManagerInterface $entityManager,
+        private DetectionResultRepository $detectionResultRepository,
+        private iterable $resultHandlers,
     ) {
     }
 

@@ -31,6 +31,7 @@ class ServiceCertificateCrudController extends AbstractCrudController
         return ServiceCertificate::class;
     }
 
+    #[\Override]
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
@@ -42,6 +43,7 @@ class ServiceCertificateCrudController extends AbstractCrudController
             ->setSearchFields(['domain', 'name', 'description', 'services.type']);
     }
 
+    #[\Override]
     public function configureActions(Actions $actions): Actions
     {
         return $actions
@@ -49,6 +51,7 @@ class ServiceCertificateCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_INDEX, Action::DELETE);
     }
 
+    #[\Override]
     public function configureFields(string $pageName): iterable
     {
         // Select domain from existing server primary domains on forms.
@@ -87,6 +90,7 @@ class ServiceCertificateCrudController extends AbstractCrudController
         ;
     }
 
+    #[\Override]
     public function configureAssets(Assets $assets): Assets
     {
         return $assets

@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GitTagRepository::class)]
-class GitTag extends AbstractBaseEntity
+class GitTag extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\Column(type: 'string', length: 255)]
     private string $tag = '';

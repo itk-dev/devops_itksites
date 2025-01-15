@@ -32,6 +32,11 @@ abstract class AbstractBaseEntity
     #[ORM\Column(type: 'string', nullable: false, options: ['default' => ''])]
     protected string $modifiedBy = '';
 
+    public function __toString(): string
+    {
+        return (string) $this->id;
+    }
+
     /**
      * Get the Ulid.
      */

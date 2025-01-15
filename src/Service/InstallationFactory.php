@@ -20,6 +20,13 @@ class InstallationFactory
     ) {
     }
 
+    /**
+     * Get Installations from detection result
+     *
+     * @param DetectionResult $detectionResult
+     *
+     * @return Collection<int, Installation>
+     */
     public function getInstallations(DetectionResult $detectionResult): Collection
     {
         try {
@@ -27,13 +34,13 @@ class InstallationFactory
 
             $installations = new ArrayCollection();
             foreach ($rootDirs as $rootDir) {
-                $installations[] = $this->getInstallation($detectionResult, $rootDir);
+                $installations->add($this->getInstallation($detectionResult, $rootDir));
             }
 
             $this->entityManager->flush();
 
             return $installations;
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             // @TODO log exceptions
 
             return new ArrayCollection();
@@ -42,7 +49,7 @@ class InstallationFactory
 
     public function getInstallation(DetectionResult $detectionResult, ?string $rootDir = null): Installation
     {
-        $rootDir = $rootDir ?? $detectionResult->getRootDir();
+        $rootDir ??= $detectionResult->getRootDir();
         $rootDir = RootDirNormalizer::normalize($rootDir);
 
         $installation = $this->repository->findOneBy([

@@ -1,5 +1,5 @@
 App\Entity\User:
   user_admin:
-    email: admin@example.com
-    roles: [ROLE_ADMIN]
-    name: Admin
+    __construct: [
+      'admin@example.com', 'Admin', [ROLE_ADMIN]
+    ]

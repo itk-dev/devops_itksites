@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SiteRepository::class)]
 #[ORM\UniqueConstraint(name: 'server_rootDir_configFilePath_idx', fields: ['server', 'rootDir', 'configFilePath'])]
-class Site extends AbstractHandlerResult
+class Site extends AbstractHandlerResult implements \Stringable
 {
     #[ORM\Column(type: 'string', length: 10)]
     #[Assert\Length(
@@ -39,6 +39,7 @@ class Site extends AbstractHandlerResult
     #[Assert\NotNull]
     private string $configFilePath = '';
 
+    /** @var Collection<Domain>  */
     #[ORM\OneToMany(mappedBy: 'site', targetEntity: Domain::class, cascade: ['persist'])]
     #[Assert\Count(
         min: 1,
@@ -50,7 +51,7 @@ class Site extends AbstractHandlerResult
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Installation $installation;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
     #[Groups(['export'])]
     #[SerializedName('Primary domain')]
     private string $primaryDomain;
@@ -174,13 +175,13 @@ class Site extends AbstractHandlerResult
 
         if ($domainCount >= 1) {
             $address = $this->domains->first()->getAddress();
-            $segments = count(explode('.', $address));
+            $segments = count(explode('.', (string) $address));
             $this->primaryDomain = $address;
 
             if ($domainCount > 1) {
                 foreach ($this->domains as $domain) {
-                    if ($segments > count(explode('.', $domain->getAddress()))) {
-                        $segments = count(explode('.', $domain->getAddress()));
+                    if ($segments > count(explode('.', (string) $domain->getAddress()))) {
+                        $segments = count(explode('.', (string) $domain->getAddress()));
                         $this->primaryDomain = $domain->getAddress();
                     }
                 }

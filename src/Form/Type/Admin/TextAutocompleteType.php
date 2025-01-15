@@ -11,11 +11,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TextAutocompleteType extends TextType
 {
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return 'textautocomplete';
     }
 
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);

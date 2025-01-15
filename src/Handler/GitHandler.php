@@ -41,7 +41,7 @@ class GitHandler implements DetectionResultHandlerInterface
             $installation = $this->installationFactory->getInstallation($detectionResult);
 
             $this->gitCloneFactory->setGitCloneData($installation, $data);
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             // @TODO log exceptions
         }
     }
@@ -74,7 +74,7 @@ class GitHandler implements DetectionResultHandlerInterface
 
         $data = \json_decode($result->getData(), false, 512, JSON_THROW_ON_ERROR);
 
-        if (empty($data->remotes) || 'unknown' === strtolower($data->remotes[0])) {
+        if (empty($data->remotes) || 'unknown' === strtolower((string) $data->remotes[0])) {
             return null;
         }
 

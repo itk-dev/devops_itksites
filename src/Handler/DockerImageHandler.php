@@ -21,7 +21,7 @@ use App\Types\SiteType;
  */
 class DockerImageHandler implements DetectionResultHandlerInterface
 {
-    private const PHP_CONTAINER = 'phpfpm';
+    private const string PHP_CONTAINER = 'phpfpm';
 
     /**
      * DirectoryHandler constructor.
@@ -80,7 +80,7 @@ class DockerImageHandler implements DetectionResultHandlerInterface
                     $this->setSymfony($site->getInstallation(), $container->symfony);
                 }
             }
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             // @TODO log exceptions
         }
     }

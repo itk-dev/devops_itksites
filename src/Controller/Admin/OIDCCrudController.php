@@ -35,11 +35,13 @@ class OIDCCrudController extends AbstractCrudController
         return OIDC::class;
     }
 
+    #[\Override]
     public function configureCrud(Crud $crud): Crud
     {
         return $crud->showEntityActionsInlined();
     }
 
+    #[\Override]
     public function configureActions(Actions $actions): Actions
     {
         return $actions
@@ -48,6 +50,7 @@ class OIDCCrudController extends AbstractCrudController
         ;
     }
 
+    #[\Override]
     public function configureFields(string $pageName): iterable
     {
         // Select domain from existing server primary domains on forms.

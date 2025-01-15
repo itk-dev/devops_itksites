@@ -11,9 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PackageRepository::class)]
 #[ORM\UniqueConstraint(name: 'vendor_name', columns: ['vendor', 'name'])]
-class Package extends AbstractBaseEntity
+class Package extends AbstractBaseEntity implements \Stringable
 {
-    private const PACKAGIST_URL_PATTERN = 'https://packagist.org/packages/%s/%s';
+    private const string PACKAGIST_URL_PATTERN = 'https://packagist.org/packages/%s/%s';
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $vendor;
@@ -22,16 +22,16 @@ class Package extends AbstractBaseEntity
     private string $name;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $description;
+    private ?string $description = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $homepage;
+    private ?string $homepage = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $type;
+    private ?string $type = null;
 
     #[ORM\Column(type: 'string', length: 25, nullable: true)]
-    private ?string $license;
+    private ?string $license = null;
 
     #[ORM\Column(nullable: true)]
     private ?bool $abandoned = null;

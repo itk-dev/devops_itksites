@@ -15,7 +15,7 @@ use Symfony\Component\Translation\TranslatableMessage;
 
 class ServiceType extends AbstractType
 {
-    public function __construct(private ServiceRepository $serviceRepository)
+    public function __construct(private readonly ServiceRepository $serviceRepository)
     {
     }
 

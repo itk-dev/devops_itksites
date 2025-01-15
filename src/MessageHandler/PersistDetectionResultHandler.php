@@ -13,13 +13,13 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 #[AsMessageHandler]
-final class PersistDetectionResultHandler
+final readonly class PersistDetectionResultHandler
 {
     public function __construct(
-        private readonly ServerRepository $serverRepository,
-        private readonly DetectionResultRepository $detectionResultRepository,
-        private readonly EntityManagerInterface $entityManager,
-        private readonly MessageBusInterface $messageBus,
+        private ServerRepository $serverRepository,
+        private DetectionResultRepository $detectionResultRepository,
+        private EntityManagerInterface $entityManager,
+        private MessageBusInterface $messageBus,
     ) {
     }
 
