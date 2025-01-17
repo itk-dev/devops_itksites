@@ -28,9 +28,6 @@
     "doctrine/collections": {
         "version": "1.6.8"
     },
-    "doctrine/common": {
-        "version": "3.2.2"
-    },
     "doctrine/data-fixtures": {
         "version": "1.5.2"
     },
@@ -55,7 +52,7 @@
         ]
     },
     "doctrine/doctrine-migrations-bundle": {
-        "version": "3.3",
+        "version": "3.4",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -78,9 +75,6 @@
     },
     "doctrine/lexer": {
         "version": "1.2.2"
-    },
-    "doctrine/migrations": {
-        "version": "3.4.1"
     },
     "doctrine/orm": {
         "version": "2.11.1"

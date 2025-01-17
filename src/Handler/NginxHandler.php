@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 /**
  * Handler for DetectionResult off type "nginx" (Sites, Domains).
  */
-class NginxHandler implements DetectionResultHandlerInterface
+readonly class NginxHandler implements DetectionResultHandlerInterface
 {
     private const string NGINX_DEFAULT = 'default';
 
@@ -26,9 +26,9 @@ class NginxHandler implements DetectionResultHandlerInterface
      * @param ValidatorInterface $validator
      */
     public function __construct(
-        private readonly SiteFactory $siteFactory,
-        private readonly DomainFactory $domainFactory,
-        private readonly ValidatorInterface $validator,
+        private SiteFactory $siteFactory,
+        private DomainFactory $domainFactory,
+        private ValidatorInterface $validator,
     ) {
     }
 

@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\UniqueConstraint(name: 'server_rootdir_idx', fields: ['server', 'rootDir'])]
 class Installation extends AbstractHandlerResult implements \Stringable
 {
-    #[ORM\OneToMany(mappedBy: 'installation', targetEntity: Site::class)]
+    #[ORM\OneToMany(targetEntity: Site::class, mappedBy: 'installation')]
     private Collection $sites;
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]

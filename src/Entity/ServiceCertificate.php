@@ -41,7 +41,7 @@ class ServiceCertificate extends AbstractBaseEntity implements \Stringable
     #[Assert\Url]
     private ?string $usageDocumentationUrl = null;
 
-    #[ORM\OneToMany(mappedBy: 'certificate', targetEntity: Service::class, orphanRemoval: true, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Service::class, mappedBy: 'certificate', cascade: ['persist'], orphanRemoval: true)]
     #[ORM\OrderBy(['type' => 'ASC'])]
     #[Assert\Valid]
     private Collection $services;

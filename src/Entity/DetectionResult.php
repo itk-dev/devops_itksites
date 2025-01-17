@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 #[ORM\Entity(repositoryClass: DetectionResultRepository::class)]
 #[ORM\UniqueConstraint(name: 'server_hash_idx', fields: ['server', 'hash'])]
-#[ORM\Index(columns: ['type'], name: 'type_idx')]
+#[ORM\Index(name: 'type_idx', columns: ['type'])]
 class DetectionResult extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\Column(type: 'string', length: 255)]

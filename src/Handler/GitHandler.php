@@ -12,7 +12,7 @@ use App\Types\DetectionType;
 /**
  * Handler for DetectionResult off type "git".
  */
-class GitHandler implements DetectionResultHandlerInterface
+readonly class GitHandler implements DetectionResultHandlerInterface
 {
     /**
      * DirectoryHandler constructor.
@@ -21,8 +21,8 @@ class GitHandler implements DetectionResultHandlerInterface
      * @param GitTagFactory $gitCloneFactory
      */
     public function __construct(
-        private readonly InstallationFactory $installationFactory,
-        private readonly GitTagFactory $gitCloneFactory,
+        private InstallationFactory $installationFactory,
+        private GitTagFactory $gitCloneFactory,
     ) {
     }
 

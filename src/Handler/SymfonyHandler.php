@@ -13,7 +13,7 @@ use App\Types\FrameworkTypes;
 /**
  * Handler for DetectionResult off type "symfony".
  */
-class SymfonyHandler implements DetectionResultHandlerInterface
+readonly class SymfonyHandler implements DetectionResultHandlerInterface
 {
     /**
      * DirectoryHandler constructor.
@@ -22,8 +22,8 @@ class SymfonyHandler implements DetectionResultHandlerInterface
      * @param InstallationFactory $installationFactory
      */
     public function __construct(
-        private readonly PackageVersionFactory $packageVersionFactory,
-        private readonly InstallationFactory $installationFactory,
+        private PackageVersionFactory $packageVersionFactory,
+        private InstallationFactory $installationFactory,
     ) {
     }
 

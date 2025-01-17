@@ -14,7 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
 class PackageVersion extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\ManyToMany(targetEntity: Installation::class, mappedBy: 'packageVersions')]
-    #[ORM\JoinColumn(nullable: false)]
     private Collection $installations;
 
     #[ORM\ManyToOne(targetEntity: Package::class, inversedBy: 'packageVersions')]

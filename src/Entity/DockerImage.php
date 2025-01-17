@@ -22,7 +22,7 @@ class DockerImage extends AbstractBaseEntity implements \Stringable
     #[ORM\Column(type: 'text')]
     private string $description = '';
 
-    #[ORM\OneToMany(mappedBy: 'dockerImage', targetEntity: DockerImageTag::class, orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: DockerImageTag::class, mappedBy: 'dockerImage', orphanRemoval: true)]
     private Collection $dockerImageTags;
 
     public function __construct()

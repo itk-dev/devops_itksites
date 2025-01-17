@@ -40,7 +40,7 @@ class Site extends AbstractHandlerResult implements \Stringable
     private string $configFilePath = '';
 
     /** @var Collection<Domain> */
-    #[ORM\OneToMany(mappedBy: 'site', targetEntity: Domain::class, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Domain::class, mappedBy: 'site', cascade: ['persist'])]
     #[Assert\Count(
         min: 1,
         minMessage: 'A site must have at least one domain'

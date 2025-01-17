@@ -19,7 +19,7 @@ class GitTag extends AbstractBaseEntity implements \Stringable
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private GitRepo $repo;
 
-    #[ORM\OneToMany(mappedBy: 'gitTag', targetEntity: Installation::class)]
+    #[ORM\OneToMany(targetEntity: Installation::class, mappedBy: 'gitTag')]
     private Collection $installations;
 
     public function __toString(): string

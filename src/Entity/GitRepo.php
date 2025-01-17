@@ -22,7 +22,7 @@ class GitRepo extends AbstractBaseEntity implements \Stringable
     #[ORM\Column(length: 255)]
     private string $repo = '';
 
-    #[ORM\OneToMany(mappedBy: 'repo', targetEntity: GitTag::class, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: GitTag::class, mappedBy: 'repo', cascade: ['persist'])]
     private Collection $gitTags;
 
     public function __construct()

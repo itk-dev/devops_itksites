@@ -24,7 +24,7 @@ class Module extends AbstractBaseEntity implements \Stringable
     #[ORM\Column(type: 'boolean')]
     private bool $enabled;
 
-    #[ORM\OneToMany(mappedBy: 'module', targetEntity: ModuleVersion::class)]
+    #[ORM\OneToMany(targetEntity: ModuleVersion::class, mappedBy: 'module')]
     private Collection $moduleVersions;
 
     public function __construct()

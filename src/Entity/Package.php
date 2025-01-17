@@ -39,10 +39,10 @@ class Package extends AbstractBaseEntity implements \Stringable
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $warning = null;
 
-    #[ORM\OneToMany(mappedBy: 'package', targetEntity: PackageVersion::class)]
+    #[ORM\OneToMany(targetEntity: PackageVersion::class, mappedBy: 'package')]
     private Collection $packageVersions;
 
-    #[ORM\OneToMany(mappedBy: 'package', targetEntity: Advisory::class)]
+    #[ORM\OneToMany(targetEntity: Advisory::class, mappedBy: 'package')]
     private Collection $advisories;
 
     #[ORM\Column]
