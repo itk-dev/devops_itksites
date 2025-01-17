@@ -11,13 +11,23 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatableMessage;
 
 trait ExportCrudControllerTrait
 {
+    private FilterFactory $filterFactory;
+
+    /**
+     * @required
+     */
+    public function autowireExportCrudControllerTrait(FilterFactory $filterFactory): void
+    {
+        $this->filterFactory = $filterFactory;
+    }
     private Exporter $exporter;
 
-    protected function setExporter(Exporter $exporter)
+    protected function setExporter(Exporter $exporter): void
     {
         $this->exporter = $exporter;
     }
@@ -29,7 +39,7 @@ trait ExportCrudControllerTrait
             ->linkToCrudAction('export');
     }
 
-    public function export(AdminContext $context)
+    public function export(AdminContext $context): Response
     {
         if (!isset($this->exporter)) {
             throw new \RuntimeException(sprintf('Exporter not set in %s', static::class));
@@ -39,7 +49,7 @@ trait ExportCrudControllerTrait
         // Lifted from self::index().
         $fields = FieldCollection::new($this->configureFields(Crud::PAGE_INDEX));
         $context->getCrud()->setFieldAssets($this->getFieldAssets($fields));
-        $filters = $this->container->get(FilterFactory::class)->create($context->getCrud()->getFiltersConfig(), $fields,
+        $filters = $this->filterFactory->create($context->getCrud()->getFiltersConfig(), $fields,
             $context->getEntity());
         $queryBuilder = $this->createIndexQueryBuilder($context->getSearch(), $context->getEntity(), $fields, $filters);
 

@@ -39,13 +39,13 @@ class ProcessDetectionResultHandlerTest extends TestCase
             [DetectionType::DIRECTORY, true],
             [DetectionType::NGINX, false],
         ];
-        $this->dirResultHandler->method('supportsType')->will($this->returnValueMap($dirMap));
+        $this->dirResultHandler->method('supportsType')->willReturnMap($dirMap);
 
         $nginxMap = [
             [DetectionType::DIRECTORY, false],
             [DetectionType::NGINX, true],
         ];
-        $this->nginxResultHandler->method('supportsType')->will($this->returnValueMap($nginxMap));
+        $this->nginxResultHandler->method('supportsType')->willReturnMap($nginxMap);
 
         $this->handler = new ProcessDetectionResultHandler(
             $this->entityManagerMock,

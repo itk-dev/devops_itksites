@@ -9,7 +9,7 @@ use App\Entity\DetectionResult;
 use App\Entity\Server;
 use App\Message\PersistDetectionResult;
 use App\Security\ApiKeyAuthenticator;
-use Symfony\Component\Messenger\Transport\InMemoryTransport;
+use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 
 class DetectionResultHandlerTest extends ApiTestCase
 {
@@ -23,6 +23,7 @@ class DetectionResultHandlerTest extends ApiTestCase
 
         $response = $client->request('POST', '/api/detection_results', [
             'headers' => [
+                'accept' => 'application/json',
                 'content-type' => 'application/json',
                 ApiKeyAuthenticator::AUTH_HEADER => ApiKeyAuthenticator::AUTH_HEADER_PREFIX.$apikey,
             ],

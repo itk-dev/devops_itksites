@@ -21,11 +21,13 @@ class ModuleCrudController extends AbstractCrudController
         return Module::class;
     }
 
+    #[\Override]
     public function configureCrud(Crud $crud): Crud
     {
         return $crud->showEntityActionsInlined();
     }
 
+    #[\Override]
     public function configureActions(Actions $actions): Actions
     {
         return $actions
@@ -37,6 +39,7 @@ class ModuleCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_DETAIL, Action::DELETE);
     }
 
+    #[\Override]
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('displayName')->setColumns(6);
@@ -45,6 +48,7 @@ class ModuleCrudController extends AbstractCrudController
         yield AssociationField::new('moduleVersions')->setColumns(6);
     }
 
+    #[\Override]
     public function configureFilters(Filters $filters): Filters
     {
         return $filters

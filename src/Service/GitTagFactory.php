@@ -30,7 +30,7 @@ class GitTagFactory
 
         $remoteParts = $this->parseRemoteUrl($remote);
         $provider = $remoteParts['host'];
-        [$org, $repo] = explode('/', $remoteParts['path']);
+        [$org, $repo] = explode('/', (string) $remoteParts['path']);
 
         $gitRepo = $this->gitRepoRepository->findOneBy([
             'provider' => $provider,

@@ -11,10 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PackageVersionRepository::class)]
 #[ORM\UniqueConstraint(name: 'package_version', columns: ['package_id', 'version'])]
-class PackageVersion extends AbstractBaseEntity
+class PackageVersion extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\ManyToMany(targetEntity: Installation::class, mappedBy: 'packageVersions')]
-    #[ORM\JoinColumn(nullable: false)]
     private Collection $installations;
 
     #[ORM\ManyToOne(targetEntity: Package::class, inversedBy: 'packageVersions')]
@@ -25,10 +24,10 @@ class PackageVersion extends AbstractBaseEntity
     private string $version;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $latest;
+    private ?string $latest = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private ?string $latestStatus;
+    private ?string $latestStatus = null;
 
     #[ORM\ManyToMany(targetEntity: Advisory::class, inversedBy: 'packageVersions')]
     private Collection $advisories;
@@ -48,7 +47,7 @@ class PackageVersion extends AbstractBaseEntity
     }
 
     /**
-     * @return Collection<id, Installation>
+     * @return Collection<Installation>
      */
     public function getInstallations(): Collection
     {

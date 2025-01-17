@@ -1,0 +1,14 @@
+parameters:
+    level: 6
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/
+#        - tests/
+    ignoreErrors:
+        - identifier: doctrine.associationType
+        - identifier: doctrine.columnType
+        - identifier: method.unused
+        - identifier: missingType.generics
+        - identifier: missingType.iterableValue

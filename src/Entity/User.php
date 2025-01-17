@@ -15,10 +15,22 @@ class User extends AbstractBaseEntity implements UserInterface
     private string $email;
 
     #[ORM\Column(type: 'json')]
-    private array $roles = [];
+    private array $roles;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name;
+
+    public function __construct(string $name, string $email, array $roles = [])
+    {
+        $this->name = $name;
+        $this->email = $email;
+        $this->roles = $roles;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 
     public function getEmail(): ?string
     {

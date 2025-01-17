@@ -11,12 +11,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TextAutocompleteType extends TextType
 {
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return 'textautocomplete';
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    #[\Override]
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver
@@ -24,7 +26,7 @@ class TextAutocompleteType extends TextType
             ->setDefault('tom_select_options', []);
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
         $view->vars += [

@@ -27,7 +27,7 @@ class DockerImageTagFactory
         $images = [];
         foreach ($containers as $container) {
             $parts = explode('/', $container->image);
-            $organization = $parts[0] ?? '';
+            $organization = $parts[0];
             $repository = $parts[1] ?? '';
 
             $dockerImage = array_key_exists($container->image, $images) ? $images[$container->image] : null;

@@ -17,11 +17,11 @@ use App\Types\FrameworkTypes;
 use App\Types\SiteType;
 
 /**
- * Handler for DetectionResult off type "symfony".
+ * Handler for DetectionResult off type "docker".
  */
-class DockerImageHandler implements DetectionResultHandlerInterface
+readonly class DockerImageHandler implements DetectionResultHandlerInterface
 {
-    private const PHP_CONTAINER = 'phpfpm';
+    private const string PHP_CONTAINER = 'phpfpm';
 
     /**
      * DirectoryHandler constructor.
@@ -29,16 +29,17 @@ class DockerImageHandler implements DetectionResultHandlerInterface
      * @param DockerImageTagFactory $dockerImageTagFactory
      * @param ModuleVersionFactory $moduleVersionFactory
      * @param PackageVersionFactory $packageVersionFactory
+     * @param AdvisoryFactory $advisoryFactory
      * @param SiteFactory $siteFactory
      * @param DomainFactory $domainFactory
      */
     public function __construct(
-        private readonly DockerImageTagFactory $dockerImageTagFactory,
-        private readonly ModuleVersionFactory $moduleVersionFactory,
-        private readonly PackageVersionFactory $packageVersionFactory,
-        private readonly AdvisoryFactory $advisoryFactory,
-        private readonly SiteFactory $siteFactory,
-        private readonly DomainFactory $domainFactory,
+        private DockerImageTagFactory $dockerImageTagFactory,
+        private ModuleVersionFactory $moduleVersionFactory,
+        private PackageVersionFactory $packageVersionFactory,
+        private AdvisoryFactory $advisoryFactory,
+        private SiteFactory $siteFactory,
+        private DomainFactory $domainFactory,
     ) {
     }
 
@@ -80,7 +81,7 @@ class DockerImageHandler implements DetectionResultHandlerInterface
                     $this->setSymfony($site->getInstallation(), $container->symfony);
                 }
             }
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             // @TODO log exceptions
         }
     }

@@ -18,6 +18,7 @@ class AuthenticationTest extends ApiTestCase
     {
         static::createClient()->request('POST', '/api/detection_results', [
             'headers' => [
+                'accept' => 'application/json',
                 'content-type' => 'application/json',
             ],
             'body' => '{
@@ -33,6 +34,7 @@ class AuthenticationTest extends ApiTestCase
 
         static::createClient()->request('POST', '/api/detection_results', [
             'headers' => [
+                'accept' => 'application/json',
                 'content-type' => 'application/json',
                 ApiKeyAuthenticator::AUTH_HEADER => ApiKeyAuthenticator::AUTH_HEADER_PREFIX.'123456789',
             ],
@@ -56,6 +58,7 @@ class AuthenticationTest extends ApiTestCase
 
         $response = $client->request('POST', '/api/detection_results', [
             'headers' => [
+                'accept' => 'application/json',
                 'content-type' => 'application/json',
                 ApiKeyAuthenticator::AUTH_HEADER => ApiKeyAuthenticator::AUTH_HEADER_PREFIX.$apikey,
             ],

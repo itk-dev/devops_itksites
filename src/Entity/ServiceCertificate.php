@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ServiceCertificateRepository::class)]
-class ServiceCertificate extends AbstractBaseEntity
+class ServiceCertificate extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
@@ -41,7 +41,7 @@ class ServiceCertificate extends AbstractBaseEntity
     #[Assert\Url]
     private ?string $usageDocumentationUrl = null;
 
-    #[ORM\OneToMany(mappedBy: 'certificate', targetEntity: Service::class, orphanRemoval: true, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Service::class, mappedBy: 'certificate', cascade: ['persist'], orphanRemoval: true)]
     #[ORM\OrderBy(['type' => 'ASC'])]
     #[Assert\Valid]
     private Collection $services;
@@ -53,7 +53,7 @@ class ServiceCertificate extends AbstractBaseEntity
 
     public function __toString(): string
     {
-        return $this->name;
+        return (string) $this->name;
     }
 
     public function getDomain(): ?string

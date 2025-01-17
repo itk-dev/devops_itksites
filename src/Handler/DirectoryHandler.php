@@ -14,7 +14,7 @@ use App\Types\DetectionType;
 /**
  * Handler for DetectionResult off type "dir" (Installations).
  */
-class DirectoryHandler implements DetectionResultHandlerInterface
+readonly class DirectoryHandler implements DetectionResultHandlerInterface
 {
     /**
      * DirectoryHandler constructor.
@@ -23,8 +23,8 @@ class DirectoryHandler implements DetectionResultHandlerInterface
      * @param InstallationFactory $installationFactory
      */
     public function __construct(
-        private readonly SiteRepository $siteRepository,
-        private readonly InstallationFactory $installationFactory,
+        private SiteRepository $siteRepository,
+        private InstallationFactory $installationFactory,
     ) {
     }
 

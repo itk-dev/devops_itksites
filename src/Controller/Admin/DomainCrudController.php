@@ -23,11 +23,13 @@ class DomainCrudController extends AbstractCrudController
         return Domain::class;
     }
 
+    #[\Override]
     public function configureCrud(Crud $crud): Crud
     {
         return $crud->showEntityActionsInlined();
     }
 
+    #[\Override]
     public function configureActions(Actions $actions): Actions
     {
         return $actions
@@ -40,6 +42,7 @@ class DomainCrudController extends AbstractCrudController
         ;
     }
 
+    #[\Override]
     public function configureFields(string $pageName): iterable
     {
         yield DomainField::new('address')->setColumns(12);
@@ -52,6 +55,7 @@ class DomainCrudController extends AbstractCrudController
         yield DateTimeField::new('detectionResult.lastContact')->hideOnIndex();
     }
 
+    #[\Override]
     public function configureFilters(Filters $filters): Filters
     {
         return $filters

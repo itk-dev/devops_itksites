@@ -26,11 +26,13 @@ class DetectionResultCrudController extends AbstractCrudController
         return DetectionResult::class;
     }
 
+    #[\Override]
     public function configureCrud(Crud $crud): Crud
     {
         return $crud->showEntityActionsInlined()->setDefaultSort(['lastContact' => 'DESC']);
     }
 
+    #[\Override]
     public function configureActions(Actions $actions): Actions
     {
         return $actions
@@ -42,6 +44,7 @@ class DetectionResultCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_DETAIL, Action::DELETE);
     }
 
+    #[\Override]
     public function configureFields(string $pageName): iterable
     {
         yield TextMonospaceField::new('id')->hideOnIndex();
@@ -55,6 +58,7 @@ class DetectionResultCrudController extends AbstractCrudController
         yield CodeEditorField::new('prettyData')->hideOnIndex()->setLabel('Data');
     }
 
+    #[\Override]
     public function configureFilters(Filters $filters): Filters
     {
         return $filters

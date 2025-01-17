@@ -20,12 +20,14 @@ security:
             pattern: ^/api
             custom_authenticators:
                 - App\Security\ApiKeyAuthenticator
+            provider: app_server_provider
 
         main:
             custom_authenticators:
                 - App\Security\AzureOIDCAuthenticator
                 - ItkDev\OpenIdConnectBundle\Security\CliLoginTokenAuthenticator
             entry_point: App\Security\AzureOIDCAuthenticator
+            provider: app_user_provider
             logout:
                 path: /logout
 

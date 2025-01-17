@@ -35,11 +35,13 @@ class SiteCrudController extends AbstractCrudController
         return Site::class;
     }
 
+    #[\Override]
     public function configureCrud(Crud $crud): Crud
     {
         return $crud->showEntityActionsInlined();
     }
 
+    #[\Override]
     public function configureActions(Actions $actions): Actions
     {
         return $actions
@@ -52,6 +54,7 @@ class SiteCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_DETAIL, Action::DELETE);
     }
 
+    #[\Override]
     public function configureFields(string $pageName): iterable
     {
         yield DomainField::new('primaryDomain')->setColumns(12);
@@ -67,6 +70,7 @@ class SiteCrudController extends AbstractCrudController
         yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 
+    #[\Override]
     public function configureFilters(Filters $filters): Filters
     {
         return $filters

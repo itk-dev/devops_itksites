@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GitTagRepository::class)]
-class GitTag extends AbstractBaseEntity
+class GitTag extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\Column(type: 'string', length: 255)]
     private string $tag = '';
@@ -19,7 +19,7 @@ class GitTag extends AbstractBaseEntity
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private GitRepo $repo;
 
-    #[ORM\OneToMany(mappedBy: 'gitTag', targetEntity: Installation::class)]
+    #[ORM\OneToMany(targetEntity: Installation::class, mappedBy: 'gitTag')]
     private Collection $installations;
 
     public function __toString(): string
