@@ -6,7 +6,7 @@ App\Entity\ServiceCertificate:
     description: |
       Bruges til opslag af CPR-numre.
     onePasswordUrl: 'https://example.com/1password'
-    expirationTime: <(new DateTimeImmutable('+2 years'))>
+    expirationTime: <(new DateTime('+2 years'))>
     usageDocumentationUrl: https://example.com/example.com/README.md#certificates
 
   service_certificate/prod.example.com:
@@ -15,7 +15,7 @@ App\Entity\ServiceCertificate:
     description: |
       Bruges til opslag af CVR-numre.
     onePasswordUrl: 'https://example.com/1password'
-    expirationTime: <(new DateTimeImmutable('+4 years'))>
+    expirationTime: <(new DateTime('+4 years'))>
     usageDocumentationUrl: https://example.com/example.com/README.md#certificates
 
 App\Entity\ServiceCertificate\Service:
