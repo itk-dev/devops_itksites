@@ -17,7 +17,7 @@ use App\Types\FrameworkTypes;
 use App\Types\SiteType;
 
 /**
- * Handler for DetectionResult off type "symfony".
+ * Handler for DetectionResult off type "docker".
  */
 readonly class DockerImageHandler implements DetectionResultHandlerInterface
 {
