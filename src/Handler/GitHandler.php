@@ -33,12 +33,13 @@ readonly class GitHandler implements DetectionResultHandlerInterface
     {
         try {
             $data = $this->getData($detectionResult);
+            $installation = $this->installationFactory->getInstallation($detectionResult);
 
             if (null === $data) {
+                $installation->setGitTag(null);
+
                 return;
             }
-
-            $installation = $this->installationFactory->getInstallation($detectionResult);
 
             $this->gitCloneFactory->setGitCloneData($installation, $data);
         } catch (\JsonException) {
