@@ -17,6 +17,7 @@ final readonly class ProcessDetectionResultHandler
         private EntityManagerInterface $entityManager,
         private DetectionResultRepository $detectionResultRepository,
         private iterable $resultHandlers,
+        private int $keepResults,
     ) {
     }
 
@@ -33,6 +34,9 @@ final readonly class ProcessDetectionResultHandler
             }
 
             $this->entityManager->flush();
+
+            $this->detectionResultRepository->cleanup($detectionResult, $this->keepResults, true);
+
             $this->entityManager->clear();
             gc_collect_cycles();
         }

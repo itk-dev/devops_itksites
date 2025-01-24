@@ -39,4 +39,30 @@ class DetectionResultRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function cleanup(DetectionResult $detectionResult, int $keep = 5, bool $flush = false): void
+    {
+        if ($keep < 1) {
+            return;
+        }
+
+        $em = $this->getEntityManager();
+
+        $results = $this->findBy(
+            [
+                'server' => $detectionResult->getServer(),
+                'type' => $detectionResult->getType(),
+                'rootDir' => $detectionResult->getRootDir(),
+            ],
+            ['lastContact' => 'DESC'], null, $keep
+        );
+
+        foreach ($results as $result) {
+            $em->remove($result);
+        }
+
+        if ($flush) {
+            $em->flush();
+        }
+    }
 }
