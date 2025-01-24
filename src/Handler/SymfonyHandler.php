@@ -38,25 +38,19 @@ readonly class SymfonyHandler implements DetectionResultHandlerInterface
             $installation = $this->installationFactory->getInstallation($detectionResult);
             $installation->setType(FrameworkTypes::SYMFONY);
 
-            if (isset($data->composerVersion)) {
-                $installation->setComposerVersion($data->composerVersion);
-            }
-            if (isset($data->symfony->version)) {
-                $installation->setFrameworkVersion($data->symfony->version);
-            }
-            if (isset($data->symfony->eof)) {
-                $installation->setEol($data->symfony->eof);
-            }
+            $installation->setComposerVersion($data->composerVersion ?? null);
+            $installation->setFrameworkVersion($data->symfony->version ?? null);
+            $installation->setEol($data->symfony->eof ?? '');
             if (isset($data->symfony->lts)) {
                 $lts = 'Yes' === $data->symfony->lts;
                 $installation->setLts($lts);
             }
-            if (isset($data->symfony->phpVersion)) {
-                $installation->setPhpVersion($data->symfony->phpVersion);
-            }
+            $installation->setPhpVersion($data->symfony->phpVersion ?? null);
 
             if (isset($data->packages->installed)) {
                 $this->packageVersionFactory->setPackageVersions($installation, $data->packages->installed);
+            } else {
+                $this->packageVersionFactory->setPackageVersions($installation, []);
             }
         } catch (\JsonException) {
             // @TODO log exceptions
