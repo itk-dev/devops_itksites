@@ -30,6 +30,7 @@ class GitRepo extends AbstractBaseEntity implements \Stringable
         $this->gitTags = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->getOrganization().'/'.$this->getRepo();

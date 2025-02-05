@@ -30,6 +30,7 @@ class DockerImage extends AbstractBaseEntity implements \Stringable
         $this->dockerImageTags = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         $name = $this->organization;

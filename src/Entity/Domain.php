@@ -25,6 +25,7 @@ class Domain extends AbstractHandlerResult implements \Stringable
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Site $site;
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->address;

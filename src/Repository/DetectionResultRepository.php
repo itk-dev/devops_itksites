@@ -6,7 +6,6 @@ namespace App\Repository;
 
 use App\Entity\DetectionResult;
 use App\Entity\Installation;
-use App\Entity\Server;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -43,7 +42,7 @@ class DetectionResultRepository extends ServiceEntityRepository
     }
 
     /**
-     * Delete all except X similar detection results
+     * Delete all except X similar detection results.
      *
      * @param DetectionResult $detectionResult
      * @param int $keep

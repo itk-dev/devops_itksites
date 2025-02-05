@@ -23,6 +23,7 @@ class ModuleVersion extends AbstractBaseEntity implements \Stringable
     #[ORM\ManyToMany(targetEntity: Installation::class, mappedBy: 'moduleVersions')]
     private Collection $installations;
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->getVersion();

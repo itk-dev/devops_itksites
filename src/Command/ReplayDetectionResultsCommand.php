@@ -117,7 +117,7 @@ class ReplayDetectionResultsCommand extends Command
 
         $count = $this->entityManager->getRepository(DetectionResult::class)->count($criteria);
 
-        $this->entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
+        $this->entityManager->getConnection()->getConfiguration()->setMiddlewares([new \Doctrine\DBAL\Logging\Middleware(new \Psr\Log\NullLogger())]);
         $iterable = $queryBuilder->getQuery()->toIterable();
 
         $limit = intval($input->getOption('limit'));

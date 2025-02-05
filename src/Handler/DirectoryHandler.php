@@ -12,8 +12,6 @@ use App\Repository\SiteRepository;
 use App\Service\InstallationFactory;
 use App\Types\DetectionType;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Handler for DetectionResult off type "dir" (Installations).
@@ -63,7 +61,6 @@ readonly class DirectoryHandler implements DetectionResultHandlerInterface
                 $this->detectionResultRepository->deleteByInstallation($oldInstallation);
             }
         }
-
     }
 
     /**

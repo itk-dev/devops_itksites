@@ -72,6 +72,7 @@ class Installation extends AbstractHandlerResult implements \Stringable
         $this->dockerImageTags = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->getServer().$this->getRootDir();
@@ -128,8 +129,11 @@ class Installation extends AbstractHandlerResult implements \Stringable
         return $this->composerVersion;
     }
 
-    public function setComposerVersion(?string $composerVersion): self
+    public function setComposerVersion(string|float|null $composerVersion): self
     {
+        if (is_float($composerVersion)) {
+            $composerVersion = (string) $composerVersion;
+        }
         $this->composerVersion = $composerVersion;
 
         return $this;

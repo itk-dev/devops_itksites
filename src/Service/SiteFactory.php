@@ -29,12 +29,12 @@ class SiteFactory
         if (null === $site) {
             $site = new Site();
             $this->entityManager->persist($site);
-
-            $installation = $this->installationFactory->getInstallation($detectionResult);
-            $site->setInstallation($installation);
-            $site->setDetectionResult($detectionResult);
-            $site->setConfigFilePath($configFilePath);
         }
+
+        $installation = $this->installationFactory->getInstallation($detectionResult);
+        $site->setInstallation($installation);
+        $site->setDetectionResult($detectionResult);
+        $site->setConfigFilePath($configFilePath);
 
         return $site;
     }

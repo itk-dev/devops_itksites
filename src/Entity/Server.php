@@ -59,7 +59,7 @@ class Server extends AbstractBaseEntity implements UserInterface, \Stringable
     private bool $monitoring = false;
 
     #[ORM\Column(type: 'string', length: 5, nullable: true)]
-    private ?string $databaseVersion;
+    private ?string $databaseVersion = null;
 
     #[ORM\Column(type: 'string', length: 15)]
     private string $system;
@@ -86,7 +86,7 @@ class Server extends AbstractBaseEntity implements UserInterface, \Stringable
     private string $type;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $lastContactAt;
+    private ?\DateTimeImmutable $lastContactAt = null;
 
     /**
      * @throws \Exception
@@ -98,6 +98,7 @@ class Server extends AbstractBaseEntity implements UserInterface, \Stringable
         $this->installations = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return (string) $this->getName();

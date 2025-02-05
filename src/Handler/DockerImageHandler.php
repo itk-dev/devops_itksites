@@ -110,6 +110,7 @@ readonly class DockerImageHandler implements DetectionResultHandlerInterface
             return;
         }
 
+        $installation->setType(FrameworkTypes::SYMFONY);
         $installation->setFrameworkVersion($symfony->version);
 
         if (isset($symfony->eof)) {

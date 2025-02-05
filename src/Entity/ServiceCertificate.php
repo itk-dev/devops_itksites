@@ -51,6 +51,7 @@ class ServiceCertificate extends AbstractBaseEntity implements \Stringable
         $this->services = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return (string) $this->name;

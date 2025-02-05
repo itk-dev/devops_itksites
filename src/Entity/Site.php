@@ -66,6 +66,7 @@ class Site extends AbstractHandlerResult implements \Stringable
         $this->domains = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         if (SiteType::DOCKER === $this->type) {

@@ -11,7 +11,7 @@ use Symfony\Component\Uid\Ulid;
 
 #[ORM\MappedSuperclass]
 #[ORM\HasLifecycleCallbacks]
-abstract class AbstractBaseEntity
+abstract class AbstractBaseEntity implements \Stringable
 {
     #[ApiProperty(identifier: true)]
     #[ORM\Id]
