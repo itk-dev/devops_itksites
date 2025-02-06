@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
 #[ORM\Table(name: 'service_certificate_service')]
-class Service extends AbstractBaseEntity
+class Service extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\ManyToOne(inversedBy: 'services')]
     #[ORM\JoinColumn(nullable: false)]
@@ -27,9 +27,10 @@ class Service extends AbstractBaseEntity
     #[Assert\Url]
     private ?string $onePasswordUrl = null;
 
+    #[\Override]
     public function __toString(): string
     {
-        return $this->type;
+        return (string) $this->type;
     }
 
     public function getCertificate(): ?ServiceCertificate

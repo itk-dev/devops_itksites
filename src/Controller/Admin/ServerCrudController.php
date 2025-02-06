@@ -23,6 +23,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -44,6 +45,7 @@ class ServerCrudController extends AbstractCrudController
         return Server::class;
     }
 
+    #[\Override]
     public function configureCrud(Crud $crud): Crud
     {
         if ($this->requestStack->getSession()->remove('confetti')) {
@@ -55,6 +57,7 @@ class ServerCrudController extends AbstractCrudController
         return $crud;
     }
 
+    #[\Override]
     public function configureActions(Actions $actions): Actions
     {
         return $actions
@@ -63,6 +66,7 @@ class ServerCrudController extends AbstractCrudController
         ;
     }
 
+    #[\Override]
     public function configureFields(string $pageName): iterable
     {
         yield FormField::addPanel('Provider Details');
@@ -88,8 +92,10 @@ class ServerCrudController extends AbstractCrudController
         yield TextField::new('serviceDeskTicket')->setColumns(12)->hideOnIndex();
         yield TextareaField::new('note')->hideOnIndex()->setColumns(6);
         yield TextareaField::new('usedFor')->hideOnIndex()->setColumns(6);
+        yield DateTimeField::new('lastContactAt');
     }
 
+    #[\Override]
     public function configureFilters(Filters $filters): Filters
     {
         return $filters

@@ -2,16 +2,16 @@
 {# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
 {% if ea.crud.currentAction == 'detail' %}
-    <code class="text-dark">{{ field.formattedValue }}</code>
+    <code class="text-primary">{{ field.formattedValue }}</code>
 {% else %}
-    <code class="text-dark">
+    <code class="text-primary">
         <span title="{{ field.formattedValue }}">
         {% if field.formattedValue starts with '/data/www/' %}
             {{ field.formattedValue | replace({'/data/www/': './'}) }}
         {% elseif field.formattedValue starts with '/home/www/' %}
-            <code class="text-dark">{{ field.formattedValue | replace({'/home/www/': './'}) }}</code>
+            <code class="text-primary">{{ field.formattedValue | replace({'/home/www/': './'}) }}</code>
         {% else %}
-            <code class="text-dark">{{ field.formattedValue }}</code>
+            <code class="text-primary">{{ field.formattedValue }}</code>
         {% endif %}
         </span>
     </code>

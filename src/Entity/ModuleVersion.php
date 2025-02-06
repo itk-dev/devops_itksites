@@ -11,18 +11,19 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ModuleVersionRepository::class)]
 #[ORM\UniqueConstraint(name: 'module_version', columns: ['module_id', 'version'])]
-class ModuleVersion extends AbstractBaseEntity
+class ModuleVersion extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\ManyToOne(targetEntity: Module::class, inversedBy: 'moduleVersions')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Module $module;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $version;
+    private ?string $version = null;
 
     #[ORM\ManyToMany(targetEntity: Installation::class, mappedBy: 'moduleVersions')]
     private Collection $installations;
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->getVersion();
@@ -33,13 +34,11 @@ class ModuleVersion extends AbstractBaseEntity
      */
     public function display(int $style): string
     {
-        switch ($style) {
-            case 0:
-                return $this->getVersion();
-            case 1:
-                return $this->getModule().':'.$this->getVersion();
-        }
-        throw new \Exception('Unknown style');
+        return match ($style) {
+            0 => $this->getVersion(),
+            1 => $this->getModule().':'.$this->getVersion(),
+            default => throw new \Exception('Unknown style'),
+        };
     }
 
     public function __construct()
@@ -52,7 +51,7 @@ class ModuleVersion extends AbstractBaseEntity
         return $this->module;
     }
 
-    public function setModule(Module $module): self
+    public function setModule(?Module $module): self
     {
         $this->module = $module;
 

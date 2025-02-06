@@ -17,8 +17,8 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class ApiKeyAuthenticator extends AbstractAuthenticator
 {
-    public const AUTH_HEADER = 'Authorization';
-    public const AUTH_HEADER_PREFIX = 'Apikey ';
+    public const string AUTH_HEADER = 'Authorization';
+    public const string AUTH_HEADER_PREFIX = 'Apikey ';
 
     /**
      * Called on every request to decide if this authenticator should be used for the request.
@@ -28,7 +28,7 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
     public function supports(Request $request): ?bool
     {
         return $request->headers->has(self::AUTH_HEADER)
-            && str_starts_with($request->headers->get(self::AUTH_HEADER), self::AUTH_HEADER_PREFIX);
+            && str_starts_with((string) $request->headers->get(self::AUTH_HEADER), self::AUTH_HEADER_PREFIX);
     }
 
     /**
@@ -36,8 +36,8 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
      */
     public function authenticate(Request $request): Passport
     {
-        $apiKey = substr($request->headers->get(self::AUTH_HEADER), strlen(self::AUTH_HEADER_PREFIX));
-        if (null === $apiKey) {
+        $apiKey = substr((string) $request->headers->get(self::AUTH_HEADER), strlen(self::AUTH_HEADER_PREFIX));
+        if ('' === $apiKey) {
             // The token header was empty, authentication fails with HTTP Status
             // Code 401 "Unauthorized"
             throw new CustomUserMessageAuthenticationException('No API token provided');

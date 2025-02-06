@@ -12,21 +12,17 @@ use Twig\TwigFunction;
 
 class AppExtension extends AbstractExtension
 {
-    private AdminUrlGenerator $adminUrlGenerator;
-    private CrudControllerRegistry $crudControllerRegistry;
-
-    public function __construct(AdminUrlGenerator $adminUrlGenerator, CrudControllerRegistry $crudControllerRegistry)
+    public function __construct(private readonly AdminUrlGenerator $adminUrlGenerator, private readonly CrudControllerRegistry $crudControllerRegistry)
     {
-        $this->adminUrlGenerator = $adminUrlGenerator;
-        $this->crudControllerRegistry = $crudControllerRegistry;
     }
 
+    #[\Override]
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('admin_detail_url', [$this, 'url']),
-            new TwigFunction('entity_display', [$this, 'entityDisplay']),
-            new TwigFunction('has_display', [$this, 'hasDisplay']),
+            new TwigFunction('admin_detail_url', $this->url(...)),
+            new TwigFunction('entity_display', $this->entityDisplay(...)),
+            new TwigFunction('has_display', $this->hasDisplay(...)),
         ];
     }
 

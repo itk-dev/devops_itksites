@@ -4,5 +4,5 @@
 {% if field.formattedValue is null %}
     <span class="badge badge-secondary">{{ 'label.null'|trans(domain = 'EasyAdminBundle') }}</span>
 {% else %}
-    <code class="text-dark">{{ field.formattedValue }}</code>
+    <code class="text-primary">{{ field.formattedValue }}</code>
 {% endif %}

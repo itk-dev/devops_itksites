@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Utils\RootDirNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
@@ -19,7 +18,7 @@ class AbstractHandlerResult extends AbstractBaseEntity
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[Groups(['export'])]
     #[SerializedName('Server')]
-    protected ?Server $server;
+    protected ?Server $server = null;
 
     #[ORM\ManyToOne(targetEntity: DetectionResult::class, fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
@@ -32,7 +31,7 @@ class AbstractHandlerResult extends AbstractBaseEntity
 
     public function setRootDir(string $rootDir): self
     {
-        $this->rootDir = RootDirNormalizer::normalize($rootDir);
+        $this->rootDir = $rootDir;
 
         return $this;
     }

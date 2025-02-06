@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\DetectionResult;
+use App\Entity\Installation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -38,5 +39,58 @@ class DetectionResultRepository extends ServiceEntityRepository
             ->setParameter('date', $date)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Delete all except X similar detection results.
+     *
+     * @param DetectionResult $detectionResult
+     * @param int $keep
+     * @param bool $flush
+     *
+     * @return void
+     */
+    public function cleanup(DetectionResult $detectionResult, int $keep = 5, bool $flush = false): void
+    {
+        if ($keep < 1) {
+            return;
+        }
+
+        $em = $this->getEntityManager();
+
+        $results = $this->findBy(
+            [
+                'server' => $detectionResult->getServer(),
+                'type' => $detectionResult->getType(),
+                'rootDir' => $detectionResult->getRootDir(),
+            ],
+            ['lastContact' => 'DESC'], null, $keep
+        );
+
+        foreach ($results as $result) {
+            $em->remove($result);
+        }
+
+        if ($flush) {
+            $em->flush();
+        }
+    }
+
+    /**
+     * Delete all detection results for a given installation.
+     *
+     * @param Installation $installation
+     *
+     * @return void
+     */
+    public function deleteByInstallation(Installation $installation): void
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->delete(DetectionResult::class, 'd')
+            ->where('d.server = :server')
+            ->andWhere('d.rootDir =:rootDir')
+            ->setParameter('server', $installation->getServer())
+            ->setParameter('rootDir', $installation->getRootDir());
+        $qb->getQuery()->execute();
     }
 }

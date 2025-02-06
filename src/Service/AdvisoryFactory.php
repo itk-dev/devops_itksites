@@ -10,6 +10,7 @@ use App\Entity\Package;
 use App\Entity\PackageVersion;
 use App\Repository\AdvisoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use z4kn4fein\SemVer\Constraints\Constraint;
 use z4kn4fein\SemVer\SemverException;
 use z4kn4fein\SemVer\Version;
 
@@ -56,7 +57,7 @@ class AdvisoryFactory
                         if (isset($advisory->reportedAt)) {
                             try {
                                 $reportedAt = new \DateTimeImmutable($advisory->reportedAt);
-                            } catch (\Exception $e) {
+                            } catch (\Exception) {
                                 $reportedAt = new \DateTimeImmutable('now');
                             }
                             $entity->setReportedAt($reportedAt);
@@ -83,29 +84,22 @@ class AdvisoryFactory
                 return $packageVersion;
             }
         }
+
+        throw new \InvalidArgumentException(sprintf('Installation "%s", Package "%s" not found', $installation, $vendorPackage));
     }
 
     private function setAdvisoryForAffectedVersions(Package $package, Advisory $advisory): void
     {
         foreach ($package->getPackageVersions() as $packageVersion) {
             try {
+                $constraint = Constraint::parse($advisory->getAffectedVersions());
                 $version = Version::parse($packageVersion->getVersion(), false);
-                $affectedVersions = $this->constraintConverter($advisory->getAffectedVersions());
-                if (Version::satisfies($version, $affectedVersions)) {
+                if ($constraint->isSatisfiedBy($version)) {
                     $advisory->addPackageVersion($packageVersion);
                 }
-            } catch (SemverException $e) {
+            } catch (SemverException) {
                 // Ignore
             }
         }
-    }
-
-    private function constraintConverter(string $constraint): string
-    {
-        // @see https://github.com/z4kn4fein/php-semver#conditions
-        $constraint = \str_replace(',', ' ', $constraint);
-        $constraint = \str_replace('|', ' || ', $constraint);
-
-        return $constraint;
     }
 }

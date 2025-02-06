@@ -25,6 +25,7 @@ class AdvisoryCrudController extends AbstractCrudController
         return Advisory::class;
     }
 
+    #[\Override]
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
@@ -32,6 +33,7 @@ class AdvisoryCrudController extends AbstractCrudController
             ->setDefaultSort(['package.vendor' => 'ASC', 'package.name' => 'ASC']);
     }
 
+    #[\Override]
     public function configureActions(Actions $actions): Actions
     {
         return $actions
@@ -43,6 +45,7 @@ class AdvisoryCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_DETAIL, Action::DELETE);
     }
 
+    #[\Override]
     public function configureFields(string $pageName): iterable
     {
         yield TextMonospaceField::new('advisoryId')->setColumns(6)->onlyOnDetail();
@@ -57,6 +60,7 @@ class AdvisoryCrudController extends AbstractCrudController
         yield SourcesField::new('sourceLinks')->setColumns(6)->onlyOnDetail();
     }
 
+    #[\Override]
     public function configureFilters(Filters $filters): Filters
     {
         return $filters

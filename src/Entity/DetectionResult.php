@@ -7,6 +7,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
 use App\Repository\DetectionResultRepository;
+use App\Utils\RootDirNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -18,8 +19,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 #[ORM\Entity(repositoryClass: DetectionResultRepository::class)]
 #[ORM\UniqueConstraint(name: 'server_hash_idx', fields: ['server', 'hash'])]
-#[ORM\Index(columns: ['type'], name: 'type_idx')]
-class DetectionResult extends AbstractBaseEntity
+#[ORM\Index(name: 'type_idx', columns: ['type'])]
+class DetectionResult extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['write'])]
@@ -43,6 +44,7 @@ class DetectionResult extends AbstractBaseEntity
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $lastContact;
 
+    #[\Override]
     public function __toString(): string
     {
         return '['.$this->type.'] '.$this->server.$this->rootDir.' @ '.$this->lastContact->format(DATE_ATOM);
@@ -67,7 +69,7 @@ class DetectionResult extends AbstractBaseEntity
 
     public function setRootDir(string $rootDir): self
     {
-        $this->rootDir = $rootDir;
+        $this->rootDir = RootDirNormalizer::normalize($rootDir);
 
         return $this;
     }
@@ -93,7 +95,7 @@ class DetectionResult extends AbstractBaseEntity
     {
         try {
             $json = json_decode($this->data, false, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             return $this->data;
         }
 
@@ -126,7 +128,7 @@ class DetectionResult extends AbstractBaseEntity
 
     public function setLastContact(?\DateTimeImmutable $lastContact = null): self
     {
-        $this->lastContact = (null === $lastContact) ? new \DateTimeImmutable() : $lastContact;
+        $this->lastContact = $lastContact ?? new \DateTimeImmutable();
 
         return $this;
     }

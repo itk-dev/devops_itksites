@@ -14,9 +14,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 /**
  * Handler for DetectionResult off type "nginx" (Sites, Domains).
  */
-class NginxHandler implements DetectionResultHandlerInterface
+readonly class NginxHandler implements DetectionResultHandlerInterface
 {
-    private const NGINX_DEFAULT = 'default';
+    private const string NGINX_DEFAULT = 'default';
 
     /**
      * DirectoryHandler constructor.
@@ -26,9 +26,9 @@ class NginxHandler implements DetectionResultHandlerInterface
      * @param ValidatorInterface $validator
      */
     public function __construct(
-        private readonly SiteFactory $siteFactory,
-        private readonly DomainFactory $domainFactory,
-        private readonly ValidatorInterface $validator,
+        private SiteFactory $siteFactory,
+        private DomainFactory $domainFactory,
+        private ValidatorInterface $validator,
     ) {
     }
 
@@ -49,7 +49,6 @@ class NginxHandler implements DetectionResultHandlerInterface
             $site->setDetectionResult($detectionResult);
             $site->setType(SiteType::NGINX);
             $site->setPhpVersion($data->phpVersion);
-            $site->setConfigFilePath($data->config);
 
             $domains = $this->domainFactory->getDomains($data->domain, $site, $detectionResult);
             $site->setDomains($domains);
@@ -59,7 +58,7 @@ class NginxHandler implements DetectionResultHandlerInterface
             if (count($errors) > 0) {
                 // @TODO log validation error
             }
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             // @TODO log exceptions
         }
     }

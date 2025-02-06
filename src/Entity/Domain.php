@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DomainRepository::class)]
 #[ORM\UniqueConstraint(name: 'site_address_idx', fields: ['site', 'address'])]
-class Domain extends AbstractHandlerResult
+class Domain extends AbstractHandlerResult implements \Stringable
 {
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(
@@ -25,6 +25,7 @@ class Domain extends AbstractHandlerResult
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Site $site;
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->address;

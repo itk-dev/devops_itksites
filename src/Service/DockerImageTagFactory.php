@@ -23,11 +23,17 @@ class DockerImageTagFactory
 
     public function setDockerImageTags(Installation $installation, array $containers): void
     {
+        // Some detection results have duplicated containers
+        $containersKeyed = [];
+        foreach ($containers as $container) {
+            $containersKeyed[$container->name] = $container;
+        }
+
         $dockerImageTags = new ArrayCollection();
         $images = [];
-        foreach ($containers as $container) {
+        foreach ($containersKeyed as $container) {
             $parts = explode('/', $container->image);
-            $organization = $parts[0] ?? '';
+            $organization = $parts[0];
             $repository = $parts[1] ?? '';
 
             $dockerImage = array_key_exists($container->image, $images) ? $images[$container->image] : null;

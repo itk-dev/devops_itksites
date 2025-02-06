@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DockerImageTagRepository::class)]
 #[ORM\UniqueConstraint(name: 'dockerImage_name_tag', columns: ['docker_image_id', 'name', 'tag'])]
-class DockerImageTag extends AbstractBaseEntity
+class DockerImageTag extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\ManyToMany(targetEntity: Installation::class, mappedBy: 'dockerImageTags')]
     private Collection $installations;
@@ -31,6 +31,7 @@ class DockerImageTag extends AbstractBaseEntity
         $this->installations = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->dockerImage.':'.$this->getTag();

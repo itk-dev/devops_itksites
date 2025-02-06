@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\AdvisoryCountField;
 use App\Admin\Field\ConfigFilePathField;
 use App\Admin\Field\DomainField;
 use App\Admin\Field\RootDirField;
@@ -35,11 +36,13 @@ class SiteCrudController extends AbstractCrudController
         return Site::class;
     }
 
+    #[\Override]
     public function configureCrud(Crud $crud): Crud
     {
         return $crud->showEntityActionsInlined();
     }
 
+    #[\Override]
     public function configureActions(Actions $actions): Actions
     {
         return $actions
@@ -52,9 +55,11 @@ class SiteCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_DETAIL, Action::DELETE);
     }
 
+    #[\Override]
     public function configureFields(string $pageName): iterable
     {
         yield DomainField::new('primaryDomain')->setColumns(12);
+        yield AdvisoryCountField::new('advisoryCount')->setLabel('Adv.');
         yield AssociationField::new('domains')->hideOnIndex();
         yield SiteTypeField::new('type')->setLabel('Stack');
         yield ConfigFilePathField::new('configFilePath')->setColumns(12)->hideOnIndex();
@@ -67,6 +72,7 @@ class SiteCrudController extends AbstractCrudController
         yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 
+    #[\Override]
     public function configureFilters(Filters $filters): Filters
     {
         return $filters

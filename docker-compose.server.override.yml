@@ -1,6 +1,6 @@
 services:
   rabbit:
-    image: rabbitmq:3.11-management-alpine
+    image: rabbitmq:4-management-alpine
     restart: unless-stopped
     networks:
       - app
@@ -13,7 +13,7 @@ services:
       - ".docker/data/rabbitmq:/var/lib/rabbitmq/mnesia/"
 
   supervisor:
-    image: itkdev/supervisor-php8.3:alpine
+    image: itkdev/supervisor-php8.4:alpine
     restart: unless-stopped
     stop_grace_period: 20s
     environment:

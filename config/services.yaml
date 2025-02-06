@@ -27,14 +27,13 @@ services:
         App\Handler\DetectionResultHandlerInterface:
             tags: [ app.handler.detection_result_handler ]
 
-    App\MessageHandler\ProcessDetectionResultHandler:
-        arguments:
-            $resultHandlers: !tagged_iterator app.handler.detection_result_handler
-
     App\EventListener\RemovedRelationsListener:
         tags:
             -
                 name: 'doctrine.event_listener'
                 event: 'postFlush'
 
-
+    App\MessageHandler\ProcessDetectionResultHandler:
+        arguments:
+            $resultHandlers: !tagged_iterator app.handler.detection_result_handler
+            $keepResults: '%env(int:APP_KEEP_RESULTS)%'

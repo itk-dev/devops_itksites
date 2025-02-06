@@ -12,7 +12,7 @@ use App\Types\DetectionType;
 /**
  * Handler for DetectionResult off type "git".
  */
-class GitHandler implements DetectionResultHandlerInterface
+readonly class GitHandler implements DetectionResultHandlerInterface
 {
     /**
      * DirectoryHandler constructor.
@@ -21,8 +21,8 @@ class GitHandler implements DetectionResultHandlerInterface
      * @param GitTagFactory $gitCloneFactory
      */
     public function __construct(
-        private readonly InstallationFactory $installationFactory,
-        private readonly GitTagFactory $gitCloneFactory,
+        private InstallationFactory $installationFactory,
+        private GitTagFactory $gitCloneFactory,
     ) {
     }
 
@@ -33,15 +33,16 @@ class GitHandler implements DetectionResultHandlerInterface
     {
         try {
             $data = $this->getData($detectionResult);
+            $installation = $this->installationFactory->getInstallation($detectionResult);
 
             if (null === $data) {
+                $installation->setGitTag(null);
+
                 return;
             }
 
-            $installation = $this->installationFactory->getInstallation($detectionResult);
-
             $this->gitCloneFactory->setGitCloneData($installation, $data);
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             // @TODO log exceptions
         }
     }
@@ -74,7 +75,7 @@ class GitHandler implements DetectionResultHandlerInterface
 
         $data = \json_decode($result->getData(), false, 512, JSON_THROW_ON_ERROR);
 
-        if (empty($data->remotes) || 'unknown' === strtolower($data->remotes[0])) {
+        if (empty($data->remotes) || 'unknown' === strtolower((string) $data->remotes[0])) {
             return null;
         }
 

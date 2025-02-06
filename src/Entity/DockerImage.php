@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DockerImageRepository::class)]
 #[ORM\UniqueConstraint(name: 'organization_repository', columns: ['organization', 'repository'])]
-class DockerImage extends AbstractBaseEntity
+class DockerImage extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\Column(type: 'string', length: 255)]
     private string $organization = '';
@@ -22,7 +22,7 @@ class DockerImage extends AbstractBaseEntity
     #[ORM\Column(type: 'text')]
     private string $description = '';
 
-    #[ORM\OneToMany(mappedBy: 'dockerImage', targetEntity: DockerImageTag::class, orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: DockerImageTag::class, mappedBy: 'dockerImage', orphanRemoval: true)]
     private Collection $dockerImageTags;
 
     public function __construct()
@@ -30,6 +30,7 @@ class DockerImage extends AbstractBaseEntity
         $this->dockerImageTags = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         $name = $this->organization;

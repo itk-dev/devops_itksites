@@ -11,14 +11,21 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User extends AbstractBaseEntity implements UserInterface
 {
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private string $email;
+    public function __construct(
+        #[ORM\Column(length: 255)]
+        private string $name,
+        #[ORM\Column(type: 'string', length: 180, unique: true)]
+        private string $email,
+        #[ORM\Column(type: 'json')]
+        private array $roles = [],
+    ) {
+    }
 
-    #[ORM\Column(type: 'json')]
-    private array $roles = [];
-
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    #[\Override]
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 
     public function getEmail(): ?string
     {

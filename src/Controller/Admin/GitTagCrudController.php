@@ -20,6 +20,7 @@ class GitTagCrudController extends AbstractCrudController
         return GitTag::class;
     }
 
+    #[\Override]
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
@@ -28,6 +29,7 @@ class GitTagCrudController extends AbstractCrudController
         ;
     }
 
+    #[\Override]
     public function configureActions(Actions $actions): Actions
     {
         return $actions
@@ -39,6 +41,7 @@ class GitTagCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_DETAIL, Action::DELETE);
     }
 
+    #[\Override]
     public function configureFields(string $pageName): iterable
     {
         yield AssociationField::new('repo')->setColumns(6);
@@ -46,6 +49,7 @@ class GitTagCrudController extends AbstractCrudController
         yield VersionField::new('tag')->setColumns(6);
     }
 
+    #[\Override]
     public function configureFilters(Filters $filters): Filters
     {
         return $filters

@@ -24,5 +24,11 @@ class DatabaseVersionType
         'Mariadb 10.9' => '10.9',
         'Mariadb 10.10' => '10.10',
         'Mariadb 10.11' => '10.11',
+        'Mariadb 11.0' => '11.0',
+        'Mariadb 11.1' => '11.1',
+        'Mariadb 11.2' => '11.3',
+        'Mariadb 11.4' => '11.4',
+        'Mariadb 11.5' => '11.5',
+        'Mariadb 11.6' => '11.6',
     ];
 }

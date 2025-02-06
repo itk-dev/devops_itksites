@@ -14,7 +14,7 @@ use App\Types\FrameworkTypes;
 /**
  * Handler for DetectionResult off type "drupal".
  */
-class DrupalHandler implements DetectionResultHandlerInterface
+readonly class DrupalHandler implements DetectionResultHandlerInterface
 {
     /**
      * DirectoryHandler constructor.
@@ -24,9 +24,9 @@ class DrupalHandler implements DetectionResultHandlerInterface
      * @param ModuleVersionFactory $moduleVersionFactory
      */
     public function __construct(
-        private readonly InstallationFactory $installationFactory,
-        private readonly PackageVersionFactory $packageVersionFactory,
-        private readonly ModuleVersionFactory $moduleVersionFactory,
+        private InstallationFactory $installationFactory,
+        private PackageVersionFactory $packageVersionFactory,
+        private ModuleVersionFactory $moduleVersionFactory,
     ) {
     }
 
@@ -51,7 +51,7 @@ class DrupalHandler implements DetectionResultHandlerInterface
             if (isset($data->modules)) {
                 $this->moduleVersionFactory->setModuleVersions($installation, $data->modules);
             }
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             // @TODO log exceptions
         }
     }

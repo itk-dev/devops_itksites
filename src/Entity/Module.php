@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ModuleRepository::class)]
-class Module extends AbstractBaseEntity
+class Module extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\Column(type: 'string', length: 255)]
     private string $package;
@@ -19,12 +19,12 @@ class Module extends AbstractBaseEntity
     private string $name;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $displayName;
+    private ?string $displayName = null;
 
     #[ORM\Column(type: 'boolean')]
     private bool $enabled;
 
-    #[ORM\OneToMany(mappedBy: 'module', targetEntity: ModuleVersion::class)]
+    #[ORM\OneToMany(targetEntity: ModuleVersion::class, mappedBy: 'module')]
     private Collection $moduleVersions;
 
     public function __construct()
@@ -32,6 +32,7 @@ class Module extends AbstractBaseEntity
         $this->moduleVersions = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->displayName ?? $this->package.'/'.$this->name;
@@ -105,12 +106,7 @@ class Module extends AbstractBaseEntity
 
     public function removeModuleVersion(ModuleVersion $moduleVersion): self
     {
-        if ($this->moduleVersions->removeElement($moduleVersion)) {
-            // set the owning side to null (unless already changed)
-            if ($moduleVersion->getModule() === $this) {
-                $moduleVersion->setModule(null);
-            }
-        }
+        $this->moduleVersions->removeElement($moduleVersion);
 
         return $this;
     }

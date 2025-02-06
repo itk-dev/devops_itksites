@@ -20,9 +20,9 @@ use Doctrine\ORM\Mapping as ORM;
     ),
 ])]
 #[ORM\UniqueConstraint(name: 'server_rootdir_idx', fields: ['server', 'rootDir'])]
-class Installation extends AbstractHandlerResult
+class Installation extends AbstractHandlerResult implements \Stringable
 {
-    #[ORM\OneToMany(mappedBy: 'installation', targetEntity: Site::class)]
+    #[ORM\OneToMany(targetEntity: Site::class, mappedBy: 'installation')]
     private Collection $sites;
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
@@ -72,6 +72,7 @@ class Installation extends AbstractHandlerResult
         $this->dockerImageTags = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->getServer().$this->getRootDir();
@@ -94,12 +95,7 @@ class Installation extends AbstractHandlerResult
 
     public function removeSite(Site $site): self
     {
-        if ($this->sites->removeElement($site)) {
-            // set the owning side to null (unless already changed)
-            if ($site->getInstallation() === $this) {
-                $site->setInstallation(null);
-            }
-        }
+        $this->sites->removeElement($site);
 
         return $this;
     }
@@ -133,8 +129,11 @@ class Installation extends AbstractHandlerResult
         return $this->composerVersion;
     }
 
-    public function setComposerVersion(?string $composerVersion): self
+    public function setComposerVersion(string|float|null $composerVersion): self
     {
+        if (is_float($composerVersion)) {
+            $composerVersion = (string) $composerVersion;
+        }
         $this->composerVersion = $composerVersion;
 
         return $this;

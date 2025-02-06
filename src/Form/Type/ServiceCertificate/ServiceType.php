@@ -15,11 +15,11 @@ use Symfony\Component\Translation\TranslatableMessage;
 
 class ServiceType extends AbstractType
 {
-    public function __construct(private ServiceRepository $serviceRepository)
+    public function __construct(private readonly ServiceRepository $serviceRepository)
     {
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('type', TextAutocompleteType::class, [
@@ -38,7 +38,7 @@ class ServiceType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([

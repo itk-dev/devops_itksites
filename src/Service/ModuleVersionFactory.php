@@ -75,8 +75,12 @@ class ModuleVersionFactory
         return $module;
     }
 
-    private function getModuleVersion(Module $module, ?string $version): ModuleVersion
+    private function getModuleVersion(Module $module, string|int|float|null $version): ModuleVersion
     {
+        if (is_int($version) || is_float($version)) {
+            $version = (string) $version;
+        }
+
         $moduleVersion = $this->moduleVersionRepository->findOneBy([
             'module' => $module,
             'version' => $version,

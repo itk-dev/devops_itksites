@@ -14,9 +14,9 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ServerRepository::class)]
-class Server extends AbstractBaseEntity implements UserInterface
+class Server extends AbstractBaseEntity implements UserInterface, \Stringable
 {
-    private const ROLES = ['ROLE_USER', 'ROLE_SERVER'];
+    private const array ROLES = ['ROLE_USER', 'ROLE_SERVER'];
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     #[Assert\Length(
@@ -33,15 +33,15 @@ class Server extends AbstractBaseEntity implements UserInterface
     private string $name = '';
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $hostingProviderName;
+    private ?string $hostingProviderName = null;
 
     #[ORM\Column(type: 'string', length: 15, nullable: true)]
     #[Assert\Ip]
-    private ?string $internalIp;
+    private ?string $internalIp = null;
 
     #[ORM\Column(type: 'string', length: 15, nullable: true)]
     #[Assert\Ip]
-    private ?string $externalIp;
+    private ?string $externalIp = null;
 
     #[ORM\Column(type: 'boolean')]
     private bool $aarhusSsl = false;
@@ -59,31 +59,34 @@ class Server extends AbstractBaseEntity implements UserInterface
     private bool $monitoring = false;
 
     #[ORM\Column(type: 'string', length: 5, nullable: true)]
-    private $databaseVersion;
+    private ?string $databaseVersion = null;
 
     #[ORM\Column(type: 'string', length: 15)]
     private string $system;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $note;
+    private ?string $note = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $serviceDeskTicket;
+    private ?string $serviceDeskTicket = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $usedFor;
+    private ?string $usedFor = null;
 
-    #[ORM\OneToMany(mappedBy: 'server', targetEntity: DetectionResult::class, cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: DetectionResult::class, mappedBy: 'server', cascade: ['persist'], orphanRemoval: true)]
     private Collection $detectionResults;
 
     #[ORM\Column(type: 'string', length: 25)]
     private string $hostingProvider;
 
-    #[ORM\OneToMany(mappedBy: 'server', targetEntity: Installation::class, cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Installation::class, mappedBy: 'server', cascade: ['persist'], orphanRemoval: true)]
     private Collection $installations;
 
     #[ORM\Column(type: 'string', length: 10)]
     private string $type;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $lastContactAt = null;
 
     /**
      * @throws \Exception
@@ -95,9 +98,10 @@ class Server extends AbstractBaseEntity implements UserInterface
         $this->installations = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
-        return $this->getName();
+        return (string) $this->getName();
     }
 
     public function getRoles(): array
@@ -386,6 +390,20 @@ class Server extends AbstractBaseEntity implements UserInterface
     public function setType(string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getLastContactAt(): ?\DateTimeImmutable
+    {
+        return $this->lastContactAt;
+    }
+
+    public function updateLastContactAt(\DateTimeImmutable $lastContactAt): static
+    {
+        if (null === $this->lastContactAt || $this->lastContactAt < $lastContactAt) {
+            $this->lastContactAt = $lastContactAt;
+        }
 
         return $this;
     }

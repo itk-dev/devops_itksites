@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GitRepoRepository::class)]
 #[ORM\UniqueConstraint(name: 'provider_org_repo', columns: ['provider', 'organization', 'repo'])]
-class GitRepo extends AbstractBaseEntity
+class GitRepo extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\Column(length: 255)]
     private string $provider = '';
@@ -22,7 +22,7 @@ class GitRepo extends AbstractBaseEntity
     #[ORM\Column(length: 255)]
     private string $repo = '';
 
-    #[ORM\OneToMany(mappedBy: 'repo', targetEntity: GitTag::class, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: GitTag::class, mappedBy: 'repo', cascade: ['persist'])]
     private Collection $gitTags;
 
     public function __construct()
@@ -30,6 +30,7 @@ class GitRepo extends AbstractBaseEntity
         $this->gitTags = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->getOrganization().'/'.$this->getRepo();
@@ -60,9 +61,7 @@ class GitRepo extends AbstractBaseEntity
 
     public function removeGitTag(GitTag $gitTag): self
     {
-        if ($this->gitTags->removeElement($gitTag)) {
-            $gitTag->setRepo(null);
-        }
+        $this->gitTags->removeElement($gitTag);
 
         return $this;
     }

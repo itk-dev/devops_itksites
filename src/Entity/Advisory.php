@@ -10,10 +10,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdvisoryRepository::class)]
-class Advisory extends AbstractBaseEntity
+class Advisory extends AbstractBaseEntity implements \Stringable
 {
-    private const GITHUB_ADVISORY_URL_PATTERN = 'https://github.com/advisories/%s';
-    private const FRIENDS_OF_PHP_ADVISORY_URL_PATTERN = 'https://github.com/FriendsOfPHP/security-advisories/blob/master/%s';
+    private const string GITHUB_ADVISORY_URL_PATTERN = 'https://github.com/advisories/%s';
+    private const string FRIENDS_OF_PHP_ADVISORY_URL_PATTERN = 'https://github.com/FriendsOfPHP/security-advisories/blob/master/%s';
 
     #[ORM\Column(length: 255, unique: true)]
     private ?string $advisoryId = null;
@@ -48,6 +48,7 @@ class Advisory extends AbstractBaseEntity
         $this->packageVersions = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         $id = $this->cve ?? $this->advisoryId;

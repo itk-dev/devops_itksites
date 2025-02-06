@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 #[AsMessageHandler]
-final class DetectionResultHandler
+final readonly class DetectionResultHandler
 {
     /**
      * DetectionResultHandler constructor.
@@ -21,8 +21,8 @@ final class DetectionResultHandler
      * @param MessageBusInterface $messageBus
      */
     public function __construct(
-        private readonly Security $security,
-        private readonly MessageBusInterface $messageBus,
+        private Security $security,
+        private MessageBusInterface $messageBus,
     ) {
     }
 
