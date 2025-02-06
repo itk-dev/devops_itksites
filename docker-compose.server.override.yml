@@ -20,6 +20,7 @@ services:
       - APP_SUPERVISOR_COMMAND=/app/bin/console messenger:consume --env=prod --no-debug --time-limit=900 --failure-limit=1 async
       - APP_SUPERVISOR_WORKERS=1
       - APP_SUPERVISOR_USER=deploy
+      - PHP_MEMORY_LIMIT=256M
     networks:
       - app
     extra_hosts:
