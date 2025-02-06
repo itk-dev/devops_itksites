@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.8.1] - 2025-02-06
+## [1.8.3] - 2025-02-06
+
+- Fix missing "depends" in docker compose
+- Fix easyadmin deprecations
+
+## [1.8.2] - 2025-02-06
 
 - Add 'application/ld+json' as allowed format
 
