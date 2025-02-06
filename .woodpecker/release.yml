@@ -22,6 +22,7 @@ steps:
       playbook: 'release'
       pre_up:
         - itkdev-docker-compose-server run phpfpm bin/console doctrine:migrations:migrate --no-interaction
+        - itkdev-docker-compose-server run phpfpm bin/console messenger:setup-transports
 
   - name: Run post deploy
     image: itkdev/ansible-plugin:1
