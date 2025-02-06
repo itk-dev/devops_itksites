@@ -32,6 +32,7 @@ class Module extends AbstractBaseEntity implements \Stringable
         $this->moduleVersions = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->displayName ?? $this->package.'/'.$this->name;

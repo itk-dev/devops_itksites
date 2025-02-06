@@ -22,6 +22,7 @@ class GitTag extends AbstractBaseEntity implements \Stringable
     #[ORM\OneToMany(targetEntity: Installation::class, mappedBy: 'gitTag')]
     private Collection $installations;
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->repo->__toString().'@'.$this->getTag();

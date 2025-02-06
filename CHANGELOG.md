@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgrade to: Symfony 7.2, Doctrine ORM 3.x / DBAL 4.x, Api-platform 4.0, PhpUnit 11 with dependencies
 - Switch to PHPStan
+- Added cleanup for detection results
+- Refactor rootDir normalization to ensure values are always normalized, fix type errors, 
+- Fix various values not being set
 
 ## [1.7.0] - 2024-10-14
 

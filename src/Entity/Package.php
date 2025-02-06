@@ -48,12 +48,16 @@ class Package extends AbstractBaseEntity implements \Stringable
     #[ORM\Column]
     private int $advisoryCount = 0;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $suggests = null;
+
     public function __construct()
     {
         $this->packageVersions = new ArrayCollection();
         $this->advisories = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->vendor.'/'.$this->name;
@@ -136,9 +140,16 @@ class Package extends AbstractBaseEntity implements \Stringable
         return $this->abandoned;
     }
 
-    public function setAbandoned(bool $abandoned): self
+    public function setAbandoned(bool|string $abandoned): self
     {
-        $this->abandoned = $abandoned;
+        // If an abandoned package suggests a replacement, we get a string with the name
+        // of the suggested replacement, not a bool.
+        if (is_string($abandoned)) {
+            $this->abandoned = true;
+            $this->setSuggests($abandoned);
+        } else {
+            $this->abandoned = $abandoned;
+        }
 
         return $this;
     }
@@ -232,6 +243,18 @@ class Package extends AbstractBaseEntity implements \Stringable
     private function setAdvisoryCount(int $advisoryCount): self
     {
         $this->advisoryCount = $advisoryCount;
+
+        return $this;
+    }
+
+    public function getSuggests(): ?string
+    {
+        return $this->suggests;
+    }
+
+    public function setSuggests(?string $suggests): static
+    {
+        $this->suggests = $suggests;
 
         return $this;
     }

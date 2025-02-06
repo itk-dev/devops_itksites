@@ -48,6 +48,7 @@ class Advisory extends AbstractBaseEntity implements \Stringable
         $this->packageVersions = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         $id = $this->cve ?? $this->advisoryId;

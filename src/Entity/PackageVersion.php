@@ -41,6 +41,7 @@ class PackageVersion extends AbstractBaseEntity implements \Stringable
         $this->advisories = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->package.':'.$this->version;

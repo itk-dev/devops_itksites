@@ -66,6 +66,7 @@ class Site extends AbstractHandlerResult implements \Stringable
         $this->domains = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         if (SiteType::DOCKER === $this->type) {
@@ -199,5 +200,17 @@ class Site extends AbstractHandlerResult implements \Stringable
         $this->type = $type;
 
         return $this;
+    }
+
+    public function getAdvisoryCount(): int
+    {
+        $advisories = new ArrayCollection();
+        foreach ($this->installation->getPackageVersions() as $packageVersion) {
+            foreach ($packageVersion->getAdvisories() as $advisory) {
+                $advisories->add($advisory);
+            }
+        }
+
+        return $advisories->count();
     }
 }

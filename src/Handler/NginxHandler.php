@@ -49,7 +49,6 @@ readonly class NginxHandler implements DetectionResultHandlerInterface
             $site->setDetectionResult($detectionResult);
             $site->setType(SiteType::NGINX);
             $site->setPhpVersion($data->phpVersion);
-            $site->setConfigFilePath($data->config);
 
             $domains = $this->domainFactory->getDomains($data->domain, $site, $detectionResult);
             $site->setDomains($domains);

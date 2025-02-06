@@ -7,9 +7,11 @@ namespace App\Handler;
 use App\Entity\DetectionResult;
 use App\Entity\Installation;
 use App\Entity\Site;
+use App\Repository\DetectionResultRepository;
 use App\Repository\SiteRepository;
 use App\Service\InstallationFactory;
 use App\Types\DetectionType;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Handler for DetectionResult off type "dir" (Installations).
@@ -25,6 +27,7 @@ readonly class DirectoryHandler implements DetectionResultHandlerInterface
     public function __construct(
         private SiteRepository $siteRepository,
         private InstallationFactory $installationFactory,
+        private DetectionResultRepository $detectionResultRepository,
     ) {
     }
 
@@ -33,13 +36,16 @@ readonly class DirectoryHandler implements DetectionResultHandlerInterface
      */
     public function handleResult(DetectionResult $detectionResult): void
     {
+        $server = $detectionResult->getServer();
+        $oldInstallations = $server->getInstallations();
+
         $installations = $this->installationFactory->getInstallations($detectionResult);
 
         /** @var Installation $installation */
         foreach ($installations as $installation) {
             $sites = $this->siteRepository->findByRootDirAndServer(
                 $installation->getRootDir(),
-                $detectionResult->getServer()
+                $server
             );
             /* @var Site $site */
             foreach ($sites as $site) {
@@ -48,6 +54,13 @@ readonly class DirectoryHandler implements DetectionResultHandlerInterface
         }
 
         $detectionResult->getServer()->setInstallations($installations);
+
+        // Delete results from installations no longer seen on the server.
+        foreach ($oldInstallations as $oldInstallation) {
+            if (!$installations->contains($oldInstallation)) {
+                $this->detectionResultRepository->deleteByInstallation($oldInstallation);
+            }
+        }
     }
 
     /**
@@ -56,5 +69,17 @@ readonly class DirectoryHandler implements DetectionResultHandlerInterface
     public function supportsType(string $type): bool
     {
         return DetectionType::DIRECTORY === $type;
+    }
+
+    private function getRemovedInstallations(Collection $oldInstallations, Collection $newInstallations): array
+    {
+        $result = [];
+        foreach ($oldInstallations as $installation) {
+            if (!$newInstallations->contains($installation)) {
+                $result[] = $installation;
+            }
+        }
+
+        return $result;
     }
 }

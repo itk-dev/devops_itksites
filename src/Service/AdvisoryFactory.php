@@ -85,7 +85,7 @@ class AdvisoryFactory
             }
         }
 
-        throw new \InvalidArgumentException('Package not found');
+        throw new \InvalidArgumentException(sprintf('Installation "%s", Package "%s" not found', $installation, $vendorPackage));
     }
 
     private function setAdvisoryForAffectedVersions(Package $package, Advisory $advisory): void

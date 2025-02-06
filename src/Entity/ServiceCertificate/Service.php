@@ -27,6 +27,7 @@ class Service extends AbstractBaseEntity implements \Stringable
     #[Assert\Url]
     private ?string $onePasswordUrl = null;
 
+    #[\Override]
     public function __toString(): string
     {
         return (string) $this->type;

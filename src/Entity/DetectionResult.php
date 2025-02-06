@@ -7,6 +7,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
 use App\Repository\DetectionResultRepository;
+use App\Utils\RootDirNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -43,6 +44,7 @@ class DetectionResult extends AbstractBaseEntity implements \Stringable
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $lastContact;
 
+    #[\Override]
     public function __toString(): string
     {
         return '['.$this->type.'] '.$this->server.$this->rootDir.' @ '.$this->lastContact->format(DATE_ATOM);
@@ -67,7 +69,7 @@ class DetectionResult extends AbstractBaseEntity implements \Stringable
 
     public function setRootDir(string $rootDir): self
     {
-        $this->rootDir = $rootDir;
+        $this->rootDir = RootDirNormalizer::normalize($rootDir);
 
         return $this;
     }
