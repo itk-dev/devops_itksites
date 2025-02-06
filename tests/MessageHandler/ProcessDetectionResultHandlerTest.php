@@ -50,7 +50,8 @@ class ProcessDetectionResultHandlerTest extends TestCase
         $this->handler = new ProcessDetectionResultHandler(
             $this->entityManagerMock,
             $this->detectionResultRepositoryMock,
-            [$this->dirResultHandler, $this->nginxResultHandler]
+            [$this->dirResultHandler, $this->nginxResultHandler],
+            5
         );
     }
 
