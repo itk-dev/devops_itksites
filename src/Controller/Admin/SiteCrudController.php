@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\AdvisoryCountField;
 use App\Admin\Field\ConfigFilePathField;
 use App\Admin\Field\DomainField;
 use App\Admin\Field\RootDirField;
@@ -20,6 +21,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 
 class SiteCrudController extends AbstractCrudController
 {
@@ -58,6 +60,7 @@ class SiteCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield DomainField::new('primaryDomain')->setColumns(12);
+        yield AdvisoryCountField::new('advisoryCount')->setLabel('Adv.');
         yield AssociationField::new('domains')->hideOnIndex();
         yield SiteTypeField::new('type')->setLabel('Stack');
         yield ConfigFilePathField::new('configFilePath')->setColumns(12)->hideOnIndex();

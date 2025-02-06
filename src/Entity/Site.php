@@ -201,4 +201,16 @@ class Site extends AbstractHandlerResult implements \Stringable
 
         return $this;
     }
+
+    public function getAdvisoryCount(): int
+    {
+        $advisories = new ArrayCollection();
+        foreach ($this->installation->getPackageVersions() as $packageVersion) {
+            foreach ($packageVersion->getAdvisories() as $advisory) {
+                $advisories->add($advisory);
+            }
+        }
+
+        return $advisories->count();
+    }
 }
