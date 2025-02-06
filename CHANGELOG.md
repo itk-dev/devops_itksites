@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Upgrade to PHP 8.4
 - Upgrade to: Symfony 7.2, Doctrine ORM 3.x / DBAL 4.x, Api-platform 4.0, PhpUnit 11 with dependencies
 - Switch to PHPStan
 - Added cleanup for detection results
