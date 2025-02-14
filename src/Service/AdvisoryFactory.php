@@ -9,17 +9,16 @@ use App\Entity\Installation;
 use App\Entity\Package;
 use App\Entity\PackageVersion;
 use App\Repository\AdvisoryRepository;
+use Composer\Semver\Semver;
 use Doctrine\ORM\EntityManagerInterface;
-use z4kn4fein\SemVer\Constraints\Constraint;
-use z4kn4fein\SemVer\SemverException;
-use z4kn4fein\SemVer\Version;
 
 class AdvisoryFactory
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly AdvisoryRepository $advisoryRepository,
-    ) {
+        private readonly AdvisoryRepository     $advisoryRepository,
+    )
+    {
     }
 
     public function setAdvisories(Installation $installation, object $audit): void
@@ -91,14 +90,8 @@ class AdvisoryFactory
     private function setAdvisoryForAffectedVersions(Package $package, Advisory $advisory): void
     {
         foreach ($package->getPackageVersions() as $packageVersion) {
-            try {
-                $constraint = Constraint::parse($advisory->getAffectedVersions());
-                $version = Version::parse($packageVersion->getVersion(), false);
-                if ($constraint->isSatisfiedBy($version)) {
-                    $advisory->addPackageVersion($packageVersion);
-                }
-            } catch (SemverException) {
-                // Ignore
+            if (Semver::satisfies($packageVersion->getVersion(), $advisory->getAffectedVersions())) {
+                $advisory->addPackageVersion($packageVersion);
             }
         }
     }

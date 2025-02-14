@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.5] - 2025-02-14
+
+- Change to `composer/semver` to fix advisories mapping
+
 ## [1.8.4] - 2025-02-14
 
 - Fix server edit/create bug
