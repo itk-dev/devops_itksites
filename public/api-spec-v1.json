@@ -24,6 +24,9 @@
                         "content": {
                             "application/json": {
                                 "schema": {}
+                            },
+                            "application/ld+json": {
+                                "schema": {}
                             }
                         },
                         "links": {}
@@ -42,6 +45,11 @@
                     "description": "The new DetectionResult resource",
                     "content": {
                         "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DetectionResult-write"
+                            }
+                        },
+                        "application/ld+json": {
                             "schema": {
                                 "$ref": "#/components/schemas/DetectionResult-write"
                             }

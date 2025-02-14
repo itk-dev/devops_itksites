@@ -19,6 +19,8 @@ paths:
           content:
             application/json:
               schema: {  }
+            application/ld+json:
+              schema: {  }
           links: {  }
         '400':
           description: 'Invalid input'
@@ -31,6 +33,9 @@ paths:
         description: 'The new DetectionResult resource'
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/DetectionResult-write'
+          application/ld+json:
             schema:
               $ref: '#/components/schemas/DetectionResult-write'
         required: true
