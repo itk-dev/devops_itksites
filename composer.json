@@ -8,6 +8,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "api-platform/core": "^4.0",
+        "composer/semver": "^3.4",
         "doctrine/dbal": "^4.0",
         "doctrine/doctrine-bundle": "^2.13",
         "doctrine/doctrine-migrations-bundle": "^3.4",
@@ -40,8 +41,7 @@
         "symfony/uid": "^7.2",
         "symfony/validator": "^7.2",
         "symfony/webpack-encore-bundle": "^2.0",
-        "symfony/yaml": "^7.2",
-        "z4kn4fein/php-semver": "^3.0"
+        "symfony/yaml": "^7.2"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.23",
