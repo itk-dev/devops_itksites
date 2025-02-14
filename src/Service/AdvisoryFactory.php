@@ -16,9 +16,8 @@ class AdvisoryFactory
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly AdvisoryRepository     $advisoryRepository,
-    )
-    {
+        private readonly AdvisoryRepository $advisoryRepository,
+    ) {
     }
 
     public function setAdvisories(Installation $installation, object $audit): void
