@@ -27,12 +27,9 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - .:/app
-      - ../../shared/.env.local:/app/.env.local
     depends_on:
       - rabbit
 
   phpfpm:
-    volumes:
-      - ../../shared/.env.local:/app/.env.local
     depends_on:
       - rabbit
