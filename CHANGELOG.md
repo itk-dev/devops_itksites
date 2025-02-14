@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.4] - 2025-02-14
+
+- Fix server edit/create bug
+- Updated dependencies and api spec
+
 ## [1.8.3] - 2025-02-06
 
 - Fix missing "depends" in docker compose

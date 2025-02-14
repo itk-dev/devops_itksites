@@ -92,7 +92,7 @@ class ServerCrudController extends AbstractCrudController
         yield TextField::new('serviceDeskTicket')->setColumns(12)->hideOnIndex();
         yield TextareaField::new('note')->hideOnIndex()->setColumns(6);
         yield TextareaField::new('usedFor')->hideOnIndex()->setColumns(6);
-        yield DateTimeField::new('lastContactAt');
+        yield DateTimeField::new('lastContactAt')->hideOnForm();
     }
 
     #[\Override]
