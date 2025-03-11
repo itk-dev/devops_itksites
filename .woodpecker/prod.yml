@@ -36,9 +36,9 @@ steps:
       secret:
         from_secret: secret
       host:
-        from_secret: host
+        from_secret: prod_host
       path:
-        from_secret: path
+        from_secret: prod_path
       user:
         from_secret: user
       actions:
