@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.6] - 2025-03-10
+
+- Update woodpecker config with labels and STG deploy
+
 ## [1.8.5] - 2025-02-14
 
 - Change to `composer/semver` to fix advisories mapping
