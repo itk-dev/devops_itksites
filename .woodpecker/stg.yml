@@ -5,10 +5,10 @@ when:
 skip_clone: true
 
 labels:
-  zone: CLOUD
+  zone: DMZ
 
 steps:
-  - name: Run test site update
+  - name: Run stg site update
     image: itkdev/ansible-plugin:1
     when:
       branch: release/*
