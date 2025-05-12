@@ -52,7 +52,7 @@ class ServerCrudController extends AbstractCrudController
             $crud->overrideTemplate('layout', 'EasyAdminBundle/layout.html.twig');
         }
 
-        //        $crud->showEntityActionsInlined();
+        $crud->showEntityActionsInlined();
 
         return $crud;
     }
@@ -61,6 +61,8 @@ class ServerCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
+            ->remove(Crud::PAGE_INDEX, Action::EDIT)
+            ->remove(Crud::PAGE_INDEX, Action::DELETE)
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
             ->add(Crud::PAGE_INDEX, $this->createExportAction())
         ;

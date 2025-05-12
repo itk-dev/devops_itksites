@@ -32,10 +32,46 @@
                         "links": {}
                     },
                     "400": {
-                        "description": "Invalid input"
+                        "description": "Invalid input",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error.jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        },
+                        "links": {}
                     },
                     "422": {
-                        "description": "Unprocessable entity"
+                        "description": "An error occurred",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld-jsonld"
+                                }
+                            },
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation-json"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ConstraintViolation-json"
+                                }
+                            }
+                        },
+                        "links": {}
                     }
                 },
                 "summary": "Creates a DetectionResult resource.",
@@ -63,6 +99,110 @@
     },
     "components": {
         "schemas": {
+            "ConstraintViolation-json": {
+                "type": "object",
+                "description": "Unprocessable entity",
+                "deprecated": false,
+                "properties": {
+                    "status": {
+                        "default": 422,
+                        "example": 422,
+                        "type": "integer"
+                    },
+                    "violations": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "propertyPath": {
+                                    "type": "string",
+                                    "description": "The property path of the violation"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "The message associated with the violation"
+                                }
+                            }
+                        }
+                    },
+                    "detail": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "title": {
+                        "readOnly": true,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "instance": {
+                        "readOnly": true,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "ConstraintViolation.jsonld-jsonld": {
+                "type": "object",
+                "description": "Unprocessable entity",
+                "deprecated": false,
+                "properties": {
+                    "status": {
+                        "default": 422,
+                        "example": 422,
+                        "type": "integer"
+                    },
+                    "violations": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "propertyPath": {
+                                    "type": "string",
+                                    "description": "The property path of the violation"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "description": "The message associated with the violation"
+                                }
+                            }
+                        }
+                    },
+                    "detail": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "description": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "title": {
+                        "readOnly": true,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "instance": {
+                        "readOnly": true,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
             "DetectionResult-write": {
                 "type": "object",
                 "description": "",
@@ -76,6 +216,99 @@
                     },
                     "data": {
                         "type": "string"
+                    }
+                }
+            },
+            "Error": {
+                "type": "object",
+                "description": "A representation of common errors.",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "readOnly": true,
+                        "description": "A short, human-readable summary of the problem.",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "detail": {
+                        "readOnly": true,
+                        "description": "A human-readable explanation specific to this occurrence of the problem.",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "status": {
+                        "type": "number",
+                        "examples": [
+                            404
+                        ],
+                        "default": 400
+                    },
+                    "instance": {
+                        "readOnly": true,
+                        "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "type": {
+                        "readOnly": true,
+                        "description": "A URI reference that identifies the problem type",
+                        "type": "string"
+                    }
+                }
+            },
+            "Error.jsonld": {
+                "type": "object",
+                "description": "A representation of common errors.",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "readOnly": true,
+                        "description": "A short, human-readable summary of the problem.",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "detail": {
+                        "readOnly": true,
+                        "description": "A human-readable explanation specific to this occurrence of the problem.",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "status": {
+                        "type": "number",
+                        "examples": [
+                            404
+                        ],
+                        "default": 400
+                    },
+                    "instance": {
+                        "readOnly": true,
+                        "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "type": {
+                        "readOnly": true,
+                        "description": "A URI reference that identifies the problem type",
+                        "type": "string"
+                    },
+                    "description": {
+                        "readOnly": true,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
                     }
                 }
             }
@@ -99,6 +332,10 @@
             "apiKey": []
         }
     ],
-    "tags": [],
+    "tags": [
+        {
+            "name": "DetectionResult"
+        }
+    ],
     "webhooks": {}
 }
