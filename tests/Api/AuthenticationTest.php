@@ -16,6 +16,8 @@ class AuthenticationTest extends ApiTestCase
 
     public function testAuthenticationDenied(): void
     {
+        $this::$alwaysBootKernel = false;
+
         static::createClient()->request('POST', '/api/detection_results', [
             'headers' => [
                 'accept' => 'application/json',
