@@ -145,10 +145,16 @@ components:
       deprecated: false
       properties:
         type:
+          default: ''
+          example: ''
           type: string
         rootDir:
+          default: ''
+          example: ''
           type: string
         data:
+          default: ''
+          example: ''
           type: string
     Error:
       type: object

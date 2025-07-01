@@ -6,7 +6,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\OIDC;
 use App\Repository\SiteRepository;
-use App\Service\Exporter;
 use App\Trait\ExportCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -24,10 +23,8 @@ class OIDCCrudController extends AbstractCrudController
     use ExportCrudControllerTrait;
 
     public function __construct(
-        Exporter $exporter,
         private readonly SiteRepository $siteRepository)
     {
-        $this->setExporter($exporter);
     }
 
     public static function getEntityFqcn(): string

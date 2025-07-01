@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.9] - 2025-07-01
+
+- Update to Symfony 7.3, update composer dependencies
+- Fix dependency injection for ExportCrudControllerTrait
+- Split config in dev/prod for secrets to only use vault in production
+
 ## [1.8.8] - 2025-05-12
 
 - Show server actions inline
