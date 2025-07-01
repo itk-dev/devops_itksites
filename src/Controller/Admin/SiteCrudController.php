@@ -12,7 +12,6 @@ use App\Admin\Field\ServerTypeField;
 use App\Admin\Field\SiteTypeField;
 use App\Admin\Field\VersionField;
 use App\Entity\Site;
-use App\Service\Exporter;
 use App\Trait\ExportCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -26,9 +25,8 @@ class SiteCrudController extends AbstractCrudController
 {
     use ExportCrudControllerTrait;
 
-    public function __construct(Exporter $exporter)
+    public function __construct()
     {
-        $this->setExporter($exporter);
     }
 
     public static function getEntityFqcn(): string

@@ -13,21 +13,21 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatableMessage;
+use Symfony\Contracts\Service\Attribute\Required;
 
 trait ExportCrudControllerTrait
 {
     private FilterFactory $filterFactory;
+    private Exporter $exporter;
 
-    /**
-     * @required
-     */
-    public function autowireExportCrudControllerTrait(FilterFactory $filterFactory): void
+    #[Required]
+    public function setFilterFactory(FilterFactory $filterFactory): void
     {
         $this->filterFactory = $filterFactory;
     }
-    private Exporter $exporter;
 
-    protected function setExporter(Exporter $exporter): void
+    #[Required]
+    public function setExporter(Exporter $exporter): void
     {
         $this->exporter = $exporter;
     }
