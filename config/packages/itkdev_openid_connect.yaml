@@ -13,11 +13,19 @@ itkdev_openid_connect:
     azure_az:
       options:
         metadata_url: '%env(string:AZURE_AZ_OIDC_METADATA_URL)%'
-        client_id: '%env(vault:AZURE_AZ_OIDC_CLIENT_ID)%'
-        client_secret: '%env(vault:AZURE_AZ_OIDC_CLIENT_SECRET)%'
+        client_id: '%env(AZURE_AZ_OIDC_CLIENT_ID)%'
+        client_secret: '%env(AZURE_AZ_OIDC_CLIENT_SECRET)%'
         # Specify redirect URI
         redirect_uri: '%env(string:AZURE_AZ_OIDC_REDIRECT_URI)%'
         allow_http: '%env(bool:AZURE_AZ_OIDC_ALLOW_HTTP)%'
         # Optional: Specify leeway (seconds) to account for clock skew between provider and hosting
         #           Defaults to 10
         leeway: '%env(int:AZURE_AZ_OIDC_LEEWAY)%'
+
+when@prod:
+  itkdev_openid_connect:
+    openid_providers:
+      azure_az:
+        options:
+          client_id: '%env(vault:AZURE_AZ_OIDC_CLIENT_ID)%'
+          client_secret: '%env(vault:AZURE_AZ_OIDC_CLIENT_SECRET)%'
