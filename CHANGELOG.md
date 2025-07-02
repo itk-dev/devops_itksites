@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.10] - 2025-07-02
+
+- Fix deprecation warning for "erase credentials"
+
 ## [1.8.9] - 2025-07-01
 
 - Update to Symfony 7.3, update composer dependencies
