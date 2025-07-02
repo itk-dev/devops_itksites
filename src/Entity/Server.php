@@ -109,9 +109,10 @@ class Server extends AbstractBaseEntity implements UserInterface, \Stringable
         return self::ROLES;
     }
 
+    #[\Deprecated]
     public function eraseCredentials(): void
     {
-        // TODO: Implement eraseCredentials() method.
+        // Deprecated: since Symfony 7.3, erase credentials using the "__serialize()" method instead
     }
 
     public function getUserIdentifier(): string
