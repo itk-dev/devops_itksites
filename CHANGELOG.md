@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#58](https://github.com/itk-dev/devops_itksites/pull/58)
+  5002: Added export to everything
+
 ## [1.8.10] - 2025-07-02
 
 - Fix deprecation warning for "erase credentials"

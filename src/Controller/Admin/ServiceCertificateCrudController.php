@@ -7,6 +7,7 @@ namespace App\Controller\Admin;
 use App\Entity\ServiceCertificate;
 use App\Form\Type\ServiceCertificate\ServiceType;
 use App\Repository\SiteRepository;
+use App\Trait\ExportCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
@@ -22,6 +23,8 @@ use Symfony\Component\Translation\TranslatableMessage;
 
 class ServiceCertificateCrudController extends AbstractCrudController
 {
+    use ExportCrudControllerTrait;
+
     public function __construct(private readonly SiteRepository $siteRepository)
     {
     }
@@ -48,6 +51,7 @@ class ServiceCertificateCrudController extends AbstractCrudController
     {
         return $actions
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_INDEX, $this->createExportAction())
             ->remove(Crud::PAGE_INDEX, Action::DELETE);
     }
 
