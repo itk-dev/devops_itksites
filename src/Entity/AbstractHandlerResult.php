@@ -12,6 +12,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 class AbstractHandlerResult extends AbstractBaseEntity
 {
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['export'])]
     private string $rootDir;
 
     #[ORM\ManyToOne(targetEntity: Server::class)]

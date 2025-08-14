@@ -8,6 +8,7 @@ use App\Entity\AbstractBaseEntity;
 use App\Entity\ServiceCertificate;
 use App\Repository\ServiceCertificate\ServiceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
@@ -20,6 +21,7 @@ class Service extends AbstractBaseEntity implements \Stringable
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
+    #[Groups(['export'])]
     private ?string $type = null;
 
     #[ORM\Column(length: 255)]
