@@ -52,7 +52,7 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('<img src="/img/itk-sites-logo.png" width="170px" alt="ITK sites">')
+            ->setTitle('<img src="/img/itk-sites-logo.png" width="170px" alt="ITK sites logo">')
             ->setFaviconPath('img/favicon.ico')
             ->renderContentMaximized();
     }
@@ -95,6 +95,6 @@ class DashboardController extends AbstractDashboardController
     #[\Override]
     public function configureAssets(): Assets
     {
-        return Assets::new()->addCssFile('css/admin.css');
+        return parent::configureAssets()->addAssetMapperEntry('app');
     }
 }
