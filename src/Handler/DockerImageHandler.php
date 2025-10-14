@@ -25,13 +25,6 @@ readonly class DockerImageHandler implements DetectionResultHandlerInterface
 
     /**
      * DirectoryHandler constructor.
-     *
-     * @param DockerImageTagFactory $dockerImageTagFactory
-     * @param ModuleVersionFactory $moduleVersionFactory
-     * @param PackageVersionFactory $packageVersionFactory
-     * @param AdvisoryFactory $advisoryFactory
-     * @param SiteFactory $siteFactory
-     * @param DomainFactory $domainFactory
      */
     public function __construct(
         private DockerImageTagFactory $dockerImageTagFactory,
@@ -43,9 +36,6 @@ readonly class DockerImageHandler implements DetectionResultHandlerInterface
     ) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function handleResult(DetectionResult $detectionResult): void
     {
         if (empty($detectionResult->getData())) {
@@ -86,7 +76,6 @@ readonly class DockerImageHandler implements DetectionResultHandlerInterface
         }
     }
 
-    /** {@inheritDoc} */
     public function supportsType(string $type): bool
     {
         return DetectionType::DOCKER === $type;

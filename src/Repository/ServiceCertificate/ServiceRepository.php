@@ -44,8 +44,6 @@ class ServiceRepository extends ServiceEntityRepository
 
     /**
      * Get unique types from existing services.
-     *
-     * @return array
      */
     public function getTypes(): array
     {

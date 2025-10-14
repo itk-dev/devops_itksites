@@ -167,8 +167,6 @@ class Site extends AbstractHandlerResult implements \Stringable
      * these domains the first is the primary:
      * - 360.aarhuskommune.dk
      * - 360.aarhuskommune.dk.srvitkphp74.itkdev.dk
-     *
-     * @return void
      */
     private function updatePrimaryDomain(): void
     {

@@ -16,9 +16,6 @@ readonly class GitHandler implements DetectionResultHandlerInterface
 {
     /**
      * DirectoryHandler constructor.
-     *
-     * @param InstallationFactory $installationFactory
-     * @param GitTagFactory $gitCloneFactory
      */
     public function __construct(
         private InstallationFactory $installationFactory,
@@ -26,9 +23,6 @@ readonly class GitHandler implements DetectionResultHandlerInterface
     ) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function handleResult(DetectionResult $detectionResult): void
     {
         try {
@@ -47,9 +41,6 @@ readonly class GitHandler implements DetectionResultHandlerInterface
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function supportsType(string $type): bool
     {
         return DetectionType::GIT === $type;
@@ -60,10 +51,6 @@ readonly class GitHandler implements DetectionResultHandlerInterface
      *
      * The git harvester will send an empty result even for
      * "fatal: not a git repository (or any parent up to mount point /)"
-     *
-     * @param DetectionResult $result
-     *
-     * @return object|null
      *
      * @throws \JsonException
      */
