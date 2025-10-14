@@ -10,7 +10,7 @@
         "api-platform/core": "^4.0",
         "composer/semver": "^3.4",
         "doctrine/dbal": "^4.0",
-        "doctrine/doctrine-bundle": "^2.13",
+        "doctrine/doctrine-bundle": "^3.0",
         "doctrine/doctrine-migrations-bundle": "^3.4",
         "doctrine/orm": "^3.0",
         "easycorp/easyadmin-bundle": "^4.0",
