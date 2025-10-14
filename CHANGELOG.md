@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#60](https://github.com/itk-dev/devops_itksites/pull/60) 5564: Dependency updates
+  - Update dependencies
+  - Update phpunit from 11 to 12
+  - Update ITK docker template
+  - Update github actions workflows
+  
 - [#58](https://github.com/itk-dev/devops_itksites/pull/58)
   5002: Added export to everything
 
@@ -133,6 +139,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2022-09-15
 
 [Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.6.0...HEAD
+[1.8.10]: https://github.com/itk-dev/devops_itksites/compare/1.8.9...1.8.10
+[1.8.9]: https://github.com/itk-dev/devops_itksites/compare/1.8.8...1.8.9
+[1.8.8]: https://github.com/itk-dev/devops_itksites/compare/1.8.7...1.8.8
+[1.8.7]: https://github.com/itk-dev/devops_itksites/compare/1.8.6...1.8.7
+[1.8.6]: https://github.com/itk-dev/devops_itksites/compare/1.8.5...1.8.6
+[1.8.5]: https://github.com/itk-dev/devops_itksites/compare/1.8.4...1.8.5
+[1.8.4]: https://github.com/itk-dev/devops_itksites/compare/1.8.3...1.8.4
+[1.8.3]: https://github.com/itk-dev/devops_itksites/compare/1.8.2...1.8.3
+[1.8.2]: https://github.com/itk-dev/devops_itksites/compare/1.8.1...1.8.2
+[1.8.1]: https://github.com/itk-dev/devops_itksites/compare/1.8.0...1.8.1
+[1.8.0]: https://github.com/itk-dev/devops_itksites/compare/1.7.1...1.8.0
+[1.7.1]: https://github.com/itk-dev/devops_itksites/compare/1.7.0...1.7.1
+[1.7.0]: https://github.com/itk-dev/devops_itksites/compare/1.6.1...1.7.0
+[1.6.1]: https://github.com/itk-dev/devops_itksites/compare/1.6.0...1.6.1
 [1.6.0]: https://github.com/itk-dev/devops_itksites/compare/1.5.0...1.6.0
 [1.5.0]: https://github.com/itk-dev/devops_itksites/compare/1.4.1...1.5.0
 [1.4.1]: https://github.com/itk-dev/devops_itksites/compare/1.4.0...1.4.1
