@@ -119,10 +119,12 @@
             "importmap:install": "symfony-cmd"
         },
         "coding-standards-apply": [
-            "PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix"
+            "PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix",
+            "vendor/bin/twig-cs-fixer --fix"
         ],
         "coding-standards-check": [
-            "PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --dry-run"
+            "PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --dry-run",
+            "vendor/bin/twig-cs-fixer"
         ],
         "fixtures-load": [
             "bin/console hautelook:fixtures:load --no-interaction"

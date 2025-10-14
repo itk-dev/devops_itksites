@@ -1,9 +1,9 @@
 homepage:
-  path: /
-  controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction
-  defaults:
-    path: /admin
-    permanent: false
+    path: /
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction
+    defaults:
+        path: /admin
+        permanent: false
 
 controllers:
     resource:

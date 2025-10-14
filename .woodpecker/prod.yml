@@ -1,45 +1,45 @@
 when:
-  - event: release
+    - event: release
 
 skip_clone: true
 
 labels:
-  zone: CLOUD
+    zone: CLOUD
 
 steps:
-  - name: Ansible playbook
-    image: itkdev/ansible-plugin:1
-    pull: true
-    settings:
-      id:
-        from_secret: id
-      secret:
-        from_secret: secret
-      host:
-        from_secret: prod_host
-      path:
-        from_secret: prod_path
-      user:
-        from_secret: user
-      keep: 4
-      playbook: 'release'
-      pre_up:
-        - itkdev-docker-compose-server run phpfpm bin/console doctrine:migrations:migrate --no-interaction
-        - itkdev-docker-compose-server run phpfpm bin/console messenger:setup-transports
+    - name: Ansible playbook
+      image: itkdev/ansible-plugin:1
+      pull: true
+      settings:
+          id:
+              from_secret: id
+          secret:
+              from_secret: secret
+          host:
+              from_secret: prod_host
+          path:
+              from_secret: prod_path
+          user:
+              from_secret: user
+          keep: 4
+          playbook: "release"
+          pre_up:
+              - itkdev-docker-compose-server run phpfpm bin/console doctrine:migrations:migrate --no-interaction
+              - itkdev-docker-compose-server run phpfpm bin/console messenger:setup-transports
 
-  - name: Run post deploy
-    image: itkdev/ansible-plugin:1
-    pull: true
-    settings:
-      id:
-        from_secret: id
-      secret:
-        from_secret: secret
-      host:
-        from_secret: prod_host
-      path:
-        from_secret: prod_path
-      user:
-        from_secret: user
-      actions:
-        - itkdev-docker-compose-server exec phpfpm bin/console cache:clear
+    - name: Run post deploy
+      image: itkdev/ansible-plugin:1
+      pull: true
+      settings:
+          id:
+              from_secret: id
+          secret:
+              from_secret: secret
+          host:
+              from_secret: prod_host
+          path:
+              from_secret: prod_path
+          user:
+              from_secret: user
+          actions:
+              - itkdev-docker-compose-server exec phpfpm bin/console cache:clear

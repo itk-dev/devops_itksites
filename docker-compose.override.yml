@@ -2,8 +2,8 @@ services:
   rabbit:
     image: rabbitmq:4-management-alpine
     networks:
-       - app
-       - frontend
+      - app
+      - frontend
     ports:
       - "15672"
     environment:
