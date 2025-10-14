@@ -16,12 +16,37 @@ paths:
       responses:
         '202':
           description: 'DetectionResult resource created'
+          content:
+            application/json:
+              schema: {  }
+            application/ld+json:
+              schema: {  }
           links: {  }
         '400':
           description: 'Invalid input'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Error.jsonld'
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
           links: {  }
         '422':
           description: 'An error occurred'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolation.jsonld-jsonld'
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolation-json'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolation-json'
           links: {  }
       summary: 'Creates a DetectionResult resource.'
       description: 'Creates a DetectionResult resource.'
@@ -36,14 +61,17 @@ paths:
             schema:
               $ref: '#/components/schemas/DetectionResult-write'
         required: true
+      deprecated: false
 components:
   schemas:
-    ConstraintViolation:
+    ConstraintViolation-json:
       type: object
       description: 'Unprocessable entity'
+      deprecated: false
       properties:
         status:
           default: 422
+          example: 422
           type: integer
         violations:
           type: array
@@ -72,12 +100,14 @@ components:
           type:
             - string
             - 'null'
-    ConstraintViolation.jsonld:
+    ConstraintViolation.jsonld-jsonld:
       type: object
       description: 'Unprocessable entity'
+      deprecated: false
       properties:
         status:
           default: 422
+          example: 422
           type: integer
         violations:
           type: array
@@ -111,19 +141,25 @@ components:
             - 'null'
     DetectionResult-write:
       type: object
+      description: ''
+      deprecated: false
       properties:
         type:
           default: ''
+          example: ''
           type: string
         rootDir:
           default: ''
+          example: ''
           type: string
         data:
           default: ''
+          example: ''
           type: string
     Error:
       type: object
       description: 'A representation of common errors.'
+      deprecated: false
       properties:
         title:
           readOnly: true
@@ -155,6 +191,7 @@ components:
     Error.jsonld:
       type: object
       description: 'A representation of common errors.'
+      deprecated: false
       properties:
         title:
           readOnly: true
@@ -205,5 +242,4 @@ security:
 tags:
   -
     name: DetectionResult
-    description: "Resource 'DetectionResult' operations."
 webhooks: {  }
