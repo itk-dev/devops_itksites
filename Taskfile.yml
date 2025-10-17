@@ -18,7 +18,7 @@ tasks:
                   COMPOSE_ARGS: pull
             - task: compose
               vars:
-                  COMPOSE_ARGS: up --detach --wait
+                  COMPOSE_ARGS: up --detach
             - task: composer
               vars:
                   COMPOSER_ARGS: install
@@ -33,38 +33,10 @@ tasks:
         desc: Load all fixtures
         prompt: Really load all fixtures?
         cmds:
-            - for:
-                  - events
-                  - organizations
-                  - occurrences
-                  - daily_occurrences
-                  - tags
-                  - vocabularies
-                  - locations
-              task: compose
+            - task: console
               vars:
-                  COMPOSE_ARGS: exec phpfpm bin/console app:fixtures:load {{.ITEM}}
-        # Loading some fixtures generates an 'Warning: Undefined array key "entityId"' error.
-        ignore_error: true
+                  CONSOLE_ARGS: hautelook:fixtures:load --no-interaction
         silent: true
-
-    fixtures:load:test:
-        desc: Load local fixtures
-        prompt: Really load all local fixtures?
-        cmds:
-            - for:
-                  - events
-                  - organizations
-                  - occurrences
-                  - daily_occurrences
-                  - tags
-                  - vocabularies
-                  - locations
-              task: compose
-              vars:
-                  COMPOSE_ARGS: exec phpfpm bin/console app:fixtures:load {{.ITEM}} --url=file:///app/tests/resources/{{.ITEM}}.json
-        # Loading some fixtures generates an 'Warning: Undefined array key "entityId"' error.
-        ignore_error: true
 
     composer:
         desc: "Run `composer` command. Example: task composer -- normalize"
@@ -185,15 +157,37 @@ tasks:
                   COMPOSE_ARGS: exec phpfpm vendor/bin/phpstan
         silent: true
 
-    api:test:
-        desc: Run API tests
+    messenger:consume:
+        desc: "Run queue consumer"
+        cmds:
+            - task: console
+              vars:
+                  CONSOLE_ARGS: bin/console messenger:consume async --failure-limit=1 -vvv
+
+    test:setup:
+        desc: "Setup test environment"
+        env:
+            APP_ENV: test
+        cmds:
+            - task: console
+              vars:
+                  CONSOLE_ARGS: doctrine:database:create --if-not-exists --no-interaction
+            - task: console
+              vars:
+                  CONSOLE_ARGS: doctrine:database:create --no-interaction --if-not-exists --quiet
+            - task: console
+              vars:
+                  CONSOLE_ARGS: doctrine:migrations:migrate --no-interaction --quiet
+
+    test:run:
+        desc: "Run phpunit tests"
         cmds:
             - task: compose
               vars:
                   COMPOSE_ARGS: exec phpfpm bin/phpunit
 
     api:spec:export:
-        desc: Export API spec
+        desc: "Export API spec"
         cmds:
             - task: console
               vars:

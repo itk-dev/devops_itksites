@@ -14,7 +14,7 @@
 ### #### Symfony YAML
 ###
 ### Symfony's YAML config files use 4 spaces for indentation and single quotes.
-### Therefore we use a [Prettier configuration
+### Therefore, we use a [Prettier configuration
 ### file](https://prettier.io/docs/configuration), `.prettierrc.yaml`, to make
 ### Prettier format YAML files in the `config/` folder like Symfony expects.
 
