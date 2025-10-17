@@ -77,7 +77,7 @@ jobs:
 
             - name: Load fixtures
               run: |
-                  task fixtures:load
+                  task fixtures:load --yes
 
     build-assets:
         name: Build assets
