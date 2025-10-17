@@ -22,6 +22,12 @@ tasks:
             - task: composer
               vars:
                   COMPOSER_ARGS: install
+            - task: console
+              vars:
+                  CONSOLE_ARGS: doctrine:migrations:migrate --no-interaction
+            - task: console
+              vars:
+                  CONSOLE_ARGS: messenger:setup-transports
 
     fixtures:load:
         desc: Load all fixtures
