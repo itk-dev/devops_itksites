@@ -6,57 +6,74 @@ env:
 on: pull_request
 
 jobs:
+    test-suite:
+        name: Test suite
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+
+            - name: Install Task
+              uses: go-task/setup-task@v1
+
+            - name: Setup docker network
+              run: |
+                  docker network create frontend
+
+            - name: Install Site
+              run: |
+                  task site:install
+
+            - name: Test suite
+              run: |
+                  task test:setup
+                  task test
+
+            - name: Upload coverage to Codecov test
+              uses: codecov/codecov-action@v5
+              with:
+                  files: ./coverage/unit.xml
+                  flags: unittests
+              env:
+                  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
     phpstan:
-        name: PHPStan static analysis
+        name: PHPStan
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout
-              uses: actions/checkout@v5
+            - uses: actions/checkout@v5
 
-            - name: Create docker network
+            - name: Install Task
+              uses: go-task/setup-task@v1
+
+            - name: Start docker compose setup
               run: |
                   docker network create frontend
+                  task compose -- up --detach
 
-            - name: Run phpstan
+            - name: Install Dependencies
               run: |
-                  docker compose run --rm phpfpm composer install
-                  docker compose run --rm phpfpm vendor/bin/phpstan analyse src --no-progress --error-format=github --memory-limit=1G
+                  task composer -- install
 
-    phpunit:
-        name: PHP Unit tests
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v5
-
-            - name: Install site
+            - name: Run PHPStan
               run: |
-                  docker network create frontend
-                  docker compose pull
-                  docker compose up --detach
-                  docker compose exec --user=root phpfpm composer install
-                  docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interaction
-
-            - name: Run tests
-              run: |
-                  docker compose exec phpfpm composer run tests
+                  task code-analysis:phpstan
 
     fixtures:
         name: Load fixtures
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout
-              uses: actions/checkout@v5
-              with:
-                  fetch-depth: 2
+            - uses: actions/checkout@v5
 
-            - name: Install site
+            - name: Install Task
+              uses: go-task/setup-task@v1
+
+            - name: Setup docker network
               run: |
                   docker network create frontend
-                  docker compose pull
-                  docker compose up --detach
-                  docker compose exec --user=root phpfpm composer install
-                  docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interaction
+
+            - name: Install Site
+              run: |
+                  task site:install
 
             - name: Load fixtures
               run: |

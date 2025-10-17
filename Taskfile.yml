@@ -12,6 +12,7 @@ vars:
 tasks:
     site:update:
         desc: Update/install site
+        aliases: [site:install]
         cmds:
             - task: compose
               vars:
@@ -179,12 +180,12 @@ tasks:
               vars:
                   CONSOLE_ARGS: doctrine:migrations:migrate --no-interaction --quiet
 
-    test:run:
-        desc: "Run phpunit tests"
+    test:
+        desc: "Run tests"
         cmds:
             - task: compose
               vars:
-                  COMPOSE_ARGS: exec phpfpm bin/phpunit
+                  COMPOSE_ARGS: exec --env XDEBUG_MODE=coverage phpfpm vendor/bin/phpunit --coverage-clover=coverage/unit.xml
 
     api:spec:export:
         desc: "Export API spec"
