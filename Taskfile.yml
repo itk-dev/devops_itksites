@@ -167,18 +167,16 @@ tasks:
 
     test:setup:
         desc: "Setup test environment"
-        env:
-            APP_ENV: test
         cmds:
             - task: console
               vars:
-                  CONSOLE_ARGS: doctrine:database:create --if-not-exists --no-interaction
+                  CONSOLE_ARGS: --env=test doctrine:database:create --if-not-exists --no-interaction
             - task: console
               vars:
-                  CONSOLE_ARGS: doctrine:database:create --no-interaction --if-not-exists --quiet
+                  CONSOLE_ARGS: --env=test doctrine:database:create --no-interaction --if-not-exists --quiet
             - task: console
               vars:
-                  CONSOLE_ARGS: doctrine:migrations:migrate --no-interaction --quiet
+                  CONSOLE_ARGS: --env=test doctrine:migrations:migrate --no-interaction --quiet
 
     test:
         desc: "Run tests"

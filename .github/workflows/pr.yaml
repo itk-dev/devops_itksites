@@ -77,7 +77,7 @@ jobs:
 
             - name: Load fixtures
               run: |
-                  docker compose exec phpfpm composer fixtures
+                  task fixtures:load
 
     build-assets:
         name: Build assets
