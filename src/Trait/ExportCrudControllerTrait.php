@@ -34,7 +34,7 @@ trait ExportCrudControllerTrait
 
     protected function createExportAction(string|TranslatableMessage|null $label = null): Action
     {
-        return Action::new('export', $label ?? new TranslatableMessage('Export'))
+        return Action::new('export', $label ?? new TranslatableMessage('Export'), 'fa fa-file-csv')
             ->createAsGlobalAction()
             ->linkToCrudAction('export');
     }

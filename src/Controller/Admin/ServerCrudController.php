@@ -62,6 +62,9 @@ class ServerCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_INDEX, Action::DELETE)
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
             ->add(Crud::PAGE_INDEX, $this->createExportAction())
+            ->update(Crud::PAGE_INDEX, Action::NEW,
+                static fn (Action $action) => $action->setIcon('fa fa-plus')
+            )
         ;
     }
 

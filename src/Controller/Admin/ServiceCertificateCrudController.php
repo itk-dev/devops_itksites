@@ -52,7 +52,11 @@ class ServiceCertificateCrudController extends AbstractCrudController
         return $actions
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
             ->add(Crud::PAGE_INDEX, $this->createExportAction())
-            ->remove(Crud::PAGE_INDEX, Action::DELETE);
+            ->remove(Crud::PAGE_INDEX, Action::DELETE)
+            ->update(Crud::PAGE_INDEX, Action::NEW,
+                static fn (Action $action) => $action->setIcon('fa fa-plus')
+            )
+        ;
     }
 
     #[\Override]

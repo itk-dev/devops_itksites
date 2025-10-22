@@ -34,6 +34,11 @@ class Project extends AbstractBaseEntity implements \Stringable
         $this->details = $details;
     }
 
+    public function __toString(): string
+    {
+        return $this->name;
+    }
+
     public function getName(): string
     {
         return $this->name;

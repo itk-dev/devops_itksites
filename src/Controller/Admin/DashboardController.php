@@ -17,6 +17,7 @@ use App\Entity\ModuleVersion;
 use App\Entity\OIDC;
 use App\Entity\Package;
 use App\Entity\PackageVersion;
+use App\Entity\Project;
 use App\Entity\Server;
 use App\Entity\ServiceCertificate;
 use App\Entity\Site;
@@ -62,6 +63,7 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Servers', 'fas fa-server', Server::class);
+        yield MenuItem::linkToCrud('Projects', 'fas fa-folder', Project::class);
         yield MenuItem::linkToCrud('Installations', 'fas fa-folder', Installation::class);
         yield MenuItem::linkToCrud('Sites', 'fas fa-bookmark', Site::class);
         yield MenuItem::linkToCrud('Domains', 'fas fa-link', Domain::class);

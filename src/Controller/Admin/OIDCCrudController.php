@@ -44,6 +44,9 @@ class OIDCCrudController extends AbstractCrudController
         return $actions
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
             ->add(Crud::PAGE_INDEX, $this->createExportAction())
+            ->update(Crud::PAGE_INDEX, Action::NEW,
+                static fn (Action $action) => $action->setIcon('fa fa-plus')
+            )
         ;
     }
 

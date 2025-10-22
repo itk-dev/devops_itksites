@@ -2,7 +2,6 @@
 
 namespace App\Command;
 
-use App\Service\Leantime\ApiService;
 use App\Service\Leantime\ProjectSyncService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -18,7 +17,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class SyncLeantimeProjectsCommand extends Command
 {
     public function __construct(
-        private readonly ApiService $leantimeService,
         private readonly ProjectSyncService $projectSyncService,
     ) {
         parent::__construct();
