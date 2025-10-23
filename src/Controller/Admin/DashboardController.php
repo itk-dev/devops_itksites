@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\EasyAdmin\Config\AutoBadgeMenuItem;
 use App\Entity\Advisory;
 use App\Entity\DetectionResult;
 use App\Entity\DockerImage;
@@ -18,10 +19,14 @@ use App\Entity\OIDC;
 use App\Entity\Package;
 use App\Entity\PackageVersion;
 use App\Entity\Project;
+use App\Entity\SecurityContract;
 use App\Entity\Server;
 use App\Entity\ServiceCertificate;
 use App\Entity\Site;
 use App\Repository\AdvisoryRepository;
+use App\Repository\OIDCRepository;
+use App\Repository\SecurityContractRepository;
+use App\Repository\ServiceCertificateRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -35,6 +40,9 @@ class DashboardController extends AbstractDashboardController
     public function __construct(
         private readonly AdminUrlGenerator $adminUrlGenerator,
         private readonly AdvisoryRepository $advisoryRepository,
+        private readonly ServiceCertificateRepository $serviceCertificateRepository,
+        private readonly OIDCRepository $oidcRepository,
+        private readonly SecurityContractRepository $securityContractRepository,
     ) {
     }
 
@@ -62,17 +70,27 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToCrud('Servers', 'fas fa-server', Server::class);
+
+        yield MenuItem::section('Projects');
         yield MenuItem::linkToCrud('Projects', 'fas fa-folder', Project::class);
+        yield AutoBadgeMenuItem::linkToCrud('Cyber Security', 'fas fa-file-contract', SecurityContract::class)
+            ->setBadge($this->securityContractRepository->countExpiredContracts(), 'danger');
+        yield AutoBadgeMenuItem::linkToCrud('OIDC', 'fas fa-shield-halved', OIDC::class)
+            ->setBadge($this->oidcRepository->countExpiredCertificates(), 'danger');
+        yield AutoBadgeMenuItem::linkToCrud('Service certificates', 'fas fa-passport', ServiceCertificate::class)
+            ->setBadge($this->serviceCertificateRepository->countExpiredCertificates(), 'danger');
+
+        yield MenuItem::section('Hosting');
+        yield MenuItem::linkToCrud('Servers', 'fas fa-server', Server::class);
         yield MenuItem::linkToCrud('Installations', 'fas fa-folder', Installation::class);
         yield MenuItem::linkToCrud('Sites', 'fas fa-bookmark', Site::class);
         yield MenuItem::linkToCrud('Domains', 'fas fa-link', Domain::class);
-        yield MenuItem::linkToCrud('OIDC', 'fas fa-key', OIDC::class);
-        yield MenuItem::linkToCrud('Service certificates', 'fas fa-lock', ServiceCertificate::class);
+
         yield MenuItem::section('Dependencies');
         yield MenuItem::linkToCrud('Packages', 'fas fa-cube', Package::class);
         yield MenuItem::linkToCrud('Package Versions', 'fas fa-cubes', PackageVersion::class);
-        yield MenuItem::linkToCrud('Advisories', 'fas fa-skull-crossbones', Advisory::class)->setBadge($this->advisoryRepository->count([]), 'dark');
+        yield AutoBadgeMenuItem::linkToCrud('Advisories', 'fas fa-skull-crossbones', Advisory::class)
+            ->setBadge($this->advisoryRepository->count([]), 'danger');
         yield MenuItem::linkToCrud('Modules', 'fas fa-cube', Module::class);
         yield MenuItem::linkToCrud('Modules Versions', 'fas fa-cubes', ModuleVersion::class);
         yield MenuItem::linkToCrud('Docker Images', 'fas fa-cube', DockerImage::class);

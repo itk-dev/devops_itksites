@@ -13,3 +13,14 @@
     --text-color-dark: rgb(66, 66, 66);
     --bs-danger-rgb: 228, 73, 48;
 }
+
+/* Grouped dropdown group styling for index pages */
+.dropdown-menu {
+    .btn-danger i, .text-danger i {
+        color: var(--button-invisible-danger-color);
+    }
+
+    a.btn-danger:hover , a.text-danger:hover {
+        background: var(--button-invisible-danger-hover-hover-bg);
+    }
+}

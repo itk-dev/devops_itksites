@@ -40,4 +40,14 @@ class ServiceCertificateRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function countExpiredCertificates(): int
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c)')
+            ->where('c.expirationTime < :now')
+            ->setParameter('now', new \DateTime())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

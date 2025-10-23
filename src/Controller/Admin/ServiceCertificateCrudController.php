@@ -21,12 +21,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use Symfony\Component\Translation\TranslatableMessage;
 
-class ServiceCertificateCrudController extends AbstractCrudController
+class ServiceCertificateCrudController extends AbstractFullCrudController
 {
-    use ExportCrudControllerTrait;
-
-    public function __construct(private readonly SiteRepository $siteRepository)
-    {
+    public function __construct(
+        private readonly SiteRepository $siteRepository
+    ) {
     }
 
     public static function getEntityFqcn(): string
@@ -44,19 +43,6 @@ class ServiceCertificateCrudController extends AbstractCrudController
             // @see https://symfony.com/bundles/EasyAdminBundle/current/design.html#form-field-templates
             ->setFormThemes(['admin/form.html.twig', '@EasyAdmin/crud/form_theme.html.twig'])
             ->setSearchFields(['domain', 'name', 'description', 'services.type']);
-    }
-
-    #[\Override]
-    public function configureActions(Actions $actions): Actions
-    {
-        return $actions
-            ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ->add(Crud::PAGE_INDEX, $this->createExportAction())
-            ->remove(Crud::PAGE_INDEX, Action::DELETE)
-            ->update(Crud::PAGE_INDEX, Action::NEW,
-                static fn (Action $action) => $action->setIcon('fa fa-plus')
-            )
-        ;
     }
 
     #[\Override]
@@ -81,7 +67,7 @@ class ServiceCertificateCrudController extends AbstractCrudController
         yield TextField::new('description')->onlyOnIndex()
             ->setHelp(new TranslatableMessage('Tell what this certificate is used for.'))->setMaxLength(33)->stripTags();
         yield UrlField::new('onePasswordUrl')
-            ->setLabel(new TranslatableMessage('1Password url'));
+            ->setLabel(new TranslatableMessage('1Password url'))->hideOnIndex();
         yield UrlField::new('usageDocumentationUrl')->hideOnIndex()
             ->setHelp(new TranslatableMessage('Tell where to find documentation on how the certificate is used on the site and how to configure the use.'));
         yield DateTimeField::new('expirationTime');
@@ -96,12 +82,5 @@ class ServiceCertificateCrudController extends AbstractCrudController
             ->renderExpanded()
             ->setTemplatePath('service_certificate/services.html.twig')
         ;
-    }
-
-    #[\Override]
-    public function configureAssets(Assets $assets): Assets
-    {
-        return $assets
-            ->addWebpackEncoreEntry('easyadmin');
     }
 }

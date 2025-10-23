@@ -38,7 +38,7 @@ class ProjectCrudController extends AbstractCrudController
             ->setDefaultSort(['name' => 'ASC'])
             ->setSearchFields(['name', 'details'])
             ->showEntityActionsInlined()
-            ->setPageTitle(Crud::PAGE_INDEX, 'Leantime projects')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Projects')
             ->setHelp(Crud::PAGE_INDEX, 'Projects are synced from Leantime. Click on the "Sync all" button to update all projects.');
     }
 
@@ -80,7 +80,13 @@ class ProjectCrudController extends AbstractCrudController
 
     public function updateAllProjects(SiteRepository $siteRepository): RedirectResponse
     {
-        $this->projectSyncService->syncAllProjects();
+        try {
+            $this->projectSyncService->syncAllProjects();
+
+            $this->addFlash('info', 'All projects have been synced.', );
+        } catch (\Throwable $e) {
+            $this->addFlash('error', 'An error occurred while syncing projects. Check the log for details.');
+        }
 
         return $this->redirectToRoute('admin_project_index');
     }

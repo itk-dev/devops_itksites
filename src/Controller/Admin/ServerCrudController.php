@@ -28,10 +28,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class ServerCrudController extends AbstractCrudController
+class ServerCrudController extends AbstractFullCrudController
 {
-    use ExportCrudControllerTrait;
-
     public function __construct(
         private readonly RequestStack $requestStack,
     ) {
@@ -52,20 +50,6 @@ class ServerCrudController extends AbstractCrudController
         $crud->showEntityActionsInlined();
 
         return $crud;
-    }
-
-    #[\Override]
-    public function configureActions(Actions $actions): Actions
-    {
-        return $actions
-            ->remove(Crud::PAGE_INDEX, Action::EDIT)
-            ->remove(Crud::PAGE_INDEX, Action::DELETE)
-            ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ->add(Crud::PAGE_INDEX, $this->createExportAction())
-            ->update(Crud::PAGE_INDEX, Action::NEW,
-                static fn (Action $action) => $action->setIcon('fa fa-plus')
-            )
-        ;
     }
 
     #[\Override]

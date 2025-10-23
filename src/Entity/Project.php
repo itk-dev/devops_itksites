@@ -27,6 +27,9 @@ class Project extends AbstractBaseEntity implements \Stringable
     #[ORM\Column]
     private ?\DateTimeImmutable $leantimeModifiedAt = null;
 
+    #[ORM\OneToOne(mappedBy: 'project', cascade: ['persist', 'remove'])]
+    private ?SecurityContract $securityContract = null;
+
     public function __construct(int $leantimeId, string $name, ?string $details = null)
     {
         $this->leantimeId = $leantimeId;
@@ -119,6 +122,23 @@ class Project extends AbstractBaseEntity implements \Stringable
     public function setDetailsText(string $detailsText): static
     {
         $this->detailsText = $detailsText;
+
+        return $this;
+    }
+
+    public function getSecurityContract(): ?SecurityContract
+    {
+        return $this->securityContract;
+    }
+
+    public function setSecurityContract(SecurityContract $securityContract): static
+    {
+        // set the owning side of the relation if necessary
+        if ($securityContract->getProject() !== $this) {
+            $securityContract->setProject($this);
+        }
+
+        $this->securityContract = $securityContract;
 
         return $this;
     }
