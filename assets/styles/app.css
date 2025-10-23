@@ -16,11 +16,13 @@
 
 /* Grouped dropdown group styling for index pages */
 .dropdown-menu {
-    .btn-danger i, .text-danger i {
+    .btn-danger i,
+    .text-danger i {
         color: var(--button-invisible-danger-color);
     }
 
-    a.btn-danger:hover , a.text-danger:hover {
+    a.btn-danger:hover,
+    a.text-danger:hover {
         background: var(--button-invisible-danger-hover-hover-bg);
     }
 }

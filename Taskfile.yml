@@ -67,6 +67,7 @@ tasks:
             - task: coding-standards:php:apply
             - task: coding-standards:twig:apply
             - task: coding-standards:yaml:apply
+            - task: coding-standards:css:apply
         silent: true
 
     coding-standards:check:
@@ -76,6 +77,7 @@ tasks:
             - task: coding-standards:php:check
             - task: coding-standards:twig:check
             - task: coding-standards:yaml:check
+            - task: coding-standards:css:check
         silent: true
 
     coding-standards:markdown:apply:
@@ -142,6 +144,22 @@ tasks:
             - task: compose
               vars:
                   COMPOSE_ARGS: run --rm prettier '**/*.{yml,yaml}' --check
+
+    coding-standards:css:apply:
+        desc: "Apply coding standards for YAML"
+        cmds:
+            - task: compose
+              vars:
+                  COMPOSE_ARGS: run --rm prettier 'assets/**/*.{css,scss}' --write
+        silent: true
+
+    coding-standards:css:check:
+        desc: "Apply and check coding standards for YAML"
+        cmds:
+            - task: coding-standards:yaml:apply
+            - task: compose
+              vars:
+                  COMPOSE_ARGS: run --rm prettier 'assets/**/*.{css,scss}' --check
         silent: true
 
     code-analysis:
