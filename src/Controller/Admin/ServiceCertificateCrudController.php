@@ -7,12 +7,7 @@ namespace App\Controller\Admin;
 use App\Entity\ServiceCertificate;
 use App\Form\Type\ServiceCertificate\ServiceType;
 use App\Repository\SiteRepository;
-use App\Trait\ExportCrudControllerTrait;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -24,7 +19,7 @@ use Symfony\Component\Translation\TranslatableMessage;
 class ServiceCertificateCrudController extends AbstractFullCrudController
 {
     public function __construct(
-        private readonly SiteRepository $siteRepository
+        private readonly SiteRepository $siteRepository,
     ) {
     }
 

@@ -43,7 +43,7 @@ class ApiService
      *
      * @throws LeantimeApiException
      */
-    public function getProject($key): ProjectDto
+    public function getProject(int $key): ProjectDto
     {
         $data = $this->request(self::API_PATH_JSONRPC, 'POST', 'leantime.rpc.projects.getProject', ['id' => $key]);
 

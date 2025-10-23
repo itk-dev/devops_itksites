@@ -63,7 +63,7 @@ class ProjectCrudController extends AbstractCrudController
         yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 
-    public function createLeantimeAction(): Action
+    public function createLeantimeAction(?string $label = null): Action
     {
         return Action::new('leantime', $label ?? new TranslatableMessage('Leantime'), 'fa fa-link')
             ->linkToUrl(function (Project $project) {
@@ -71,7 +71,7 @@ class ProjectCrudController extends AbstractCrudController
             });
     }
 
-    public function createUpdateAllProjectsAction(): Action
+    public function createUpdateAllProjectsAction(?string $label = null): Action
     {
         return Action::new('update', $label ?? new TranslatableMessage('Sync all'), 'fa fa-rotate')
             ->createAsGlobalAction()
@@ -83,7 +83,7 @@ class ProjectCrudController extends AbstractCrudController
         try {
             $this->projectSyncService->syncAllProjects();
 
-            $this->addFlash('info', 'All projects have been synced.', );
+            $this->addFlash('info', 'All projects have been synced.');
         } catch (\Throwable $e) {
             $this->addFlash('error', 'An error occurred while syncing projects. Check the log for details.');
         }

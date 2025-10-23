@@ -3,26 +3,32 @@
 namespace App\EasyAdmin\Config\Menu;
 
 use EasyCorp\Bundle\EasyAdminBundle\Config\Menu\CrudMenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Menu\MenuItemInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\MenuItemDto;
+use Symfony\Contracts\Translation\TranslatableInterface;
 
-class AutoBadgeCrudMenuItem
+class AutoBadgeCrudMenuItem implements MenuItemInterface
 {
     private CrudMenuItem $crudMenuItem;
 
-    public function __construct(...$args)
+    public function __construct(TranslatableInterface|string $label, ?string $icon, string $entityFqcn)
     {
-        $this->crudMenuItem = new CrudMenuItem(...$args);
+        $this->crudMenuItem = new CrudMenuItem($label, $icon, $entityFqcn);
     }
 
+    /** @phpstan-ignore missingType.return, missingType.parameter, missingType.parameter  */
     public function __call($name, $arguments)
     {
         return $this->crudMenuItem->$name(...$arguments);
     }
 
+    /** @phpstan-ignore missingType.return  */
     public static function __callStatic(string $name, array $arguments)
     {
         throw new \BadMethodCallException(sprintf('Static method %s not implemented', $name));
     }
 
+    /** @phpstan-ignore missingType.parameter  */
     public function setBadge(/* \Stringable|string|int|float|bool|null */ $content, string $style = 'secondary', array $htmlAttributes = []): self
     {
         if (!is_int($content)) {
@@ -34,5 +40,10 @@ class AutoBadgeCrudMenuItem
         }
 
         return $this;
+    }
+
+    public function getAsDto(): MenuItemDto
+    {
+        return $this->crudMenuItem->getAsDto();
     }
 }

@@ -114,18 +114,6 @@ class Project extends AbstractBaseEntity implements \Stringable
         return $this;
     }
 
-    public function getDetailsText(): ?string
-    {
-        return $this->detailsText;
-    }
-
-    public function setDetailsText(string $detailsText): static
-    {
-        $this->detailsText = $detailsText;
-
-        return $this;
-    }
-
     public function getSecurityContract(): ?SecurityContract
     {
         return $this->securityContract;

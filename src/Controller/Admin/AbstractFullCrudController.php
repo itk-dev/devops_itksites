@@ -53,7 +53,7 @@ abstract class AbstractFullCrudController extends AbstractCrudController
             ->update(Crud::PAGE_INDEX, Action::NEW,
                 static fn (Action $action) => $action->setIcon('fa fa-plus')
             )
-            ;
+        ;
     }
 
     #[\Override]

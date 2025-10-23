@@ -3,10 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\SecurityContract;
-use App\Repository\SecurityContractRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
-use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
@@ -14,17 +11,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class SecurityContractCrudController extends AbstractFullCrudController
 {
-    public function __construct(
-        private readonly SecurityContractRepository $securityContractRepository,
-    )
-    {
-    }
-
     public static function getEntityFqcn(): string
     {
         return SecurityContract::class;
@@ -35,7 +24,7 @@ class SecurityContractCrudController extends AbstractFullCrudController
     {
         return $crud
             ->setDefaultSort(['project.name' => 'ASC'])
-            //->setSearchFields(['name', 'details'])
+            // ->setSearchFields(['name', 'details'])
             ->showEntityActionsInlined()
             ->setPageTitle(Crud::PAGE_INDEX, 'Cyber Security Contracts');
     }
