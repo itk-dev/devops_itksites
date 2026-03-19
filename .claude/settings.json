@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(diff:*)",
+      "Bash(echo:*)",
+      "Bash(find:*)",
+      "Bash(gh:*)",
+      "Bash(git:*)",
+      "Bash(grep:*)",
+      "Bash(head:*)",
+      "Bash(ls:*)",
+      "Bash(pwd)",
+      "Bash(tail:*)",
+      "Bash(tree:*)",
+      "Bash(wc:*)",
+      "Bash(which:*)",
+      "Bash(docker compose:*)",
+      "Bash(docker network:*)"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Read(./.env.local)",
+      "Read(./.env.local.*)",
+      "Read(./config/secrets/*)"
+    ],
+    "ask": [
+      "Bash(gh issue create:*)",
+      "Bash(gh issue close:*)",
+      "Bash(gh issue delete:*)",
+      "Bash(gh issue edit:*)",
+      "Bash(gh issue comment:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr close:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(gh pr edit:*)",
+      "Bash(gh pr comment:*)",
+      "Bash(gh pr review:*)",
+      "Bash(gh release create:*)",
+      "Bash(gh release delete:*)",
+      "Bash(gh release edit:*)",
+      "Bash(gh repo create:*)",
+      "Bash(gh repo delete:*)",
+      "Bash(gh label create:*)",
+      "Bash(gh label delete:*)",
+      "Bash(gh label edit:*)",
+      "Bash(git push:*)",
+      "Bash(git branch -d:*)",
+      "Bash(git branch -D:*)",
+      "Bash(git tag -d:*)",
+      "Bash(git tag -a:*)",
+      "Bash(git tag :*)",
+      "Bash(git reset:*)",
+      "Bash(git rebase:*)",
+      "Bash(git merge:*)",
+      "Bash(git stash drop:*)",
+      "Bash(git clean:*)",
+      "Bash(git checkout -- :*)",
+      "Bash(git restore:*)",
+      "Bash(git commit:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.php) docker compose exec -T phpfpm vendor/bin/php-cs-fixer fix --quiet \"$CLAUDE_FILE_PATH\" 2>/dev/null || true ;; esac",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.yaml|*.yml) docker compose exec -T phpfpm bin/console lint:yaml \"$CLAUDE_FILE_PATH\" 2>/dev/null || true ;; esac",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.twig) docker compose exec -T phpfpm bin/console lint:twig \"$CLAUDE_FILE_PATH\" 2>/dev/null || true ;; esac",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.json) python3 -m json.tool \"$CLAUDE_FILE_PATH\" > /dev/null 2>&1 || true ;; esac",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "php-lsp@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true
+  },
+  "alwaysThinkingEnabled": true,
+  "defaultMode": "acceptEdits"
+}
