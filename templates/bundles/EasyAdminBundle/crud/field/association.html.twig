@@ -4,14 +4,14 @@
 {% if 'toMany' == field.customOptions.get('associationType') %}
     {% if field.value.count == 0 %}
         <span class="badge badge-warning">None</span>
-    {% elseif not has_display(field.value[0]) and ea.crud.currentAction != 'detail'%}
+    {% elseif not has_display(field.value[0]) and ea().crud.currentAction != 'detail'%}
         <span class="badge badge-light">{{ field.value | length }}</span>
     {% else %}
         {% for value in field.value %}
-            {% if ea.crud.currentAction == 'detail' %}
-                <div><a href="{{ admin_detail_url(value) }}"><code>{{ entity_display(value, ea.crud.currentAction) }}</code></a></div>
+            {% if ea().crud.currentAction == 'detail' %}
+                <div><a href="{{ admin_detail_url(value) }}"><code>{{ entity_display(value, ea().crud.currentAction) }}</code></a></div>
             {% elseif has_display(value) %}
-                <a href="{{ admin_detail_url(value) }}"><code>{{ entity_display(value, ea.crud.currentAction) }}</code></a>
+                <a href="{{ admin_detail_url(value) }}"><code>{{ entity_display(value, ea().crud.currentAction) }}</code></a>
             {% else %}
                 <span class="badge badge-warning">None</span>
             {% endif %}

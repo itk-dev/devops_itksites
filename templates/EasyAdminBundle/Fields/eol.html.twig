@@ -3,7 +3,7 @@
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
 
 {% set slicedDate = field.formattedValue | slice(0, 7) %}
-{% if ea.crud.currentAction == 'detail' %}
+{% if ea().crud.currentAction == 'detail' %}
     {% set outputValue = field.formattedValue %}
 {% else %}
     {% set outputValue = slicedDate %}
