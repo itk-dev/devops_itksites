@@ -36,9 +36,9 @@ class AppExtension extends AbstractExtension
         if (method_exists($entity, 'display')) {
             if ('detail' == $action) {
                 return $entity->display(1);
-            } else {
-                return $entity->display(0);
             }
+
+            return $entity->display(0);
         }
 
         return $entity->__toString();
