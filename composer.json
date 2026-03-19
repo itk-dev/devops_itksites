@@ -4,14 +4,14 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "api-platform/core": "^4.0",
         "composer/semver": "^3.4",
         "doctrine/dbal": "^4.0",
-        "doctrine/doctrine-bundle": "^2.13",
-        "doctrine/doctrine-migrations-bundle": "^3.4",
+        "doctrine/doctrine-bundle": "^3.2",
+        "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.0",
         "easycorp/easyadmin-bundle": "^4.0",
         "itk-dev/openid-connect-bundle": "^4.0",
@@ -99,7 +99,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "7.3.*"
+            "require": "7.4.*"
         }
     },
     "scripts": {
