@@ -81,6 +81,7 @@ tasks:
                   COMPOSE_ARGS: exec phpfpm bin/console {{.CONSOLE_ARGS}}
 
     coding-standards:apply:
+        aliases: [cs:apply]
         desc: Apply coding standards
         cmds:
             - task: coding-standards:markdown:apply
@@ -90,6 +91,7 @@ tasks:
         silent: true
 
     coding-standards:check:
+        aliases: [cs:check]
         desc: Check coding standards
         cmds:
             - task: coding-standards:markdown:check
@@ -99,6 +101,7 @@ tasks:
         silent: true
 
     coding-standards:markdown:apply:
+        aliases: [cs:markdown:apply]
         desc: Apply coding standards for Markdown
         cmds:
             - task: compose
@@ -106,6 +109,7 @@ tasks:
                   COMPOSE_ARGS: run --rm markdownlint markdownlint '**/*.md' --fix
 
     coding-standards:markdown:check:
+        aliases: [cs:markdown:check]
         desc: Check coding standards for Markdown
         cmds:
             - task: coding-standards:markdown:apply
@@ -114,6 +118,7 @@ tasks:
                   COMPOSE_ARGS: run --rm markdownlint markdownlint '**/*.md'
 
     coding-standards:php:apply:
+        aliases: [cs:php:apply]
         desc: Apply coding standards for PHP
         cmds:
             - task: compose
@@ -122,6 +127,7 @@ tasks:
         silent: true
 
     coding-standards:php:check:
+        aliases: [cs:php:check]
         desc: Check coding standards for PHP
         cmds:
             - task: coding-standards:php:apply
@@ -131,6 +137,7 @@ tasks:
         silent: true
 
     coding-standards:twig:apply:
+        aliases: [cs:twig:apply]
         desc: Apply coding standards for Twig
         cmds:
             - task: compose
@@ -139,6 +146,7 @@ tasks:
         silent: true
 
     coding-standards:twig:check:
+        aliases: [cs:twig:check]
         desc: Check coding standards for Twig
         cmds:
             - task: coding-standards:twig:apply
@@ -148,6 +156,7 @@ tasks:
         silent: true
 
     coding-standards:yaml:apply:
+        aliases: [cs:yaml:apply]
         desc: Apply coding standards for YAML
         cmds:
             - task: compose
@@ -156,6 +165,7 @@ tasks:
         silent: true
 
     coding-standards:yaml:check:
+        aliases: [cs:yaml:check]
         desc: Check coding standards for YAML
         cmds:
             - task: coding-standards:yaml:apply
