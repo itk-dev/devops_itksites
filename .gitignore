@@ -31,3 +31,4 @@ phpstan.neon
 ###< phpstan/phpstan ###
 .phpunit.cache
 .claude
+.twig-cs-fixer.cache
