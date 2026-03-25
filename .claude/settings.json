@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "COMPOSE_USER": "deploy"
   },
   "permissions": {
     "allow": [
@@ -20,19 +20,34 @@
       "Bash(tree:*)",
       "Bash(wc:*)",
       "Bash(which:*)",
-      "Bash(docker compose:*)",
+      "Bash(docker compose exec:*)",
+      "Bash(docker compose run:*)",
+      "Bash(docker compose up:*)",
+      "Bash(docker compose ps:*)",
+      "Bash(docker compose logs:*)",
+      "Bash(docker compose top:*)",
+      "Bash(docker compose config:*)",
+      "Bash(docker compose pull:*)",
+      "Bash(docker compose images:*)",
       "Bash(docker network:*)"
     ],
     "deny": [
       "Bash(rm -rf:*)",
+      "Bash(gh issue delete:*)",
+      "Bash(gh release delete:*)",
+      "Bash(gh repo delete:*)",
+      "Bash(gh label delete:*)",
       "Read(./.env.local)",
       "Read(./.env.local.*)",
       "Read(./config/secrets/*)"
     ],
     "ask": [
+      "Bash(docker compose down:*)",
+      "Bash(docker compose stop:*)",
+      "Bash(docker compose rm:*)",
+      "Bash(docker compose restart:*)",
       "Bash(gh issue create:*)",
       "Bash(gh issue close:*)",
-      "Bash(gh issue delete:*)",
       "Bash(gh issue edit:*)",
       "Bash(gh issue comment:*)",
       "Bash(gh pr create:*)",
@@ -42,12 +57,9 @@
       "Bash(gh pr comment:*)",
       "Bash(gh pr review:*)",
       "Bash(gh release create:*)",
-      "Bash(gh release delete:*)",
       "Bash(gh release edit:*)",
       "Bash(gh repo create:*)",
-      "Bash(gh repo delete:*)",
       "Bash(gh label create:*)",
-      "Bash(gh label delete:*)",
       "Bash(gh label edit:*)",
       "Bash(git push:*)",
       "Bash(git branch -d:*)",
@@ -66,6 +78,19 @@
     ]
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "docker compose up --detach --quiet-pull 2>/dev/null || true",
+            "timeout": 60,
+            "statusMessage": "Starting Docker services..."
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
@@ -77,18 +102,30 @@
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.yaml|*.yml) docker compose exec -T phpfpm bin/console lint:yaml \"$CLAUDE_FILE_PATH\" 2>/dev/null || true ;; esac",
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.php) docker compose exec -T phpfpm vendor/bin/phpstan analyse --no-progress --error-format=raw \"$CLAUDE_FILE_PATH\" 2>/dev/null || true ;; esac",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.twig) docker compose exec -T phpfpm vendor/bin/twig-cs-fixer lint --fix \"$CLAUDE_FILE_PATH\" 2>/dev/null || true ;; esac",
             "timeout": 15
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.twig) docker compose exec -T phpfpm bin/console lint:twig \"$CLAUDE_FILE_PATH\" 2>/dev/null || true ;; esac",
-            "timeout": 15
-          },
+            "command": "case \"$CLAUDE_FILE_PATH\" in */composer.json) docker compose exec -T phpfpm composer normalize --quiet 2>/dev/null || true ;; esac",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.json) python3 -m json.tool \"$CLAUDE_FILE_PATH\" > /dev/null 2>&1 || true ;; esac",
-            "timeout": 10
+            "command": "docker compose exec -T phpfpm bin/console lint:container 2>/dev/null || true",
+            "timeout": 30,
+            "statusMessage": "Validating Symfony DI container..."
           }
         ]
       }
