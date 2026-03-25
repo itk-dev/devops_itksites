@@ -149,15 +149,15 @@ and is not portable across tools.
 
 The following plugins are enabled in `.claude/settings.json`:
 
-| Plugin | Purpose | Source |
-|---|---|---|
-| `php-lsp` | PHP language server for type-aware code intelligence | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
-| `context7` | Up-to-date documentation lookup for Symfony, Doctrine, API Platform, etc. | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
-| `code-review` | Pull request code review | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
-| `code-simplifier` | Suggests clarity and maintainability improvements | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
-| `security-guidance` | Flags potential security issues (OWASP, injection, etc.) | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
-| `playwright` | Browser automation for debugging and testing the EasyAdmin UI | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
-| `feature-dev` | Guided feature development with codebase exploration and architecture focus | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
+| Plugin              | Purpose                                                                     | Source                                                                       |
+|---------------------|-----------------------------------------------------------------------------|------------------------------------------------------------------------------|
+| `php-lsp`           | PHP language server for type-aware code intelligence                        | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
+| `context7`          | Up-to-date documentation lookup for Symfony, Doctrine, API Platform, etc.   | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
+| `code-review`       | Pull request code review                                                    | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
+| `code-simplifier`   | Suggests clarity and maintainability improvements                           | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
+| `security-guidance` | Flags potential security issues (OWASP, injection, etc.)                    | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
+| `playwright`        | Browser automation for debugging and testing the EasyAdmin UI               | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
+| `feature-dev`       | Guided feature development with codebase exploration and architecture focus | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
 
 > **Note:** The `php-lsp` plugin requires [Intelephense](https://intelephense.com/)
 > installed globally: `npm install -g intelephense`. All other plugins work
