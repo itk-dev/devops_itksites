@@ -21,14 +21,6 @@
                 "responses": {
                     "202": {
                         "description": "DetectionResult resource created",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            },
-                            "application/ld+json": {
-                                "schema": {}
-                            }
-                        },
                         "links": {}
                     },
                     "400": {
@@ -57,17 +49,17 @@
                         "content": {
                             "application/ld+json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld-jsonld"
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
                                 }
                             },
                             "application/problem+json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ConstraintViolation-json"
+                                    "$ref": "#/components/schemas/ConstraintViolation"
                                 }
                             },
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ConstraintViolation-json"
+                                    "$ref": "#/components/schemas/ConstraintViolation"
                                 }
                             }
                         },
@@ -92,21 +84,18 @@
                         }
                     },
                     "required": true
-                },
-                "deprecated": false
+                }
             }
         }
     },
     "components": {
         "schemas": {
-            "ConstraintViolation-json": {
+            "ConstraintViolation": {
                 "type": "object",
                 "description": "Unprocessable entity",
-                "deprecated": false,
                 "properties": {
                     "status": {
                         "default": 422,
-                        "example": 422,
                         "type": "integer"
                     },
                     "violations": {
@@ -121,8 +110,25 @@
                                 "message": {
                                     "type": "string",
                                     "description": "The message associated with the violation"
+                                },
+                                "code": {
+                                    "type": "string",
+                                    "description": "The code of the violation"
+                                },
+                                "hint": {
+                                    "type": "string",
+                                    "description": "An extra hint to understand the violation"
+                                },
+                                "payload": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "The serialized payload of the violation"
                                 }
-                            }
+                            },
+                            "required": [
+                                "propertyPath",
+                                "message"
+                            ]
                         }
                     },
                     "detail": {
@@ -149,14 +155,12 @@
                     }
                 }
             },
-            "ConstraintViolation.jsonld-jsonld": {
+            "ConstraintViolation.jsonld": {
                 "type": "object",
                 "description": "Unprocessable entity",
-                "deprecated": false,
                 "properties": {
                     "status": {
                         "default": 422,
-                        "example": 422,
                         "type": "integer"
                     },
                     "violations": {
@@ -171,8 +175,25 @@
                                 "message": {
                                     "type": "string",
                                     "description": "The message associated with the violation"
+                                },
+                                "code": {
+                                    "type": "string",
+                                    "description": "The code of the violation"
+                                },
+                                "hint": {
+                                    "type": "string",
+                                    "description": "An extra hint to understand the violation"
+                                },
+                                "payload": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "The serialized payload of the violation"
                                 }
-                            }
+                            },
+                            "required": [
+                                "propertyPath",
+                                "message"
+                            ]
                         }
                     },
                     "detail": {
@@ -205,22 +226,17 @@
             },
             "DetectionResult-write": {
                 "type": "object",
-                "description": "",
-                "deprecated": false,
                 "properties": {
                     "type": {
                         "default": "",
-                        "example": "",
                         "type": "string"
                     },
                     "rootDir": {
                         "default": "",
-                        "example": "",
                         "type": "string"
                     },
                     "data": {
                         "default": "",
-                        "example": "",
                         "type": "string"
                     }
                 }
@@ -228,7 +244,6 @@
             "Error": {
                 "type": "object",
                 "description": "A representation of common errors.",
-                "deprecated": false,
                 "properties": {
                     "title": {
                         "readOnly": true,
@@ -247,7 +262,10 @@
                         ]
                     },
                     "status": {
-                        "type": "number",
+                        "type": [
+                            "number",
+                            "null"
+                        ],
                         "examples": [
                             404
                         ],
@@ -271,7 +289,6 @@
             "Error.jsonld": {
                 "type": "object",
                 "description": "A representation of common errors.",
-                "deprecated": false,
                 "properties": {
                     "title": {
                         "readOnly": true,
@@ -290,7 +307,10 @@
                         ]
                     },
                     "status": {
-                        "type": "number",
+                        "type": [
+                            "number",
+                            "null"
+                        ],
                         "examples": [
                             404
                         ],
@@ -340,7 +360,8 @@
     ],
     "tags": [
         {
-            "name": "DetectionResult"
+            "name": "DetectionResult",
+            "description": "Resource 'DetectionResult' operations."
         }
     ],
     "webhooks": {}

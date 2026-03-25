@@ -8,7 +8,7 @@ parameters:
 services:
     # default configuration for services in *this* file
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
+        autowire: true # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
     # makes classes in src/ available to be used as services
@@ -25,13 +25,12 @@ services:
 
     _instanceof:
         App\Handler\DetectionResultHandlerInterface:
-            tags: [ app.handler.detection_result_handler ]
+            tags: [app.handler.detection_result_handler]
 
     App\EventListener\RemovedRelationsListener:
         tags:
-            -
-                name: 'doctrine.event_listener'
-                event: 'postFlush'
+            - name: 'doctrine.event_listener'
+              event: 'postFlush'
 
     App\MessageHandler\ProcessDetectionResultHandler:
         arguments:

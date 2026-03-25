@@ -1,245 +1,256 @@
 openapi: 3.1.0
 info:
-  title: ''
-  description: ''
-  version: 0.0.0
+    title: ""
+    description: ""
+    version: 0.0.0
 servers:
-  -
-    url: /
-    description: ''
+    - url: /
+      description: ""
 paths:
-  /api/detection_results:
-    post:
-      operationId: api_detection_results_post
-      tags:
-        - DetectionResult
-      responses:
-        '202':
-          description: 'DetectionResult resource created'
-          content:
-            application/json:
-              schema: {  }
-            application/ld+json:
-              schema: {  }
-          links: {  }
-        '400':
-          description: 'Invalid input'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Error.jsonld'
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/Error'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-          links: {  }
-        '422':
-          description: 'An error occurred'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/ConstraintViolation.jsonld-jsonld'
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ConstraintViolation-json'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConstraintViolation-json'
-          links: {  }
-      summary: 'Creates a DetectionResult resource.'
-      description: 'Creates a DetectionResult resource.'
-      parameters: []
-      requestBody:
-        description: 'The new DetectionResult resource'
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DetectionResult-write'
-          application/ld+json:
-            schema:
-              $ref: '#/components/schemas/DetectionResult-write'
-        required: true
-      deprecated: false
+    /api/detection_results:
+        post:
+            operationId: api_detection_results_post
+            tags:
+                - DetectionResult
+            responses:
+                "202":
+                    description: "DetectionResult resource created"
+                    links: {}
+                "400":
+                    description: "Invalid input"
+                    content:
+                        application/ld+json:
+                            schema:
+                                $ref: "#/components/schemas/Error.jsonld"
+                        application/problem+json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                    links: {}
+                "422":
+                    description: "An error occurred"
+                    content:
+                        application/ld+json:
+                            schema:
+                                $ref: "#/components/schemas/ConstraintViolation.jsonld"
+                        application/problem+json:
+                            schema:
+                                $ref: "#/components/schemas/ConstraintViolation"
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ConstraintViolation"
+                    links: {}
+            summary: "Creates a DetectionResult resource."
+            description: "Creates a DetectionResult resource."
+            parameters: []
+            requestBody:
+                description: "The new DetectionResult resource"
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/DetectionResult-write"
+                    application/ld+json:
+                        schema:
+                            $ref: "#/components/schemas/DetectionResult-write"
+                required: true
 components:
-  schemas:
-    ConstraintViolation-json:
-      type: object
-      description: 'Unprocessable entity'
-      deprecated: false
-      properties:
-        status:
-          default: 422
-          example: 422
-          type: integer
-        violations:
-          type: array
-          items:
+    schemas:
+        ConstraintViolation:
+            type: object
+            description: "Unprocessable entity"
+            properties:
+                status:
+                    default: 422
+                    type: integer
+                violations:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            propertyPath:
+                                type: string
+                                description: "The property path of the violation"
+                            message:
+                                type: string
+                                description: "The message associated with the violation"
+                            code:
+                                type: string
+                                description: "The code of the violation"
+                            hint:
+                                type: string
+                                description: "An extra hint to understand the violation"
+                            payload:
+                                type: object
+                                additionalProperties: true
+                                description: "The serialized payload of the violation"
+                        required:
+                            - propertyPath
+                            - message
+                detail:
+                    readOnly: true
+                    type: string
+                type:
+                    readOnly: true
+                    type: string
+                title:
+                    readOnly: true
+                    type:
+                        - string
+                        - "null"
+                instance:
+                    readOnly: true
+                    type:
+                        - string
+                        - "null"
+        ConstraintViolation.jsonld:
+            type: object
+            description: "Unprocessable entity"
+            properties:
+                status:
+                    default: 422
+                    type: integer
+                violations:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            propertyPath:
+                                type: string
+                                description: "The property path of the violation"
+                            message:
+                                type: string
+                                description: "The message associated with the violation"
+                            code:
+                                type: string
+                                description: "The code of the violation"
+                            hint:
+                                type: string
+                                description: "An extra hint to understand the violation"
+                            payload:
+                                type: object
+                                additionalProperties: true
+                                description: "The serialized payload of the violation"
+                        required:
+                            - propertyPath
+                            - message
+                detail:
+                    readOnly: true
+                    type: string
+                description:
+                    readOnly: true
+                    type: string
+                type:
+                    readOnly: true
+                    type: string
+                title:
+                    readOnly: true
+                    type:
+                        - string
+                        - "null"
+                instance:
+                    readOnly: true
+                    type:
+                        - string
+                        - "null"
+        DetectionResult-write:
             type: object
             properties:
-              propertyPath:
-                type: string
-                description: 'The property path of the violation'
-              message:
-                type: string
-                description: 'The message associated with the violation'
-        detail:
-          readOnly: true
-          type: string
-        type:
-          readOnly: true
-          type: string
-        title:
-          readOnly: true
-          type:
-            - string
-            - 'null'
-        instance:
-          readOnly: true
-          type:
-            - string
-            - 'null'
-    ConstraintViolation.jsonld-jsonld:
-      type: object
-      description: 'Unprocessable entity'
-      deprecated: false
-      properties:
-        status:
-          default: 422
-          example: 422
-          type: integer
-        violations:
-          type: array
-          items:
+                type:
+                    default: ""
+                    type: string
+                rootDir:
+                    default: ""
+                    type: string
+                data:
+                    default: ""
+                    type: string
+        Error:
             type: object
+            description: "A representation of common errors."
             properties:
-              propertyPath:
-                type: string
-                description: 'The property path of the violation'
-              message:
-                type: string
-                description: 'The message associated with the violation'
-        detail:
-          readOnly: true
-          type: string
-        description:
-          readOnly: true
-          type: string
-        type:
-          readOnly: true
-          type: string
-        title:
-          readOnly: true
-          type:
-            - string
-            - 'null'
-        instance:
-          readOnly: true
-          type:
-            - string
-            - 'null'
-    DetectionResult-write:
-      type: object
-      description: ''
-      deprecated: false
-      properties:
-        type:
-          default: ''
-          example: ''
-          type: string
-        rootDir:
-          default: ''
-          example: ''
-          type: string
-        data:
-          default: ''
-          example: ''
-          type: string
-    Error:
-      type: object
-      description: 'A representation of common errors.'
-      deprecated: false
-      properties:
-        title:
-          readOnly: true
-          description: 'A short, human-readable summary of the problem.'
-          type:
-            - string
-            - 'null'
-        detail:
-          readOnly: true
-          description: 'A human-readable explanation specific to this occurrence of the problem.'
-          type:
-            - string
-            - 'null'
-        status:
-          type: number
-          examples:
-            - 404
-          default: 400
-        instance:
-          readOnly: true
-          description: 'A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.'
-          type:
-            - string
-            - 'null'
-        type:
-          readOnly: true
-          description: 'A URI reference that identifies the problem type'
-          type: string
-    Error.jsonld:
-      type: object
-      description: 'A representation of common errors.'
-      deprecated: false
-      properties:
-        title:
-          readOnly: true
-          description: 'A short, human-readable summary of the problem.'
-          type:
-            - string
-            - 'null'
-        detail:
-          readOnly: true
-          description: 'A human-readable explanation specific to this occurrence of the problem.'
-          type:
-            - string
-            - 'null'
-        status:
-          type: number
-          examples:
-            - 404
-          default: 400
-        instance:
-          readOnly: true
-          description: 'A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.'
-          type:
-            - string
-            - 'null'
-        type:
-          readOnly: true
-          description: 'A URI reference that identifies the problem type'
-          type: string
-        description:
-          readOnly: true
-          type:
-            - string
-            - 'null'
-  responses: {  }
-  parameters: {  }
-  examples: {  }
-  requestBodies: {  }
-  headers: {  }
-  securitySchemes:
-    apiKey:
-      type: apiKey
-      description: 'Value for the Authorization header parameter.'
-      name: Authorization
-      in: header
+                title:
+                    readOnly: true
+                    description: "A short, human-readable summary of the problem."
+                    type:
+                        - string
+                        - "null"
+                detail:
+                    readOnly: true
+                    description: "A human-readable explanation specific to this occurrence of the problem."
+                    type:
+                        - string
+                        - "null"
+                status:
+                    type:
+                        - number
+                        - "null"
+                    examples:
+                        - 404
+                    default: 400
+                instance:
+                    readOnly: true
+                    description: "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced."
+                    type:
+                        - string
+                        - "null"
+                type:
+                    readOnly: true
+                    description: "A URI reference that identifies the problem type"
+                    type: string
+        Error.jsonld:
+            type: object
+            description: "A representation of common errors."
+            properties:
+                title:
+                    readOnly: true
+                    description: "A short, human-readable summary of the problem."
+                    type:
+                        - string
+                        - "null"
+                detail:
+                    readOnly: true
+                    description: "A human-readable explanation specific to this occurrence of the problem."
+                    type:
+                        - string
+                        - "null"
+                status:
+                    type:
+                        - number
+                        - "null"
+                    examples:
+                        - 404
+                    default: 400
+                instance:
+                    readOnly: true
+                    description: "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced."
+                    type:
+                        - string
+                        - "null"
+                type:
+                    readOnly: true
+                    description: "A URI reference that identifies the problem type"
+                    type: string
+                description:
+                    readOnly: true
+                    type:
+                        - string
+                        - "null"
+    responses: {}
+    parameters: {}
+    examples: {}
+    requestBodies: {}
+    headers: {}
+    securitySchemes:
+        apiKey:
+            type: apiKey
+            description: "Value for the Authorization header parameter."
+            name: Authorization
+            in: header
 security:
-  -
-    apiKey: []
+    - apiKey: []
 tags:
-  -
-    name: DetectionResult
-webhooks: {  }
+    - name: DetectionResult
+      description: "Resource 'DetectionResult' operations."
+webhooks: {}
