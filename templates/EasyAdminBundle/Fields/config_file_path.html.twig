@@ -4,5 +4,5 @@
 {% if ea().crud.currentAction == 'detail' %}
     <code>{{ field.formattedValue }}</code>
 {% else %}
-    <code>{{ field.formattedValue | replace({'/etc/nginx/sites-enabled/': './'}) }}</code>
+    <code>{{ field.formattedValue|replace({'/etc/nginx/sites-enabled/': './'}) }}</code>
 {% endif %}
