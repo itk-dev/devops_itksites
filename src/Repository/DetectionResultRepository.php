@@ -26,10 +26,10 @@ class DetectionResultRepository extends ServiceEntityRepository
      * Remove detection results base on last contact.
      *
      * @param \dateTime $date
-     *   The date to delete before
+     *                        The date to delete before
      *
      * @return mixed
-     *   Number of records removed or false
+     *               Number of records removed or false
      */
     public function remove(\DateTime $date): mixed
     {
@@ -43,12 +43,6 @@ class DetectionResultRepository extends ServiceEntityRepository
 
     /**
      * Delete all except X similar detection results.
-     *
-     * @param DetectionResult $detectionResult
-     * @param int $keep
-     * @param bool $flush
-     *
-     * @return void
      */
     public function cleanup(DetectionResult $detectionResult, int $keep = 5, bool $flush = false): void
     {
@@ -78,10 +72,6 @@ class DetectionResultRepository extends ServiceEntityRepository
 
     /**
      * Delete all detection results for a given installation.
-     *
-     * @param Installation $installation
-     *
-     * @return void
      */
     public function deleteByInstallation(Installation $installation): void
     {

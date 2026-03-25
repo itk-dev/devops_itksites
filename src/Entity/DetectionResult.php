@@ -9,7 +9,7 @@ use ApiPlatform\Metadata\Post;
 use App\Repository\DetectionResultRepository;
 use App\Utils\RootDirNormalizer;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ApiResource(
     operations: [

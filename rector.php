@@ -18,12 +18,13 @@ return static function (RectorConfig $rectorConfig): void {
 
     // define sets of rules
     $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_83,
-        SymfonySetList::SYMFONY_64,
+        LevelSetList::UP_TO_PHP_85,
+        SymfonySetList::SYMFONY_74,
         SymfonySetList::CONFIGS,
         SymfonySetList::SYMFONY_CODE_QUALITY,
         SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
         Rector\PHPUnit\Set\PHPUnitSetList::PHPUNIT_100,
         Rector\PHPUnit\Set\PHPUnitSetList::PHPUNIT_110,
+        Rector\PHPUnit\Set\PHPUnitSetList::PHPUNIT_120,
     ]);
 };

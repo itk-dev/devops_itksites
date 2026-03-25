@@ -2,8 +2,8 @@ services:
   rabbit:
     image: rabbitmq:4-management-alpine
     networks:
-       - app
-       - frontend
+      - app
+      - frontend
     ports:
       - "15672"
     environment:
@@ -17,7 +17,9 @@ services:
       retries: 30
 
   node:
-    image: node:20
+    profiles:
+      - dev
+    image: node:24
     volumes:
       - .:/app
     working_dir: /app

@@ -28,9 +28,9 @@ class ProcessDetectionResultHandlerTest extends TestCase
         parent::setUp();
 
         $this->detectionResultRepositoryMock = $this->createMock(DetectionResultRepository::class);
-        $this->entityManagerMock = $this->createMock(EntityManagerInterface::class);
-        $connectionMock = $this->createMock(Connection::class);
-        $this->entityManagerMock->expects($this->any())->method('getConnection')->willReturn($connectionMock);
+        $this->entityManagerMock = $this->createStub(EntityManagerInterface::class);
+        $connectionMock = $this->createStub(Connection::class);
+        $this->entityManagerMock->method('getConnection')->willReturn($connectionMock);
 
         $this->dirResultHandler = $this->createMock(DetectionResultHandlerInterface::class);
         $this->nginxResultHandler = $this->createMock(DetectionResultHandlerInterface::class);
