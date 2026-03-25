@@ -31,11 +31,18 @@ jobs:
             - name: Create docker network
               run: docker network create frontend
 
-            - name: Run tests
+            - name: Run tests with coverage
               run: |
-                  docker compose up --detach
-                  docker compose exec phpfpm composer install --no-interaction
-                  docker compose exec phpfpm composer run tests
+                  docker compose run --rm -e XDEBUG_MODE=coverage phpfpm composer install --no-interaction
+                  docker compose run --rm -e XDEBUG_MODE=coverage phpfpm vendor/bin/phpunit --coverage-clover=coverage/unit.xml
+
+            - name: Upload coverage to Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  files: ./coverage/unit.xml
+                  fail_ci_if_error: true
+                  flags: unittests
 
     fixtures:
         runs-on: ubuntu-latest
