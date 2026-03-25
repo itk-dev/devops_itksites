@@ -33,8 +33,12 @@ jobs:
 
             - name: Run tests with coverage
               run: |
-                  docker compose run --rm -e XDEBUG_MODE=coverage phpfpm composer install --no-interaction
-                  docker compose run --rm -e XDEBUG_MODE=coverage phpfpm vendor/bin/phpunit --coverage-clover=coverage/unit.xml
+                  docker compose up --detach
+                  docker compose exec -e XDEBUG_MODE=coverage phpfpm composer install --no-interaction
+                  docker compose exec -e XDEBUG_MODE=coverage phpfpm bin/console --env=test doctrine:database:drop --if-exists --force --quiet
+                  docker compose exec -e XDEBUG_MODE=coverage phpfpm bin/console --env=test doctrine:database:create --no-interaction --if-not-exists --quiet
+                  docker compose exec -e XDEBUG_MODE=coverage phpfpm bin/console --env=test doctrine:migrations:migrate --no-interaction --quiet
+                  docker compose exec -e XDEBUG_MODE=coverage phpfpm vendor/bin/phpunit --coverage-clover=coverage/unit.xml
 
             - name: Upload coverage to Codecov
               uses: codecov/codecov-action@v5
