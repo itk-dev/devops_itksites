@@ -20,10 +20,6 @@ readonly class NginxHandler implements DetectionResultHandlerInterface
 
     /**
      * DirectoryHandler constructor.
-     *
-     * @param SiteFactory $siteFactory
-     * @param DomainFactory $domainFactory
-     * @param ValidatorInterface $validator
      */
     public function __construct(
         private SiteFactory $siteFactory,
@@ -32,16 +28,13 @@ readonly class NginxHandler implements DetectionResultHandlerInterface
     ) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function handleResult(DetectionResult $detectionResult): void
     {
         try {
             $data = \json_decode($detectionResult->getData(), false, 512, JSON_THROW_ON_ERROR);
 
             // Nginx 'default' sites should not be indexed.
-            if (str_ends_with($data->config, self::NGINX_DEFAULT)) {
+            if (str_ends_with((string) $data->config, self::NGINX_DEFAULT)) {
                 return;
             }
 
@@ -63,7 +56,6 @@ readonly class NginxHandler implements DetectionResultHandlerInterface
         }
     }
 
-    /** {@inheritDoc} */
     public function supportsType(string $type): bool
     {
         return DetectionType::NGINX === $type;

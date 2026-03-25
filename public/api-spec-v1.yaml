@@ -16,11 +16,6 @@ paths:
       responses:
         '202':
           description: 'DetectionResult resource created'
-          content:
-            application/json:
-              schema: {  }
-            application/ld+json:
-              schema: {  }
           links: {  }
         '400':
           description: 'Invalid input'
@@ -40,13 +35,13 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/ConstraintViolation.jsonld-jsonld'
+                $ref: '#/components/schemas/ConstraintViolation.jsonld'
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/ConstraintViolation-json'
+                $ref: '#/components/schemas/ConstraintViolation'
             application/json:
               schema:
-                $ref: '#/components/schemas/ConstraintViolation-json'
+                $ref: '#/components/schemas/ConstraintViolation'
           links: {  }
       summary: 'Creates a DetectionResult resource.'
       description: 'Creates a DetectionResult resource.'
@@ -61,17 +56,14 @@ paths:
             schema:
               $ref: '#/components/schemas/DetectionResult-write'
         required: true
-      deprecated: false
 components:
   schemas:
-    ConstraintViolation-json:
+    ConstraintViolation:
       type: object
       description: 'Unprocessable entity'
-      deprecated: false
       properties:
         status:
           default: 422
-          example: 422
           type: integer
         violations:
           type: array
@@ -84,6 +76,19 @@ components:
               message:
                 type: string
                 description: 'The message associated with the violation'
+              code:
+                type: string
+                description: 'The code of the violation'
+              hint:
+                type: string
+                description: 'An extra hint to understand the violation'
+              payload:
+                type: object
+                additionalProperties: true
+                description: 'The serialized payload of the violation'
+            required:
+              - propertyPath
+              - message
         detail:
           readOnly: true
           type: string
@@ -100,14 +105,12 @@ components:
           type:
             - string
             - 'null'
-    ConstraintViolation.jsonld-jsonld:
+    ConstraintViolation.jsonld:
       type: object
       description: 'Unprocessable entity'
-      deprecated: false
       properties:
         status:
           default: 422
-          example: 422
           type: integer
         violations:
           type: array
@@ -120,6 +123,19 @@ components:
               message:
                 type: string
                 description: 'The message associated with the violation'
+              code:
+                type: string
+                description: 'The code of the violation'
+              hint:
+                type: string
+                description: 'An extra hint to understand the violation'
+              payload:
+                type: object
+                additionalProperties: true
+                description: 'The serialized payload of the violation'
+            required:
+              - propertyPath
+              - message
         detail:
           readOnly: true
           type: string
@@ -141,25 +157,19 @@ components:
             - 'null'
     DetectionResult-write:
       type: object
-      description: ''
-      deprecated: false
       properties:
         type:
           default: ''
-          example: ''
           type: string
         rootDir:
           default: ''
-          example: ''
           type: string
         data:
           default: ''
-          example: ''
           type: string
     Error:
       type: object
       description: 'A representation of common errors.'
-      deprecated: false
       properties:
         title:
           readOnly: true
@@ -174,7 +184,9 @@ components:
             - string
             - 'null'
         status:
-          type: number
+          type:
+            - number
+            - 'null'
           examples:
             - 404
           default: 400
@@ -191,7 +203,6 @@ components:
     Error.jsonld:
       type: object
       description: 'A representation of common errors.'
-      deprecated: false
       properties:
         title:
           readOnly: true
@@ -206,7 +217,9 @@ components:
             - string
             - 'null'
         status:
-          type: number
+          type:
+            - number
+            - 'null'
           examples:
             - 404
           default: 400
@@ -242,4 +255,5 @@ security:
 tags:
   -
     name: DetectionResult
+    description: "Resource 'DetectionResult' operations."
 webhooks: {  }

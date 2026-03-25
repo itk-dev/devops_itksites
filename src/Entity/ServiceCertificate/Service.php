@@ -8,7 +8,7 @@ use App\Entity\AbstractBaseEntity;
 use App\Entity\ServiceCertificate;
 use App\Repository\ServiceCertificate\ServiceRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]

@@ -7,7 +7,6 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/itk-dev/devops_itksites?style=flat-square)](https://github.com/itk-dev/devops_itksites/commits/develop/)
 [![GitHub License](https://img.shields.io/github/license/itk-dev/devops_itksites?style=flat-square)](https://github.com/itk-dev/devops_itksites/blob/develop/LICENSE)
 
-
 This is our internal server and site registration tool. It works in tandem with our
 [ITK sites server harvester](https://github.com/itk-dev/devops_itkServerHarvest).
 The harvester is installed by default on all servers, and runs at intervals and collects
@@ -15,6 +14,7 @@ information about sites and installations running on the server. These are sent 
 `DetectionResults` to ITKsites where they are analysed and processed.
 
 This allows us to monitor
+
 * What is installed and running
 * Which sites/domains we are hosting
 * What docker images we are running
@@ -23,6 +23,7 @@ This allows us to monitor
 * What git repositories we are hosting
 
 Additionally we can register and document
+
 * All OpenID Connect setups
 * All Services Certificates
 
@@ -30,6 +31,7 @@ Servers, OpenID Connect setups, Services Certificates must be created and mainta
 All other information is kept up to date by analysing the DetectionResults.
 
 ## Architecture
+
 This is a Symfony 6 project build with api-platform 3.x and EasyAdmin.
 
 Api-platform provides a simple REST api for POST'ing the DetectionResults.
@@ -54,6 +56,7 @@ docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interact
 Then create a `.env.local` file to set secrets for your local setup.
 
 ### OpenID Connect
+
 All users access is controlled by OpenID Connect. For local development you must
 add the following to your `.env.local` file:
 
@@ -94,11 +97,13 @@ docker compose exec phpfpm bin/console itk-dev:openid-connect:login admin@exampl
 
 All processing of Detctionresults is done in a series of message handlers. To
 run these do either:
+
 ```shell
 docker compose exec phpfpm composer queues
 ```
 
 or
+
 ```shell
 docker compose exec phpfpm bin/console messenger:consume async --failure-limit=1 -vvv
 ```

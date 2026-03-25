@@ -10,7 +10,7 @@ api_platform:
     enable_swagger: true
     enable_swagger_ui: true
     swagger:
-        versions: [ 3 ]
+        versions: [3]
         api_keys:
             apiKey:
                 name: Authorization

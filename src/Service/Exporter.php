@@ -33,7 +33,7 @@ class Exporter
             'itksites-export-%s-%s.%s',
             preg_replace('@^.+\\\\([^\\\\]+)$@', '$1', $className),
             // Windows cannot handle colons in filenames so we use . to separate time parts.
-            (new \DateTimeImmutable())->format('Y-m-d\TH.i.s'),
+            new \DateTimeImmutable()->format('Y-m-d\TH.i.s'),
             $format
         );
 

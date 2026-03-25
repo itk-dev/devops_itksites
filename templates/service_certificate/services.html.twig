@@ -1,5 +1,5 @@
 {# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
-{% if ea.crud.currentPage == constant('EasyCorp\\Bundle\\EasyAdminBundle\\Config\\Crud::PAGE_INDEX') %}
+{% if ea().crud.currentPage == constant('EasyCorp\\Bundle\\EasyAdminBundle\\Config\\Crud::PAGE_INDEX') %}
     {% for service in field.value -%}
         {{ loop.index0 > 0 ? ', ' }}{{ service }}
     {%- endfor %}
