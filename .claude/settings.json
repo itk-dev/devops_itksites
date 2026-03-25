@@ -16,6 +16,7 @@
       "Bash(ls:*)",
       "Bash(pwd)",
       "Bash(tail:*)",
+      "Bash(task:*)",
       "Bash(tree:*)",
       "Bash(wc:*)",
       "Bash(which:*)",
