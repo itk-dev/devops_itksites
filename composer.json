@@ -59,7 +59,8 @@
         "symfony/maker-bundle": "^1.37",
         "symfony/stopwatch": "^8.0",
         "symfony/var-dumper": "^8.0",
-        "symfony/web-profiler-bundle": "^8.0"
+        "symfony/web-profiler-bundle": "^8.0",
+        "vincentlanglet/twig-cs-fixer": "^3.14"
     },
     "replace": {
         "symfony/polyfill-ctype": "*",
