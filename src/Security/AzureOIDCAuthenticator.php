@@ -28,10 +28,6 @@ class AzureOIDCAuthenticator extends OpenIdLoginAuthenticator
 
     /**
      * AzureOIDCAuthenticator constructor.
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param UrlGeneratorInterface $router
-     * @param OpenIdConfigurationProviderManager $providerManager
      */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -41,7 +37,6 @@ class AzureOIDCAuthenticator extends OpenIdLoginAuthenticator
         parent::__construct($providerManager);
     }
 
-    /** {@inheritDoc} */
     public function authenticate(Request $request): Passport
     {
         try {
@@ -73,7 +68,6 @@ class AzureOIDCAuthenticator extends OpenIdLoginAuthenticator
         }
     }
 
-    /** {@inheritDoc} */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         $targetUrl = $this->getTargetPath($request->getSession(), $firewallName) ?? $this->router->generate('admin');
@@ -81,7 +75,6 @@ class AzureOIDCAuthenticator extends OpenIdLoginAuthenticator
         return new RedirectResponse($targetUrl);
     }
 
-    /** {@inheritDoc} */
     public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
         return new RedirectResponse($this->router->generate('itkdev_openid_connect_login', [

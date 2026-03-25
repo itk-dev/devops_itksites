@@ -30,9 +30,6 @@ class ReplayDetectionResultsCommand extends Command
 {
     /**
      * ReplayDetectionResultsCommand constructor.
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param MessageBusInterface    $messageBus
      */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -68,7 +65,6 @@ class ReplayDetectionResultsCommand extends Command
         ;
     }
 
-    /** {@inheritDoc} */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -147,10 +143,6 @@ class ReplayDetectionResultsCommand extends Command
     /**
      * Dispatch message to the message bus.
      *
-     * @param Ulid $detectionResultID
-     *
-     * @return Envelope
-     *
      * @throws \Throwable
      */
     private function dispatch(Ulid $detectionResultID): Envelope
@@ -172,10 +164,6 @@ class ReplayDetectionResultsCommand extends Command
 
     /**
      * Get a Ulid from a string with/without dashes.
-     *
-     * @param string $ulid
-     *
-     * @return Ulid
      */
     private static function fromString(string $ulid): Ulid
     {

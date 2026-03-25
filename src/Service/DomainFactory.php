@@ -23,10 +23,6 @@ class DomainFactory
     }
 
     /**
-     * @param string $addressList
-     * @param Site $site
-     * @param DetectionResult $detectionResult
-     *
      * @return Collection<int, Domain>
      */
     public function getDomains(string $addressList, Site $site, DetectionResult $detectionResult): Collection
