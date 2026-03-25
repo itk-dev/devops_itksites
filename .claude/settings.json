@@ -100,7 +100,8 @@
     "code-review@claude-plugins-official": true,
     "security-guidance@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
-    "feature-dev@claude-plugins-official": true
+    "feature-dev@claude-plugins-official": true,
+    "itkdev-skills@itkdev-marketplace": true
   },
   "alwaysThinkingEnabled": true,
   "defaultMode": "acceptEdits"
