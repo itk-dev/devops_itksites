@@ -108,17 +108,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.php) docker compose exec -T phpfpm vendor/bin/php-cs-fixer fix --quiet \"$CLAUDE_FILE_PATH\" 2>/dev/null || true ;; esac",
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.php) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose exec -T phpfpm vendor/bin/php-cs-fixer fix --quiet \"$REL_PATH\" 2>/dev/null || true ;; esac",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.php) docker compose exec -T phpfpm vendor/bin/phpstan analyse --no-progress --error-format=raw \"$CLAUDE_FILE_PATH\" 2>/dev/null || true ;; esac",
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.php) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose exec -T phpfpm vendor/bin/phpstan analyse --no-progress --error-format=raw \"$REL_PATH\" 2>/dev/null || true ;; esac",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.twig) docker compose exec -T phpfpm vendor/bin/twig-cs-fixer lint --fix \"$CLAUDE_FILE_PATH\" 2>/dev/null || true ;; esac",
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.twig) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose exec -T phpfpm vendor/bin/twig-cs-fixer lint --fix \"$REL_PATH\" 2>/dev/null || true ;; esac",
             "timeout": 15
           },
           {
@@ -128,7 +128,7 @@
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.js|*.css|*.scss|*.yaml|*.yml|*.md) docker compose run --rm -T node npx prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null || true ;; esac",
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.js|*.css|*.scss|*.yaml|*.yml|*.md) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose run --rm -T node npx prettier --write \"$REL_PATH\" 2>/dev/null || true ;; esac",
             "timeout": 15
           }
         ]
