@@ -140,7 +140,5 @@
     "playwright@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
     "itkdev-skills@itkdev-marketplace": true
-  },
-  "alwaysThinkingEnabled": true,
-  "defaultMode": "acceptEdits"
+  }
 }
