@@ -16,17 +16,17 @@ information about sites and installations running on the server. These are sent 
 
 This allows us to monitor
 
--   What is installed and running
--   Which sites/domains we are hosting
--   What docker images we are running
--   What packages and modules we are running
--   If there are known CVE's for the packages/modules
--   What git repositories we are hosting
+- What is installed and running
+- Which sites/domains we are hosting
+- What docker images we are running
+- What packages and modules we are running
+- If there are known CVE's for the packages/modules
+- What git repositories we are hosting
 
 Additionally we can register and document
 
--   All OpenID Connect setups
--   All Services Certificates
+- All OpenID Connect setups
+- All Services Certificates
 
 Servers, OpenID Connect setups, Services Certificates must be created and maintained manually.
 All other information is kept up to date by analysing the DetectionResults.
@@ -74,9 +74,9 @@ AZURE_AZ_OIDC_REDIRECT_URI=https://itksites.local.itkdev.dk/openid-connect/gener
 
 There are not implemented on
 
--   sites
--   installations
--   domains
+- sites
+- installations
+- domains
 
 This is due to automated processes and scripts that listen from sites and data
 is therefore not relevant to have. The architecture makes it possible to delete
