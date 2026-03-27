@@ -91,6 +91,17 @@
         ]
       }
     ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "case \"$CLAUDE_FILE_PATH\" in */composer.lock|*/yarn.lock|*/.env.local|*/.env.local.*) echo 'BLOCKED: Do not edit lock files or .env.local directly' >&2; exit 1 ;; esac"
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
@@ -114,6 +125,11 @@
             "type": "command",
             "command": "case \"$CLAUDE_FILE_PATH\" in */composer.json) docker compose exec -T phpfpm composer normalize --quiet 2>/dev/null || true ;; esac",
             "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.js|*.css|*.scss|*.yaml|*.yml|*.md) docker compose run --rm -T node npx prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null || true ;; esac",
+            "timeout": 15
           }
         ]
       }
