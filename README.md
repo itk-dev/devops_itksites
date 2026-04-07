@@ -6,7 +6,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/itk-dev/devops_itksites?style=flat-square&logo=codecov)](https://codecov.io/gh/itk-dev/devops_itksites)
 [![GitHub last commit](https://img.shields.io/github/last-commit/itk-dev/devops_itksites?style=flat-square)](https://github.com/itk-dev/devops_itksites/commits/develop/)
 [![GitHub License](https://img.shields.io/github/license/itk-dev/devops_itksites?style=flat-square)](https://github.com/itk-dev/devops_itksites/blob/develop/LICENSE)
-[![agents.md](https://img.shields.io/badge/%F0%9F%A4%96_agents.md-AI%20ready-8A2BE2?style=flat-square)](https://github.com/itk-dev/devops_itksites/blob/develop/agents.md)
+[![claude.md](https://img.shields.io/badge/%F0%9F%A4%96_claude.md-AI%20ready-8A2BE2?style=flat-square)](https://github.com/itk-dev/devops_itksites/blob/develop/claude.md)
 
 This is our internal server and site registration tool. It works in tandem with our
 [ITK sites server harvester](https://github.com/itk-dev/devops_itkServerHarvest).
@@ -134,16 +134,17 @@ docker compose run --rm node yarn coding-standards-check
 
 ### 🤖 AI coding agents
 
-This project includes an [`agents.md`](agents.md) file that provides project
-context for AI coding agents. The file describes the project architecture,
+This project includes an [`claude.md`](claude.md) file that provides project
+context for Claude Code. The file describes the project architecture,
 technology stack, development commands, CI/CD setup, and coding conventions.
-
-`agents.md` is a vendor-neutral standard supported by tools such as
-[Claude Code](https://claude.ai/claude-code),
-[OpenCode](https://opencode.ai/), and others.
 
 Tool-specific configuration (permissions, hooks, plugins) lives in `.claude/`
 and is not portable across tools.
+
+> [!NOTE]
+> `agents.md` is a vendor-neutral standard supported by tools such as
+> [OpenCode](https://opencode.ai/) and others. Claude Code doesn't currently support
+> `agents.md`, `claude.md` should be renamed to a vendor neutral standard when Claude supports it.
 
 #### Claude Code plugins
 
