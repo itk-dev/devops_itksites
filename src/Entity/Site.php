@@ -208,9 +208,7 @@ class Site extends AbstractHandlerResult implements \Stringable
         $advisories = new ArrayCollection();
         foreach ($this->installation->getPackageVersions() as $packageVersion) {
             foreach ($packageVersion->getAdvisories() as $advisory) {
-                if (!$advisories->contains($advisory)) {
-                    $advisories->add($advisory);
-                }
+                $advisories->add($advisory);
             }
         }
 
