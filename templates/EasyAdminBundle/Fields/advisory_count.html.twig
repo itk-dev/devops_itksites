@@ -1,6 +1,33 @@
 {# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
 {# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
-{% if field.formattedValue != 0 %}
+{% if ea().crud.currentAction == 'detail' %}
+    {% set advisories = entity.instance.advisories %}
+    {% if advisories|length > 0 %}
+        <table class="table table-sm table-borderless">
+            <thead>
+                <tr>
+                    <th>Package</th>
+                    <th>CVE</th>
+                    <th>Title</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for advisory in advisories %}
+                    {% set url = ea_url()
+                        .unsetAll()
+                        .setController('App\\Controller\\Admin\\AdvisoryCrudController')
+                        .setAction('detail')
+                        .setEntityId(advisory.id) %}
+                    <tr>
+                        <td>{{ advisory.package }}</td>
+                        <td><a href="{{ url }}">{{ advisory.cve ?? advisory.advisoryId }}</a></td>
+                        <td>{{ advisory.title }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% elseif field.formattedValue != 0 %}
     <span class="badge badge-danger">{{ field.formattedValue }}</span>
 {% endif %}
