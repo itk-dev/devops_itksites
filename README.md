@@ -70,6 +70,11 @@ AZURE_AZ_OIDC_REDIRECT_URI=https://itksites.local.itkdev.dk/openid-connect/gener
 ###< itk-dev/openid-connect-bundle ###
 ```
 
+> [!NOTE]
+> In the `dev` environment the main firewall security is disabled
+> (`security.yaml` → `when@dev`), so authentication is not required.
+> This is because the current AAK OIDC setup doesn't support `itksites.local.itkdev.dk`.
+
 ### Fixtures
 
 There are not implemented on
