@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#58](https://github.com/itk-dev/devops_itksites/pull/58)
   5002: Added export to everything
+- [#62](https://github.com/itk-dev/devops_itksites/pull/62)
+  6869: Add claude.md and Claude Code configuration for AI coding agents
 
 ## [1.8.10] - 2025-07-02
 

@@ -21,6 +21,21 @@ jobs:
                   docker compose exec phpfpm bin/console messenger:setup-transports failed
                   docker compose exec phpfpm bin/console doctrine:schema:validate
 
+    phpstan:
+        runs-on: ubuntu-latest
+        name: PHPStan
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+
+            - name: Create docker network
+              run: docker network create frontend
+
+            - name: Run PHPStan
+              run: |
+                  docker compose run --rm phpfpm composer install --no-interaction
+                  docker compose run --rm phpfpm vendor/bin/phpstan analyse
+
     phpunit:
         runs-on: ubuntu-latest
         name: PHP Unit tests
