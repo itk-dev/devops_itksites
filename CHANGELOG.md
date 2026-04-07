@@ -7,10 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- [#58](https://github.com/itk-dev/devops_itksites/pull/58)
-  5002: Added export to everything
+## [1.9.0] - 2026-04-07
+
+- [#64](https://github.com/itk-dev/devops_itksites/pull/64)
+  6869: Improve OpenAPI spec with descriptions, examples, and error codes
+- [#63](https://github.com/itk-dev/devops_itksites/pull/63)
+  6654: Upgrade to PHP 8.5, Symfony 8.0, EasyAdmin 5.x, DoctrineBundle 3.x, PHPUnit 13
 - [#62](https://github.com/itk-dev/devops_itksites/pull/62)
   6869: Add claude.md and Claude Code configuration for AI coding agents
+- [#58](https://github.com/itk-dev/devops_itksites/pull/58)
+  5002: Added export to everything
 
 ## [1.8.10] - 2025-07-02
 
@@ -134,7 +140,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.6.0...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.8.10...HEAD
+[1.8.10]: https://github.com/itk-dev/devops_itksites/compare/1.8.9...1.8.10
+[1.8.9]: https://github.com/itk-dev/devops_itksites/compare/1.8.8...1.8.9
+[1.8.8]: https://github.com/itk-dev/devops_itksites/compare/1.8.7...1.8.8
+[1.8.7]: https://github.com/itk-dev/devops_itksites/compare/1.8.6...1.8.7
+[1.8.6]: https://github.com/itk-dev/devops_itksites/compare/1.8.5...1.8.6
+[1.8.5]: https://github.com/itk-dev/devops_itksites/compare/1.8.4...1.8.5
+[1.8.4]: https://github.com/itk-dev/devops_itksites/compare/1.8.3...1.8.4
+[1.8.3]: https://github.com/itk-dev/devops_itksites/compare/1.8.2...1.8.3
+[1.8.2]: https://github.com/itk-dev/devops_itksites/compare/1.8.1...1.8.2
+[1.8.1]: https://github.com/itk-dev/devops_itksites/compare/1.8.0...1.8.1
+[1.8.0]: https://github.com/itk-dev/devops_itksites/compare/1.7.1...1.8.0
+[1.7.1]: https://github.com/itk-dev/devops_itksites/compare/1.7.0...1.7.1
+[1.7.0]: https://github.com/itk-dev/devops_itksites/compare/1.6.1...1.7.0
+[1.6.1]: https://github.com/itk-dev/devops_itksites/compare/1.6.0...1.6.1
 [1.6.0]: https://github.com/itk-dev/devops_itksites/compare/1.5.0...1.6.0
 [1.5.0]: https://github.com/itk-dev/devops_itksites/compare/1.4.1...1.5.0
 [1.4.1]: https://github.com/itk-dev/devops_itksites/compare/1.4.0...1.4.1
