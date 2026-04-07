@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.2] - 2026-04-07
+
+- [#67](https://github.com/itk-dev/devops_itksites/pull/67)
+  6654: Fix `#[AdminRoute] attribute error, add smoke tests for admin routes
+- 
 ## [1.9.1] - 2026-04-07
 
 - [#66](https://github.com/itk-dev/devops_itksites/pull/66)
@@ -145,7 +150,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.9.1...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.9.2...HEAD
+[1.9.2]: https://github.com/itk-dev/devops_itksites/compare/1.9.1...1.9.2
 [1.9.1]: https://github.com/itk-dev/devops_itksites/compare/1.9.0...1.9.1
 [1.9.0]: https://github.com/itk-dev/devops_itksites/compare/1.8.9...1.9.0
 [1.8.10]: https://github.com/itk-dev/devops_itksites/compare/1.8.9...1.8.10
