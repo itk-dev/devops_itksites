@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.1] - 2026-04-07
+
+- [#66](https://github.com/itk-dev/devops_itksites/pull/66)
+  6654: Downgrade to PHP 8.4, update composer dependencies
+
 ## [1.9.0] - 2026-04-07
 
 - [#64](https://github.com/itk-dev/devops_itksites/pull/64)
@@ -140,7 +145,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.8.10...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.9.1...HEAD
+[1.9.1]: https://github.com/itk-dev/devops_itksites/compare/1.9.0...1.9.1
+[1.9.0]: https://github.com/itk-dev/devops_itksites/compare/1.8.9...1.9.0
 [1.8.10]: https://github.com/itk-dev/devops_itksites/compare/1.8.9...1.8.10
 [1.8.9]: https://github.com/itk-dev/devops_itksites/compare/1.8.8...1.8.9
 [1.8.8]: https://github.com/itk-dev/devops_itksites/compare/1.8.7...1.8.8
