@@ -20,9 +20,6 @@ readonly class DirectoryHandler implements DetectionResultHandlerInterface
 {
     /**
      * DirectoryHandler constructor.
-     *
-     * @param SiteRepository $siteRepository
-     * @param InstallationFactory $installationFactory
      */
     public function __construct(
         private SiteRepository $siteRepository,
@@ -31,9 +28,6 @@ readonly class DirectoryHandler implements DetectionResultHandlerInterface
     ) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function handleResult(DetectionResult $detectionResult): void
     {
         $server = $detectionResult->getServer();
@@ -63,9 +57,6 @@ readonly class DirectoryHandler implements DetectionResultHandlerInterface
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function supportsType(string $type): bool
     {
         return DetectionType::DIRECTORY === $type;

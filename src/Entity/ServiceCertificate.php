@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ServiceCertificateRepository::class)]
@@ -17,33 +18,40 @@ class ServiceCertificate extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
+    #[Groups(['export'])]
     private ?string $domain = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
+    #[Groups(['export'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
+    #[Groups(['export'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Url]
+    #[Groups(['export'])]
     private ?string $onePasswordUrl = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotNull]
+    #[Groups(['export'])]
     private ?\DateTimeInterface $expirationTime = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Url]
+    #[Groups(['export'])]
     private ?string $usageDocumentationUrl = null;
 
     #[ORM\OneToMany(targetEntity: Service::class, mappedBy: 'certificate', cascade: ['persist'], orphanRemoval: true)]
     #[ORM\OrderBy(['type' => 'ASC'])]
     #[Assert\Valid]
+    #[Groups(['export'])]
     private Collection $services;
 
     public function __construct()

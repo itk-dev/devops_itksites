@@ -37,8 +37,6 @@ class SiteRepository extends ServiceEntityRepository
 
     /**
      * Get unique primary domains from existing sites.
-     *
-     * @return array
      */
     public function getPrimaryDomains(): array
     {

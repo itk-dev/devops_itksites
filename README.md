@@ -6,7 +6,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/itk-dev/devops_itksites?style=flat-square&logo=codecov)](https://codecov.io/gh/itk-dev/devops_itksites)
 [![GitHub last commit](https://img.shields.io/github/last-commit/itk-dev/devops_itksites?style=flat-square)](https://github.com/itk-dev/devops_itksites/commits/develop/)
 [![GitHub License](https://img.shields.io/github/license/itk-dev/devops_itksites?style=flat-square)](https://github.com/itk-dev/devops_itksites/blob/develop/LICENSE)
-
+[![claude.md](https://img.shields.io/badge/%F0%9F%A4%96_claude.md-AI%20ready-8A2BE2?style=flat-square)](https://github.com/itk-dev/devops_itksites/blob/develop/claude.md)
 
 This is our internal server and site registration tool. It works in tandem with our
 [ITK sites server harvester](https://github.com/itk-dev/devops_itkServerHarvest).
@@ -15,21 +15,24 @@ information about sites and installations running on the server. These are sent 
 `DetectionResults` to ITKsites where they are analysed and processed.
 
 This allows us to monitor
-* What is installed and running
-* Which sites/domains we are hosting
-* What docker images we are running
-* What packages and modules we are running
-* If there are known CVE's for the packages/modules
-* What git repositories we are hosting
+
+- What is installed and running
+- Which sites/domains we are hosting
+- What docker images we are running
+- What packages and modules we are running
+- If there are known CVE's for the packages/modules
+- What git repositories we are hosting
 
 Additionally we can register and document
-* All OpenID Connect setups
-* All Services Certificates
+
+- All OpenID Connect setups
+- All Services Certificates
 
 Servers, OpenID Connect setups, Services Certificates must be created and maintained manually.
 All other information is kept up to date by analysing the DetectionResults.
 
 ## Architecture
+
 This is a Symfony 6 project build with api-platform 3.x and EasyAdmin.
 
 Api-platform provides a simple REST api for POST'ing the DetectionResults.
@@ -54,6 +57,7 @@ docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interact
 Then create a `.env.local` file to set secrets for your local setup.
 
 ### OpenID Connect
+
 All users access is controlled by OpenID Connect. For local development you must
 add the following to your `.env.local` file:
 
@@ -66,13 +70,18 @@ AZURE_AZ_OIDC_REDIRECT_URI=https://itksites.local.itkdev.dk/openid-connect/gener
 ###< itk-dev/openid-connect-bundle ###
 ```
 
+> [!NOTE]
+> In the `dev` environment the main firewall security is disabled
+> (`security.yaml` → `when@dev`), so authentication is not required.
+> This is because the current AAK OIDC setup doesn't support `itksites.local.itkdev.dk`.
+
 ### Fixtures
 
 There are not implemented on
 
-* sites
-* installations
-* domains
+- sites
+- installations
+- domains
 
 This is due to automated processes and scripts that listen from sites and data
 is therefore not relevant to have. The architecture makes it possible to delete
@@ -94,11 +103,13 @@ docker compose exec phpfpm bin/console itk-dev:openid-connect:login admin@exampl
 
 All processing of Detctionresults is done in a series of message handlers. To
 run these do either:
+
 ```shell
 docker compose exec phpfpm composer queues
 ```
 
 or
+
 ```shell
 docker compose exec phpfpm bin/console messenger:consume async --failure-limit=1 -vvv
 ```
@@ -125,3 +136,75 @@ during development to automatically rebuild assets when source files change.
 ```sh
 docker compose run --rm node yarn coding-standards-check
 ```
+
+### 🤖 AI coding agents
+
+This project includes an [`claude.md`](claude.md) file that provides project
+context for Claude Code. The file describes the project architecture,
+technology stack, development commands, CI/CD setup, and coding conventions.
+
+Tool-specific configuration (permissions, hooks, plugins) lives in `.claude/`
+and is not portable across tools.
+
+> [!NOTE]
+> `agents.md` is a vendor-neutral standard supported by tools such as
+> [OpenCode](https://opencode.ai/) and others. Claude Code doesn't currently support
+> `agents.md`, `claude.md` should be renamed to a vendor neutral standard when Claude supports it.
+
+#### Claude Code plugins
+
+The following plugins are enabled in `.claude/settings.json`:
+
+| Plugin              | Purpose                                                                     | Source                                                                       |
+| ------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `php-lsp`           | PHP language server for type-aware code intelligence                        | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
+| `context7`          | Up-to-date documentation lookup for Symfony, Doctrine, API Platform, etc.   | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
+| `code-review`       | Pull request code review                                                    | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
+| `code-simplifier`   | Suggests clarity and maintainability improvements                           | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
+| `security-guidance` | Flags potential security issues (OWASP, injection, etc.)                    | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
+| `playwright`        | Browser automation for debugging and testing the EasyAdmin UI               | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
+| `feature-dev`       | Guided feature development with codebase exploration and architecture focus | [claude-plugins-official](https://github.com/anthropics/claude-code-plugins) |
+
+> **Note:** The `php-lsp` plugin requires [Intelephense](https://intelephense.com/)
+> installed globally: `npm install -g intelephense`. All other plugins work
+> without additional dependencies.
+
+#### Claude Code agents
+
+Custom agents in `.claude/agents/` automate multi-step workflows:
+
+| Agent              | Purpose                                                           |
+| ------------------ | ----------------------------------------------------------------- |
+| `pr-readiness`     | Runs all CI-equivalent checks locally before creating a PR        |
+| `create-migration` | Generates and validates a Doctrine migration after entity changes |
+
+#### Claude Code skills
+
+Custom skills in `.claude/skills/` provide repeatable task shortcuts:
+
+| Skill             | Invocation         | Purpose                                               |
+| ----------------- | ------------------ | ----------------------------------------------------- |
+| `update-api-spec` | `/update-api-spec` | Regenerate and stage OpenAPI spec files after changes |
+
+#### Claude Code hooks
+
+Hooks in `.claude/settings.json` run automatically on tool events:
+
+| Hook           | Trigger        | Purpose                                                |
+| -------------- | -------------- | ------------------------------------------------------ |
+| Docker start   | `SessionStart` | Starts Docker services on session start                |
+| PHP-CS-Fixer   | `PostToolUse`  | Auto-formats PHP files on edit                         |
+| PHPStan        | `PostToolUse`  | Runs static analysis on edited PHP files               |
+| Twig-CS-Fixer  | `PostToolUse`  | Auto-formats Twig templates on edit                    |
+| Composer norm  | `PostToolUse`  | Normalizes `composer.json` on edit                     |
+| Prettier       | `PostToolUse`  | Auto-formats JS, CSS, YAML, and Markdown files on edit |
+| Lock guard     | `PreToolUse`   | Blocks edits to lock files and `.env.local`            |
+| Container lint | `Stop`         | Validates Symfony DI container before stopping         |
+
+#### MCP servers
+
+A shared `.mcp.json` provides team-wide MCP server configuration:
+
+| Server     | Purpose                                                                   |
+| ---------- | ------------------------------------------------------------------------- |
+| `context7` | Live documentation lookup for Symfony, Doctrine, API Platform, and others |

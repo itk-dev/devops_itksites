@@ -9,8 +9,8 @@ use App\Types\SiteType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SiteRepository::class)]
@@ -167,8 +167,6 @@ class Site extends AbstractHandlerResult implements \Stringable
      * these domains the first is the primary:
      * - 360.aarhuskommune.dk
      * - 360.aarhuskommune.dk.srvitkphp74.itkdev.dk
-     *
-     * @return void
      */
     private function updatePrimaryDomain(): void
     {

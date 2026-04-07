@@ -9,6 +9,7 @@ use App\Types\FrameworkTypes;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: InstallationRepository::class)]
 #[ORM\AssociationOverrides([
@@ -26,21 +27,27 @@ class Installation extends AbstractHandlerResult implements \Stringable
     private Collection $sites;
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    #[Groups(['export'])]
     private ?string $type = 'unknown';
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    #[Groups(['export'])]
     private ?string $phpVersion = 'unknown';
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    #[Groups(['export'])]
     private ?string $composerVersion = 'unknown';
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    #[Groups(['export'])]
     private ?string $frameworkVersion = FrameworkTypes::UNKNOWN;
 
     #[ORM\Column(type: 'boolean')]
+    #[Groups(['export'])]
     private bool $lts = false;
 
     #[ORM\Column(type: 'string', length: 30)]
+    #[Groups(['export'])]
     private string $eol = '';
 
     #[ORM\Column(type: 'text')]

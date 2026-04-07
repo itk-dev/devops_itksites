@@ -34,6 +34,7 @@ class ServiceType extends AbstractType
             ])
             ->add('onePasswordUrl', UrlType::class, [
                 'label' => new TranslatableMessage('1Password url'),
+                'default_protocol' => 'https',
             ])
         ;
     }

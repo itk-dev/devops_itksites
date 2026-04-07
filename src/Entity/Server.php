@@ -9,8 +9,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ServerRepository::class)]
@@ -107,12 +107,6 @@ class Server extends AbstractBaseEntity implements UserInterface, \Stringable
     public function getRoles(): array
     {
         return self::ROLES;
-    }
-
-    #[\Deprecated]
-    public function eraseCredentials(): void
-    {
-        // Deprecated: since Symfony 7.3, erase credentials using the "__serialize()" method instead
     }
 
     public function getUserIdentifier(): string

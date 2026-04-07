@@ -47,7 +47,7 @@ trait ExportCrudControllerTrait
 
         assert($this instanceof AbstractCrudController);
         // Lifted from self::index().
-        $fields = FieldCollection::new($this->configureFields(Crud::PAGE_INDEX));
+        $fields = new FieldCollection($this->configureFields(Crud::PAGE_INDEX));
         $context->getCrud()->setFieldAssets($this->getFieldAssets($fields));
         $filters = $this->filterFactory->create($context->getCrud()->getFiltersConfig(), $fields,
             $context->getEntity());

@@ -11,7 +11,7 @@ use App\Admin\Field\ServerTypeField;
 use App\Admin\Field\VersionField;
 use App\Entity\Installation;
 use App\Form\Type\Admin\FrameworkFilter;
-use App\Form\Type\Admin\SystemFilter;
+use App\Trait\ExportCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -24,6 +24,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 
 class InstallationCrudController extends AbstractCrudController
 {
+    use ExportCrudControllerTrait;
+
     public static function getEntityFqcn(): string
     {
         return Installation::class;
@@ -40,6 +42,7 @@ class InstallationCrudController extends AbstractCrudController
     {
         return $actions
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_INDEX, $this->createExportAction())
             ->remove(Crud::PAGE_INDEX, Action::NEW)
             ->remove(Crud::PAGE_INDEX, Action::EDIT)
             ->remove(Crud::PAGE_INDEX, Action::DELETE)

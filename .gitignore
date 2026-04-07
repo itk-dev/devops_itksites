@@ -30,3 +30,5 @@ yarn-error.log
 phpstan.neon
 ###< phpstan/phpstan ###
 .phpunit.cache
+.twig-cs-fixer.cache
+.playwright-mcp

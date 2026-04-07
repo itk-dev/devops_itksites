@@ -16,9 +16,6 @@ final readonly class DetectionResultHandler
 {
     /**
      * DetectionResultHandler constructor.
-     *
-     * @param Security $security
-     * @param MessageBusInterface $messageBus
      */
     public function __construct(
         private Security $security,

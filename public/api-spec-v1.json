@@ -1,13 +1,13 @@
 {
     "openapi": "3.1.0",
     "info": {
-        "title": "",
-        "description": "",
-        "version": "0.0.0"
+        "title": "ITKsites Detection API",
+        "description": "REST API for ingesting server detection results from the ITK sites server harvester. Detection results are processed asynchronously to track servers, sites, domains, packages, modules, Docker images, and git repositories.",
+        "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "/",
+            "url": "https://itksites.local.itkdev.dk",
             "description": ""
         }
     ],
@@ -20,19 +20,11 @@
                 ],
                 "responses": {
                     "202": {
-                        "description": "DetectionResult resource created",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            },
-                            "application/ld+json": {
-                                "schema": {}
-                            }
-                        },
+                        "description": "Detection result accepted for processing",
                         "links": {}
                     },
                     "400": {
-                        "description": "Invalid input",
+                        "description": "Invalid input \u2014 malformed request body",
                         "content": {
                             "application/ld+json": {
                                 "schema": {
@@ -52,30 +44,36 @@
                         },
                         "links": {}
                     },
+                    "401": {
+                        "description": "Unauthorized \u2014 missing or invalid API key. The Authorization header must use the format: Apikey {key}"
+                    },
+                    "403": {
+                        "description": "Forbidden \u2014 the authenticated server does not have the required ROLE_SERVER role"
+                    },
                     "422": {
-                        "description": "An error occurred",
+                        "description": "Validation error \u2014 one or more fields failed constraint validation",
                         "content": {
                             "application/ld+json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld-jsonld"
+                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
                                 }
                             },
                             "application/problem+json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ConstraintViolation-json"
+                                    "$ref": "#/components/schemas/ConstraintViolation"
                                 }
                             },
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ConstraintViolation-json"
+                                    "$ref": "#/components/schemas/ConstraintViolation"
                                 }
                             }
                         },
                         "links": {}
                     }
                 },
-                "summary": "Creates a DetectionResult resource.",
-                "description": "Creates a DetectionResult resource.",
+                "summary": "Submit a detection result for async processing",
+                "description": "Accepts a detection result from the server harvester and queues it for asynchronous processing. The result is deduplicated by content hash \u2014 identical submissions update the last contact timestamp without triggering reprocessing. Returns 202 Accepted with an empty body.",
                 "parameters": [],
                 "requestBody": {
                     "description": "The new DetectionResult resource",
@@ -92,21 +90,18 @@
                         }
                     },
                     "required": true
-                },
-                "deprecated": false
+                }
             }
         }
     },
     "components": {
         "schemas": {
-            "ConstraintViolation-json": {
+            "ConstraintViolation": {
                 "type": "object",
                 "description": "Unprocessable entity",
-                "deprecated": false,
                 "properties": {
                     "status": {
                         "default": 422,
-                        "example": 422,
                         "type": "integer"
                     },
                     "violations": {
@@ -121,8 +116,25 @@
                                 "message": {
                                     "type": "string",
                                     "description": "The message associated with the violation"
+                                },
+                                "code": {
+                                    "type": "string",
+                                    "description": "The code of the violation"
+                                },
+                                "hint": {
+                                    "type": "string",
+                                    "description": "An extra hint to understand the violation"
+                                },
+                                "payload": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "The serialized payload of the violation"
                                 }
-                            }
+                            },
+                            "required": [
+                                "propertyPath",
+                                "message"
+                            ]
                         }
                     },
                     "detail": {
@@ -149,14 +161,12 @@
                     }
                 }
             },
-            "ConstraintViolation.jsonld-jsonld": {
+            "ConstraintViolation.jsonld": {
                 "type": "object",
                 "description": "Unprocessable entity",
-                "deprecated": false,
                 "properties": {
                     "status": {
                         "default": 422,
-                        "example": 422,
                         "type": "integer"
                     },
                     "violations": {
@@ -171,8 +181,25 @@
                                 "message": {
                                     "type": "string",
                                     "description": "The message associated with the violation"
+                                },
+                                "code": {
+                                    "type": "string",
+                                    "description": "The code of the violation"
+                                },
+                                "hint": {
+                                    "type": "string",
+                                    "description": "An extra hint to understand the violation"
+                                },
+                                "payload": {
+                                    "type": "object",
+                                    "additionalProperties": true,
+                                    "description": "The serialized payload of the violation"
                                 }
-                            }
+                            },
+                            "required": [
+                                "propertyPath",
+                                "message"
+                            ]
                         }
                     },
                     "detail": {
@@ -205,22 +232,27 @@
             },
             "DetectionResult-write": {
                 "type": "object",
-                "description": "",
-                "deprecated": false,
                 "properties": {
                     "type": {
-                        "default": "",
-                        "example": "",
-                        "type": "string"
+                        "enum": [
+                            "dir",
+                            "docker",
+                            "drupal",
+                            "git",
+                            "nginx",
+                            "symfony"
+                        ]
                     },
                     "rootDir": {
+                        "description": "Absolute path to the root directory of the detected installation on the server",
                         "default": "",
-                        "example": "",
+                        "example": "/data/www/example-site/htdocs",
                         "type": "string"
                     },
                     "data": {
+                        "description": "JSON-encoded payload from the server harvester containing the detection details. Structure varies by type.",
                         "default": "",
-                        "example": "",
+                        "example": "{\"packages\":{\"symfony/framework-bundle\":{\"version\":\"7.2.1\"}}}",
                         "type": "string"
                     }
                 }
@@ -228,7 +260,6 @@
             "Error": {
                 "type": "object",
                 "description": "A representation of common errors.",
-                "deprecated": false,
                 "properties": {
                     "title": {
                         "readOnly": true,
@@ -247,7 +278,10 @@
                         ]
                     },
                     "status": {
-                        "type": "number",
+                        "type": [
+                            "number",
+                            "null"
+                        ],
                         "examples": [
                             404
                         ],
@@ -271,7 +305,6 @@
             "Error.jsonld": {
                 "type": "object",
                 "description": "A representation of common errors.",
-                "deprecated": false,
                 "properties": {
                     "title": {
                         "readOnly": true,
@@ -290,7 +323,10 @@
                         ]
                     },
                     "status": {
-                        "type": "number",
+                        "type": [
+                            "number",
+                            "null"
+                        ],
                         "examples": [
                             404
                         ],
@@ -327,7 +363,7 @@
         "securitySchemes": {
             "apiKey": {
                 "type": "apiKey",
-                "description": "Value for the Authorization header parameter.",
+                "description": "Server API key. Use the format: Apikey {your-api-key}",
                 "name": "Authorization",
                 "in": "header"
             }
@@ -340,7 +376,8 @@
     ],
     "tags": [
         {
-            "name": "DetectionResult"
+            "name": "DetectionResult",
+            "description": "Resource 'DetectionResult' operations."
         }
     ],
     "webhooks": {}
