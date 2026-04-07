@@ -1,4 +1,8 @@
 api_platform:
+    title: 'ITKsites Detection API'
+    description: 'REST API for ingesting server detection results from the ITK sites server harvester. Detection results are processed asynchronously to track servers, sites, domains, packages, modules, Docker images, and git repositories.'
+    version: '1.0.0'
+
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     formats:
