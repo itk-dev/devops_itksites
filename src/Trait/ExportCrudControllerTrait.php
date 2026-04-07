@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Trait;
 
 use App\Service\Exporter;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -39,6 +40,7 @@ trait ExportCrudControllerTrait
             ->linkToCrudAction('export');
     }
 
+    #[AdminRoute]
     public function export(AdminContext $context): Response
     {
         if (!isset($this->exporter)) {
