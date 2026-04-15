@@ -200,7 +200,10 @@ class Site extends AbstractHandlerResult implements \Stringable
         return $this;
     }
 
-    public function getAdvisoryCount(): int
+    /**
+     * @return Collection<int, Advisory>
+     */
+    public function getAdvisories(): Collection
     {
         $advisories = new ArrayCollection();
         foreach ($this->installation->getPackageVersions() as $packageVersion) {
@@ -209,6 +212,11 @@ class Site extends AbstractHandlerResult implements \Stringable
             }
         }
 
-        return $advisories->count();
+        return $advisories;
+    }
+
+    public function getAdvisoryCount(): int
+    {
+        return $this->getAdvisories()->count();
     }
 }

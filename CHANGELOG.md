@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#68](https://github.com/itk-dev/devops_itksites/pull/68)
+  6667: Update advisories on Detailed site display
+
 ## [1.9.2] - 2026-04-07
 
 - [#67](https://github.com/itk-dev/devops_itksites/pull/67)
