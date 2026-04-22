@@ -190,6 +190,25 @@ class Advisory extends AbstractBaseEntity implements \Stringable
         return $this;
     }
 
+    /**
+     * @return Collection<int, Site>
+     */
+    public function getSites(): Collection
+    {
+        $sites = new ArrayCollection();
+        foreach ($this->packageVersions as $packageVersion) {
+            foreach ($packageVersion->getInstallations() as $installation) {
+                foreach ($installation->getSites() as $site) {
+                    if (!$sites->contains($site)) {
+                        $sites->add($site);
+                    }
+                }
+            }
+        }
+
+        return $sites;
+    }
+
     public function getPackage(): ?Package
     {
         return $this->package;
