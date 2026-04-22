@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\AffectedSitesField;
 use App\Admin\Field\SourcesField;
 use App\Admin\Field\TextMonospaceField;
 use App\Entity\Advisory;
@@ -58,6 +59,7 @@ class AdvisoryCrudController extends AbstractCrudController
         yield DateField::new('reportedAt')->setColumns(6)->onlyOnIndex();
         yield DateTimeField::new('reportedAt')->setColumns(6)->onlyOnDetail();
         yield SourcesField::new('sourceLinks')->setColumns(6)->onlyOnDetail();
+        yield AffectedSitesField::new('sites')->setLabel('Affected Sites');
     }
 
     #[\Override]
