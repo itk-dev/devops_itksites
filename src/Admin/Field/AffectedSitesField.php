@@ -8,7 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
 use Symfony\Contracts\Translation\TranslatableInterface;
 
-class AdvisoryCountField implements FieldInterface
+class AffectedSitesField implements FieldInterface
 {
     use FieldTrait;
 
@@ -17,8 +17,6 @@ class AdvisoryCountField implements FieldInterface
         return new self()
             ->setProperty($propertyName)
             ->setLabel($label)
-
-            // this template is used in 'index' and 'detail' pages
-            ->setTemplatePath('EasyAdminBundle/Fields/advisories.html.twig');
+            ->setTemplatePath('EasyAdminBundle/Fields/affected_sites.html.twig');
     }
 }

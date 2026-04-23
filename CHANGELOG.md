@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-04-23
+
+- [#68](https://github.com/itk-dev/devops_itksites/pull/68)
+  6667: Update advisories on Detailed site display
+
+- [#68](https://github.com/itk-dev/devops_itksites/pull/68)
+  6667: Show sites affected on advisories.
+
 ## [1.9.2] - 2026-04-07
 
 - [#67](https://github.com/itk-dev/devops_itksites/pull/67)
@@ -151,7 +159,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.9.2...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.10.0...HEAD
+[1.10.0]: https://github.com/itk-dev/devops_itksites/compare/1.9.2...1.10.0
 [1.9.2]: https://github.com/itk-dev/devops_itksites/compare/1.9.1...1.9.2
 [1.9.1]: https://github.com/itk-dev/devops_itksites/compare/1.9.0...1.9.1
 [1.9.0]: https://github.com/itk-dev/devops_itksites/compare/1.8.9...1.9.0
