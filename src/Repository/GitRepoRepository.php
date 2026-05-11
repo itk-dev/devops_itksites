@@ -9,7 +9,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<GitTagRepository>
+ * @extends ServiceEntityRepository<GitRepo>
  *
  * @method GitRepo|null find($id, $lockMode = null, $lockVersion = null)
  * @method GitRepo|null findOneBy(array $criteria, array $orderBy = null)
