@@ -7,10 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Update composer dependencies
-- Fix PHPDoc typo in `GitRepoRepository` (`GitTagRepository` → `GitRepo`) caught
-  by updated PHPStan
-- Regenerate API spec (`number` → `integer` for status fields)
+## [1.10.1] - 2026-05-11
+
+- [#71](https://github.com/itk-dev/devops_itksites/pull/71)
+  Update composer dependencies
 
 ## [1.10.0] - 2026-04-23
 
