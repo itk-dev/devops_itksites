@@ -46,7 +46,7 @@ class SemverFilterType extends AbstractType
             ])
             ->add('value2', TextType::class, [
                 'required' => false,
-                'attr' => ['placeholder' => 'upper bound (when between)'],
+                'attr' => ['placeholder' => 'upper bound (optional, makes it a range)'],
             ])
         ;
     }
