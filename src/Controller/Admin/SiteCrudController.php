@@ -12,6 +12,7 @@ use App\Admin\Field\ServerTypeField;
 use App\Admin\Field\SiteTypeField;
 use App\Admin\Field\VersionField;
 use App\Entity\Site;
+use App\Form\Type\Admin\SemverFilter;
 use App\Trait\ExportCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -76,7 +77,7 @@ class SiteCrudController extends AbstractCrudController
         return $filters
             ->add('primaryDomain')
             ->add('configFilePath')
-            ->add('phpVersion')
+            ->add(SemverFilter::new('phpVersion', 'PHP'))
             ->add('server');
     }
 }

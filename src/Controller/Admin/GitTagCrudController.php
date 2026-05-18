@@ -6,6 +6,7 @@ namespace App\Controller\Admin;
 
 use App\Admin\Field\VersionField;
 use App\Entity\GitTag;
+use App\Form\Type\Admin\SemverFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -54,7 +55,7 @@ class GitTagCrudController extends AbstractCrudController
     {
         return $filters
             ->add('repo')
-            ->add('tag')
+            ->add(SemverFilter::new('tag'))
         ;
     }
 }

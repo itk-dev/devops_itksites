@@ -6,6 +6,7 @@ namespace App\Controller\Admin;
 
 use App\Admin\Field\VersionField;
 use App\Entity\DockerImageTag;
+use App\Form\Type\Admin\SemverFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -53,7 +54,7 @@ class DockerImageTagCrudController extends AbstractCrudController
     {
         return $filters
             ->add('dockerImage')
-            ->add('tag')
+            ->add(SemverFilter::new('tag'))
         ;
     }
 }

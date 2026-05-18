@@ -6,6 +6,7 @@ namespace App\Controller\Admin;
 
 use App\Admin\Field\VersionField;
 use App\Entity\ModuleVersion;
+use App\Form\Type\Admin\SemverFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -51,7 +52,7 @@ class ModuleVersionCrudController extends AbstractCrudController
     {
         return $filters
             ->add('module')
-            ->add('version')
+            ->add(SemverFilter::new('version'))
         ;
     }
 }
