@@ -11,8 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `frameworkVersion` and `composerVersion`, PackageVersion `version` and
   `latest`, ModuleVersion `version`, Site `phpVersion`, GitTag `tag`,
   DockerImageTag `tag`) so the admin can filter with `=, !=, >, >=, <, <=`
-  using semver order instead of lexicographic string comparison. Values
-  with a leading `v`/`V` (e.g. `v5.5.40`) are accepted; non-semver values
+  or by an inclusive/exclusive range (`between (inclusive)` / `between
+  (exclusive)`) using semver order instead of lexicographic string
+  comparison. Values with a leading `v`/`V` (e.g. `v5.5.40`) are accepted;
+  non-semver values
   are excluded from results when the filter is active.
 
 ## [1.10.1] - 2026-05-11

@@ -29,16 +29,28 @@ class SemverFilter implements FilterInterface
     public function apply(QueryBuilder $queryBuilder, FilterDataDto $filterDataDto, ?FieldDto $fieldDto, EntityDto $entityDto): void
     {
         // EasyAdmin's FilterDataDto splits the compound form: getValue() returns
-        // the "value" field as a scalar, and getComparison() returns the operator.
+        // the "value" field as a scalar, getComparison() returns the operator,
+        // and getValue2() returns the optional second value (used for between).
         $value = trim((string) $filterDataDto->getValue());
+        $value2 = trim((string) $filterDataDto->getValue2());
         $comparison = $filterDataDto->getComparison();
 
-        if ('' === $value || !isset(SemverFilterType::COMPARISON_CHOICES[$comparison])) {
+        if ('' === $value || !in_array($comparison, SemverFilterType::COMPARISON_CHOICES, true)) {
+            return;
+        }
+
+        $isRange = SemverFilterType::COMPARISON_BETWEEN === $comparison
+            || SemverFilterType::COMPARISON_BETWEEN_EXCLUSIVE === $comparison;
+        if ($isRange && '' === $value2) {
             return;
         }
 
         try {
-            new VersionParser()->normalize($value);
+            $parser = new VersionParser();
+            $parser->normalize($value);
+            if ($isRange) {
+                $parser->normalize($value2);
+            }
         } catch (\UnexpectedValueException) {
             $queryBuilder->andWhere('1 = 0');
 
@@ -57,6 +69,27 @@ class SemverFilter implements FilterInterface
         // Doctrine would emit the placeholder five times (the function
         // references its argument five times) and PDO would complain about
         // bound-variable count.
+        if ($isRange) {
+            [$lowerOp, $upperOp] = SemverFilterType::COMPARISON_BETWEEN === $comparison
+                ? ['>=', '<=']
+                : ['>', '<'];
+
+            $queryBuilder
+                ->andWhere(sprintf(
+                    'SEMVER_NUMERIC(%1$s.%2$s) %3$s :%4$s_min AND SEMVER_NUMERIC(%1$s.%2$s) %5$s :%4$s_max',
+                    $alias,
+                    $property,
+                    $lowerOp,
+                    $parameter,
+                    $upperOp,
+                ))
+                ->setParameter($parameter.'_min', self::toSemverNumeric($value))
+                ->setParameter($parameter.'_max', self::toSemverNumeric($value2))
+            ;
+
+            return;
+        }
+
         $queryBuilder
             ->andWhere(sprintf(
                 'SEMVER_NUMERIC(%1$s.%2$s) %3$s :%4$s',

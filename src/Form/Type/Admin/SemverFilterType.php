@@ -18,6 +18,8 @@ class SemverFilterType extends AbstractType
     public const string COMPARISON_GTE = '>=';
     public const string COMPARISON_LT = '<';
     public const string COMPARISON_LTE = '<=';
+    public const string COMPARISON_BETWEEN = 'between';
+    public const string COMPARISON_BETWEEN_EXCLUSIVE = 'between_exclusive';
 
     public const array COMPARISON_CHOICES = [
         '=' => self::COMPARISON_EQ,
@@ -26,6 +28,8 @@ class SemverFilterType extends AbstractType
         '>=' => self::COMPARISON_GTE,
         '<' => self::COMPARISON_LT,
         '<=' => self::COMPARISON_LTE,
+        'between (inclusive)' => self::COMPARISON_BETWEEN,
+        'between (exclusive)' => self::COMPARISON_BETWEEN_EXCLUSIVE,
     ];
 
     #[\Override]
@@ -39,6 +43,10 @@ class SemverFilterType extends AbstractType
             ->add('value', TextType::class, [
                 'required' => false,
                 'attr' => ['placeholder' => 'e.g. 10.0.0'],
+            ])
+            ->add('value2', TextType::class, [
+                'required' => false,
+                'attr' => ['placeholder' => 'upper bound (when between)'],
             ])
         ;
     }

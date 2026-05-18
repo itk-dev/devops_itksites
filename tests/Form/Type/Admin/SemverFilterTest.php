@@ -59,6 +59,49 @@ class SemverFilterTest extends KernelTestCase
         self::assertStringContainsString('1 = 0', $qb->getDQL(), 'Invalid user input must produce a 0-row query');
     }
 
+    public function testApplyHandlesExclusiveBetween(): void
+    {
+        $qb = $this->makeInstallationQueryBuilder();
+
+        $this->apply($qb, 'between_exclusive', '10', '11.3');
+
+        $dql = $qb->getDQL();
+        self::assertStringContainsString('SEMVER_NUMERIC(entity.frameworkVersion) > :frameworkVersion_0_min', $dql, 'Exclusive range must use > on the lower bound');
+        self::assertStringContainsString('SEMVER_NUMERIC(entity.frameworkVersion) < :frameworkVersion_0_max', $dql, 'Exclusive range must use < on the upper bound');
+        self::assertSame(10_000_000_000_000, $qb->getParameter('frameworkVersion_0_min')?->getValue());
+        self::assertSame(11_000_300_000_000, $qb->getParameter('frameworkVersion_0_max')?->getValue());
+    }
+
+    public function testApplyHandlesInclusiveBetween(): void
+    {
+        $qb = $this->makeInstallationQueryBuilder();
+
+        $this->apply($qb, 'between', '10', '11.3');
+
+        $dql = $qb->getDQL();
+        self::assertStringContainsString('SEMVER_NUMERIC(entity.frameworkVersion) >= :frameworkVersion_0_min', $dql, 'Inclusive range must use >= on the lower bound');
+        self::assertStringContainsString('SEMVER_NUMERIC(entity.frameworkVersion) <= :frameworkVersion_0_max', $dql, 'Inclusive range must use <= on the upper bound');
+    }
+
+    public function testApplyReturnsEarlyForRangeWithoutUpperBound(): void
+    {
+        $qb = $this->makeInstallationQueryBuilder();
+        $dqlBefore = $qb->getDQL();
+
+        $this->apply($qb, 'between', '10', '');
+
+        self::assertSame($dqlBefore, $qb->getDQL(), 'Missing upper bound on a range filter must be a no-op');
+    }
+
+    public function testApplyShortCircuitsRangeOnInvalidUpperBound(): void
+    {
+        $qb = $this->makeInstallationQueryBuilder();
+
+        $this->apply($qb, 'between_exclusive', '10', 'oops');
+
+        self::assertStringContainsString('1 = 0', $qb->getDQL(), 'Invalid upper-bound input must produce a 0-row query');
+    }
+
     /**
      * @return iterable<string, array{string, string, int}>
      */
@@ -70,7 +113,7 @@ class SemverFilterTest extends KernelTestCase
         yield 'v-prefix accepted' => ['<=', 'v5.5.40', 5_000_500_400_000];
     }
 
-    private function apply(QueryBuilder $qb, string $comparison, string $userValue): void
+    private function apply(QueryBuilder $qb, string $comparison, string $userValue, string $userValue2 = ''): void
     {
         $filterDto = new FilterDto();
         $filterDto->setProperty('frameworkVersion');
@@ -81,6 +124,7 @@ class SemverFilterTest extends KernelTestCase
             FilterDataDto::new(0, $filterDto, 'entity', [
                 'comparison' => $comparison,
                 'value' => $userValue,
+                'value2' => $userValue2,
             ]),
             null,
             new EntityDto(Installation::class, $this->getEntityManager()->getClassMetadata(Installation::class)),
