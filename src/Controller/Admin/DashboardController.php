@@ -20,9 +20,6 @@ class DashboardController extends AbstractDashboardController
     public function __construct(
         private readonly AdminUrlGenerator $adminUrlGenerator,
         private readonly AdvisoryRepository $advisoryRepository,
-        private readonly ServiceCertificateRepository $serviceCertificateRepository,
-        private readonly OIDCRepository $oidcRepository,
-        private readonly SecurityContractRepository $securityContractRepository,
     ) {
     }
 
