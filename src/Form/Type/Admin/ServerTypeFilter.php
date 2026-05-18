@@ -18,7 +18,7 @@ class ServerTypeFilter implements FilterInterface
 
     public static function new(string $propertyName, false|string|TranslatableInterface|null $label = null): self
     {
-        return (new self())
+        return new self()
             ->setFilterFqcn(self::class)
             ->setProperty($propertyName)
             ->setLabel($label)

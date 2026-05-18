@@ -34,7 +34,7 @@ readonly class NginxHandler implements DetectionResultHandlerInterface
             $data = \json_decode($detectionResult->getData(), false, 512, JSON_THROW_ON_ERROR);
 
             // Nginx 'default' sites should not be indexed.
-            if (str_ends_with($data->config, self::NGINX_DEFAULT)) {
+            if (str_ends_with((string) $data->config, self::NGINX_DEFAULT)) {
                 return;
             }
 

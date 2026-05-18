@@ -38,12 +38,12 @@
         "version": "v0.5.3"
     },
     "doctrine/doctrine-bundle": {
-        "version": "2.13",
+        "version": "3.2",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "2.10",
-            "ref": "c170ded8fc587d6bd670550c43dafcf093762245"
+            "version": "3.0",
+            "ref": "18ee08e513ba0303fd09a01fc1c934870af06ffa"
         },
         "files": [
             "config/packages/doctrine.yaml",
@@ -202,15 +202,6 @@
     },
     "php-cs-fixer/diff": {
         "version": "v2.0.2"
-    },
-    "phpdocumentor/reflection-common": {
-        "version": "2.2.0"
-    },
-    "phpdocumentor/reflection-docblock": {
-        "version": "5.3.0"
-    },
-    "phpdocumentor/type-resolver": {
-        "version": "1.6.0"
     },
     "phpspec/prophecy": {
         "version": "v1.15.0"
@@ -694,7 +685,7 @@
         "version": "v3.3.8"
     },
     "vincentlanglet/twig-cs-fixer": {
-        "version": "3.10",
+        "version": "3.14",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
             "branch": "main",

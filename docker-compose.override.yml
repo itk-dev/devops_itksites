@@ -9,7 +9,7 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=user
       - RABBITMQ_DEFAULT_PASS=password
-      - RABBITMQ_ERLANG_COOKIE='d53f219cd9376f8f440aaf9889f315ab'
+      - RABBITMQ_ERLANG_COOKIE='local-dev-cookie-not-a-secret'
     healthcheck:
       test: rabbitmq-diagnostics check_port_connectivity
       interval: 1s
@@ -17,7 +17,9 @@ services:
       retries: 30
 
   node:
-    image: node:20
+    profiles:
+      - dev
+    image: node:24
     volumes:
       - .:/app
     working_dir: /app

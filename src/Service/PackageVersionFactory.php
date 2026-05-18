@@ -28,7 +28,7 @@ class PackageVersionFactory
     {
         $packageVersions = new ArrayCollection();
         foreach ($installedPackages as $installed) {
-            [$vendor, $name] = explode('/', $installed->name);
+            [$vendor, $name] = explode('/', (string) $installed->name);
 
             $package = $this->getPackage($vendor, $name);
 

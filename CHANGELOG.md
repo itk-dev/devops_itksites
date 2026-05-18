@@ -12,7 +12,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Update phpunit from 11 to 12
   - Update ITK docker template
   - Update github actions workflows
-  
+
+## [1.10.1] - 2026-05-11
+
+- [#71](https://github.com/itk-dev/devops_itksites/pull/71)
+  Update composer dependencies
+
+## [1.10.0] - 2026-04-23
+
+- [#68](https://github.com/itk-dev/devops_itksites/pull/68)
+  6667: Update advisories on Detailed site display
+
+- [#68](https://github.com/itk-dev/devops_itksites/pull/68)
+  6667: Show sites affected on advisories.
+
+## [1.9.2] - 2026-04-07
+
+- [#67](https://github.com/itk-dev/devops_itksites/pull/67)
+  6654: Fix `#[AdminRoute] attribute error, add smoke tests for admin routes
+-
+
+## [1.9.1] - 2026-04-07
+
+- [#66](https://github.com/itk-dev/devops_itksites/pull/66)
+  6654: Downgrade to PHP 8.4, update composer dependencies
+
+## [1.9.0] - 2026-04-07
+
+- [#64](https://github.com/itk-dev/devops_itksites/pull/64)
+  6869: Improve OpenAPI spec with descriptions, examples, and error codes
+- [#63](https://github.com/itk-dev/devops_itksites/pull/63)
+  6654: Upgrade to PHP 8.5, Symfony 8.0, EasyAdmin 5.x, DoctrineBundle 3.x, PHPUnit 13
+- [#62](https://github.com/itk-dev/devops_itksites/pull/62)
+  6869: Add claude.md and Claude Code configuration for AI coding agents
 - [#58](https://github.com/itk-dev/devops_itksites/pull/58)
   5002: Added export to everything
 
@@ -138,7 +170,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.6.0...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.10.0...HEAD
+[1.10.0]: https://github.com/itk-dev/devops_itksites/compare/1.9.2...1.10.0
+[1.9.2]: https://github.com/itk-dev/devops_itksites/compare/1.9.1...1.9.2
+[1.9.1]: https://github.com/itk-dev/devops_itksites/compare/1.9.0...1.9.1
+[1.9.0]: https://github.com/itk-dev/devops_itksites/compare/1.8.9...1.9.0
 [1.8.10]: https://github.com/itk-dev/devops_itksites/compare/1.8.9...1.8.10
 [1.8.9]: https://github.com/itk-dev/devops_itksites/compare/1.8.8...1.8.9
 [1.8.8]: https://github.com/itk-dev/devops_itksites/compare/1.8.7...1.8.8

@@ -86,7 +86,7 @@ readonly class DockerImageHandler implements DetectionResultHandlerInterface
         $matches = [];
         foreach ($containers as $container) {
             if (self::PHP_CONTAINER === $container->name) {
-                \preg_match('/\d.+\d/', $container->image, $matches);
+                \preg_match('/\d.+\d/', (string) $container->image, $matches);
             }
         }
 

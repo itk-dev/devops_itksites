@@ -1,8 +1,6 @@
-name: PR Review
-
+name: Review
 env:
-    COMPOSE_USER: root
-
+    COMPOSE_USER: runner
 on: pull_request
 
 jobs:
@@ -10,86 +8,120 @@ jobs:
         name: Test suite
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v5
+            -   uses: actions/checkout@v5
 
-            - name: Install Task
-              uses: go-task/setup-task@v1
+            -   name: Install Task
+                uses: go-task/setup-task@v1
 
-            - name: Setup docker network
+            -   name: Setup docker network
+                run: |
+                    docker network create frontend
+
+            -   name: Install Site
+                run: |
+                    task site:install
+
+            -   name: Test suite
+                run: |
+                    task test:setup
+                    task test
+
+            -   name: Upload coverage to Codecov test
+                uses: codecov/codecov-action@v5
+                with:
+                    files: ./coverage/unit.xml
+                    flags: unittests
+                env:
+                    CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+    validate-doctrine-schema:
+        runs-on: ubuntu-latest
+        name: Validate Doctrine Schema
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+
+            - name: Create docker network
+              run: docker network create frontend
+
+            - name: Install and validate
               run: |
-                  docker network create frontend
-
-            - name: Install Site
-              run: |
-                  task site:install
-
-            - name: Test suite
-              run: |
-                  task test:setup
-                  task test
-
-            - name: Upload coverage to Codecov test
-              uses: codecov/codecov-action@v5
-              with:
-                  files: ./coverage/unit.xml
-                  flags: unittests
-              env:
-                  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+                  docker compose up --detach
+                  docker compose exec phpfpm composer install --no-interaction
+                  docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interaction
+                  docker compose exec phpfpm bin/console messenger:setup-transports failed
+                  docker compose exec phpfpm bin/console doctrine:schema:validate
 
     phpstan:
-        name: PHPStan
         runs-on: ubuntu-latest
+        name: PHPStan
         steps:
-            - uses: actions/checkout@v5
+            - name: Checkout
+              uses: actions/checkout@v6
 
-            - name: Install Task
-              uses: go-task/setup-task@v1
-
-            - name: Start docker compose setup
-              run: |
-                  docker network create frontend
-                  task compose -- up --detach
-
-            - name: Install Dependencies
-              run: |
-                  task composer -- install
+            - name: Create docker network
+              run: docker network create frontend
 
             - name: Run PHPStan
               run: |
-                  task code-analysis:phpstan
+                  docker compose run --rm phpfpm composer install --no-interaction
+                  docker compose run --rm phpfpm vendor/bin/phpstan analyse
+
+    phpunit:
+        runs-on: ubuntu-latest
+        name: PHP Unit tests
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+
+            - name: Create docker network
+              run: docker network create frontend
+
+            - name: Run tests with coverage
+              run: |
+                  docker compose up --detach
+                  docker compose exec -e XDEBUG_MODE=coverage phpfpm composer install --no-interaction
+                  docker compose exec -e XDEBUG_MODE=coverage phpfpm bin/console --env=test doctrine:database:drop --if-exists --force --quiet
+                  docker compose exec -e XDEBUG_MODE=coverage phpfpm bin/console --env=test doctrine:database:create --no-interaction --if-not-exists --quiet
+                  docker compose exec -e XDEBUG_MODE=coverage phpfpm bin/console --env=test doctrine:migrations:migrate --no-interaction --quiet
+                  docker compose exec -e XDEBUG_MODE=coverage phpfpm vendor/bin/phpunit --coverage-clover=coverage/unit.xml
+
+            - name: Upload coverage to Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  files: ./coverage/unit.xml
+                  fail_ci_if_error: true
+                  flags: unittests
 
     fixtures:
-        name: Load fixtures
         runs-on: ubuntu-latest
+        name: Load fixtures
         steps:
-            - uses: actions/checkout@v5
+            - name: Checkout
+              uses: actions/checkout@v6
 
-            - name: Install Task
-              uses: go-task/setup-task@v1
-
-            - name: Setup docker network
-              run: |
-                  docker network create frontend
-
-            - name: Install Site
-              run: |
-                  task site:install
+            - name: Create docker network
+              run: docker network create frontend
 
             - name: Load fixtures
               run: |
-                  task fixtures:load --yes
+                  docker compose up --detach
+                  docker compose exec phpfpm composer install --no-interaction
+                  docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interaction
+                  docker compose exec phpfpm composer fixtures
 
     build-assets:
-        name: Build assets
         runs-on: ubuntu-latest
+        name: Build assets
         steps:
             - name: Checkout
-              uses: actions/checkout@v5
-              with:
-                  fetch-depth: 2
+              uses: actions/checkout@v6
+
+            - name: Create docker network
+              run: docker network create frontend
 
             - name: Build assets
               run: |
-                  docker network create frontend
                   docker compose run --rm node yarn install
                   docker compose run --rm node yarn build

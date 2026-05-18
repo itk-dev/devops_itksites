@@ -1,7 +1,7 @@
 {# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
 {# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
-{% if ea.crud.currentAction == 'detail' %}
+{% if ea().crud.currentAction == 'detail' %}
     <code class="text-primary">{{ field.formattedValue }}</code>
 {% else %}
     <code class="text-primary">

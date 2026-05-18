@@ -1,5 +1,5 @@
-# https://taskfile.dev
-
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+---
 version: "3"
 
 # https://taskfile.dev/usage/#env-files
@@ -12,32 +12,54 @@ vars:
 tasks:
     site:update:
         desc: Update/install site
-        aliases: [site:install]
         cmds:
             - task: compose
               vars:
                   COMPOSE_ARGS: pull
             - task: compose
               vars:
-                  COMPOSE_ARGS: up --detach
+                  COMPOSE_ARGS: up --detach --wait
             - task: composer
               vars:
                   COMPOSER_ARGS: install
+
+    site:migrate:
+        desc: Run database migrations
+        cmds:
             - task: console
               vars:
                   CONSOLE_ARGS: doctrine:migrations:migrate --no-interaction
-            - task: console
-              vars:
-                  CONSOLE_ARGS: messenger:setup-transports
 
     fixtures:load:
-        desc: Load all fixtures
+        desc: Load fixtures
         prompt: Really load all fixtures?
         cmds:
             - task: console
               vars:
                   CONSOLE_ARGS: hautelook:fixtures:load --no-interaction
-        silent: true
+
+    tests:
+        desc: Run tests
+        cmds:
+            - task: console
+              vars:
+                  CONSOLE_ARGS: --env=test doctrine:database:drop --if-exists --force --quiet
+            - task: console
+              vars:
+                  CONSOLE_ARGS: --env=test doctrine:database:create --no-interaction --if-not-exists --quiet
+            - task: console
+              vars:
+                  CONSOLE_ARGS: --env=test doctrine:migrations:migrate --no-interaction --quiet
+            - task: compose
+              vars:
+                  COMPOSE_ARGS: exec phpfpm vendor/bin/phpunit --stop-on-failure
+
+    queues:
+        desc: Consume async messenger queue
+        cmds:
+            - task: console
+              vars:
+                  CONSOLE_ARGS: messenger:consume async --failure-limit=1 -vvv
 
     composer:
         desc: "Run `composer` command. Example: task composer -- normalize"
@@ -49,46 +71,46 @@ tasks:
     compose:
         desc: "Run `docker compose` command. Example: task compose -- ps"
         cmds:
-            # Run docker compose with both arguments passed via var plus any cli args.
             - "{{.DOCKER_COMPOSE}} {{.COMPOSE_ARGS}} {{.CLI_ARGS}}"
 
     console:
         desc: "Run Symfony console command. Example: task console -- cache:clear"
         cmds:
-            # Run docker compose with both arguments passed via var plus any cli args.
             - task: compose
               vars:
                   COMPOSE_ARGS: exec phpfpm bin/console {{.CONSOLE_ARGS}}
 
     coding-standards:apply:
-        desc: "Apply coding standards"
+        aliases: [cs:apply]
+        desc: Apply coding standards
         cmds:
             - task: coding-standards:markdown:apply
             - task: coding-standards:php:apply
             - task: coding-standards:twig:apply
             - task: coding-standards:yaml:apply
-            - task: coding-standards:css:apply
         silent: true
 
     coding-standards:check:
-        desc: "Apply coding standards"
+        aliases: [cs:check]
+        desc: Check coding standards
         cmds:
             - task: coding-standards:markdown:check
             - task: coding-standards:php:check
             - task: coding-standards:twig:check
             - task: coding-standards:yaml:check
-            - task: coding-standards:css:check
         silent: true
 
     coding-standards:markdown:apply:
-        desc: "Apply coding standards for Markdown"
+        aliases: [cs:markdown:apply]
+        desc: Apply coding standards for Markdown
         cmds:
             - task: compose
               vars:
                   COMPOSE_ARGS: run --rm markdownlint markdownlint '**/*.md' --fix
 
     coding-standards:markdown:check:
-        desc: "Apply and check coding standards for Markdown"
+        aliases: [cs:markdown:check]
+        desc: Check coding standards for Markdown
         cmds:
             - task: coding-standards:markdown:apply
             - task: compose
@@ -96,7 +118,8 @@ tasks:
                   COMPOSE_ARGS: run --rm markdownlint markdownlint '**/*.md'
 
     coding-standards:php:apply:
-        desc: "Apply coding standards for PHP"
+        aliases: [cs:php:apply]
+        desc: Apply coding standards for PHP
         cmds:
             - task: compose
               vars:
@@ -104,7 +127,8 @@ tasks:
         silent: true
 
     coding-standards:php:check:
-        desc: "Apply and check coding standards for PHP"
+        aliases: [cs:php:check]
+        desc: Check coding standards for PHP
         cmds:
             - task: coding-standards:php:apply
             - task: compose
@@ -113,105 +137,122 @@ tasks:
         silent: true
 
     coding-standards:twig:apply:
-        desc: "Apply coding standards for Twig"
+        aliases: [cs:twig:apply]
+        desc: Apply coding standards for Twig
         cmds:
             - task: compose
               vars:
-                  COMPOSE_ARGS: exec phpfpm vendor/bin/twig-cs-fixer fix
+                  COMPOSE_ARGS: exec phpfpm vendor/bin/twig-cs-fixer lint --fix
         silent: true
 
     coding-standards:twig:check:
-        desc: "Apply and check coding standards for Twig"
+        aliases: [cs:twig:check]
+        desc: Check coding standards for Twig
         cmds:
             - task: coding-standards:twig:apply
             - task: compose
               vars:
-                  COMPOSE_ARGS: exec phpfpm vendor/bin/twig-cs-fixer check
+                  COMPOSE_ARGS: exec phpfpm vendor/bin/twig-cs-fixer lint
         silent: true
 
     coding-standards:yaml:apply:
-        desc: "Apply coding standards for YAML"
+        aliases: [cs:yaml:apply]
+        desc: Apply coding standards for YAML
         cmds:
             - task: compose
               vars:
-                  COMPOSE_ARGS: run --rm prettier '**/*.{yml,yaml}' --write
+                  COMPOSE_ARGS: run --rm prettier '**/*.{yml,yaml}' --write --no-error-on-unmatched-pattern
         silent: true
 
     coding-standards:yaml:check:
-        desc: "Apply and check coding standards for YAML"
+        aliases: [cs:yaml:check]
+        desc: Check coding standards for YAML
         cmds:
             - task: coding-standards:yaml:apply
             - task: compose
               vars:
-                  COMPOSE_ARGS: run --rm prettier '**/*.{yml,yaml}' --check
+                  COMPOSE_ARGS: run --rm prettier '**/*.{yml,yaml}' --check --no-error-on-unmatched-pattern
+        silent: true
 
-    coding-standards:css:apply:
-        desc: "Apply coding standards for YAML"
+    # Composer checks (mirrors composer.yaml CI)
+
+    composer:check:
+        desc: Validate, normalize, and audit composer
         cmds:
             - task: compose
               vars:
-                  COMPOSE_ARGS: run --rm prettier 'assets/**/*.{css,scss}' --write
-        silent: true
-
-    coding-standards:css:check:
-        desc: "Apply and check coding standards for YAML"
-        cmds:
-            - task: coding-standards:yaml:apply
+                  COMPOSE_ARGS: exec phpfpm composer validate --strict
             - task: compose
               vars:
-                  COMPOSE_ARGS: run --rm prettier 'assets/**/*.{css,scss}' --check
-        silent: true
+                  COMPOSE_ARGS: exec phpfpm composer normalize --dry-run
+            - task: compose
+              vars:
+                  COMPOSE_ARGS: exec phpfpm composer audit
 
-    code-analysis:
-        desc: "Run code analysis"
-        cmds:
-            - task: code-analysis:phpstan
-        silent: true
+    # Analysis
 
-    code-analysis:phpstan:
-        desc: "Run PHPStan"
+    analysis:php:
+        aliases: [analyze:php]
+        desc: Run PHPStan static analysis
         cmds:
             - task: compose
               vars:
                   COMPOSE_ARGS: exec phpfpm vendor/bin/phpstan
         silent: true
 
-    messenger:consume:
-        desc: "Run queue consumer"
+    # Test matrix (mirrors pr.yaml CI jobs)
+
+    test:matrix:
+        desc: Run full test matrix (tests, schema validation, fixtures, assets)
+        cmds:
+            - task: tests
+            - task: test:doctrine-schema
+            - task: test:fixtures
+            - task: test:build-assets
+
+    test:doctrine-schema:
+        desc: Validate Doctrine schema against database
         cmds:
             - task: console
               vars:
-                  CONSOLE_ARGS: bin/console messenger:consume async --failure-limit=1 -vvv
+                  CONSOLE_ARGS: doctrine:schema:validate
 
-    test:setup:
-        desc: "Setup test environment"
+    test:fixtures:
+        desc: Verify fixtures load successfully
         cmds:
             - task: console
               vars:
-                  CONSOLE_ARGS: --env=test doctrine:database:create --if-not-exists --no-interaction
-            - task: console
-              vars:
-                  CONSOLE_ARGS: --env=test doctrine:database:create --no-interaction --if-not-exists --quiet
-            - task: console
-              vars:
-                  CONSOLE_ARGS: --env=test doctrine:migrations:migrate --no-interaction --quiet
+                  CONSOLE_ARGS: hautelook:fixtures:load --no-interaction
 
-    test:
-        desc: "Run tests"
+    test:build-assets:
+        desc: Verify frontend assets compile
         cmds:
             - task: compose
               vars:
-                  COMPOSE_ARGS: exec --env XDEBUG_MODE=coverage phpfpm vendor/bin/phpunit --coverage-clover=coverage/unit.xml
+                  COMPOSE_ARGS: run --rm node yarn install
+            - task: compose
+              vars:
+                  COMPOSE_ARGS: run --rm node yarn build
+
+    # CI
+
+    pr:actions:
+        desc: Run all CI checks locally
+        cmds:
+            - task: composer:check
+            - task: coding-standards:check
+            - task: analyze:php
+            - task: test:matrix
 
     api:spec:export:
-        desc: "Export API spec"
+        desc: Export API specification
         cmds:
             - task: console
               vars:
-                  CONSOLE_ARGS: api:openapi:export --yaml --output=public/api-spec-v1.yaml --no-interaction
+                  CONSOLE_ARGS: api:openapi:export --output=public/api-spec-v1.yaml --yaml --no-interaction
             - task: console
               vars:
-                  CONSOLE_ARGS: api:openapi:export --json --output=public/api-spec-v1.json --no-interaction
+                  CONSOLE_ARGS: api:openapi:export --output=public/api-spec-v1.json --no-interaction
         silent: true
 
     default:

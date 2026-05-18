@@ -40,3 +40,7 @@ phpstan.neon
 /assets/vendor/
 ###< symfony/asset-mapper ###
 coverage
+
+.twig-cs-fixer.cache
+.playwright-mcp
+
