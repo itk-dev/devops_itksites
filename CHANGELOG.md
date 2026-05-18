@@ -7,22 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Sort the same admin version columns in semver order (not lexicographic)
-  when their headers are clicked, so `10.5.9` correctly orders above
-  `9.5.1`, and `11.2.10` above `11.2.8`. Implemented via a small
-  `SemverSort` helper that rewrites `ORDER BY entity.col` to
-  `ORDER BY SEMVER_NUMERIC(entity.col)` in each affected
-  `createIndexQueryBuilder()`.
-
-- Add semver-aware filter on every admin version column (Installation
-  `frameworkVersion` and `composerVersion`, PackageVersion `version` and
-  `latest`, ModuleVersion `version`, Site `phpVersion`, GitTag `tag`,
-  DockerImageTag `tag`) so the admin can filter with `=, !=, >, >=, <, <=`
-  or by an inclusive/exclusive range (`between (inclusive)` / `between
-  (exclusive)`) using semver order instead of lexicographic string
-  comparison. Values with a leading `v`/`V` (e.g. `v5.5.40`) are accepted;
-  non-semver values
-  are excluded from results when the filter is active.
+- [#75](https://github.com/itk-dev/devops_itksites/pull/75)
+  Add semver-aware filter on every admin version column, make version
+  column semver sortable
 
 ## [1.10.1] - 2026-05-11
 
