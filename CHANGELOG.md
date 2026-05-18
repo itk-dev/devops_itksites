@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.0] - 2026-05-19
+
+- [#78](https://github.com/itk-dev/devops_itksites/pull/78)
+  Update composer dependencies, fix php-cs-fixer deprecation
+- [#77](https://github.com/itk-dev/devops_itksites/pull/77)
+  Fix SemverFilter: respect value2 with directional operators
+- [#76](https://github.com/itk-dev/devops_itksites/pull/76)
+  Add server type filter and sort on Installation, Site, Domain
+- [#75](https://github.com/itk-dev/devops_itksites/pull/75)
+  Add semver-aware filter on every admin version column, make version
+  column semver sortable
+
 ## [1.10.1] - 2026-05-11
 
 - [#71](https://github.com/itk-dev/devops_itksites/pull/71)
@@ -164,7 +176,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.10.0...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.11.0...HEAD
+[1.11.0]: https://github.com/itk-dev/devops_itksites/compare/1.10.1...1.11.0
+[1.10.1]: https://github.com/itk-dev/devops_itksites/compare/1.10.0...1.10.1
 [1.10.0]: https://github.com/itk-dev/devops_itksites/compare/1.9.2...1.10.0
 [1.9.2]: https://github.com/itk-dev/devops_itksites/compare/1.9.1...1.9.2
 [1.9.1]: https://github.com/itk-dev/devops_itksites/compare/1.9.0...1.9.1
