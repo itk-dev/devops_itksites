@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#75](https://github.com/itk-dev/devops_itksites/pull/75)
+  Add semver-aware filter on every admin version column, make version
+  column semver sortable
+
 ## [1.10.1] - 2026-05-11
 
 - [#71](https://github.com/itk-dev/devops_itksites/pull/71)

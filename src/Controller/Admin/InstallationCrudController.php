@@ -11,7 +11,9 @@ use App\Admin\Field\ServerTypeField;
 use App\Admin\Field\VersionField;
 use App\Entity\Installation;
 use App\Form\Type\Admin\FrameworkFilter;
+use App\Form\Type\Admin\SemverFilter;
 use App\Trait\ExportCrudControllerTrait;
+use App\Trait\SemverSortableCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -25,6 +27,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 class InstallationCrudController extends AbstractCrudController
 {
     use ExportCrudControllerTrait;
+    use SemverSortableCrudControllerTrait;
 
     public static function getEntityFqcn(): string
     {
@@ -77,13 +80,19 @@ class InstallationCrudController extends AbstractCrudController
     {
         return $filters
             ->add(FrameworkFilter::new('type'))
-            ->add('frameworkVersion')
+            ->add(SemverFilter::new('frameworkVersion', 'ver.'))
             ->add('lts')
             ->add('eol')
-            ->add('composerVersion')
+            ->add(SemverFilter::new('composerVersion', 'Comp.'))
             ->add('rootDir')
             ->add('server')
 //            ->add(SystemFilter::new('system')->mapped(false))
         ;
+    }
+
+    #[\Override]
+    protected function semverSortedProperties(): array
+    {
+        return ['frameworkVersion', 'composerVersion'];
     }
 }

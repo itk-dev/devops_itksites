@@ -6,6 +6,8 @@ namespace App\Controller\Admin;
 
 use App\Admin\Field\VersionField;
 use App\Entity\GitTag;
+use App\Form\Type\Admin\SemverFilter;
+use App\Trait\SemverSortableCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -15,6 +17,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
 class GitTagCrudController extends AbstractCrudController
 {
+    use SemverSortableCrudControllerTrait;
+
     public static function getEntityFqcn(): string
     {
         return GitTag::class;
@@ -54,7 +58,13 @@ class GitTagCrudController extends AbstractCrudController
     {
         return $filters
             ->add('repo')
-            ->add('tag')
+            ->add(SemverFilter::new('tag'))
         ;
+    }
+
+    #[\Override]
+    protected function semverSortedProperties(): array
+    {
+        return ['tag'];
     }
 }

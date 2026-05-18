@@ -12,7 +12,9 @@ use App\Admin\Field\ServerTypeField;
 use App\Admin\Field\SiteTypeField;
 use App\Admin\Field\VersionField;
 use App\Entity\Site;
+use App\Form\Type\Admin\SemverFilter;
 use App\Trait\ExportCrudControllerTrait;
+use App\Trait\SemverSortableCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -24,6 +26,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 class SiteCrudController extends AbstractCrudController
 {
     use ExportCrudControllerTrait;
+    use SemverSortableCrudControllerTrait;
 
     public function __construct()
     {
@@ -76,7 +79,13 @@ class SiteCrudController extends AbstractCrudController
         return $filters
             ->add('primaryDomain')
             ->add('configFilePath')
-            ->add('phpVersion')
+            ->add(SemverFilter::new('phpVersion', 'PHP'))
             ->add('server');
+    }
+
+    #[\Override]
+    protected function semverSortedProperties(): array
+    {
+        return ['phpVersion'];
     }
 }
