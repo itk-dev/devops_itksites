@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Sort the same admin version columns in semver order (not lexicographic)
+  when their headers are clicked, so `10.5.9` correctly orders above
+  `9.5.1`, and `11.2.10` above `11.2.8`. Implemented via a small
+  `SemverSort` helper that rewrites `ORDER BY entity.col` to
+  `ORDER BY SEMVER_NUMERIC(entity.col)` in each affected
+  `createIndexQueryBuilder()`.
+
 - Add semver-aware filter on every admin version column (Installation
   `frameworkVersion` and `composerVersion`, PackageVersion `version` and
   `latest`, ModuleVersion `version`, Site `phpVersion`, GitTag `tag`,
