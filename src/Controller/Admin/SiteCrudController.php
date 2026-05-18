@@ -11,26 +11,22 @@ use App\Admin\Field\RootDirField;
 use App\Admin\Field\ServerTypeField;
 use App\Admin\Field\SiteTypeField;
 use App\Admin\Field\VersionField;
-use App\Admin\SemverSort;
 use App\Entity\Site;
 use App\Form\Type\Admin\SemverFilter;
 use App\Trait\ExportCrudControllerTrait;
-use Doctrine\ORM\QueryBuilder;
-use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
-use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use App\Trait\SemverSortableCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
-use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 
 class SiteCrudController extends AbstractCrudController
 {
     use ExportCrudControllerTrait;
+    use SemverSortableCrudControllerTrait;
 
     public function __construct()
     {
@@ -88,11 +84,8 @@ class SiteCrudController extends AbstractCrudController
     }
 
     #[\Override]
-    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    protected function semverSortedProperties(): array
     {
-        $qb = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-        SemverSort::apply($qb, 'phpVersion');
-
-        return $qb;
+        return ['phpVersion'];
     }
 }

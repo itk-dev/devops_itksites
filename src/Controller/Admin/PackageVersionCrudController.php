@@ -7,25 +7,22 @@ namespace App\Controller\Admin;
 use App\Admin\Field\AdvisoryCountField;
 use App\Admin\Field\LatestStatusField;
 use App\Admin\Field\VersionField;
-use App\Admin\SemverSort;
 use App\Entity\PackageVersion;
 use App\Form\Type\Admin\SemverFilter;
-use Doctrine\ORM\QueryBuilder;
-use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
-use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use App\Trait\SemverSortableCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
-use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
 class PackageVersionCrudController extends AbstractCrudController
 {
+    use SemverSortableCrudControllerTrait;
+
     public static function getEntityFqcn(): string
     {
         return PackageVersion::class;
@@ -77,11 +74,8 @@ class PackageVersionCrudController extends AbstractCrudController
     }
 
     #[\Override]
-    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    protected function semverSortedProperties(): array
     {
-        $qb = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-        SemverSort::apply($qb, 'version', 'latest');
-
-        return $qb;
+        return ['version', 'latest'];
     }
 }
