@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#78](https://github.com/itk-dev/devops_itksites/pull/78)
+  Update composer dependencies, fix php-cs-fixer deprecation
 - [#77](https://github.com/itk-dev/devops_itksites/pull/77)
   Fix SemverFilter: respect value2 with directional operators
 - [#76](https://github.com/itk-dev/devops_itksites/pull/76)
