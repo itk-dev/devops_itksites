@@ -13,6 +13,7 @@ use App\Admin\Field\SiteTypeField;
 use App\Admin\Field\VersionField;
 use App\Entity\Site;
 use App\Form\Type\Admin\SemverFilter;
+use App\Form\Type\Admin\ServerTypeFilter;
 use App\Trait\ExportCrudControllerTrait;
 use App\Trait\SemverSortableCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -67,7 +68,7 @@ class SiteCrudController extends AbstractCrudController
         yield RootDirField::new('rootDir')->setColumns(12)->hideOnIndex();
         yield VersionField::new('phpVersion')->setLabel('PHP');
         yield AssociationField::new('installation')->hideOnIndex();
-        yield ServerTypeField::new('server.type')->setLabel('Type');
+        yield ServerTypeField::new('server.type')->setLabel('Type')->setSortable(true);
         yield AssociationField::new('server');
         yield AssociationField::new('detectionResult')->hideOnIndex();
         yield DateTimeField::new('createdAt')->hideOnIndex();
@@ -80,7 +81,8 @@ class SiteCrudController extends AbstractCrudController
             ->add('primaryDomain')
             ->add('configFilePath')
             ->add(SemverFilter::new('phpVersion', 'PHP'))
-            ->add('server');
+            ->add('server')
+            ->add(ServerTypeFilter::new('server.type', 'Server type'));
     }
 
     #[\Override]

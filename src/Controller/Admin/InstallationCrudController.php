@@ -12,6 +12,7 @@ use App\Admin\Field\VersionField;
 use App\Entity\Installation;
 use App\Form\Type\Admin\FrameworkFilter;
 use App\Form\Type\Admin\SemverFilter;
+use App\Form\Type\Admin\ServerTypeFilter;
 use App\Trait\ExportCrudControllerTrait;
 use App\Trait\SemverSortableCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -68,7 +69,7 @@ class InstallationCrudController extends AbstractCrudController
         yield CodeEditorField::new('gitChanges')->hideOnIndex();
         yield AssociationField::new('sites')->hideOnIndex();
         yield RootDirField::new('rootDir')->setColumns(12);
-        yield ServerTypeField::new('server.type')->setLabel('Type');
+        yield ServerTypeField::new('server.type')->setLabel('Type')->setSortable(true);
         yield AssociationField::new('server');
         yield AssociationField::new('detectionResult')->hideOnIndex();
         yield DateTimeField::new('createdAt')->hideOnIndex();
@@ -86,6 +87,7 @@ class InstallationCrudController extends AbstractCrudController
             ->add(SemverFilter::new('composerVersion', 'Comp.'))
             ->add('rootDir')
             ->add('server')
+            ->add(ServerTypeFilter::new('server.type', 'Server type'))
 //            ->add(SystemFilter::new('system')->mapped(false))
         ;
     }
