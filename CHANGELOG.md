@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#77](https://github.com/itk-dev/devops_itksites/pull/77)
+  Fix SemverFilter: respect value2 with directional operators
+
 - [#75](https://github.com/itk-dev/devops_itksites/pull/75)
   Add semver-aware filter on every admin version column, make version
   column semver sortable
