@@ -103,6 +103,60 @@ class SemverFilterTest extends KernelTestCase
     }
 
     /**
+     * Regression: `>= 11.0.0` with value2=11.2.0 must produce a range,
+     * not silently ignore the upper bound (which previously let 11.3.5
+     * leak through).
+     */
+    public function testApplyAutoPromotesGteWithValue2ToInclusiveRange(): void
+    {
+        $qb = $this->makeInstallationQueryBuilder();
+
+        $this->apply($qb, '>=', '11.0.0', '11.2.0');
+
+        $dql = $qb->getDQL();
+        self::assertStringContainsString('SEMVER_NUMERIC(entity.frameworkVersion) >= :frameworkVersion_0_min', $dql);
+        self::assertStringContainsString('SEMVER_NUMERIC(entity.frameworkVersion) <= :frameworkVersion_0_max', $dql);
+        self::assertSame(11_000_000_000_000, $qb->getParameter('frameworkVersion_0_min')?->getValue());
+        self::assertSame(11_000_200_000_000, $qb->getParameter('frameworkVersion_0_max')?->getValue());
+    }
+
+    public function testApplyAutoPromotesGtWithValue2ToExclusiveRange(): void
+    {
+        $qb = $this->makeInstallationQueryBuilder();
+
+        $this->apply($qb, '>', '11.0.0', '11.2.0');
+
+        $dql = $qb->getDQL();
+        self::assertStringContainsString('SEMVER_NUMERIC(entity.frameworkVersion) > :frameworkVersion_0_min', $dql);
+        self::assertStringContainsString('SEMVER_NUMERIC(entity.frameworkVersion) < :frameworkVersion_0_max', $dql);
+    }
+
+    /**
+     * Auto-promote sorts the two values so users can enter them in either
+     * order — "< 11.2.0" with value2 = "11.0.0" still means [11.0.0, 11.2.0].
+     */
+    public function testApplyAutoPromoteSortsValuesNumerically(): void
+    {
+        $qb = $this->makeInstallationQueryBuilder();
+
+        $this->apply($qb, '<', '11.2.0', '11.0.0');
+
+        self::assertSame(11_000_000_000_000, $qb->getParameter('frameworkVersion_0_min')?->getValue());
+        self::assertSame(11_000_200_000_000, $qb->getParameter('frameworkVersion_0_max')?->getValue());
+    }
+
+    public function testApplyIgnoresValue2ForEqualsOperator(): void
+    {
+        $qb = $this->makeInstallationQueryBuilder();
+
+        $this->apply($qb, '=', '11.0.0', '11.2.0');
+
+        $dql = $qb->getDQL();
+        self::assertStringNotContainsString('_min', $dql, '= operator with value2 must remain a single-value match');
+        self::assertSame(11_000_000_000_000, $qb->getParameter('frameworkVersion_0')?->getValue());
+    }
+
+    /**
      * @return iterable<string, array{string, string, int}>
      */
     public static function semverFilterCases(): iterable

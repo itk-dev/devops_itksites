@@ -39,9 +39,23 @@ class SemverFilter implements FilterInterface
             return;
         }
 
-        $isRange = SemverFilterType::COMPARISON_BETWEEN === $comparison
-            || SemverFilterType::COMPARISON_BETWEEN_EXCLUSIVE === $comparison;
-        if ($isRange && '' === $value2) {
+        // When the user fills the upper-bound field together with a directional
+        // operator (>, >=, <, <=), treat the filter as a range. The operator's
+        // inclusivity carries over (>= / <= → inclusive, > / < → exclusive),
+        // so the natural reading "from X to Y" works regardless of which side
+        // the user picked. Range operators (between / between_exclusive)
+        // require both values and behave the same way. = and != are exact
+        // matches, so value2 is ignored.
+        $isExplicitRange = in_array($comparison, [SemverFilterType::COMPARISON_BETWEEN, SemverFilterType::COMPARISON_BETWEEN_EXCLUSIVE], true);
+        $autoRange = '' !== $value2 && in_array($comparison, [
+            SemverFilterType::COMPARISON_GT,
+            SemverFilterType::COMPARISON_GTE,
+            SemverFilterType::COMPARISON_LT,
+            SemverFilterType::COMPARISON_LTE,
+        ], true);
+        $isRange = $isExplicitRange || $autoRange;
+
+        if ($isExplicitRange && '' === $value2) {
             return;
         }
 
@@ -70,9 +84,19 @@ class SemverFilter implements FilterInterface
         // references its argument five times) and PDO would complain about
         // bound-variable count.
         if ($isRange) {
-            [$lowerOp, $upperOp] = SemverFilterType::COMPARISON_BETWEEN === $comparison
-                ? ['>=', '<=']
-                : ['>', '<'];
+            $inclusive = in_array($comparison, [
+                SemverFilterType::COMPARISON_BETWEEN,
+                SemverFilterType::COMPARISON_GTE,
+                SemverFilterType::COMPARISON_LTE,
+            ], true);
+            [$lowerOp, $upperOp] = $inclusive ? ['>=', '<='] : ['>', '<'];
+
+            // Sort the two values numerically so the user can enter them in any
+            // order — "< 11.3.0" with value2 = "10.0.0" still produces a sane
+            // range, not an unsatisfiable WHERE.
+            $a = self::toSemverNumeric($value);
+            $b = self::toSemverNumeric($value2);
+            [$min, $max] = $a <= $b ? [$a, $b] : [$b, $a];
 
             $queryBuilder
                 ->andWhere(sprintf(
@@ -83,8 +107,8 @@ class SemverFilter implements FilterInterface
                     $parameter,
                     $upperOp,
                 ))
-                ->setParameter($parameter.'_min', self::toSemverNumeric($value))
-                ->setParameter($parameter.'_max', self::toSemverNumeric($value2))
+                ->setParameter($parameter.'_min', $min)
+                ->setParameter($parameter.'_max', $max)
             ;
 
             return;
