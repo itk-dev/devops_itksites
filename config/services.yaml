@@ -36,7 +36,3 @@ services:
         arguments:
             $resultHandlers: !tagged_iterator app.handler.detection_result_handler
             $keepResults: '%env(int:APP_KEEP_RESULTS)%'
-
-    App\Service\Leantime\LeantimeProjectUrlFactory:
-        arguments:
-            $baseUrl: '%env(string:APP_LEANTIME_URI)%'
