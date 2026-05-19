@@ -25,8 +25,7 @@ jobs:
 
             - name: Test suite
               run: |
-                  task test:setup
-                  task test
+                  task test:matrix
 
             - name: Upload coverage to Codecov test
               uses: codecov/codecov-action@v5
