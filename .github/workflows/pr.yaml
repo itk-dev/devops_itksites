@@ -8,31 +8,31 @@ jobs:
         name: Test suite
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v5
+            - uses: actions/checkout@v5
 
-            -   name: Install Task
-                uses: go-task/setup-task@v1
+            - name: Install Task
+              uses: go-task/setup-task@v1
 
-            -   name: Setup docker network
-                run: |
-                    docker network create frontend
+            - name: Setup docker network
+              run: |
+                  docker network create frontend
 
-            -   name: Install Site
-                run: |
-                    task site:install
+            - name: Install Site
+              run: |
+                  task site:install
 
-            -   name: Test suite
-                run: |
-                    task test:setup
-                    task test
+            - name: Test suite
+              run: |
+                  task test:setup
+                  task test
 
-            -   name: Upload coverage to Codecov test
-                uses: codecov/codecov-action@v5
-                with:
-                    files: ./coverage/unit.xml
-                    flags: unittests
-                env:
-                    CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+            - name: Upload coverage to Codecov test
+              uses: codecov/codecov-action@v5
+              with:
+                  files: ./coverage/unit.xml
+                  flags: unittests
+              env:
+                  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     validate-doctrine-schema:
         runs-on: ubuntu-latest

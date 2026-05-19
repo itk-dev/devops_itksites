@@ -14,12 +14,12 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 readonly class ServiceAgreementSyncService
 {
     /**
-     * @param EntityManagerInterface $entityManager Doctrine entity manager for persisting contracts
+     * @param EntityManagerInterface $entityManager   Doctrine entity manager for persisting contracts
      * @param HttpClientInterface    $economicsClient scoped HTTP client for the Economics API
      */
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private HttpClientInterface    $economicsClient,
+        private HttpClientInterface $economicsClient,
     ) {
     }
 
@@ -80,6 +80,7 @@ readonly class ServiceAgreementSyncService
      * Map API response data onto a SecurityContract entity.
      *
      * @param array<string, mixed> $data a single service agreement from the API
+     *
      * @throws \Exception
      */
     private function mapDataToContract(SecurityContract $contract, array $data): void
