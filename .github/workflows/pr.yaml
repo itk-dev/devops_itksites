@@ -19,7 +19,9 @@ jobs:
 
             - name: Install Site
               run: |
-                  task site:install
+                  task site:update
+                  task site:migrate
+                  task fixtures:load
 
             - name: Test suite
               run: |
