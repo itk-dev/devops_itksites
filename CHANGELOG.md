@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- [#61](https://github.com/itk-dev/devops_itksites/pull/61) 5566: Service agreements
+- [#90](https://github.com/itk-dev/devops_itksites/pull/80) 5566: Service agreements
   - Remove project entity
   - Remove leantime service
   - Add security contract entity with crud controller
