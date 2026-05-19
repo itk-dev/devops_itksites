@@ -6,6 +6,8 @@ namespace App\Controller\Admin;
 
 use App\Admin\Field\VersionField;
 use App\Entity\DockerImageTag;
+use App\Form\Type\Admin\SemverFilter;
+use App\Trait\SemverSortableCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -16,6 +18,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 
 class DockerImageTagCrudController extends AbstractCrudController
 {
+    use SemverSortableCrudControllerTrait;
+
     public static function getEntityFqcn(): string
     {
         return DockerImageTag::class;
@@ -49,7 +53,13 @@ class DockerImageTagCrudController extends AbstractCrudController
     {
         return $filters
             ->add('dockerImage')
-            ->add('tag')
+            ->add(SemverFilter::new('tag'))
         ;
+    }
+
+    #[\Override]
+    protected function semverSortedProperties(): array
+    {
+        return ['tag'];
     }
 }

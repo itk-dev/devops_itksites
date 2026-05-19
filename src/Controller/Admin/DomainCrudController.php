@@ -8,6 +8,7 @@ use App\Admin\Field\DomainField;
 use App\Admin\Field\ServerTypeField;
 use App\Admin\Field\SiteTypeField;
 use App\Entity\Domain;
+use App\Form\Type\Admin\ServerTypeFilter;
 use App\Trait\ExportCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -47,7 +48,7 @@ class DomainCrudController extends AbstractCrudController
         yield DomainField::new('address')->setColumns(12);
         yield SiteTypeField::new('site.type')->hideOnIndex();
         yield AssociationField::new('site')->hideOnIndex();
-        yield ServerTypeField::new('server.type')->setLabel('Type');
+        yield ServerTypeField::new('server.type')->setLabel('Type')->setSortable(true);
         yield AssociationField::new('server');
         yield AssociationField::new('detectionResult')->hideOnIndex();
         yield DateTimeField::new('createdAt')->hideOnIndex();
@@ -61,6 +62,7 @@ class DomainCrudController extends AbstractCrudController
             ->add('address')
             ->add('site')
             ->add('server')
+            ->add(ServerTypeFilter::new('server.type', 'Server type'))
         ;
     }
 }

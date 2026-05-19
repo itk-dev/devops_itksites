@@ -20,9 +20,6 @@ class DashboardController extends AbstractDashboardController
     public function __construct(
         private readonly AdminUrlGenerator $adminUrlGenerator,
         private readonly AdvisoryRepository $advisoryRepository,
-        private readonly ServiceCertificateRepository $serviceCertificateRepository,
-        private readonly OIDCRepository $oidcRepository,
-        private readonly SecurityContractRepository $securityContractRepository,
     ) {
     }
 
@@ -55,6 +52,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(DomainCrudController::class, 'Domains', 'fas fa-link');
         yield MenuItem::linkTo(OIDCCrudController::class, 'OIDC', 'fas fa-key');
         yield MenuItem::linkTo(ServiceCertificateCrudController::class, 'Service certificates', 'fas fa-lock');
+        yield MenuItem::linkTo(SecurityContractCrudController::class, 'Service Agreements', 'fas fa-file-contract');
         yield MenuItem::section('Dependencies');
         yield MenuItem::linkTo(PackageCrudController::class, 'Packages', 'fas fa-cube');
         yield MenuItem::linkTo(PackageVersionCrudController::class, 'Package Versions', 'fas fa-cubes');
