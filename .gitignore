@@ -30,17 +30,5 @@ yarn-error.log
 phpstan.neon
 ###< phpstan/phpstan ###
 .phpunit.cache
-
-###> vincentlanglet/twig-cs-fixer ###
-/.twig-cs-fixer.cache
-###< vincentlanglet/twig-cs-fixer ###
-
-###> symfony/asset-mapper ###
-/public/assets/
-/assets/vendor/
-###< symfony/asset-mapper ###
-coverage
-
 .twig-cs-fixer.cache
 .playwright-mcp
-

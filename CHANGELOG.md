@@ -7,18 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- [#90](https://github.com/itk-dev/devops_itksites/pull/80) 5566: Service agreements
-  - Remove project entity
-  - Remove leantime service
+- [#80](https://github.com/itk-dev/devops_itksites/pull/80) 5566: Service agreements
   - Add security contract entity with crud controller
   - Add Abstract full crud controller and extend on it in some cases
   - Add economics service and sync action/command for service agreement synchronization
-
-- [#60](https://github.com/itk-dev/devops_itksites/pull/60) 5564: Dependency updates
-  - Update dependencies
-  - Update phpunit from 11 to 12
-  - Update ITK docker template
-  - Update github actions workflows
 
 ## [1.11.0] - 2026-05-19
 

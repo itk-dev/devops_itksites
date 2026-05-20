@@ -21,7 +21,6 @@
         "phpstan/phpdoc-parser": "^2.0",
         "symfony/amqp-messenger": "^8.0",
         "symfony/asset": "^8.0",
-        "symfony/asset-mapper": "~8.0.0",
         "symfony/browser-kit": "^8.0",
         "symfony/console": "^8.0",
         "symfony/doctrine-messenger": "^8.0",
@@ -112,8 +111,7 @@
         ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "importmap:install": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "coding-standards-apply": [
             "vendor/bin/php-cs-fixer fix"
