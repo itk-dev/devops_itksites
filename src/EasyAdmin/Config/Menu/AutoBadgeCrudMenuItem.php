@@ -16,20 +16,17 @@ class AutoBadgeCrudMenuItem implements MenuItemInterface
         $this->crudMenuItem = new CrudMenuItem($label, $icon, $entityFqcn);
     }
 
-    /** @phpstan-ignore missingType.return, missingType.parameter, missingType.parameter  */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments): mixed
     {
         return $this->crudMenuItem->$name(...$arguments);
     }
 
-    /** @phpstan-ignore missingType.return  */
-    public static function __callStatic(string $name, array $arguments)
+    public static function __callStatic(string $name, array $arguments): never
     {
         throw new \BadMethodCallException(sprintf('Static method %s not implemented', $name));
     }
 
-    /** @phpstan-ignore missingType.parameter  */
-    public function setBadge(/* \Stringable|string|int|float|bool|null */ $content, string $style = 'secondary', array $htmlAttributes = []): self
+    public function setBadge(\Stringable|string|int|float|bool|null $content, string $style = 'secondary', array $htmlAttributes = []): self
     {
         if (!is_int($content)) {
             throw new \InvalidArgumentException('The badge content must be an integer');

@@ -7,14 +7,12 @@ use Symfony\Contracts\Translation\TranslatableInterface;
 
 class AutoBadgeMenuItem
 {
-    /** @phpstan-ignore missingType.return  */
-    public function __call(string $name, array $arguments)
+    public function __call(string $name, array $arguments): never
     {
         throw new \BadMethodCallException(sprintf('Method %s not implemented', $name));
     }
 
-    /** @phpstan-ignore missingType.return  */
-    public static function __callStatic(string $name, array $arguments)
+    public static function __callStatic(string $name, array $arguments): never
     {
         throw new \BadMethodCallException(sprintf('Static method %s not implemented', $name));
     }
