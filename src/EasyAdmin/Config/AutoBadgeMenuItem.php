@@ -5,6 +5,10 @@ namespace App\EasyAdmin\Config;
 use App\EasyAdmin\Config\Menu\AutoBadgeCrudMenuItem;
 use Symfony\Contracts\Translation\TranslatableInterface;
 
+/**
+ * Factory that mirrors EasyAdmin's MenuItem static API but produces
+ * AutoBadgeCrudMenuItem so dashboard entries hide their badge when the count is zero.
+ */
 class AutoBadgeMenuItem
 {
     public function __call(string $name, array $arguments): never

@@ -7,6 +7,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Contracts\Menu\MenuItemInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\MenuItemDto;
 use Symfony\Contracts\Translation\TranslatableInterface;
 
+/**
+ * Drop-in replacement for EasyAdmin's CrudMenuItem that suppresses the badge
+ * when its integer count is zero or negative; all other calls pass through.
+ */
 class AutoBadgeCrudMenuItem implements MenuItemInterface
 {
     private CrudMenuItem $crudMenuItem;
