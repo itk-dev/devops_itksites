@@ -12,7 +12,7 @@ name: Renovate
 
 on:
     schedule:
-        - cron: "0 5 * * 1-5" # weekdays 05:00 UTC ~= 06/07:00 Aarhus
+        - cron: "0 10 * * 1-5" # weekdays 10:00 UTC = 12:00 Copenhagen (CEST) / 11:00 (CET)
     workflow_dispatch:
         inputs:
             logLevel:
