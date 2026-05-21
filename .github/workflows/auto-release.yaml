@@ -1,0 +1,117 @@
+# After a Renovate PR merges into `main`, promote the `[Unreleased]` section
+# of CHANGELOG.md to the next patch version, commit, tag, push, and back-merge
+# main into develop so the branches stay in sync.
+#
+# Required secrets:
+#   RELEASE_TOKEN   PAT or GitHub App token with contents:write + workflows.
+#                   Needed for the tag push to trigger github_build_release.yml
+#                   (the default GITHUB_TOKEN cannot trigger other workflows)
+#                   and for the back-merge push to `develop`.
+#
+# Gating: the existing pr.yaml is required by branch protection, so by the time
+# a PR is merged into main, CI has already passed. We do not re-wait for checks
+# on the merge commit (it has no associated check runs after a squash-merge).
+
+name: Auto Release on Renovate Merge
+
+on:
+    pull_request:
+        types: [closed]
+        branches: [main]
+
+permissions:
+    contents: read
+
+jobs:
+    release:
+        if: >-
+            github.event.pull_request.merged == true &&
+            github.event.pull_request.user.login == 'renovate[bot]'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout main with full history
+              uses: actions/checkout@v6
+              with:
+                  ref: main
+                  fetch-depth: 0
+                  token: ${{ secrets.RELEASE_TOKEN }}
+
+            - name: Compute next patch version
+              id: version
+              run: |
+                  latest=$(git tag -l '[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -1)
+                  : "${latest:=0.0.0}"
+                  IFS=. read -r maj min pat <<<"$latest"
+                  next="${maj}.${min}.$((pat + 1))"
+                  {
+                    echo "current=$latest"
+                    echo "next=$next"
+                    echo "date=$(date -u +%Y-%m-%d)"
+                  } >>"$GITHUB_OUTPUT"
+                  echo "Will release: $latest -> $next"
+
+            - name: Bail if [Unreleased] is empty
+              id: gate
+              run: |
+                  body=$(awk '/^## \[Unreleased\]/{f=1;next} /^## \[/{f=0} f' CHANGELOG.md \
+                         | grep -v '^[[:space:]]*$' || true)
+                  if [ -z "$body" ]; then
+                    echo "Nothing under [Unreleased]; skipping release."
+                    echo "skip=true" >>"$GITHUB_OUTPUT"
+                  else
+                    echo "skip=false" >>"$GITHUB_OUTPUT"
+                  fi
+
+            - name: Promote [Unreleased] -> ${{ steps.version.outputs.next }}
+              if: steps.gate.outputs.skip != 'true'
+              env:
+                  VER: ${{ steps.version.outputs.next }}
+                  DATE: ${{ steps.version.outputs.date }}
+              run: |
+                  python3 - <<'PY'
+                  import os, re, pathlib
+                  ver  = os.environ["VER"]
+                  date = os.environ["DATE"]
+                  p = pathlib.Path("CHANGELOG.md")
+                  text = p.read_text(encoding="utf-8")
+                  text = re.sub(
+                      r"## \[Unreleased\]\n",
+                      f"## [Unreleased]\n\n## [{ver}] - {date}\n",
+                      text, count=1,
+                  )
+                  p.write_text(text, encoding="utf-8")
+                  PY
+
+            - name: Commit on main, tag, push
+              if: steps.gate.outputs.skip != 'true'
+              env:
+                  VER: ${{ steps.version.outputs.next }}
+              run: |
+                  git config user.name  "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git add CHANGELOG.md
+                  git commit -m "release: ${VER}"
+                  git tag -a "${VER}" -m "Release ${VER}"
+                  git push origin main
+                  git push origin "${VER}"
+
+            - name: Back-merge main into develop
+              if: steps.gate.outputs.skip != 'true'
+              env:
+                  VER: ${{ steps.version.outputs.next }}
+                  GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+              run: |
+                  git fetch origin develop
+                  git checkout -B develop origin/develop
+                  if git merge --no-ff main -m "chore: back-merge hotfix ${VER} into develop"; then
+                    git push origin develop
+                    echo "Back-merged ${VER} to develop."
+                  else
+                    git merge --abort || true
+                    gh pr create \
+                      --repo "${GITHUB_REPOSITORY}" \
+                      --base develop \
+                      --head main \
+                      --title "Back-merge hotfix ${VER} into develop" \
+                      --body "Automated back-merge from \`main\` conflicted with \`develop\`. Resolve and merge to keep branches in sync after release ${VER}."
+                  fi

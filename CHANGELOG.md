@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#81](https://github.com/itk-dev/devops_itksites/pull/81) 5564: Asset Mapper migration
   - Add Symfony Asset Mapper bundle and importmap
+- Add Renovate auto-patch + auto-release pipeline (Phase 1 fork validation)
 
 ## [1.11.0] - 2026-05-19
 
