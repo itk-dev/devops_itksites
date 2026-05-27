@@ -1,0 +1,134 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:recommended",
+        ":dependencyDashboard",
+        ":semanticCommitsDisabled",
+        ":maintainLockFilesWeekly",
+        "schedule:weekdays"
+    ],
+    "baseBranches": ["main", "develop"],
+    "timezone": "Europe/Copenhagen",
+    "labels": ["dependencies", "renovate"],
+    "prConcurrentLimit": 5,
+    "prHourlyLimit": 2,
+    "rangeStrategy": "bump",
+    "rebaseWhen": "behind-base-branch",
+    "platformAutomerge": true,
+    "ignoreUnstable": true,
+    "respectLatest": true,
+
+    "vulnerabilityAlerts": {
+        "enabled": true,
+        "labels": ["security", "dependencies"],
+        "automerge": true,
+        "automergeType": "pr",
+        "minimumReleaseAge": "0 days",
+        "prPriority": 10,
+        "commitMessagePrefix": "security:",
+        "matchBaseBranches": ["main"]
+    },
+    "osvVulnerabilityAlerts": true,
+
+    "lockFileMaintenance": {
+        "enabled": true,
+        "schedule": ["before 6am on Monday"],
+        "automerge": true,
+        "automergeType": "pr",
+        "commitMessageAction": "Refresh",
+        "matchBaseBranches": ["main"]
+    },
+
+    "composer": { "enabled": true, "ignorePlatformReqs": [] },
+    "npm": { "enabled": true },
+    "github-actions": { "enabled": true, "pinDigests": true },
+    "docker-compose": { "enabled": true, "pinDigests": true },
+    "dockerfile": { "enabled": true, "pinDigests": true },
+
+    "packageRules": [
+        {
+            "description": "Hotfix: auto-merge patches/digests/lockfile on main after 7-day soak",
+            "matchBaseBranches": ["main"],
+            "matchUpdateTypes": [
+                "patch",
+                "pin",
+                "digest",
+                "lockFileMaintenance"
+            ],
+            "automerge": true,
+            "automergeType": "pr",
+            "automergeStrategy": "squash",
+            "minimumReleaseAge": "7 days"
+        },
+        {
+            "description": "Normal flow: minor/major on develop, dashboard approval, never auto-merge",
+            "matchBaseBranches": ["develop"],
+            "matchUpdateTypes": ["minor", "major"],
+            "dependencyDashboardApproval": true,
+            "automerge": false
+        },
+        {
+            "description": "Suppress minor/major against main (those belong on develop)",
+            "matchBaseBranches": ["main"],
+            "matchUpdateTypes": ["minor", "major"],
+            "enabled": false
+        },
+        {
+            "description": "Suppress patches against develop (they reach develop via back-merge after release)",
+            "matchBaseBranches": ["develop"],
+            "matchUpdateTypes": [
+                "patch",
+                "pin",
+                "digest",
+                "lockFileMaintenance"
+            ],
+            "enabled": false
+        },
+        {
+            "description": "Group Symfony patches into one PR on main",
+            "matchBaseBranches": ["main"],
+            "matchPackagePatterns": ["^symfony/"],
+            "matchUpdateTypes": ["patch"],
+            "groupName": "symfony (patch)"
+        },
+        {
+            "description": "Group Doctrine patches on main",
+            "matchBaseBranches": ["main"],
+            "matchPackagePatterns": ["^doctrine/"],
+            "matchUpdateTypes": ["patch"],
+            "groupName": "doctrine (patch)"
+        },
+        {
+            "description": "Group api-platform patches on main",
+            "matchBaseBranches": ["main"],
+            "matchPackagePatterns": ["^api-platform/"],
+            "matchUpdateTypes": ["patch"],
+            "groupName": "api-platform (patch)"
+        },
+        {
+            "description": "Never auto-bump the PHP platform requirement",
+            "matchBaseBranches": ["develop"],
+            "matchPackageNames": ["php"],
+            "rangeStrategy": "in-range-only",
+            "automerge": false,
+            "dependencyDashboardApproval": true
+        },
+        {
+            "description": "GitHub Actions: pin digests, auto-merge digest/patch on main",
+            "matchBaseBranches": ["main"],
+            "matchManagers": ["github-actions"],
+            "matchUpdateTypes": ["digest", "patch"],
+            "automerge": true
+        }
+    ],
+
+    "postUpdateOptions": ["composerUpdateAllDependencies"],
+
+    "postUpgradeTasks": {
+        "commands": [
+            "bash .github/scripts/renovate-changelog.sh \"{{{branchName}}}\" \"{{{prTitle}}}\""
+        ],
+        "fileFilters": ["CHANGELOG.md"],
+        "executionMode": "branch"
+    }
+}
