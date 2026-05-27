@@ -1,0 +1,64 @@
+name: Doctrine
+
+env:
+    COMPOSE_USER: root
+
+on:
+    pull_request:
+    push:
+        branches:
+            - main
+            - develop
+
+jobs:
+    validate-doctrine-schema:
+        name: Validate Doctrine Schema
+        runs-on: ubuntu-latest
+        env:
+            APP_ENV: prod
+
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: Create docker network
+              run: |
+                  docker network create frontend
+
+            - name: Run Composer Install
+              run: |
+                  docker compose run --rm phpfpm composer install
+
+            - name: Run Doctrine Migrations
+              run: |
+                  docker compose run --rm phpfpm bin/console doctrine:migrations:migrate --no-interaction
+
+            - name: Setup messenger "failed" doctrine transport to ensure db schema is updated
+              run: |
+                  docker compose run --rm phpfpm bin/console messenger:setup-transports failed
+
+            - name: Validate Doctrine schema
+              run: |
+                  docker compose run --rm phpfpm bin/console doctrine:schema:validate
+
+    load-fixtures:
+        name: Load Doctrine fixtures
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: Create docker network
+              run: |
+                  docker network create frontend
+
+            - name: Run Composer Install
+              run: |
+                  docker compose run --rm phpfpm composer install --no-interaction
+
+            - name: Run Doctrine Migrations
+              run: |
+                  docker compose run --rm phpfpm bin/console doctrine:migrations:migrate --no-interaction
+
+            - name: Load fixtures
+              run: |
+                  docker compose run --rm phpfpm composer fixtures
