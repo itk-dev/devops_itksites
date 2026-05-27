@@ -6,6 +6,8 @@ namespace App\Controller\Admin;
 
 use App\Admin\Field\VersionField;
 use App\Entity\ModuleVersion;
+use App\Form\Type\Admin\SemverFilter;
+use App\Trait\SemverSortableCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -15,6 +17,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
 class ModuleVersionCrudController extends AbstractCrudController
 {
+    use SemverSortableCrudControllerTrait;
+
     public static function getEntityFqcn(): string
     {
         return ModuleVersion::class;
@@ -30,12 +34,8 @@ class ModuleVersionCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
-            ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ->remove(Crud::PAGE_INDEX, Action::NEW)
-            ->remove(Crud::PAGE_INDEX, Action::EDIT)
-            ->remove(Crud::PAGE_INDEX, Action::DELETE)
-            ->remove(Crud::PAGE_DETAIL, Action::EDIT)
-            ->remove(Crud::PAGE_DETAIL, Action::DELETE);
+            ->disable(Action::DELETE, Action::NEW, Action::EDIT)
+            ->add(Crud::PAGE_INDEX, Action::DETAIL);
     }
 
     #[\Override]
@@ -51,7 +51,13 @@ class ModuleVersionCrudController extends AbstractCrudController
     {
         return $filters
             ->add('module')
-            ->add('version')
+            ->add(SemverFilter::new('version'))
         ;
+    }
+
+    #[\Override]
+    protected function semverSortedProperties(): array
+    {
+        return ['version'];
     }
 }

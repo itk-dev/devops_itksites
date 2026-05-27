@@ -14,6 +14,10 @@ $finder->notPath('config/reference.php');
 
 $config = new PhpCsFixer\Config();
 $config->setFinder($finder);
+// Allow running on PHP versions php-cs-fixer doesn't officially support yet
+// (we run on the latest stable PHP). Replaces the deprecated
+// PHP_CS_FIXER_IGNORE_ENV env var.
+$config->setUnsupportedPhpVersionAllowed(true);
 
 $config->setRules([
   '@Symfony' => true,

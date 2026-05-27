@@ -1,5 +1,8 @@
 parameters:
     level: 6
+    # Require a reason on every @phpstan-ignore so the next reader knows
+    # why a check was suppressed. https://phpstan.org/user-guide/ignoring-errors#requiring-comments-for-@phpstan-ignore
+    reportIgnoresWithoutComments: true
     paths:
         - bin/
         - config/

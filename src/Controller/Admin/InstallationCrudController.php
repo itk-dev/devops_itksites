@@ -11,7 +11,10 @@ use App\Admin\Field\ServerTypeField;
 use App\Admin\Field\VersionField;
 use App\Entity\Installation;
 use App\Form\Type\Admin\FrameworkFilter;
+use App\Form\Type\Admin\SemverFilter;
+use App\Form\Type\Admin\ServerTypeFilter;
 use App\Trait\ExportCrudControllerTrait;
+use App\Trait\SemverSortableCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -25,6 +28,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 class InstallationCrudController extends AbstractCrudController
 {
     use ExportCrudControllerTrait;
+    use SemverSortableCrudControllerTrait;
 
     public static function getEntityFqcn(): string
     {
@@ -41,13 +45,9 @@ class InstallationCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
+            ->disable(Action::DELETE, Action::NEW, Action::EDIT)
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ->add(Crud::PAGE_INDEX, $this->createExportAction())
-            ->remove(Crud::PAGE_INDEX, Action::NEW)
-            ->remove(Crud::PAGE_INDEX, Action::EDIT)
-            ->remove(Crud::PAGE_INDEX, Action::DELETE)
-            ->remove(Crud::PAGE_DETAIL, Action::EDIT)
-            ->remove(Crud::PAGE_DETAIL, Action::DELETE);
+            ->add(Crud::PAGE_INDEX, $this->createExportAction());
     }
 
     #[\Override]
@@ -65,7 +65,7 @@ class InstallationCrudController extends AbstractCrudController
         yield CodeEditorField::new('gitChanges')->hideOnIndex();
         yield AssociationField::new('sites')->hideOnIndex();
         yield RootDirField::new('rootDir')->setColumns(12);
-        yield ServerTypeField::new('server.type')->setLabel('Type');
+        yield ServerTypeField::new('server.type')->setLabel('Type')->setSortable(true);
         yield AssociationField::new('server');
         yield AssociationField::new('detectionResult')->hideOnIndex();
         yield DateTimeField::new('createdAt')->hideOnIndex();
@@ -77,13 +77,20 @@ class InstallationCrudController extends AbstractCrudController
     {
         return $filters
             ->add(FrameworkFilter::new('type'))
-            ->add('frameworkVersion')
+            ->add(SemverFilter::new('frameworkVersion', 'ver.'))
             ->add('lts')
             ->add('eol')
-            ->add('composerVersion')
+            ->add(SemverFilter::new('composerVersion', 'Comp.'))
             ->add('rootDir')
             ->add('server')
+            ->add(ServerTypeFilter::new('server.type', 'Server type'))
 //            ->add(SystemFilter::new('system')->mapped(false))
         ;
+    }
+
+    #[\Override]
+    protected function semverSortedProperties(): array
+    {
+        return ['frameworkVersion', 'composerVersion'];
     }
 }

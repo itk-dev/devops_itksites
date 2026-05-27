@@ -12,7 +12,10 @@ use App\Admin\Field\ServerTypeField;
 use App\Admin\Field\SiteTypeField;
 use App\Admin\Field\VersionField;
 use App\Entity\Site;
+use App\Form\Type\Admin\SemverFilter;
+use App\Form\Type\Admin\ServerTypeFilter;
 use App\Trait\ExportCrudControllerTrait;
+use App\Trait\SemverSortableCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -24,6 +27,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 class SiteCrudController extends AbstractCrudController
 {
     use ExportCrudControllerTrait;
+    use SemverSortableCrudControllerTrait;
 
     public function __construct()
     {
@@ -44,13 +48,9 @@ class SiteCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
+            ->disable(Action::DELETE, Action::NEW, Action::EDIT)
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ->add(Crud::PAGE_INDEX, $this->createExportAction())
-            ->remove(Crud::PAGE_INDEX, Action::NEW)
-            ->remove(Crud::PAGE_INDEX, Action::EDIT)
-            ->remove(Crud::PAGE_INDEX, Action::DELETE)
-            ->remove(Crud::PAGE_DETAIL, Action::EDIT)
-            ->remove(Crud::PAGE_DETAIL, Action::DELETE);
+            ->add(Crud::PAGE_INDEX, $this->createExportAction());
     }
 
     #[\Override]
@@ -64,7 +64,7 @@ class SiteCrudController extends AbstractCrudController
         yield RootDirField::new('rootDir')->setColumns(12)->hideOnIndex();
         yield VersionField::new('phpVersion')->setLabel('PHP');
         yield AssociationField::new('installation')->hideOnIndex();
-        yield ServerTypeField::new('server.type')->setLabel('Type');
+        yield ServerTypeField::new('server.type')->setLabel('Type')->setSortable(true);
         yield AssociationField::new('server');
         yield AssociationField::new('detectionResult')->hideOnIndex();
         yield DateTimeField::new('createdAt')->hideOnIndex();
@@ -76,7 +76,14 @@ class SiteCrudController extends AbstractCrudController
         return $filters
             ->add('primaryDomain')
             ->add('configFilePath')
-            ->add('phpVersion')
-            ->add('server');
+            ->add(SemverFilter::new('phpVersion', 'PHP'))
+            ->add('server')
+            ->add(ServerTypeFilter::new('server.type', 'Server type'));
+    }
+
+    #[\Override]
+    protected function semverSortedProperties(): array
+    {
+        return ['phpVersion'];
     }
 }

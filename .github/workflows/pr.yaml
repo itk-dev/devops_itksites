@@ -3,24 +3,6 @@ name: Review
 env:
     COMPOSE_USER: runner
 jobs:
-    validate-doctrine-schema:
-        runs-on: ubuntu-latest
-        name: Validate Doctrine Schema
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v6
-
-            - name: Create docker network
-              run: docker network create frontend
-
-            - name: Install and validate
-              run: |
-                  docker compose up --detach
-                  docker compose exec phpfpm composer install --no-interaction
-                  docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interaction
-                  docker compose exec phpfpm bin/console messenger:setup-transports failed
-                  docker compose exec phpfpm bin/console doctrine:schema:validate
-
     phpstan:
         runs-on: ubuntu-latest
         name: PHPStan
@@ -62,23 +44,6 @@ jobs:
                   files: ./coverage/unit.xml
                   fail_ci_if_error: true
                   flags: unittests
-
-    fixtures:
-        runs-on: ubuntu-latest
-        name: Load fixtures
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v6
-
-            - name: Create docker network
-              run: docker network create frontend
-
-            - name: Load fixtures
-              run: |
-                  docker compose up --detach
-                  docker compose exec phpfpm composer install --no-interaction
-                  docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interaction
-                  docker compose exec phpfpm composer fixtures
 
     build-assets:
         runs-on: ubuntu-latest

@@ -19,6 +19,6 @@ class AdvisoryCountField implements FieldInterface
             ->setLabel($label)
 
             // this template is used in 'index' and 'detail' pages
-            ->setTemplatePath('EasyAdminBundle/Fields/advisory_count.html.twig');
+            ->setTemplatePath('EasyAdminBundle/Fields/advisories.html.twig');
     }
 }
