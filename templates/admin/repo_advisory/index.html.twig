@@ -1,0 +1,79 @@
+{% extends '@!EasyAdmin/layout.html.twig' %}
+
+{% block title %}Repositories with advisories{% endblock %}
+
+{% block content_title %}Repositories with advisories{% endblock %}
+
+{% block main %}
+    {% if rows is empty %}
+        <div class="callout callout-info">No repositories have associated advisories.</div>
+    {% else %}
+        <table class="table datagrid">
+            <thead>
+                <tr>
+                    <th>Repository</th>
+                    <th class="text-end">Advisories</th>
+                    <th>Project</th>
+                    <th>Service agreements</th>
+                    <th>Code owner action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    {% set repo = row.repo %}
+                    {% set repo_url = ea_url()
+                        .unsetAll()
+                        .setController('App\\Controller\\Admin\\GitRepoCrudController')
+                        .setAction('detail')
+                        .setEntityId(repo.id) %}
+                    <tr>
+                        <td><a href="{{ repo_url }}">{{ repo }}</a></td>
+                        <td class="text-end">
+                            <span class="badge badge-danger">{{ row.advisoryCount }}</span>
+                        </td>
+                        <td>
+                            {% for project in row.projects %}
+                                {{ project.name }}{{ not loop.last ? ', ' }}
+                            {% else %}
+                                &mdash;
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% set contracts = [] %}
+                            {% for project in row.projects %}
+                                {% for sc in project.serviceAgreements %}
+                                    {% set contracts = contracts|merge([sc]) %}
+                                {% endfor %}
+                            {% endfor %}
+                            {% for sc in contracts %}
+                                <div>
+                                    {{ sc.hostingProvider ?? sc.economicsId }}
+                                    {% if sc.validTo %}<small class="text-muted">(until {{ sc.validTo|date('Y-m-d') }})</small>{% endif %}
+                                </div>
+                            {% else %}
+                                &mdash;
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% if row.codeOwners is empty %}
+                                <em class="text-muted">No code owners</em>
+                            {% else %}
+                                <form method="post"
+                                      action="{{ path('admin_repo_advisories_print_codeowner', {repo: repo.id}) }}"
+                                      class="d-flex gap-2 align-items-center">
+                                    <input type="hidden" name="_token" value="{{ csrf_token(csrf_intent) }}">
+                                    <select name="codeOwnerId" class="form-control form-control-sm" style="max-width: 16rem;">
+                                        {% for co in row.codeOwners %}
+                                            <option value="{{ co.id }}">{{ co.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary">Print name</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

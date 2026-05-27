@@ -22,4 +22,36 @@ class GitRepoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, GitRepo::class);
     }
+
+    /**
+     * Repos reachable from any package-version advisory, with their advisory count.
+     *
+     * Path: GitRepo → GitTag → Installation → PackageVersion → Advisory.
+     *
+     * @return list<array{repo: GitRepo, advisoryCount: int}>
+     */
+    public function findReposWithAdvisoryCount(): array
+    {
+        /** @var list<array{repo: GitRepo, advisoryCount: int}> $rows */
+        $rows = $this->createQueryBuilder('r')
+            ->select('r AS repo', 'COUNT(DISTINCT a.id) AS advisoryCount')
+            ->innerJoin('r.gitTags', 'gt')
+            ->innerJoin('gt.installations', 'i')
+            ->innerJoin('i.packageVersions', 'pv')
+            ->innerJoin('pv.advisories', 'a')
+            ->groupBy('r.id')
+            ->having('COUNT(DISTINCT a.id) > 0')
+            ->orderBy('r.organization', 'ASC')
+            ->addOrderBy('r.repo', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return array_map(
+            static fn (array $row): array => [
+                'repo' => $row['repo'],
+                'advisoryCount' => (int) $row['advisoryCount'],
+            ],
+            $rows,
+        );
+    }
 }
