@@ -40,4 +40,14 @@ class OIDCRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function countExpiredCertificates(): int
+    {
+        return $this->createQueryBuilder('o')
+            ->select('COUNT(o)')
+            ->where('o.expirationTime < :now')
+            ->setParameter('now', new \DateTime())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
