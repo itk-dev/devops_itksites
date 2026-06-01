@@ -5,6 +5,17 @@
 {% block content_title %}Repositories with advisories{% endblock %}
 
 {% block main %}
+    <div class="d-flex justify-content-end mb-3">
+        <form method="post" action="{{ path('admin_repo_advisories_sync') }}" class="d-inline">
+            <input type="hidden" name="_token" value="{{ csrf_token(csrf_intent) }}">
+            <button type="submit"
+                    class="btn btn-secondary action-syncAll"
+                    onclick="const i=this.querySelector('i');if(i){i.classList.add('fa-spin')}this.style.pointerEvents='none';this.style.opacity='0.6'">
+                <i class="fa fa-rotate"></i> Sync all
+            </button>
+        </form>
+    </div>
+
     {% if rows is empty %}
         <div class="callout callout-info">No repositories have associated advisories.</div>
     {% else %}
@@ -12,6 +23,7 @@
             <thead>
                 <tr>
                     <th>Repository</th>
+                    <th>Project type &amp; version</th>
                     <th class="text-end">Advisories</th>
                     <th>Project</th>
                     <th>Service agreements</th>
@@ -28,8 +40,21 @@
                         .setEntityId(repo.id) %}
                     <tr>
                         <td><a href="{{ repo_url }}">{{ repo }}</a></td>
+                        <td>
+                            {% for tv in row.typesAndVersions %}
+                                <span class="badge badge-secondary">{{ tv }}</span>
+                            {% else %}
+                                &mdash;
+                            {% endfor %}
+                        </td>
                         <td class="text-end">
-                            <span class="badge badge-danger">{{ row.advisoryCount }}</span>
+                            {% if row.advisoriesUrl %}
+                                <a href="{{ row.advisoriesUrl }}" class="text-decoration-none">
+                                    <span class="badge badge-danger">{{ row.advisoryCount }}</span>
+                                </a>
+                            {% else %}
+                                <span class="badge badge-danger">{{ row.advisoryCount }}</span>
+                            {% endif %}
                         </td>
                         <td>
                             {% for project in row.projects %}
@@ -55,19 +80,30 @@
                             {% endfor %}
                         </td>
                         <td>
-                            {% if row.codeOwners is empty %}
+                            {% if row.openTicket %}
+                                <div>
+                                    <i class="fa fa-circle-check text-success"></i>
+                                    Issue assigned to <strong>{{ row.openTicket.assigneeName ?? 'Unassigned' }}</strong>
+                                    {% if row.openTicket.createdAt %}
+                                        <small class="text-muted">(created {{ row.openTicket.createdAt|date('Y-m-d') }})</small>
+                                    {% endif %}
+                                </div>
+                            {% elseif row.leantimeProjectId is null %}
+                                <em class="text-muted">No Leantime project linked</em>
+                            {% elseif row.codeOwners is empty %}
                                 <em class="text-muted">No code owners</em>
                             {% else %}
                                 <form method="post"
-                                      action="{{ path('admin_repo_advisories_print_codeowner', {repo: repo.id}) }}"
+                                      action="{{ path('admin_repo_advisories_create_ticket', {repoId: repo.id}) }}"
                                       class="d-flex gap-2 align-items-center">
                                     <input type="hidden" name="_token" value="{{ csrf_token(csrf_intent) }}">
+                                    <input type="hidden" name="leantimeProjectId" value="{{ row.leantimeProjectId }}">
                                     <select name="codeOwnerId" class="form-control form-control-sm" style="max-width: 16rem;">
                                         {% for co in row.codeOwners %}
                                             <option value="{{ co.id }}">{{ co.name }}</option>
                                         {% endfor %}
                                     </select>
-                                    <button type="submit" class="btn btn-sm btn-primary">Print name</button>
+                                    <button type="submit" class="btn btn-sm btn-primary">Create ticket</button>
                                 </form>
                             {% endif %}
                         </td>

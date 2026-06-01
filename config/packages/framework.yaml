@@ -20,6 +20,12 @@ framework:
                 scope: '%env(APP_ECONOMICS_URI)%'
                 headers:
                     x-api-key: '%env(APP_ECONOMICS_API_KEY)%'
+            leantime.client:
+                base_uri: '%env(default:default_leantime_uri:APP_LEANTIME_URI)%'
+                scope: '%env(default:default_leantime_uri:APP_LEANTIME_URI)%'
+                headers:
+                    Content-Type: 'application/json'
+                    x-api-key: '%env(default::APP_LEANTIME_API_KEY)%'
 
 when@test:
     framework:

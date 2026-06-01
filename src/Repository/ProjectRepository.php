@@ -36,9 +36,8 @@ class ProjectRepository extends ServiceEntityRepository
             ->select('p', 'co', 'sc')
             ->leftJoin('p.codeOwners', 'co')
             ->leftJoin('p.serviceAgreements', 'sc')
-            ->innerJoin('p.gitRepos', 'gr')
-            ->where('gr = :repo')
-            ->setParameter('repo', $repo)
+            ->where(':repoId MEMBER OF p.gitRepos')
+            ->setParameter('repoId', $repo->getId(), 'ulid')
             ->orderBy('p.name', 'ASC')
             ->getQuery()
             ->getResult();
