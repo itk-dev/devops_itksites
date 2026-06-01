@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Add Symfony Asset Mapper bundle and importmap
 - Add Renovate auto-patch + auto-release pipeline (Phase 1 fork validation)
 
+## [1.11.1] - 2026-06-01
+
+- [#84](https://github.com/itk-dev/devops_itksites/pull/84)
+  Update composer dependencies. Fix for Symfony and Twig CVE's
+
 ## [1.11.0] - 2026-05-19
 
 - [#78](https://github.com/itk-dev/devops_itksites/pull/78)
@@ -188,7 +193,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.11.0...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.11.1...HEAD
+[1.11.1]: https://github.com/itk-dev/devops_itksites/compare/1.11.0...1.11.1
 [1.11.0]: https://github.com/itk-dev/devops_itksites/compare/1.10.1...1.11.0
 [1.10.1]: https://github.com/itk-dev/devops_itksites/compare/1.10.0...1.10.1
 [1.10.0]: https://github.com/itk-dev/devops_itksites/compare/1.9.2...1.10.0
