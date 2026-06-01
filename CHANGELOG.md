@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - [#80](https://github.com/itk-dev/devops_itksites/pull/80  ) 7523: Service agreements
-  - Add Project entity top-level Economics project
+  - Add Project entity top-level Economics project.
   - Add CodeOwner entity
   - Add Leantime integration
 - [#80](https://github.com/itk-dev/devops_itksites/pull/80  ) 5566: Service agreements
