@@ -58,11 +58,15 @@ class LeantimeService
     /**
      * Find currently-open security tickets across all Leantime projects.
      *
-     * Pre-filters via searchCriteria (term + type + status), then tightens
-     * the LIKE match to an exact headline check, then keeps the most recent
-     * match per projectId.
+     * Pre-filters via the Leantime `searchCriteria` (term + type + status),
+     * then tightens the server-side LIKE match into an exact headline check,
+     * and finally keeps only the most recent matching ticket per Leantime
+     * project id. Used by the repo-advisories page to show whether a project
+     * already has an open security ticket.
      *
-     * @return array<int, array{assigneeName: ?string, createdAt: ?string, id: int}> keyed by Leantime project id
+     * @return array<int, array{assigneeName: ?string, createdAt: ?string, id: int}> tickets keyed by Leantime project id
+     *
+     * @throws \RuntimeException if the Leantime API rejects the request or the transport fails
      */
     public function findOpenSecurityTickets(): array
     {
@@ -112,6 +116,20 @@ class LeantimeService
         return $byProjectId;
     }
 
+    /**
+     * Resolve a Leantime user id for an email address.
+     *
+     * Loads (and caches) the Leantime user directory on first call and looks
+     * the email up case-insensitively. Returns null when the email is empty
+     * or not present in Leantime, so callers can decide whether to fall back
+     * to an unassigned ticket.
+     *
+     * @param string $email free-form email — leading/trailing whitespace and case are normalized
+     *
+     * @return int|null the Leantime user id, or null when no match exists
+     *
+     * @throws \RuntimeException if the user directory fetch fails
+     */
     public function findUserIdByEmail(string $email): ?int
     {
         $email = mb_strtolower(trim($email));
@@ -126,9 +144,18 @@ class LeantimeService
     /**
      * Create a "Sikkerhedsopdatering" task in the given Leantime project.
      *
-     * @return int the new ticket's Leantime ID
+     * Submits a ticket with priority `critical`, status `new`, and a one-hour
+     * planned/remaining estimate. Dates default to "today" — Leantime requires
+     * editFrom/editTo/dateToFinish on creation, so we set all three. When
+     * `$userId` is null the ticket is created unassigned (Leantime accepts an
+     * empty editorId).
      *
-     * @throws \RuntimeException if the API returns an error
+     * @param int      $projectId Leantime project id the ticket belongs to
+     * @param int|null $userId    Leantime user id to assign the ticket to, or null for unassigned
+     *
+     * @return int the new ticket's Leantime id, or 0 if Leantime returned an unexpected response shape
+     *
+     * @throws \RuntimeException if the API rejects the request or the transport fails
      */
     public function createSecurityTicket(int $projectId, ?int $userId = null): int
     {
@@ -161,11 +188,20 @@ class LeantimeService
     }
 
     /**
-     * Send a JSON-RPC 2.0 request.
+     * Send a JSON-RPC 2.0 request to the Leantime API.
      *
-     * @param array<string, mixed> $params
+     * Wraps the scoped HTTP client with the JSON-RPC envelope (jsonrpc/method/
+     * params/id) and unwraps the response. The HTTP client supplies the base
+     * URI and x-api-key header; this method just shapes the body and decodes
+     * the response. Both transport-level failures and API-level error
+     * responses are normalized into a RuntimeException.
      *
-     * @throws \RuntimeException on transport error or API error response
+     * @param string               $method JSON-RPC method name (e.g. `leantime.rpc.tickets.getAll`)
+     * @param array<string, mixed> $params method parameters to forward verbatim to Leantime
+     *
+     * @return mixed the decoded `result` field from the JSON-RPC response, or null when absent
+     *
+     * @throws \RuntimeException on transport error or when the API responds with an `error` object
      */
     private function request(string $method, array $params = []): mixed
     {
@@ -190,6 +226,21 @@ class LeantimeService
         return $data['result'] ?? null;
     }
 
+    /**
+     * Look up a Leantime user's display name by id.
+     *
+     * Loads (and caches) the user directory on first call. Accepts mixed
+     * input because Leantime delivers ids as either strings or ints in
+     * different payloads; both are coerced to int for lookup. Returns null
+     * when the id is empty or unknown so the caller can fall back to a
+     * neutral label like "Unassigned".
+     *
+     * @param mixed $userId raw user id straight from the Leantime payload (int, numeric string, or null)
+     *
+     * @return string|null the user's display name, or null when no match exists
+     *
+     * @throws \RuntimeException if the user directory fetch fails
+     */
     private function resolveUserName(mixed $userId): ?string
     {
         if (null === $userId || '' === $userId) {
@@ -200,6 +251,17 @@ class LeantimeService
         return $this->userNamesById[(int) $userId] ?? null;
     }
 
+    /**
+     * Populate the user id/name/email caches from Leantime.
+     *
+     * Idempotent: a non-null `$userNamesById` short-circuits the call so the
+     * directory is fetched at most once per service instance. Builds both an
+     * id → display-name map (preferring firstname+lastname, falling back to
+     * username) and an email → id map keyed by lowercase email. Malformed
+     * entries (missing id) are skipped silently.
+     *
+     * @throws \RuntimeException if the Leantime API rejects the request or the transport fails
+     */
     private function loadUsers(): void
     {
         if (null !== $this->userNamesById) {

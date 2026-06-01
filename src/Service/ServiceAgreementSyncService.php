@@ -37,9 +37,17 @@ readonly class ServiceAgreementSyncService
     /**
      * Fetch all projects from the Economics API and sync them locally.
      *
-     * @return array{projects:int, unmatchedRepoNames:list<string>}
+     * The Economics API is treated as the source of truth: every Project,
+     * CodeOwner and SecurityContract whose `economicsId` is not present in
+     * the response is removed. Nested data (codeowners, github repos and the
+     * service-agreement payload) is reconciled per project. GitHub repo names
+     * that cannot be matched against an existing GitRepo entry are collected
+     * and returned to the caller so they can be surfaced to the admin.
      *
-     * @throws \RuntimeException|\Exception if the API request fails
+     * @return array{projects: int, unmatchedRepoNames: list<string>} count of projects processed and the list of unresolvable GitHub repo names
+     *
+     * @throws \RuntimeException if the Economics API request fails
+     * @throws \Exception        if a date string in the payload cannot be parsed
      */
     public function syncAll(): array
     {
@@ -126,9 +134,20 @@ readonly class ServiceAgreementSyncService
     }
 
     /**
-     * @param array<int, array<string, mixed>> $codeOwnersData
-     * @param array<int, CodeOwner>            $existingCodeOwners passed by reference so newly-created owners are reused within one sync run
-     * @param list<int>                        $seenCodeOwnerIds
+     * Reconcile a project's code owners against the Economics payload.
+     *
+     * Upserts every code owner present in `$codeOwnersData` (creating new
+     * CodeOwner entities when needed), persists them, and adjusts the
+     * project's association so it ends up linked to exactly the desired set.
+     * Both `$existingCodeOwners` and `$seenCodeOwnerIds` are passed by
+     * reference because the caller reuses them across all projects in a
+     * single sync run — newly created owners must be reachable on the next
+     * iteration and the seen-list drives the post-loop cleanup pass.
+     *
+     * @param Project                          $project            project being synced
+     * @param array<int, array<string, mixed>> $codeOwnersData     raw `codeowners` array straight from Economics
+     * @param array<int, CodeOwner>            $existingCodeOwners by-reference id-keyed lookup; mutated to include newly-created owners
+     * @param list<int>                        $seenCodeOwnerIds   by-reference accumulator of every economicsId touched this run
      *
      * @param-out array<int, CodeOwner> $existingCodeOwners
      * @param-out list<int>             $seenCodeOwnerIds
@@ -165,8 +184,22 @@ readonly class ServiceAgreementSyncService
     }
 
     /**
-     * @param array<string, GitRepo> $existingGitReposByRepo
-     * @param array<string, true>    $unmatchedRepoNames     accumulator across all projects
+     * Reconcile a project's GitHub repo associations against the Economics payload.
+     *
+     * Splits the multi-line `githubRepos` string into individual repo names,
+     * matches each one against the existing GitRepo lookup, and adjusts the
+     * project's association to the desired set. Repo names that have no
+     * matching GitRepo entry are recorded in `$unmatchedRepoNames` so the
+     * caller can warn the operator; GitRepo entries are NOT created on the
+     * fly because they are normally populated by the harvester and creating
+     * a half-empty one here would mask the underlying onboarding gap.
+     *
+     * @param Project                $project                project being synced
+     * @param string|null            $githubReposString      raw multi-line list from Economics, or null when the field is unset
+     * @param array<string, GitRepo> $existingGitReposByRepo lookup keyed by GitRepo::getRepo()
+     * @param array<string, true>    $unmatchedRepoNames     by-reference accumulator across all projects (set-like)
+     *
+     * @param-out array<string, true> $unmatchedRepoNames
      */
     private function syncGitRepos(Project $project, ?string $githubReposString, array $existingGitReposByRepo, array &$unmatchedRepoNames): void
     {
@@ -201,9 +234,19 @@ readonly class ServiceAgreementSyncService
     }
 
     /**
-     * @param array<string, mixed> $data
+     * Copy a single Economics `serviceAgreement` payload onto a SecurityContract.
      *
-     * @throws \Exception
+     * Pure field-by-field mapping plus a project association — no persistence,
+     * no fetches. The contract may be either an existing entity (re-synced)
+     * or a brand-new one; the caller decides and persists it afterwards.
+     * Dates run through `parseDate()` which handles the Economics-specific
+     * `{date, timezone_type, timezone}` shape.
+     *
+     * @param SecurityContract     $contract entity to mutate in place
+     * @param array<string, mixed> $data     raw `serviceAgreement` payload from Economics
+     * @param Project              $project  project the contract belongs to
+     *
+     * @throws \Exception if a date string in the payload cannot be parsed
      */
     private function mapServiceAgreementToContract(SecurityContract $contract, array $data, Project $project): void
     {
@@ -224,11 +267,17 @@ readonly class ServiceAgreementSyncService
     }
 
     /**
-     * Parse the Economics API date format ({date, timezone_type, timezone}) into a DateTimeImmutable.
+     * Parse the Economics API's `{date, timezone_type, timezone}` shape into a DateTimeImmutable.
      *
-     * @param array{date?: string, timezone_type?: int, timezone?: string}|null $dateData
+     * Returns null when the payload is null or missing the `date` key so the
+     * caller can leave the contract field unset. The timezone string from the
+     * payload is used as-is when present; otherwise UTC is assumed.
      *
-     * @throws \Exception if the date string cannot be parsed
+     * @param array{date?: string, timezone_type?: int, timezone?: string}|null $dateData raw date payload from Economics, or null when absent
+     *
+     * @return \DateTimeImmutable|null parsed date, or null when no date was supplied
+     *
+     * @throws \Exception if the date string cannot be parsed by DateTimeImmutable
      */
     private function parseDate(?array $dateData): ?\DateTimeImmutable
     {
