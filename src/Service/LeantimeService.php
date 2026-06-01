@@ -10,14 +10,11 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /**
  * Minimal JSON-RPC 2.0 client for the Leantime API.
  *
- * Only the calls this app needs: list open "Sikkerhedsopdatering" tickets,
- * map codeowner emails to Leantime user IDs, and create new security tickets.
- * The JSON-RPC contract (POST /api/jsonrpc/, x-api-key header) is copied
- * verbatim from the reference implementation in leantime_ticket_generator.
- *
- * The scoped HTTP client `$leantimeClient` (configured in framework.yaml)
- * provides the base URI and the x-api-key header, so this class only needs
- * to assemble the JSON-RPC body and unwrap responses.
+ * Exposes the calls this app needs: listing open "Sikkerhedsopdatering"
+ * tickets, mapping codeowner emails to user IDs, and creating security
+ * tickets. The scoped HTTP client `$leantimeClient` supplies the base URI and
+ * the x-api-key header; this class only assembles the JSON-RPC body and
+ * unwraps responses.
  */
 class LeantimeService
 {
@@ -59,10 +56,8 @@ class LeantimeService
      * Find currently-open security tickets across all Leantime projects.
      *
      * Pre-filters via the Leantime `searchCriteria` (term + type + status),
-     * then tightens the server-side LIKE match into an exact headline check,
-     * and finally keeps only the most recent matching ticket per Leantime
-     * project id. Used by the repo-advisories page to show whether a project
-     * already has an open security ticket.
+     * tightens the LIKE match into an exact headline check, and keeps the
+     * most recent matching ticket per Leantime project id.
      *
      * @return array<int, array{assigneeName: ?string, createdAt: ?string, id: int}> tickets keyed by Leantime project id
      *
@@ -119,10 +114,9 @@ class LeantimeService
     /**
      * Resolve a Leantime user id for an email address.
      *
-     * Loads (and caches) the Leantime user directory on first call and looks
-     * the email up case-insensitively. Returns null when the email is empty
-     * or not present in Leantime, so callers can decide whether to fall back
-     * to an unassigned ticket.
+     * Lazy-loads the Leantime user directory on first call and looks the
+     * email up case-insensitively. Returns null when the email is empty or
+     * unknown so the caller can fall back to an unassigned ticket.
      *
      * @param string $email free-form email — leading/trailing whitespace and case are normalized
      *
@@ -144,11 +138,9 @@ class LeantimeService
     /**
      * Create a "Sikkerhedsopdatering" task in the given Leantime project.
      *
-     * Submits a ticket with priority `critical`, status `new`, and a one-hour
-     * planned/remaining estimate. Dates default to "today" — Leantime requires
-     * editFrom/editTo/dateToFinish on creation, so we set all three. When
-     * `$userId` is null the ticket is created unassigned (Leantime accepts an
-     * empty editorId).
+     * Submits a ticket with priority `critical`, status `new`, a one-hour
+     * planned estimate, and editFrom/editTo/dateToFinish all set to today.
+     * A null `$userId` produces an unassigned ticket.
      *
      * @param int      $projectId Leantime project id the ticket belongs to
      * @param int|null $userId    Leantime user id to assign the ticket to, or null for unassigned
@@ -190,11 +182,9 @@ class LeantimeService
     /**
      * Send a JSON-RPC 2.0 request to the Leantime API.
      *
-     * Wraps the scoped HTTP client with the JSON-RPC envelope (jsonrpc/method/
-     * params/id) and unwraps the response. The HTTP client supplies the base
-     * URI and x-api-key header; this method just shapes the body and decodes
-     * the response. Both transport-level failures and API-level error
-     * responses are normalized into a RuntimeException.
+     * Wraps the call in the JSON-RPC envelope, decodes the response, and
+     * normalizes both transport failures and API-level error objects into
+     * RuntimeException.
      *
      * @param string               $method JSON-RPC method name (e.g. `leantime.rpc.tickets.getAll`)
      * @param array<string, mixed> $params method parameters to forward verbatim to Leantime
@@ -229,13 +219,11 @@ class LeantimeService
     /**
      * Look up a Leantime user's display name by id.
      *
-     * Loads (and caches) the user directory on first call. Accepts mixed
-     * input because Leantime delivers ids as either strings or ints in
-     * different payloads; both are coerced to int for lookup. Returns null
-     * when the id is empty or unknown so the caller can fall back to a
-     * neutral label like "Unassigned".
+     * Lazy-loads the user directory on first call and coerces the id to int
+     * (Leantime delivers it as either string or int). Returns null when the
+     * id is empty or unknown.
      *
-     * @param mixed $userId raw user id straight from the Leantime payload (int, numeric string, or null)
+     * @param mixed $userId raw user id from the Leantime payload (int, numeric string, or null)
      *
      * @return string|null the user's display name, or null when no match exists
      *
@@ -254,11 +242,10 @@ class LeantimeService
     /**
      * Populate the user id/name/email caches from Leantime.
      *
-     * Idempotent: a non-null `$userNamesById` short-circuits the call so the
-     * directory is fetched at most once per service instance. Builds both an
-     * id → display-name map (preferring firstname+lastname, falling back to
-     * username) and an email → id map keyed by lowercase email. Malformed
-     * entries (missing id) are skipped silently.
+     * Idempotent — fetches the directory at most once per service instance.
+     * Builds an id → display-name map (firstname+lastname, falling back to
+     * username) and an email → id map keyed by lowercase email; entries with
+     * no id are skipped.
      *
      * @throws \RuntimeException if the Leantime API rejects the request or the transport fails
      */

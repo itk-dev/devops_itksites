@@ -37,12 +37,11 @@ readonly class ServiceAgreementSyncService
     /**
      * Fetch all projects from the Economics API and sync them locally.
      *
-     * The Economics API is treated as the source of truth: every Project,
-     * CodeOwner and SecurityContract whose `economicsId` is not present in
-     * the response is removed. Nested data (codeowners, github repos and the
-     * service-agreement payload) is reconciled per project. GitHub repo names
-     * that cannot be matched against an existing GitRepo entry are collected
-     * and returned to the caller so they can be surfaced to the admin.
+     * Treats the Economics API as the source of truth: any Project,
+     * CodeOwner or SecurityContract whose `economicsId` is missing from the
+     * response is removed. Nested codeowners, GitHub repos and service
+     * agreements are reconciled per project; GitHub repo names with no
+     * matching GitRepo entry are returned for the caller to surface.
      *
      * @return array{projects: int, unmatchedRepoNames: list<string>} count of projects processed and the list of unresolvable GitHub repo names
      *
@@ -136,16 +135,14 @@ readonly class ServiceAgreementSyncService
     /**
      * Reconcile a project's code owners against the Economics payload.
      *
-     * Upserts every code owner present in `$codeOwnersData` (creating new
-     * CodeOwner entities when needed), persists them, and adjusts the
-     * project's association so it ends up linked to exactly the desired set.
-     * Both `$existingCodeOwners` and `$seenCodeOwnerIds` are passed by
-     * reference because the caller reuses them across all projects in a
-     * single sync run — newly created owners must be reachable on the next
-     * iteration and the seen-list drives the post-loop cleanup pass.
+     * Upserts each owner in `$codeOwnersData`, persists it, and links the
+     * project to exactly the desired set. The `$existingCodeOwners` and
+     * `$seenCodeOwnerIds` arrays are by-reference so newly created owners
+     * are reused across projects in the same sync run, and the seen-list
+     * drives the post-loop cleanup pass.
      *
      * @param Project                          $project            project being synced
-     * @param array<int, array<string, mixed>> $codeOwnersData     raw `codeowners` array straight from Economics
+     * @param array<int, array<string, mixed>> $codeOwnersData     raw `codeowners` array from Economics
      * @param array<int, CodeOwner>            $existingCodeOwners by-reference id-keyed lookup; mutated to include newly-created owners
      * @param list<int>                        $seenCodeOwnerIds   by-reference accumulator of every economicsId touched this run
      *
@@ -186,13 +183,10 @@ readonly class ServiceAgreementSyncService
     /**
      * Reconcile a project's GitHub repo associations against the Economics payload.
      *
-     * Splits the multi-line `githubRepos` string into individual repo names,
-     * matches each one against the existing GitRepo lookup, and adjusts the
-     * project's association to the desired set. Repo names that have no
-     * matching GitRepo entry are recorded in `$unmatchedRepoNames` so the
-     * caller can warn the operator; GitRepo entries are NOT created on the
-     * fly because they are normally populated by the harvester and creating
-     * a half-empty one here would mask the underlying onboarding gap.
+     * Splits the multi-line `githubRepos` string and links the project to
+     * exactly the matching GitRepo entries. Unknown repo names are recorded
+     * in `$unmatchedRepoNames`; GitRepo entries are not created on the fly
+     * because that would hide the underlying harvester onboarding gap.
      *
      * @param Project                $project                project being synced
      * @param string|null            $githubReposString      raw multi-line list from Economics, or null when the field is unset
@@ -236,11 +230,10 @@ readonly class ServiceAgreementSyncService
     /**
      * Copy a single Economics `serviceAgreement` payload onto a SecurityContract.
      *
-     * Pure field-by-field mapping plus a project association — no persistence,
-     * no fetches. The contract may be either an existing entity (re-synced)
-     * or a brand-new one; the caller decides and persists it afterwards.
-     * Dates run through `parseDate()` which handles the Economics-specific
-     * `{date, timezone_type, timezone}` shape.
+     * Field-by-field mapping plus the project association. No persistence
+     * and no fetches — the caller persists the contract afterwards. Dates
+     * go through `parseDate()` to handle Economics' `{date, timezone_type,
+     * timezone}` shape.
      *
      * @param SecurityContract     $contract entity to mutate in place
      * @param array<string, mixed> $data     raw `serviceAgreement` payload from Economics
@@ -269,9 +262,8 @@ readonly class ServiceAgreementSyncService
     /**
      * Parse the Economics API's `{date, timezone_type, timezone}` shape into a DateTimeImmutable.
      *
-     * Returns null when the payload is null or missing the `date` key so the
-     * caller can leave the contract field unset. The timezone string from the
-     * payload is used as-is when present; otherwise UTC is assumed.
+     * Returns null when the payload is null or has no `date` key. The
+     * payload's timezone is honored when present; otherwise UTC is assumed.
      *
      * @param array{date?: string, timezone_type?: int, timezone?: string}|null $dateData raw date payload from Economics, or null when absent
      *

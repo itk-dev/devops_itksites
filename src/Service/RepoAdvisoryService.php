@@ -15,16 +15,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 /**
  * Page-flow service backing the repo-advisories admin index.
  *
- * Owns the data assembly that used to live in RepoAdvisoryController: joining
- * GitRepo + Project + CodeOwner state, deriving installation type/version
- * labels, building the deep-link URL into AdvisoryCrudController, and
- * augmenting each row with live Leantime ticket state. Also orchestrates the
- * inline "create security ticket" action by combining a CodeOwner lookup with
- * LeantimeService calls.
- *
- * Kept separate from LeantimeService so the JSON-RPC client stays a thin
- * Leantime API wrapper, and separate from ServiceAgreementSyncService since
- * the shapes here exist only to feed the admin template.
+ * Joins GitRepo + Project + CodeOwner state into per-repo rows for the admin
+ * template, augments each row with the matching Leantime security ticket, and
+ * orchestrates the inline "create security ticket" action by combining a
+ * CodeOwner lookup with LeantimeService calls.
  */
 class RepoAdvisoryService
 {
@@ -40,17 +34,12 @@ class RepoAdvisoryService
     /**
      * Build the rows + warnings rendered by the repo-advisories admin index.
      *
-     * Loads every GitRepo that has at least one advisory, attaches its
-     * projects/codeowners, derives installation-type/version labels, computes
-     * a filtered URL into AdvisoryCrudController for the repo's affected
-     * package versions, and pairs each row with the most recent matching
-     * Leantime "Sikkerhedsopdatering" ticket (if any).
+     * Loads every GitRepo with at least one advisory and pairs each one with
+     * its matching open Leantime ticket. A Leantime fetch failure is captured
+     * in `leantimeError` so the page can still render the rows without ticket
+     * state.
      *
-     * Failures while fetching Leantime tickets are caught and surfaced via the
-     * returned `leantimeError` so the page can still render the rows without
-     * ticket state — Leantime being down should not break the advisories view.
-     *
-     * @return array{rows: list<array<string, mixed>>, leantimeError: ?string} rows keyed by repo plus an optional Leantime error message for the caller to flash
+     * @return array{rows: list<array<string, mixed>>, leantimeError: ?string} rows plus an optional Leantime error for the caller to flash
      */
     public function buildIndexRows(): array
     {
@@ -79,15 +68,13 @@ class RepoAdvisoryService
     /**
      * Create a Leantime "Sikkerhedsopdatering" ticket on behalf of a code owner.
      *
-     * Resolves the code owner via the repository, asks LeantimeService to
-     * translate its email into a Leantime user id, then creates the security
-     * ticket on the given project. When the email cannot be mapped to a
-     * Leantime user the ticket is still created — just unassigned — and the
-     * caller learns about it via the `unassigned` flag in the result.
+     * Resolves the code owner, maps its email to a Leantime user id, and
+     * creates the ticket on the given project. When no Leantime user matches
+     * the ticket is still created — just unassigned — signalled via the
+     * `unassigned` flag in the result.
      *
      * @param string $codeOwnerId       RFC-4122 UUID of a CodeOwner entity
-     * @param int    $leantimeProjectId numeric Leantime project id (external
-     *                                  system's id, not an ORM id)
+     * @param int    $leantimeProjectId numeric Leantime project id (external system's id, not an ORM id)
      *
      * @return array{ticketId: int, codeOwner: CodeOwner, unassigned: bool} the new ticket id, the resolved code owner, and whether the ticket is unassigned
      *
@@ -114,17 +101,16 @@ class RepoAdvisoryService
     /**
      * Build a single repo-advisory row for the admin index.
      *
-     * Encapsulates the per-repo joins: projects, code owners (deduplicated by
-     * id), installation type/version labels, the AdvisoryCrudController
-     * deep-link, and the matching Leantime ticket (preferring the project
-     * whose id has an open ticket; otherwise falling back to the first
-     * project's Leantime id).
+     * Resolves the repo's projects, deduplicates their code owners, derives
+     * installation type/version labels, builds the AdvisoryCrudController
+     * deep-link, and picks the Leantime project id — preferring one with an
+     * open ticket, otherwise the first non-empty project id.
      *
      * @param array{repo: \App\Entity\GitRepo, advisoryCount: int}                  $entry                  repo + precomputed advisory count
      * @param array<string, list<string>>                                           $packageVersionsPerRepo map of repo-id → package version ids that have advisories
      * @param array<int, array{assigneeName: ?string, createdAt: ?string, id: int}> $ticketsByLeantimeId    open security tickets keyed by Leantime project id
      *
-     * @return array<string, mixed> Row data ready for the Twig template
+     * @return array<string, mixed> row data ready for the Twig template
      */
     private function buildRow(array $entry, array $packageVersionsPerRepo, array $ticketsByLeantimeId): array
     {
