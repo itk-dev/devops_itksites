@@ -7,18 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Adapt `/api/serviceagreements` consumer to new payload shape
-  - Add `Project` entity (top-level Economics project) with relations to
-    `CodeOwner` (ManyToMany), `GitRepo` (ManyToMany, matched by repo name),
-    and `SecurityContract` (OneToMany)
-  - Add `CodeOwner` entity (economicsId/name/email)
-  - Slim `SecurityContract` to the nested-agreement fields; drop
-    `projectName`, `clientName`, `leantimeUrl`, `projectTrackerKey`,
-    `gitRepos`, `quarterlyHours`, `cybersecurityPrice`, `cybersecurityNote`;
-    add ManyToOne to `Project`
-  - Rewrite `ServiceAgreementSyncService` to upsert projects, codeowners,
-    and contracts in one pass; warn when `githubRepos` names cannot be
-    linked to existing `GitRepo` rows
+- [#80](https://github.com/itk-dev/devops_itksites/pull/80  ) 7523: Service agreements
+  - Add Project entity top-level Economics project
+  - Add CodeOwner entity
+  - Add Leantime integration
 - [#80](https://github.com/itk-dev/devops_itksites/pull/80  ) 5566: Service agreements
   - Add security contract entity with crud controller
   - Add Abstract full crud controller and extend on it in some cases
