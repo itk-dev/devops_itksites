@@ -14,9 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#81](https://github.com/itk-dev/devops_itksites/pull/81) 5564: Asset Mapper migration
   - Add Symfony Asset Mapper bundle and importmap
 
-- [#84](https://github.com/itk-dev/devops_itksites/pull/84)
-  Update composer dependencies. Fix for Symfony and Twig CVE's
-
 - [#85](https://github.com/itk-dev/devops_itksites/pull/85)
   Update openid-connect-bundle to 5.0 and Symfony to 8.1
   - Bump `itk-dev/openid-connect-bundle` to `^5.0` (pulls `itk-dev/openid-connect` 5.0)
@@ -24,6 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `OpenIdConnectExceptionInterface` (5.0 BC: concrete exceptions no longer
     extend `ItkOpenIdConnectException`)
   - Update Symfony to 8.1
+
+## [1.11.1] - 2026-06-01
+
+- [#84](https://github.com/itk-dev/devops_itksites/pull/84)
+  Update composer dependencies. Fix for Symfony and Twig CVE's
 
 ## [1.11.0] - 2026-05-19
 
