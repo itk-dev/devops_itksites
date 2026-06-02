@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Add Symfony Asset Mapper bundle and importmap
 - Add Renovate auto-patch + auto-release pipeline (Phase 1 fork validation)
 
+## [1.11.2] - 2026-06-02
+
 - [#85](https://github.com/itk-dev/devops_itksites/pull/85)
   Update openid-connect-bundle to 5.0 and Symfony to 8.1
   - Bump `itk-dev/openid-connect-bundle` to `^5.0` (pulls `itk-dev/openid-connect` 5.0)
@@ -201,7 +203,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.11.1...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.11.2...HEAD
+[1.11.2]: https://github.com/itk-dev/devops_itksites/compare/1.11.1...1.11.2
 [1.11.1]: https://github.com/itk-dev/devops_itksites/compare/1.11.0...1.11.1
 [1.11.0]: https://github.com/itk-dev/devops_itksites/compare/1.10.1...1.11.0
 [1.10.1]: https://github.com/itk-dev/devops_itksites/compare/1.10.0...1.10.1
