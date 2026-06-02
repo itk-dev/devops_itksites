@@ -11,13 +11,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Add Project entity top-level Economics project.
   - Add CodeOwner entity
   - Add Leantime integration
-- [#80](https://github.com/itk-dev/devops_itksites/pull/80  ) 5566: Service agreements
+- [#80](https://github.com/itk-dev/devops_itksites/pull/80) 5566: Service agreements
   - Add security contract entity with crud controller
   - Add Abstract full crud controller and extend on it in some cases
   - Add economics service and sync action/command for service agreement synchronization
 - [#81](https://github.com/itk-dev/devops_itksites/pull/81) 5564: Asset Mapper migration
   - Add Symfony Asset Mapper bundle and importmap
 - Add Renovate auto-patch + auto-release pipeline (Phase 1 fork validation)
+
+- [#85](https://github.com/itk-dev/devops_itksites/pull/85)
+  Update openid-connect-bundle to 5.0 and Symfony to 8.1
+  - Bump `itk-dev/openid-connect-bundle` to `^5.0` (pulls `itk-dev/openid-connect` 5.0)
+  - Migrate OIDC authenticator to the new exception marker interface
+    `OpenIdConnectExceptionInterface` (5.0 BC: concrete exceptions no longer
+    extend `ItkOpenIdConnectException`)
+  - Update Symfony to 8.1
 
 ## [1.11.1] - 2026-06-01
 
