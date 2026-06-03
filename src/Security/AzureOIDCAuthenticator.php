@@ -6,8 +6,7 @@ namespace App\Security;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use ItkDev\OpenIdConnect\Exception\ItkOpenIdConnectException;
-use ItkDev\OpenIdConnectBundle\Exception\InvalidProviderException;
+use ItkDev\OpenIdConnect\Exception\OpenIdConnectExceptionInterface;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdConfigurationProviderManager;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdLoginAuthenticator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -63,7 +62,7 @@ class AzureOIDCAuthenticator extends OpenIdLoginAuthenticator
             $this->entityManager->flush();
 
             return new SelfValidatingPassport(new UserBadge($user->getUserIdentifier()));
-        } catch (ItkOpenIdConnectException|InvalidProviderException $exception) {
+        } catch (OpenIdConnectExceptionInterface $exception) {
             throw new CustomUserMessageAuthenticationException($exception->getMessage());
         }
     }
