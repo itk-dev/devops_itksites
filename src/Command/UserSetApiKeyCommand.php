@@ -7,7 +7,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
@@ -31,7 +30,9 @@ readonly class UserSetApiKeyCommand
             ?? $this->userRepository->findOneBy(['name' => $userId]);
 
         if (null === $user) {
-            throw new InvalidArgumentException(sprintf('Cannot load user with id %s', $userId));
+            $io->error(sprintf('Cannot load user with id %s', $userId));
+
+            return Command::INVALID;
         }
 
         $question = sprintf('Really set API key on user %s', $user->getUserIdentifier());
