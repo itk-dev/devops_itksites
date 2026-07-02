@@ -59,6 +59,98 @@ paths:
             schema:
               $ref: '#/components/schemas/DetectionResult-write'
         required: true
+  /api/servers:
+    get:
+      operationId: api_servers_get_collection
+      tags:
+        - Server
+      responses:
+        '200':
+          description: 'Server collection'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Server-export'
+            application/ld+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Server-export'
+        '403':
+          description: Forbidden
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Error.jsonld'
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          links: {}
+      summary: 'Retrieves the collection of Server resources.'
+      description: 'Retrieves the collection of Server resources.'
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'The collection page number'
+          required: false
+          deprecated: false
+          schema:
+            type: integer
+            default: 1
+          style: form
+          explode: true
+  /api/sites:
+    get:
+      operationId: api_sites_get_collection
+      tags:
+        - Site
+      responses:
+        '200':
+          description: 'Site collection'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Site-export'
+            application/ld+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Site-export'
+        '403':
+          description: Forbidden
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Error.jsonld'
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          links: {}
+      summary: 'Retrieves the collection of Site resources.'
+      description: 'Retrieves the collection of Site resources.'
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'The collection page number'
+          required: false
+          deprecated: false
+          schema:
+            type: integer
+            default: 1
+          style: form
+          explode: true
 components:
   schemas:
     ConstraintViolation:
@@ -250,6 +342,32 @@ components:
           type:
             - string
             - 'null'
+    Server-export:
+      type: object
+      properties:
+        Name:
+          default: ''
+          type: string
+    Site-export:
+      type: object
+      required:
+        - 'PHP version'
+      properties:
+        'PHP version':
+          minLength: 1
+          maxLength: 10
+          default: ''
+          type: string
+        'Primary domain':
+          readOnly: true
+          type: string
+        Type:
+          default: ''
+          type: string
+        Server:
+          $ref: '#/components/schemas/Server-export'
+        rootDir:
+          type: string
   responses: {}
   parameters: {}
   examples: {}
@@ -267,4 +385,8 @@ security:
 tags:
   - name: DetectionResult
     description: "Resource 'DetectionResult' operations."
+  - name: Server
+    description: "Resource 'Server' operations."
+  - name: Site
+    description: "Resource 'Site' operations."
 webhooks: {}
