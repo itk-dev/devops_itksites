@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ServerRepository;
+use App\Trait\ApiKeyEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,16 +17,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ServerRepository::class)]
 class Server extends AbstractBaseEntity implements UserInterface, \Stringable
 {
-    private const array ROLES = ['ROLE_USER', 'ROLE_SERVER'];
+    use ApiKeyEntityTrait;
 
-    #[ORM\Column(type: 'string', length: 255, unique: true)]
-    #[Assert\Length(
-        min: 40,
-        max: 255,
-        minMessage: 'Api key must be at least {{ limit }} characters long',
-        maxMessage: 'Api key cannot be longer than {{ limit }} characters',
-    )]
-    private string $apiKey;
+    private const array ROLES = ['ROLE_USER', 'ROLE_SERVER'];
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
     #[Groups(['export'])]
@@ -93,8 +87,8 @@ class Server extends AbstractBaseEntity implements UserInterface, \Stringable
      */
     public function __construct()
     {
+        $this->setApiKey($this->generateApiKey());
         $this->detectionResults = new ArrayCollection();
-        $this->apiKey = sha1(\random_bytes(40));
         $this->installations = new ArrayCollection();
     }
 
@@ -254,18 +248,6 @@ class Server extends AbstractBaseEntity implements UserInterface, \Stringable
     public function setUsedFor(?string $usedFor): self
     {
         $this->usedFor = $usedFor;
-
-        return $this;
-    }
-
-    public function getApiKey(): string
-    {
-        return $this->apiKey;
-    }
-
-    public function setApiKey(string $apiKey): self
-    {
-        $this->apiKey = $apiKey;
 
         return $this;
     }

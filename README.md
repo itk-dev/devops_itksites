@@ -45,6 +45,24 @@ The system is build so that all analyzed data can be truncated safely and rebuil
 by "replaying" the DetectionResults. This means that care must be taken when
 manually maintained data and auto updated data must have cross references.
 
+## API
+
+Authenticated users can access a simple read-only API – see the API documentation on `/api/docs` for details.
+
+### API keys
+
+Run the `app:user:set-api-key` console command to set the API for a user:
+
+``` shell
+docker compose exec phpfpm php bin/console app:user:set-api-key <user-id>
+```
+
+Use the API key to make an authenticated request, e.g.
+
+``` shell
+curl --header 'accept: application/json' --header 'authorization: Apikey <the API key>' https://itksites.local.itkdev.dk/api/sites
+```
+
 ## Development
 
 ```sh
