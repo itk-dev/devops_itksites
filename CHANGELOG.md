@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#89](https://github.com/itk-dev/devops_itksites/pull/89)
+  Added `--rm` to `docker compose run` in prod deployment
 - [#88](https://github.com/itk-dev/devops_itksites/pull/88)
   - Let users use the API
   - Add security to detection results API endpoint
