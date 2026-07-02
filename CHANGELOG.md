@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#88](https://github.com/itk-dev/devops_itksites/pull/88)
   - Let users use the API
+  - Add security to detection results API endpoint
 - [#80](https://github.com/itk-dev/devops_itksites/pull/80) 5566: Service agreements
   - Add security contract entity with crud controller
   - Add Abstract full crud controller and extend on it in some cases

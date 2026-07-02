@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ApiResource(
     operations: [
         new Post(
+            security: "is_granted('ROLE_SERVER')",
             status: 202,
             output: false,
             messenger: true,
