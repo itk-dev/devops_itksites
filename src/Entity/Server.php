@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\ServerRepository;
 use App\Trait\ApiKeyEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,6 +16,11 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[ApiResource(
+    normalizationContext: ['groups' => ['export']],
+    security: "is_granted('ROLE_USER')",
+)]
+#[GetCollection()]
 #[ORM\Entity(repositoryClass: ServerRepository::class)]
 class Server extends AbstractBaseEntity implements UserInterface, \Stringable
 {
