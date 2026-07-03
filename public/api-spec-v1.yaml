@@ -1,7 +1,10 @@
 openapi: 3.1.0
 info:
-  title: 'ITKsites Detection API'
-  description: 'REST API for ingesting server detection results from the ITK sites server harvester. Detection results are processed asynchronously to track servers, sites, domains, packages, modules, Docker images, and git repositories.'
+  title: 'ITKsites API'
+  description: |-
+    REST API for ingesting server detection results from the ITK sites server harvester. Detection results are processed asynchronously to track servers, sites, domains, packages, modules, Docker images, and git repositories.
+
+    The API also provides read-only access to information on servers and sites created by processing detection results.
   version: 1.0.0
 servers:
   - url: 'https://itksites.local.itkdev.dk'
