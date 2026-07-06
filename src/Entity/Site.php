@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\SiteRepository;
 use App\Types\SiteType;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,6 +15,11 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[ApiResource(
+    normalizationContext: ['groups' => ['export']],
+    security: "is_granted('ROLE_USER')",
+)]
+#[GetCollection()]
 #[ORM\Entity(repositoryClass: SiteRepository::class)]
 #[ORM\UniqueConstraint(name: 'server_rootDir_configFilePath_idx', fields: ['server', 'rootDir', 'configFilePath'])]
 class Site extends AbstractHandlerResult implements \Stringable
