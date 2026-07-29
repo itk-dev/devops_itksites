@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#90](https://github.com/itk-dev/devops_itksites/pull/90)
+  - Fixed user API key migration failing on databases with more than one user
+  - Generated an API key for existing users, as users created since already get
+  - Added users to the fixtures and a CI job running migrations on a populated
+    database
 - [#89](https://github.com/itk-dev/devops_itksites/pull/89)
   Added `--rm` to `docker compose run` in prod deployment
 - [#88](https://github.com/itk-dev/devops_itksites/pull/88)
