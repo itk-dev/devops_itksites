@@ -3,3 +3,12 @@ App\Entity\User:
         __construct: ["Admin", "admin@example.com", [ROLE_ADMIN]]
     user_user:
         __construct: ["User", "user@example.com", [ROLE_USER]]
+    # A few more users so migrations are exercised against a table holding more
+    # than one row. A single row cannot collide with itself, which hides
+    # migrations adding a unique column to an existing table.
+    user_1:
+        __construct: ["User 1", "user1@example.com", [ROLE_USER]]
+    user_2:
+        __construct: ["User 2", "user2@example.com", [ROLE_USER]]
+    user_3:
+        __construct: ["User 3", "user3@example.com", [ROLE_USER]]
