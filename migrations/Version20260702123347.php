@@ -19,8 +19,18 @@ final class Version20260702123347 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
+        // Adding the column gives every existing user the same empty string,
+        // which collides on the unique index. Add random keys to allow unique index.
+        //
+        // The keys are generated in PHP because they are credentials and have
+        // to come from a cryptographically secure source. SQL's RAND() and
+        // UUID() are not one.
         $this->addSql('ALTER TABLE user ADD api_key VARCHAR(255) NOT NULL');
+
+        foreach ($this->connection->fetchFirstColumn('SELECT email FROM user') as $email) {
+            $this->addSql('UPDATE user SET api_key = ? WHERE email = ?', [sha1(\random_bytes(40)), $email]);
+        }
+
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649C912ED9D ON user (api_key)');
     }
 
