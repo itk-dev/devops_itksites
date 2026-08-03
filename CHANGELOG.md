@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#91](https://github.com/itk-dev/devops_itksites/pull/91) Health endpoints
+  - Add `/health/live`, `/health/ready` and `/health/detail` endpoints
+  - Add health checks for database, RabbitMQ transport and detection result freshness
+  - Cache check results in a dedicated `cache.health` pool
+  - Exclude `^/health` from the firewalls and protect `/health/detail` with `ITKBasicAuth`
 - [#90](https://github.com/itk-dev/devops_itksites/pull/90)
   - Fixed user API key migration failing on databases with more than one user
   - Generated an API key for existing users, as users created since already get

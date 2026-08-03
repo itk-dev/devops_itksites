@@ -63,6 +63,43 @@ Use the API key to make an authenticated request, e.g.
 curl --header 'accept: application/json' --header 'authorization: Apikey <the API key>' https://itksites.local.itkdev.dk/api/sites
 ```
 
+## Health checks
+
+Three endpoints report on the application, in increasing order of detail:
+
+| Endpoint | Access | Checks |
+| --- | --- | --- |
+| `/health/live` | Public | Nothing – only that the app responds |
+| `/health/ready` | Public | All checks, aggregated status only |
+| `/health/detail` | `ITKBasicAuth` in Traefik | Per-check results and timings |
+
+`/health/ready` answers `200` when everything is well and `503` when it is not.
+It deliberately does not say *what* is wrong – point monitoring at this one and
+read `/health/detail` when it goes red:
+
+``` shell
+curl --silent https://itksites.local.itkdev.dk/health/detail | jq
+```
+
+The checks cover the database, the RabbitMQ messenger transport and the
+freshness of the most recent detection result. The last one catches an ingest
+pipeline that has stopped while the application itself is still serving
+requests.
+
+`HEALTH_INGEST_MAX_AGE` sets how old the most recent detection result may be
+before ingest is reported as degraded.
+
+Results are cached for `HEALTH_CACHE_TTL` seconds so that polling does not turn
+into load on the dependencies. The cache is the dedicated, filesystem-backed
+`cache.health` pool in `config/packages/cache.yaml` – it has to keep working
+while the database and the broker are down, and the adapter can be swapped
+there without touching code.
+
+`^/health` is excluded from the Symfony firewalls: both user providers are
+Doctrine entity providers, so an authenticated endpoint would fail to
+authenticate during a database outage and answer `500` rather than reporting
+that the database is down.
+
 ## Development
 
 ```sh

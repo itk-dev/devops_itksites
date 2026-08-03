@@ -15,5 +15,15 @@ framework:
         #app: cache.adapter.apcu
 
         # Namespaced pools use the above "app" backend by default
-        #pools:
-        #my.dedicated.cache: null
+        pools:
+            # Health check results.
+            #
+            # Filesystem-backed on purpose: this pool has to keep working while
+            # the database and the message broker are down, which is exactly
+            # when the health endpoints matter.
+            #
+            # It is a dedicated pool so the adapter can be swapped without
+            # touching code: cache.adapter.apcu is faster and shared between
+            # FPM workers, at the cost of being cleared on every FPM restart.
+            cache.health:
+                adapter: cache.adapter.filesystem
