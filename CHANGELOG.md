@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#92](https://github.com/itk-dev/devops_itksites/pull/92) Update openid-connect-bundle to 6.0
+  - Bump `itk-dev/openid-connect-bundle` to `^6.0`
+  - A failed OIDC callback now raises an error instead of redirecting to the
+    identity provider again, so an expired client secret can no longer put the
+    site in a login loop
+  - Only the provider's callback path is treated as a callback; the configured
+    `redirect_uri` covers this, no `callback_path` needed
+  - Set `client_secret_expires_at` for the `azure_az` provider from the new
+    `AZURE_AZ_OIDC_CLIENT_SECRET_EXPIRES_AT` variable, so the bundle warns
+    before the secret expires
+  - Render a failed login as a page saying so, instead of an unhandled
+    exception, in `OpenIdConnectFailureListener`
 - [#91](https://github.com/itk-dev/devops_itksites/pull/91) Health endpoints
   - Add `/health/live`, `/health/ready` and `/health/detail` endpoints
   - Add health checks for database, RabbitMQ transport and detection result freshness
