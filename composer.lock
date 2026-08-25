@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ceb76d3549aace47bff7b8e9260728fe",
+    "content-hash": "18003b642aa58da510f8036137cbdfee",
     "packages": [
         {
             "name": "api-platform/core",
@@ -1985,16 +1985,16 @@
         },
         {
             "name": "itk-dev/openid-connect-bundle",
-            "version": "5.0.0",
+            "version": "6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/itk-dev/openid-connect-bundle.git",
-                "reference": "af57823b41629ad5bc1abc50eeb388c7b4b6dbb4"
+                "reference": "79be9eb80767e6c0f7945de8cee9bbfe2a4b5f3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itk-dev/openid-connect-bundle/zipball/af57823b41629ad5bc1abc50eeb388c7b4b6dbb4",
-                "reference": "af57823b41629ad5bc1abc50eeb388c7b4b6dbb4",
+                "url": "https://api.github.com/repos/itk-dev/openid-connect-bundle/zipball/79be9eb80767e6c0f7945de8cee9bbfe2a4b5f3d",
+                "reference": "79be9eb80767e6c0f7945de8cee9bbfe2a4b5f3d",
                 "shasum": ""
             },
             "require": {
@@ -2003,7 +2003,10 @@
                 "ext-openssl": "*",
                 "itk-dev/openid-connect": "^5.0",
                 "php": "^8.3",
+                "psr/log": "^3.0",
                 "symfony/cache": "^6.4 || ^7.0 || ^8.0",
+                "symfony/clock": "^6.4 || ^7.0 || ^8.0",
+                "symfony/event-dispatcher": "^6.4 || ^7.0 || ^8.0",
                 "symfony/framework-bundle": "^6.4.13 || ^7.0 || ^8.0",
                 "symfony/security-bundle": "^6.4.13 || ^7.0 || ^8.0",
                 "symfony/uid": "^6.4 || ^7.0 || ^8.0",
@@ -2012,6 +2015,7 @@
             "require-dev": {
                 "ergebnis/composer-normalize": "^2.28",
                 "friendsofphp/php-cs-fixer": "^3.11",
+                "infection/infection": "*",
                 "phpstan/phpstan": "^2.1.41",
                 "phpstan/phpstan-deprecation-rules": "^2.0",
                 "phpstan/phpstan-phpunit": "^2.0",
@@ -2044,9 +2048,9 @@
             "description": "Symfony bundle for openid-connect",
             "support": {
                 "issues": "https://github.com/itk-dev/openid-connect-bundle/issues",
-                "source": "https://github.com/itk-dev/openid-connect-bundle/tree/5.0.0"
+                "source": "https://github.com/itk-dev/openid-connect-bundle/tree/6.0.0"
             },
-            "time": "2026-06-02T11:15:20+00:00"
+            "time": "2026-08-25T19:09:29+00:00"
         },
         {
             "name": "itk-dev/vault",
