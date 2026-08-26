@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#96](https://github.com/itk-dev/devops_itksites/pull/96)
+  Service Agreements: fix the page and name the currency
+  - Add `#[AdminRoute]` to `syncAll()`. EasyAdmin 5 requires it on a custom CRUD
+    action, and without it rendering the "Sync all" button threw, taking the
+    whole index page with it
+  - Show the amounts as Danish kroner, `12.500,50 kr.`, on index and detail
 - [#95](https://github.com/itk-dev/devops_itksites/pull/95)
   Update `vincentlanglet/twig-cs-fixer` to 4.0. Every other dependency is
   already at its latest minor; the remaining majors are held back by their

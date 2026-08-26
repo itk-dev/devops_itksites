@@ -72,9 +72,14 @@ class SecurityContractCrudController extends AbstractCrudController
         yield TextField::new('clientContactEmail')->hideOnIndex();
 
         yield FormField::addFieldset('Budget');
-        yield NumberField::new('monthlyPrice')->setTextAlign('right')->setColumns(6);
+        // The amounts are Danish kroner, which until now the admin never said
+        // anywhere. 5.5's prepend()/append() addons would be the way to show a
+        // unit inside an input, but they render on form pages only and this CRUD
+        // disables NEW and EDIT (see configureActions), so the only pages that
+        // exist are index and detail. Hence formatting instead of an addon.
+        yield NumberField::new('monthlyPrice')->setTextAlign('right')->setColumns(6)->formatValue(self::formatKroner(...));
         yield NumberField::new('quarterlyHours')->setTextAlign('right')->setColumns(6);
-        yield NumberField::new('cybersecurityPrice')->setTextAlign('right')->hideOnIndex()->setColumns(6);
+        yield NumberField::new('cybersecurityPrice')->setTextAlign('right')->hideOnIndex()->setColumns(6)->formatValue(self::formatKroner(...));
         yield TextareaField::new('cybersecurityNote')->hideOnIndex()->setColumns(12);
 
         yield FormField::addFieldset('Infrastructure');
@@ -88,6 +93,30 @@ class SecurityContractCrudController extends AbstractCrudController
         yield DateField::new('validTo')->setColumns(6);
     }
 
+    #[AdminRoute]
+    /**
+     * An amount as Danish kroner: 12.500,50 kr.
+     *
+     * Through Intl rather than by pasting a suffix on, so the grouping and the
+     * decimal separator are Danish too. The application locale is `en`, which
+     * would otherwise render 12,500.5 with no currency at all.
+     */
+    public static function formatKroner(?float $value): ?string
+    {
+        if (null === $value) {
+            return null;
+        }
+
+        return (new \NumberFormatter('da_DK', \NumberFormatter::CURRENCY))->formatCurrency($value, 'DKK') ?: null;
+    }
+
+    /**
+     * The attribute is what makes this method reachable as a CRUD action.
+     *
+     * Without it EasyAdmin throws while rendering the "Sync all" button, which
+     * took the whole index page with it — see the "Custom CRUD Actions" section
+     * of the bundle's UPGRADE.md.
+     */
     #[AdminRoute]
     public function syncAll(): RedirectResponse
     {
