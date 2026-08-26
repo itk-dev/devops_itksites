@@ -37,15 +37,13 @@ jobs:
                   docker compose exec -e XDEBUG_MODE=coverage phpfpm bin/console --env=test doctrine:migrations:migrate --no-interaction --quiet
                   docker compose exec -e XDEBUG_MODE=coverage phpfpm vendor/bin/phpunit --coverage-clover=coverage/unit.xml
 
-            # Codecov upload disabled on the fork — no CODECOV_TOKEN secret.
-            # Re-enable when promoting to upstream.
-            # - name: Upload coverage to Codecov
-            #   uses: codecov/codecov-action@v5
-            #   with:
-            #       token: ${{ secrets.CODECOV_TOKEN }}
-            #       files: ./coverage/unit.xml
-            #       fail_ci_if_error: true
-            #       flags: unittests
+            - name: Upload coverage to Codecov
+              uses: codecov/codecov-action@v7
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  files: ./coverage/unit.xml
+                  fail_ci_if_error: true
+                  flags: unittests
 
     build-assets:
         runs-on: ubuntu-latest

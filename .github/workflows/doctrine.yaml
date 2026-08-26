@@ -62,3 +62,54 @@ jobs:
             - name: Load fixtures
               run: |
                   docker compose run --rm phpfpm composer fixtures
+
+    # The jobs above migrate an empty database. A deployment migrates a database
+    # that already holds rows, so a migration that cannot cope with existing
+    # data passes those jobs unnoticed. This job builds the database as it looks
+    # before the pull request, fixtures included, and then applies the pull
+    # request's migrations on top of it.
+    migrate-populated-database:
+        name: Run migrations on a populated database
+        runs-on: ubuntu-latest
+        # This workflow also runs on pushes to main and develop, where there is
+        # no pull request to read a base branch from: the checkout steps below
+        # would get an empty revision and fail. A push has no base to compare
+        # against, so skip the job rather than guess one.
+        if: github.event_name == 'pull_request'
+
+        steps:
+            - uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+
+            - name: Create docker network
+              run: |
+                  docker network create frontend
+
+            - name: Check out the base branch
+              run: |
+                  git checkout ${{ github.event.pull_request.base.sha }}
+
+            - name: Run Composer Install
+              run: |
+                  docker compose run --rm phpfpm composer install --no-interaction
+
+            - name: Run Doctrine Migrations
+              run: |
+                  docker compose run --rm phpfpm bin/console doctrine:migrations:migrate --no-interaction
+
+            - name: Load fixtures
+              run: |
+                  docker compose run --rm phpfpm composer fixtures
+
+            - name: Check out the pull request
+              run: |
+                  git checkout ${{ github.event.pull_request.head.sha }}
+
+            - name: Run Composer Install
+              run: |
+                  docker compose run --rm phpfpm composer install --no-interaction
+
+            - name: Run Doctrine Migrations on the populated database
+              run: |
+                  docker compose run --rm phpfpm bin/console doctrine:migrations:migrate --no-interaction

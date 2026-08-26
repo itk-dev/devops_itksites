@@ -12,12 +12,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Add CodeOwner entity
   - Add Leantime integration
 - [#80](https://github.com/itk-dev/devops_itksites/pull/80  ) 5566: Service agreements
+- [#90](https://github.com/itk-dev/devops_itksites/pull/90)
+  - Fixed user API key migration failing on databases with more than one user
+  - Generated an API key for existing users, as users created since already get
+  - Added users to the fixtures and a CI job running migrations on a populated
+    database
+- [#89](https://github.com/itk-dev/devops_itksites/pull/89)
+  Added `--rm` to `docker compose run` in prod deployment
+- [#88](https://github.com/itk-dev/devops_itksites/pull/88)
+  - Let users use the API
+  - Add security to detection results API endpoint
+  - Add server and site collections API endpoints
+- [#80](https://github.com/itk-dev/devops_itksites/pull/80) 5566: Service agreements
   - Add security contract entity with crud controller
   - Add Abstract full crud controller and extend on it in some cases
   - Add economics service and sync action/command for service agreement synchronization
 - [#81](https://github.com/itk-dev/devops_itksites/pull/81) 5564: Asset Mapper migration
   - Add Symfony Asset Mapper bundle and importmap
 - Add Renovate auto-patch + auto-release pipeline (Phase 1 fork validation)
+- [#87](https://github.com/itk-dev/devops_itksites/pull/87) Update `codecov/codecov-action` to v7
 
 ## [1.11.2] - 2026-06-02
 

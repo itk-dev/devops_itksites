@@ -12,6 +12,11 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+
+        app_api_users:
+            chain:
+                providers: [app_server_provider, app_user_provider]
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -20,7 +25,7 @@ security:
             pattern: ^/api
             custom_authenticators:
                 - App\Security\ApiKeyAuthenticator
-            provider: app_server_provider
+            provider: app_api_users
 
         main:
             custom_authenticators:
@@ -41,7 +46,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/docs, roles: PUBLIC_ACCESS }
-        - { path: ^/api, roles: ROLE_SERVER }
+        - { path: ^/api, roles: [ROLE_SERVER, ROLE_USER] }
         - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 
