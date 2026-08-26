@@ -123,7 +123,24 @@ against `frankenphp`.
 Traefik still terminates TLS. Caddy listens on plain HTTP on port 8080 and
 `auto_https` is off, so it neither requests nor serves certificates.
 
-Two files carry the configuration that used to live on the phpfpm and nginx
+The image is built in two flavours from one multi-stage `Dockerfile`, selected
+by `target:` in the override files:
+
+| | `dev` | `prod` |
+| --- | --- | --- |
+| Xdebug | installed | **absent** |
+| `opcache.validate_timestamps` | `1` | **`0`** |
+
+Development keeps Xdebug and lets OPcache recheck files so an edit takes effect.
+Production has neither: the extension is not in the image, and OPcache trusts
+what it compiled rather than stat-ing every file on every request, which
+`validate_timestamps=1` with `revalidate_freq=0` made it do. The cost is that a
+code change needs a new container, which both deployment paths already give it –
+staging runs `up -d --force-recreate` and the release playbook brings the stack
+up again, and a fresh container starts with an empty OPcache. A bare
+`docker build .` resolves to `prod`, the last stage.
+
+Three files carry the configuration that used to live on the phpfpm and nginx
 images:
 
 - `.docker/Caddyfile` – a port of `.docker/nginx.conf` and
@@ -131,6 +148,7 @@ images:
 - `.docker/php.ini` – the PHP settings the `itkdev/php8.5-fpm` image derives
   from its `PHP_*` environment variables, plus its tuned baseline. The compose
   files still set the same variables; the ini file interpolates them.
+- `.docker/php-dev.ini` – the Xdebug half of that, mounted only in development.
 
 Coming from the phpfpm stack, remove the containers it left behind once:
 

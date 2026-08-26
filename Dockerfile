@@ -1,21 +1,24 @@
-# FrankenPHP POC.
+# FrankenPHP image for this application, in two flavours.
 #
 # The published dunglas/frankenphp images are deliberately minimal, so the
 # extensions this application cannot boot without are added on top. Everything
-# else it needs — ctype, iconv, dom, mbstring, opcache, … — is already in the
-# base image.
-# Pinned to PHP 8.5 to match itkdev/php8.5-fpm and itkdev/supervisor-php8.5:
-# the messenger worker and the web container share vendor/ and var/cache over
-# the same bind mount, so they have to agree on the PHP version.
-FROM dunglas/frankenphp:1.12-php8.5
+# else it needs — ctype, iconv, dom, mbstring, opcache, … — is already there.
+#
+# Pinned to PHP 8.5 to match itkdev/php8.5-fpm and itkdev/supervisor-php8.5: the
+# messenger worker and the web container share vendor/ and var/cache over the
+# same bind mount, so they have to agree on the PHP version.
+#
+# Pick a stage explicitly. Compose does, through `target:` in the two override
+# files; a bare `docker build .` gets `prod`, the last stage, which is the safer
+# of the two to end up with by accident.
+FROM dunglas/frankenphp:1.12-php8.5 AS base
 
 RUN install-php-extensions \
 	pdo_mysql \
 	amqp \
 	intl \
 	gd \
-	zip \
-	xdebug
+	zip
 
 # msmtp keeps sendmail_path working the way it does in itkdev/php8.5-fpm.
 RUN apt-get update \
@@ -41,9 +44,28 @@ ENV PHP_LOGS=/dev/stderr \
 	PHP_OPCACHE_MAX_ACCELERATED_FILES=20000 \
 	PHP_OPCACHE_MAX_WASTED_PERCENTAGE=10 \
 	PHP_OPCACHE_REVALIDATE_FREQ=0 \
-	PHP_OPCACHE_VALIDATE_TIMESTAMPS=1 \
-	PHP_XDEBUG_MODE=off \
+	PHP_OPCACHE_VALIDATE_TIMESTAMPS=1
+
+# Development: Xdebug, and OPcache rechecking files so an edit takes effect.
+FROM base AS dev
+
+RUN install-php-extensions xdebug
+
+# Read by .docker/php-dev.ini, which only development mounts.
+ENV PHP_XDEBUG_MODE=off \
 	PHP_XDEBUG_CLIENT_HOST=host.docker.internal \
 	PHP_XDEBUG_START_WITH_REQUEST=yes \
 	PHP_XDEBUG_MAX_NESTING_LEVEL=256 \
 	PHP_XDEBUG_OUTPUT_DIR=/app
+
+# Production: no Xdebug, and OPcache trusting what it compiled.
+#
+# validate_timestamps=0 stops PHP stat-ing every file on every request, which
+# validate_timestamps=1 with revalidate_freq=0 made it do. The cost is that a
+# code change needs a new container — both deployment paths give it one, since
+# staging runs `up -d --force-recreate` and the release playbook brings the stack
+# up again, and a fresh container starts with an empty OPcache. It also makes
+# PHP_OPCACHE_REVALIDATE_FREQ moot.
+FROM base AS prod
+
+ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS=0

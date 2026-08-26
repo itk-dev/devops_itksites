@@ -12,7 +12,10 @@ services:
       - replaced-by-frankenphp
 
   frankenphp:
-    build: .
+    build:
+      context: .
+      # No Xdebug, and OPcache trusting what it compiled.
+      target: prod
     restart: unless-stopped
     networks:
       - app
