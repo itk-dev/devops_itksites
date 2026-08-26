@@ -47,6 +47,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     consumer, which in a worker outlives the request
   - Cover all of it with tests: the factories had none, and neither the
     dashboard nor the Security Contract CRUD was in the admin smoke test
+  - Document worker mode and the statelessness it requires in `README.md` and
+    `claude.md`. It stays off: measured here it gives roughly 20% more requests
+    per second on `/admin` and half the median latency, but around 40% fewer on
+    `/health/live`, and the numbers come from a laptop sharing CPU with other
+    containers
 - [#96](https://github.com/itk-dev/devops_itksites/pull/96)
   Show the Service Agreements monthly price as Danish kroner,
   `12.500,50 kr.`, on index and detail

@@ -154,6 +154,45 @@ does not carry: this build has `console`, `json`, `append`, `filter` and
 `journald`. JSON also matches supercronic, which the fpm image already runs with
 `-json`.
 
+#### Worker mode
+
+Worker mode is off. Turning it on needs no PHP package and no code change:
+`symfony/runtime` has shipped `FrankenPhpWorkerRunner` since 7.4, FrankenPHP
+sets `FRANKENPHP_WORKER=1` for a worker script, and `SymfonyRuntime::getRunner()`
+switches on that. `.docker/Caddyfile` reads `{$FRANKENPHP_CONFIG}`, so the switch
+is an environment variable on the `frankenphp` service:
+
+```yaml
+environment:
+    FRANKENPHP_CONFIG: worker /app/public/index.php
+```
+
+Add a count – `worker /app/public/index.php 8` – to override the default, which
+is twice the number of CPU cores. Keep `num_threads` × `memory_limit` below the
+memory available to the container.
+
+What it bought here, measured on this project in `prod` with a warm OPcache:
+about 20% more requests per second on `/admin` and half the median latency,
+against about 40% *fewer* on `/health/live`. The trivial endpoint is worker
+mode's worst case – there is no per-request work for the saved kernel boot to be
+weighed against, and the runner's `gc_collect_cycles()` on every request is not
+free. The numbers come from a laptop sharing CPU with other containers and
+running the application over a bind mount, so treat them as a shape rather than
+a figure, and measure again on a server before adopting.
+
+**Services must not carry request state.** Under php-fpm a service instance died
+with the request; in a worker it does not, so anything a service remembers leaks
+into the next request. Prefer keeping services stateless. Where state is
+deliberate, implement `Symfony\Contracts\Service\ResetInterface` –
+`autoconfigure` tags it `kernel.reset` and Symfony calls it between requests.
+For an object you do not own, clear it at the call site, the way every
+`AdminUrlGenerator` chain here opens with `unsetAll()`.
+
+`FRANKENPHP_RESET_KERNEL=1`, on Symfony 8.1 and later, clones the kernel between
+requests instead. It hides this class of bug at the cost of a boot per request,
+which is most of what worker mode is for – useful to compare against, not to
+depend on.
+
 #### Metrics
 
 `/metrics` serves Prometheus metrics from Caddy, behind the `ITKMetricsAuth@file`
