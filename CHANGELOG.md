@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#95](https://github.com/itk-dev/devops_itksites/pull/95)
+  Update `vincentlanglet/twig-cs-fixer` to 4.0. Every other dependency is
+  already at its latest minor; the remaining majors are held back by their
+  dependents
 - [#94](https://github.com/itk-dev/devops_itksites/pull/94)
   Use EasyAdmin's own components in the admin templates
   - Replace hand-rolled badge and icon markup with `<twig:ea:Badge>` and
