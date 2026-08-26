@@ -90,26 +90,48 @@ jobs:
               run: |
                   git checkout ${{ github.event.pull_request.base.sha }}
 
+            - name: Resolve the PHP service name
+              run: |
+                  # This job straddles two revisions of docker-compose.yml: one
+                  # of them may still call the PHP service phpfpm while the
+                  # other calls it frankenphp.
+                  if docker compose config --services | grep -qx frankenphp; then
+                      echo "PHP_SERVICE=frankenphp" >> "$GITHUB_ENV"
+                  else
+                      echo "PHP_SERVICE=phpfpm" >> "$GITHUB_ENV"
+                  fi
+
             - name: Run Composer Install
               run: |
-                  docker compose run --rm frankenphp composer install --no-interaction
+                  docker compose run --rm "$PHP_SERVICE" composer install --no-interaction
 
             - name: Run Doctrine Migrations
               run: |
-                  docker compose run --rm frankenphp bin/console doctrine:migrations:migrate --no-interaction
+                  docker compose run --rm "$PHP_SERVICE" bin/console doctrine:migrations:migrate --no-interaction
 
             - name: Load fixtures
               run: |
-                  docker compose run --rm frankenphp composer fixtures
+                  docker compose run --rm "$PHP_SERVICE" composer fixtures
 
             - name: Check out the pull request
               run: |
                   git checkout ${{ github.event.pull_request.head.sha }}
 
+            - name: Resolve the PHP service name
+              run: |
+                  # This job straddles two revisions of docker-compose.yml: one
+                  # of them may still call the PHP service phpfpm while the
+                  # other calls it frankenphp.
+                  if docker compose config --services | grep -qx frankenphp; then
+                      echo "PHP_SERVICE=frankenphp" >> "$GITHUB_ENV"
+                  else
+                      echo "PHP_SERVICE=phpfpm" >> "$GITHUB_ENV"
+                  fi
+
             - name: Run Composer Install
               run: |
-                  docker compose run --rm frankenphp composer install --no-interaction
+                  docker compose run --rm "$PHP_SERVICE" composer install --no-interaction
 
             - name: Run Doctrine Migrations on the populated database
               run: |
-                  docker compose run --rm frankenphp bin/console doctrine:migrations:migrate --no-interaction
+                  docker compose run --rm "$PHP_SERVICE" bin/console doctrine:migrations:migrate --no-interaction
