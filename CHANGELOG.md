@@ -32,8 +32,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     never happened
   - Leave worker mode off for now, but not for want of a runtime: `symfony/runtime`
     has shipped `FrankenPhpWorkerRunner` since 7.4, so enabling it is one line in
-    `.docker/Caddyfile` and needs no package. Three stateful services want
-    attention first
+    `.docker/Caddyfile` and needs no package
+  - Make `PackageVersionFactory` and `ModuleVersionFactory` stateless: their
+    deduplication buffers are locals rather than properties, so a failing flush
+    can no longer leave entities from a closed EntityManager for the next call.
+    This was a live bug in the messenger consumer, which is already long-running
+  - Implement `ResetInterface` on `LeantimeService`, whose memoised user
+    directory has to stay a cache — `resolveUserName()` runs in a loop over
+    tickets — but must not outlive the request
+  - Cover all three with tests: the factories had none
 - [#96](https://github.com/itk-dev/devops_itksites/pull/96)
   Show the Service Agreements monthly price as Danish kroner,
   `12.500,50 kr.`, on index and detail
