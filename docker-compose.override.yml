@@ -1,4 +1,35 @@
 services:
+  # A mock identity provider, so the OpenID Connect login can be exercised locally.
+  # The real one has no redirect URI registered for a developer machine.
+  #
+  # https://github.com/geigerzaehler/oidc-provider-mock
+  #
+  # The container name is the external hostname on purpose: the browser and the
+  # application then reach the provider by the same name, so the issuer in the
+  # discovery document matches the one in the ID token.
+  #
+  # Claims must cover what AzureOIDCAuthenticator reads — `name` and `upn`.
+  idp:
+    image: ghcr.io/geigerzaehler/oidc-provider-mock:latest
+    container_name: idp.${COMPOSE_DOMAIN:?}
+    networks:
+      - app
+      - frontend
+    expose:
+      - "80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=frontend"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}_idp.rule=Host(`idp.${COMPOSE_DOMAIN:?}`)"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME:?}_idp.loadbalancer.server.port=80"
+    command:
+      - "--port"
+      - "80"
+      - "--user-claims"
+      - '{"sub": "admin", "name": "Admin Jensen", "upn": "admin@example.org", "email": "admin@example.org"}'
+      - "--user-claims"
+      - '{"sub": "editor", "name": "Ed Editor", "upn": "editor@example.org", "email": "editor@example.org"}'
+
   rabbit:
     image: rabbitmq:4-management-alpine
     networks:
