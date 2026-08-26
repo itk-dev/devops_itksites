@@ -2,13 +2,13 @@
 {# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
 {% if field.formattedValue == 'unknown' %}
-    <span class="badge badge-secondary">?</span>
+    <twig:ea:Badge variant="secondary">?</twig:ea:Badge>
 {% elseif field.formattedValue == 'up-to-date' %}
-    <span class="badge badge-light">{{ field.formattedValue }}</span>
+    <twig:ea:Badge variant="light">{{ field.formattedValue }}</twig:ea:Badge>
 {% elseif field.formattedValue == 'semver-safe-update' %}
-    <span class="badge badge-success">{{ field.formattedValue }}</span>
+    <twig:ea:Badge variant="success">{{ field.formattedValue }}</twig:ea:Badge>
 {% elseif field.formattedValue == 'update-possible' %}
-    <span class="badge badge-info">{{ field.formattedValue }}</span>
+    <twig:ea:Badge variant="info">{{ field.formattedValue }}</twig:ea:Badge>
 {% else %}
-    <span class="badge badge-info">{{ field.formattedValue }}</span>
+    <twig:ea:Badge variant="info">{{ field.formattedValue }}</twig:ea:Badge>
 {% endif %}
