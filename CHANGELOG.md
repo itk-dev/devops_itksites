@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     before the secret expires
   - Render a failed login as a page saying so, instead of an unhandled
     exception, in `OpenIdConnectFailureListener`
+  - Add an `oidc_client_secret` health check, so a client secret nearing its
+    expiry shows up in `/health/detail` instead of in a login loop
 - [#91](https://github.com/itk-dev/devops_itksites/pull/91) Health endpoints
   - Add `/health/live`, `/health/ready` and `/health/detail` endpoints
   - Add health checks for database, RabbitMQ transport and detection result freshness

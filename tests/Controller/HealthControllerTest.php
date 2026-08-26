@@ -77,7 +77,7 @@ class HealthControllerTest extends WebTestCase
 
         $this->assertArrayHasKey('checks', $payload);
         $this->assertEqualsCanonicalizing(
-            ['database', 'rabbitmq', 'ingest_freshness'],
+            ['database', 'rabbitmq', 'ingest_freshness', 'oidc_client_secret'],
             array_keys($payload['checks'])
         );
 
