@@ -7,7 +7,8 @@ info:
     The API also provides read-only access to information on servers and sites created by processing detection results.
   version: 1.0.0
 servers:
-  - url: 'https://itksites.local.itkdev.dk'
+  -
+    url: 'https://itksites.local.itkdev.dk'
     description: ''
 paths:
   /api/detection_results:
@@ -386,10 +387,13 @@ security:
   -
     apiKey: []
 tags:
-  - name: DetectionResult
+  -
+    name: DetectionResult
     description: "Resource 'DetectionResult' operations."
-  - name: Server
+  -
+    name: Server
     description: "Resource 'Server' operations."
-  - name: Site
+  -
+    name: Site
     description: "Resource 'Site' operations."
 webhooks: {}
