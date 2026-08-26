@@ -2,7 +2,7 @@
 {# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
 {% if field.formattedValue == 0 %}
-    <span class="badge badge-secondary">{{ field.formattedValue }}</span>
+    <twig:ea:Badge variant="secondary">{{ field.formattedValue }}</twig:ea:Badge>
 {% else %}
-    <span class="badge badge-warning">{{ field.formattedValue }}</span>
+    <twig:ea:Badge variant="warning">{{ field.formattedValue }}</twig:ea:Badge>
 {% endif %}
