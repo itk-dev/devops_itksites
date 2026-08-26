@@ -27,6 +27,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `guzzlehttp/guzzle` 7.10.6 → 7.15.5, `guzzlehttp/psr7` 2.10.4 → 2.13.1
   - Regenerated the API spec: `symfony/yaml` now writes sequence items on their
     own line. No API changes
+- [#83](https://github.com/itk-dev/devops_itksites/pull/83) 7523: Service agreements
+  - Add Project entity top-level Economics project.
+  - Add CodeOwner entity
+  - Add Leantime integration
+- [#80](https://github.com/itk-dev/devops_itksites/pull/80  ) 5566: Service agreements
 - [#90](https://github.com/itk-dev/devops_itksites/pull/90)
   - Fixed user API key migration failing on databases with more than one user
   - Generated an API key for existing users, as users created since already get
@@ -44,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Add economics service and sync action/command for service agreement synchronization
 - [#81](https://github.com/itk-dev/devops_itksites/pull/81) 5564: Asset Mapper migration
   - Add Symfony Asset Mapper bundle and importmap
+- Add Renovate auto-patch + auto-release pipeline (Phase 1 fork validation)
 - [#87](https://github.com/itk-dev/devops_itksites/pull/87) Update `codecov/codecov-action` to v7
 
 ## [1.11.2] - 2026-06-02
