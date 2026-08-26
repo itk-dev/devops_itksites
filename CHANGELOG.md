@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#93](https://github.com/itk-dev/devops_itksites/pull/93)
+  Update composer dependencies, clearing 15 security advisories
+  - `api-platform/core` 4.3.7 → 4.3.17, `easycorp/easyadmin-bundle` 5.0.11 → 5.5.1,
+    `guzzlehttp/guzzle` 7.10.6 → 7.15.5, `guzzlehttp/psr7` 2.10.4 → 2.13.1
+  - Regenerated the API spec: `symfony/yaml` now writes sequence items on their
+    own line. No API changes
 - [#90](https://github.com/itk-dev/devops_itksites/pull/90)
   - Fixed user API key migration failing on databases with more than one user
   - Generated an API key for existing users, as users created since already get
