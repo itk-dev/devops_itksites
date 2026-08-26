@@ -113,8 +113,22 @@ Then create a `.env.local` file to set secrets for your local setup.
 
 ### OpenID Connect
 
-All users access is controlled by OpenID Connect. For local development you must
-add the following to your `.env.local` file:
+All user access is controlled by OpenID Connect. Locally the login runs against a
+mock identity provider, defined as the `idp` service in `docker-compose.override.yml`
+— the real provider has no redirect URI registered for a developer machine.
+
+Start it with the rest of the stack:
+
+```shell
+docker compose up --detach
+```
+
+Then log in as `admin` or `editor`: the mock shows a form where you type the subject,
+and hands back the claims for it. Both identities are defined in the compose file, and
+their claims must include `name` and `upn`, which `AzureOIDCAuthenticator` reads.
+
+`.env.dev` carries the settings, so there is nothing to add to `.env.local` for an
+ordinary setup. To develop against a real provider instead, override them there:
 
 ```dotenv
 ###> itk-dev/openid-connect-bundle ###
@@ -122,13 +136,18 @@ AZURE_AZ_OIDC_METADATA_URL=<value>
 AZURE_AZ_OIDC_CLIENT_ID=<value>
 AZURE_AZ_OIDC_CLIENT_SECRET=<value>
 AZURE_AZ_OIDC_REDIRECT_URI=https://itksites.local.itkdev.dk/openid-connect/generic
+AZURE_AZ_OIDC_ALLOW_HTTP=false
 ###< itk-dev/openid-connect-bundle ###
 ```
 
 > [!NOTE]
-> In the `dev` environment the main firewall security is disabled
-> (`security.yaml` → `when@dev`), so authentication is not required.
-> This is because the current AAK OIDC setup doesn't support `itksites.local.itkdev.dk`.
+> `AZURE_AZ_OIDC_ALLOW_HTTP=true` in `.env.dev` is what lets the application talk to
+> the mock over http inside the docker network. It must never be true anywhere else:
+> since `itk-dev/openid-connect` 5.1 it governs every endpoint the discovery document
+> announces, not only the metadata URL.
+
+The mock accepts the PKCE challenge the bundle sends but does not verify it, so a
+successful login here does not prove PKCE works against Azure.
 
 ### Fixtures
 
