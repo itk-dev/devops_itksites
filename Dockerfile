@@ -23,3 +23,27 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer/composer:2-bin /composer /usr/bin/composer
+
+# The itkdev/php8.5-fpm image turns these into ini settings and defaults them on
+# the image rather than in compose. `.docker/php.ini` reads the same names, so
+# the same overrides work and no variable is ever unset.
+ENV PHP_LOGS=/dev/stderr \
+	PHP_TIMEZONE=Europe/Copenhagen \
+	PHP_MEMORY_LIMIT=128M \
+	PHP_MAX_EXECUTION_TIME=30 \
+	PHP_MAX_INPUT_VARS=1000 \
+	PHP_POST_MAX_SIZE=8M \
+	PHP_UPLOAD_MAX_FILESIZE=2M \
+	PHP_SENDMAIL_PATH="/usr/sbin/sendmail -S host.docker.internal -t -i" \
+	PHP_OPCACHE_ENABLED=1 \
+	PHP_OPCACHE_JIT=off \
+	PHP_OPCACHE_MEMORY_CONSUMPTION=64 \
+	PHP_OPCACHE_MAX_ACCELERATED_FILES=20000 \
+	PHP_OPCACHE_MAX_WASTED_PERCENTAGE=10 \
+	PHP_OPCACHE_REVALIDATE_FREQ=0 \
+	PHP_OPCACHE_VALIDATE_TIMESTAMPS=1 \
+	PHP_XDEBUG_MODE=off \
+	PHP_XDEBUG_CLIENT_HOST=host.docker.internal \
+	PHP_XDEBUG_START_WITH_REQUEST=yes \
+	PHP_XDEBUG_MAX_NESTING_LEVEL=256 \
+	PHP_XDEBUG_OUTPUT_DIR=/app

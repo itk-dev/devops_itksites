@@ -26,15 +26,14 @@ services:
       SERVER_NAME: ":8080"
       SERVER_ROOT: /app/public
       PHP_MAX_BODY_SIZE: 5MB
-      CRON_METRICS_UPSTREAM: ${COMPOSE_PROJECT_NAME:?}-frankenphp-1:9746
-      # Read by .docker/php.ini. Same values the itkdev/php8.5-fpm image gets
-      # from its own env handling.
+      # Read by .docker/php.ini, which uses the itkdev/php8.5-fpm image's own
+      # variable names. Everything else is defaulted on the image, so only the
+      # values that differ from the fpm image are set here.
       PHP_MEMORY_LIMIT: 256M
-      PHP_MAX_EXECUTION_TIME: "30"
       # Depending on the setup, you may have to remove --read-envelope-from from msmtp (cf. https://marlam.de/msmtp/msmtp.html) or use SMTP to send mail
       PHP_SENDMAIL_PATH: /usr/bin/msmtp --host=mail --port=1025 --read-recipients --read-envelope-from
       PHP_XDEBUG_MODE: ${PHP_XDEBUG_MODE:-off}
-      PHP_XDEBUG_WITH_REQUEST: ${PHP_XDEBUG_WITH_REQUEST:-no}
+      PHP_XDEBUG_START_WITH_REQUEST: ${PHP_XDEBUG_WITH_REQUEST:-yes}
       DOCKER_HOST_DOMAIN: ${COMPOSE_DOMAIN:?}
       PHP_IDE_CONFIG: serverName=localhost
     depends_on:
@@ -58,8 +57,9 @@ services:
       # HTTPS config - uncomment to enable redirect from :80 to :443
       # - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}.middlewares=redirect-to-https"
       # - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-      # Cron-metrics protection.
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-metrics.rule=Host(`${COMPOSE_DOMAIN:?}`) && PathPrefix(`/cron-metrics`) "
+      # Metrics protection. Caddy's Prometheus endpoint, where nginx proxied
+      # /cron-metrics to a supercronic that this project never starts.
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-metrics.rule=Host(`${COMPOSE_DOMAIN:?}`) && PathPrefix(`/metrics`)"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-metrics.middlewares=ITKMetricsAuth@file"
       # Detailed health check protection. /health/live and /health/ready stay
       # public; only /health/detail discloses internals.

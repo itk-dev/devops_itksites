@@ -21,6 +21,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `itkdev/supervisor-php8.5` included
   - Point Taskfile, workflows, Woodpecker and the README at the `frankenphp`
     service
+  - Serve Prometheus metrics from Caddy at `/metrics`, behind the same
+    `ITKMetricsAuth` middleware `/cron-metrics` used. nginx exported nothing,
+    and the supercronic it proxied to never started without an `/app/crontab`
+  - Log requests as JSON from Caddy, carrying every field nginx's `log_format
+    main` had plus `duration`. The published image has no transform encoder, so
+    the text layout cannot be reproduced exactly
+  - Trust `private_ranges` rather than the template's `172.16.0.0/16`, which
+    covered neither the `frontend` network nor the client, so real-IP resolution
+    never happened
   - Worker mode stays off: `runtime/frankenphp-symfony` has no Symfony 8 release
 - [#96](https://github.com/itk-dev/devops_itksites/pull/96)
   Show the Service Agreements monthly price as Danish kroner,

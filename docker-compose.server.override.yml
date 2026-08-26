@@ -24,13 +24,9 @@ services:
       SERVER_NAME: ":8080"
       SERVER_ROOT: /app/public
       PHP_MAX_BODY_SIZE: 5MB
-      CRON_METRICS_UPSTREAM: ${COMPOSE_PROJECT_NAME:?}-frankenphp-1:9746
-      # Read by .docker/php.ini.
-      PHP_MEMORY_LIMIT: 128M
-      PHP_MAX_EXECUTION_TIME: "30"
-      PHP_SENDMAIL_PATH: /usr/sbin/sendmail -t -i
-      PHP_XDEBUG_MODE: "off"
-      PHP_XDEBUG_WITH_REQUEST: "no"
+      # Read by .docker/php.ini, which uses the itkdev/php8.5-fpm image's own
+      # variable names. The image defaults match the fpm image's, so nothing
+      # needs restating here.
     depends_on:
       rabbit:
         condition: service_healthy
@@ -52,8 +48,10 @@ services:
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}.rule=Host(`${COMPOSE_SERVER_DOMAIN:?}`)"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}.entrypoints=websecure"
-      # Cron-metrics protection.
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-metrics.rule=Host(`${COMPOSE_SERVER_DOMAIN:?}`) && PathPrefix(`/cron-metrics`) "
+      # Metrics protection. Caddy's Prometheus endpoint, where nginx proxied
+      # /cron-metrics to a supercronic that this project never starts.
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-metrics.rule=Host(`${COMPOSE_SERVER_DOMAIN:?}`) && PathPrefix(`/metrics`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-metrics.entrypoints=websecure"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-metrics.middlewares=ITKMetricsAuth@file"
       # Detailed health check protection. /health/live and /health/ready stay
       # public; only /health/detail discloses internals.

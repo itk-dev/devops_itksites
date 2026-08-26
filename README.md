@@ -138,6 +138,40 @@ Coming from the phpfpm stack, remove the containers it left behind once:
 docker compose rm --stop --force phpfpm nginx
 ```
 
+#### Logging
+
+php-fpm sent its error log, its slowlog and everything a worker wrote to stderr
+to `/dev/stderr`, and configured no access log at all – the nginx access log was
+the only per-request record. `.docker/php.ini` keeps `error_log` pointed at
+`${PHP_LOGS}` and Caddy's access log replaces nginx's.
+
+Caddy logs JSON rather than nginx's `log_format main` text. Every field that
+format carried is in it – `client_ip`, `user_id`, `ts`, method, uri, proto,
+`status`, `size` and the `Referer`, `User-Agent` and `X-Forwarded-For` headers –
+plus `duration`, which nginx did not log. The text layout cannot be reproduced
+byte for byte without the Caddy transform encoder, which the published image
+does not carry: this build has `console`, `json`, `append`, `filter` and
+`journald`. JSON also matches supercronic, which the fpm image already runs with
+`-json`.
+
+#### Metrics
+
+`/metrics` serves Prometheus metrics from Caddy, behind the `ITKMetricsAuth@file`
+middleware on its own Traefik router.
+
+This is where `/cron-metrics` used to point. That route proxied to supercronic
+on `${NGINX_CRON_METRICS}`, and the fpm entrypoint only starts supercronic when
+`/app/crontab` exists – this project has no crontab, so nothing ever listened
+and the route answered `502`. nginx exported nothing itself: `stub_status` is
+compiled into the image but the template never enabled it, and php-fpm's
+`pm.status_path = /status` was never routed.
+
+Caddy does export, so the endpoint has something behind it: request counts,
+durations and sizes by code, method and handler, requests in flight, and Go
+runtime and process metrics. FrankenPHP's own thread metrics only appear in
+worker mode, which is off. A supercronic sidecar, if one is added, needs a route
+of its own.
+
 ### OpenID Connect
 
 All users access is controlled by OpenID Connect. For local development you must
