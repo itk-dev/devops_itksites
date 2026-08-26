@@ -98,6 +98,17 @@
 		respond @directPhp 404
 
 		# try_files $uri /index.php$is_args$args
+		#
+		# Uncommenting the worker line is all worker mode needs: FrankenPHP sets
+		# FRANKENPHP_WORKER=1, and symfony/runtime has picked its own
+		# FrankenPhpWorkerRunner off that since 7.4 — no PHP package, no
+		# APP_RUNTIME override. Symfony 8.1 adds FRANKENPHP_RESET_KERNEL=1, which
+		# clones the kernel between requests to mitigate state leaks at the cost
+		# of a boot per request.
+		#
+		# Off until the stateful services are dealt with: LeantimeService caches
+		# the Leantime user directory per instance, and the package/module
+		# factories clear their dedup buffers outside a finally.
 		php_server {
 			#worker /app/public/index.php
 		}

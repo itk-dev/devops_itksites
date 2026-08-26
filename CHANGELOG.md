@@ -30,7 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Trust `private_ranges` rather than the template's `172.16.0.0/16`, which
     covered neither the `frontend` network nor the client, so real-IP resolution
     never happened
-  - Worker mode stays off: `runtime/frankenphp-symfony` has no Symfony 8 release
+  - Leave worker mode off for now, but not for want of a runtime: `symfony/runtime`
+    has shipped `FrankenPhpWorkerRunner` since 7.4, so enabling it is one line in
+    `.docker/Caddyfile` and needs no package. Three stateful services want
+    attention first
 - [#96](https://github.com/itk-dev/devops_itksites/pull/96)
   Show the Service Agreements monthly price as Danish kroner,
   `12.500,50 kr.`, on index and detail
