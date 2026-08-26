@@ -1,0 +1,166 @@
+{
+  "files": {
+    "src/Command/PurgeCommand.php": [
+      {
+        "message": "Mutation detected on an injected dependency ($this->detectionResultRepository). Risk of State Leak in a worker.",
+        "reason": "A repository method call, not a property assignment. Console commands also run in their own process, never inside a worker request."
+      }
+    ],
+    "src/Command/ReplayDetectionResultsCommand.php": [
+      {
+        "message": "Mutation detected on an injected dependency ($this->entityManager). Risk of State Leak in a worker.",
+        "reason": "Sets a Doctrine connection middleware for the duration of a console command. Commands run in their own process, never inside a worker request."
+      }
+    ],
+    "src/Controller/Admin/DashboardController.php": [
+      {
+        "message": "Mutation detected on an injected dependency ($this->adminUrlGenerator). Risk of State Leak in a worker.",
+        "reason": "The chain opens with unsetAll(), which clears the accumulated route parameters before anything is set. Igor does not recognise unsetAll() as a reset. DashboardControllerTest asserts where the redirect lands, so a misplaced unsetAll() fails the build."
+      },
+      {
+        "message": "Mutation detected on an injected dependency ($this->adminUrlGenerator). Risk of State Leak in a worker.",
+        "reason": "The chain opens with unsetAll(), which clears the accumulated route parameters before anything is set. Igor does not recognise unsetAll() as a reset. DashboardControllerTest asserts where the redirect lands, so a misplaced unsetAll() fails the build."
+      }
+    ],
+    "src/Controller/Admin/SecurityContractCrudController.php": [
+      {
+        "message": "Mutation detected on an injected dependency ($this->adminUrlGenerator). Risk of State Leak in a worker.",
+        "reason": "The chain opens with unsetAll(), which clears the accumulated route parameters before anything is set. Igor does not recognise unsetAll() as a reset."
+      },
+      {
+        "message": "Mutation detected on an injected dependency ($this->adminUrlGenerator). Risk of State Leak in a worker.",
+        "reason": "The chain opens with unsetAll(), which clears the accumulated route parameters before anything is set. Igor does not recognise unsetAll() as a reset."
+      }
+    ],
+    "src/Doctrine/Functions/SemverNumeric.php": [
+      {
+        "message": "Mutation of state 'versionExpression' in SemverNumeric::parse()",
+        "reason": "A Doctrine DQL AST function node, not a service. Doctrine builds one per query while parsing, so the assignment in parse() cannot outlive it."
+      }
+    ],
+    "src/Handler/DockerImageHandler.php": [
+      {
+        "message": "Mutation detected on an injected dependency ($this->dockerImageTagFactory). Risk of State Leak in a worker.",
+        "reason": "Calls a command method on a factory whose name begins with \"set\", which Igor treats as a setter. setPackageVersions() and friends do work and return void; they assign nothing on the factory, which is stateless."
+      },
+      {
+        "message": "Mutation detected on an injected dependency ($this->packageVersionFactory). Risk of State Leak in a worker.",
+        "reason": "Calls a command method on a factory whose name begins with \"set\", which Igor treats as a setter. setPackageVersions() and friends do work and return void; they assign nothing on the factory, which is stateless."
+      },
+      {
+        "message": "Mutation detected on an injected dependency ($this->advisoryFactory). Risk of State Leak in a worker.",
+        "reason": "Calls a command method on a factory whose name begins with \"set\", which Igor treats as a setter. setPackageVersions() and friends do work and return void; they assign nothing on the factory, which is stateless."
+      },
+      {
+        "message": "Mutation detected on an injected dependency ($this->moduleVersionFactory). Risk of State Leak in a worker.",
+        "reason": "Calls a command method on a factory whose name begins with \"set\", which Igor treats as a setter. setPackageVersions() and friends do work and return void; they assign nothing on the factory, which is stateless."
+      }
+    ],
+    "src/Handler/DrupalHandler.php": [
+      {
+        "message": "Mutation detected on an injected dependency ($this->packageVersionFactory). Risk of State Leak in a worker.",
+        "reason": "Calls a command method on a factory whose name begins with \"set\", which Igor treats as a setter. setPackageVersions() and friends do work and return void; they assign nothing on the factory, which is stateless."
+      },
+      {
+        "message": "Mutation detected on an injected dependency ($this->moduleVersionFactory). Risk of State Leak in a worker.",
+        "reason": "Calls a command method on a factory whose name begins with \"set\", which Igor treats as a setter. setPackageVersions() and friends do work and return void; they assign nothing on the factory, which is stateless."
+      }
+    ],
+    "src/Handler/GitHandler.php": [
+      {
+        "message": "Mutation detected on an injected dependency ($this->gitCloneFactory). Risk of State Leak in a worker.",
+        "reason": "Calls a command method on a factory whose name begins with \"set\", which Igor treats as a setter. setPackageVersions() and friends do work and return void; they assign nothing on the factory, which is stateless."
+      }
+    ],
+    "src/Handler/SymfonyHandler.php": [
+      {
+        "message": "Mutation detected on an injected dependency ($this->packageVersionFactory). Risk of State Leak in a worker.",
+        "reason": "Calls a command method on a factory whose name begins with \"set\", which Igor treats as a setter. setPackageVersions() and friends do work and return void; they assign nothing on the factory, which is stateless."
+      },
+      {
+        "message": "Mutation detected on an injected dependency ($this->packageVersionFactory). Risk of State Leak in a worker.",
+        "reason": "Calls a command method on a factory whose name begins with \"set\", which Igor treats as a setter. setPackageVersions() and friends do work and return void; they assign nothing on the factory, which is stateless."
+      }
+    ],
+    "src/Repository/DetectionResultRepository.php": [
+      {
+        "message": "Mutation detected on a local reference to a shared service ($em). Risk of State Leak in a worker.",
+        "reason": "EntityManager::remove() is ordinary Doctrine usage, not a mutation of the manager. Whether the unit of work is flushed is the caller's business."
+      }
+    ],
+    "src/Service/ModuleVersionFactory.php": [
+      {
+        "message": "Mutation detected on a local reference to a shared service ($module). Risk of State Leak in a worker.",
+        "reason": "Mutations on Doctrine entities returned from a repository, which Igor reads as shared services because the repository is one. The entities are rows, not services. The factory itself holds no state: its deduplication buffers are locals, covered by ModuleVersionFactoryTest."
+      },
+      {
+        "message": "Mutation detected on a local reference to a shared service ($module). Risk of State Leak in a worker.",
+        "reason": "Mutations on Doctrine entities returned from a repository, which Igor reads as shared services because the repository is one. The entities are rows, not services. The factory itself holds no state: its deduplication buffers are locals, covered by ModuleVersionFactoryTest."
+      }
+    ],
+    "src/Service/PackageVersionFactory.php": [
+      {
+        "message": "Mutation detected on a local reference to a shared service ($package). Risk of State Leak in a worker.",
+        "reason": "Mutations on Doctrine entities returned from a repository, which Igor reads as shared services because the repository is one. The entities are rows, not services. The factory itself holds no state: its deduplication buffers are locals, covered by PackageVersionFactoryTest."
+      },
+      {
+        "message": "Mutation detected on a local reference to a shared service ($package). Risk of State Leak in a worker.",
+        "reason": "Mutations on Doctrine entities returned from a repository, which Igor reads as shared services because the repository is one. The entities are rows, not services. The factory itself holds no state: its deduplication buffers are locals, covered by PackageVersionFactoryTest."
+      },
+      {
+        "message": "Mutation detected on a local reference to a shared service ($package). Risk of State Leak in a worker.",
+        "reason": "Mutations on Doctrine entities returned from a repository, which Igor reads as shared services because the repository is one. The entities are rows, not services. The factory itself holds no state: its deduplication buffers are locals, covered by PackageVersionFactoryTest."
+      },
+      {
+        "message": "Mutation detected on a local reference to a shared service ($packageVersion). Risk of State Leak in a worker.",
+        "reason": "Mutations on Doctrine entities returned from a repository, which Igor reads as shared services because the repository is one. The entities are rows, not services. The factory itself holds no state: its deduplication buffers are locals, covered by PackageVersionFactoryTest."
+      },
+      {
+        "message": "Mutation detected on a local reference to a shared service ($packageVersion). Risk of State Leak in a worker.",
+        "reason": "Mutations on Doctrine entities returned from a repository, which Igor reads as shared services because the repository is one. The entities are rows, not services. The factory itself holds no state: its deduplication buffers are locals, covered by PackageVersionFactoryTest."
+      },
+      {
+        "message": "Mutation detected on a local reference to a shared service ($packageVersion). Risk of State Leak in a worker.",
+        "reason": "Mutations on Doctrine entities returned from a repository, which Igor reads as shared services because the repository is one. The entities are rows, not services. The factory itself holds no state: its deduplication buffers are locals, covered by PackageVersionFactoryTest."
+      }
+    ],
+    "src/Service/RepoAdvisoryService.php": [
+      {
+        "message": "Mutation detected on an injected dependency ($this->adminUrlGenerator). Risk of State Leak in a worker.",
+        "reason": "The chain opens with unsetAll(), which clears the accumulated route parameters before anything is set. Igor does not recognise unsetAll() as a reset."
+      },
+      {
+        "message": "Mutation detected on an injected dependency ($this->adminUrlGenerator). Risk of State Leak in a worker.",
+        "reason": "The chain opens with unsetAll(), which clears the accumulated route parameters before anything is set. Igor does not recognise unsetAll() as a reset."
+      },
+      {
+        "message": "Mutation detected on an injected dependency ($this->adminUrlGenerator). Risk of State Leak in a worker.",
+        "reason": "The chain opens with unsetAll(), which clears the accumulated route parameters before anything is set. Igor does not recognise unsetAll() as a reset."
+      }
+    ],
+    "src/Trait/ExportCrudControllerTrait.php": [
+      {
+        "message": "Mutation of state 'filterFactory' in ExportCrudControllerTrait::setFilterFactory()",
+        "reason": "Setter injection via #[Required]. The container calls these once while building the service, not at request time."
+      },
+      {
+        "message": "Mutation of state 'exporter' in ExportCrudControllerTrait::setExporter()",
+        "reason": "Setter injection via #[Required]. The container calls these once while building the service, not at request time."
+      }
+    ],
+    "src/Twig/AppExtension.php": [
+      {
+        "message": "Mutation detected on an injected dependency ($this->adminUrlGenerator). Risk of State Leak in a worker.",
+        "reason": "The chain opens with unsetAll(), which clears the accumulated route parameters before anything is set. Igor does not recognise unsetAll() as a reset."
+      },
+      {
+        "message": "Mutation detected on an injected dependency ($this->adminUrlGenerator). Risk of State Leak in a worker.",
+        "reason": "The chain opens with unsetAll(), which clears the accumulated route parameters before anything is set. Igor does not recognise unsetAll() as a reset."
+      },
+      {
+        "message": "Mutation detected on an injected dependency ($this->adminUrlGenerator). Risk of State Leak in a worker.",
+        "reason": "The chain opens with unsetAll(), which clears the accumulated route parameters before anything is set. Igor does not recognise unsetAll() as a reset."
+      }
+    ]
+  }
+}

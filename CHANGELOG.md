@@ -47,6 +47,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     consumer, which in a worker outlives the request
   - Cover all of it with tests: the factories had none, and neither the
     dashboard nor the Security Contract CRUD was in the admin smoke test
+  - Gate pull requests on `igor-php`, which audits every shared service in the
+    compiled container for state that would leak between requests.
+    `igor-baseline.json` records the 33 existing findings with a reason each, so
+    the job fails only on new ones; vendor code is out of scope
   - Document worker mode and the statelessness it requires in `README.md` and
     `claude.md`. It stays off: measured here it gives roughly 20% more requests
     per second on `/admin` and half the median latency, but around 40% fewer on

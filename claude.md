@@ -119,6 +119,12 @@ Things that break a worker and have no place here: `exit()`/`die()`, writes to
 superglobals, `__destruct()` on a shared service, and mutable `static`
 properties.
 
+`composer worker-state-check` audits this with igor-php and runs on every pull
+request. `igor-baseline.json` holds the known findings, each with a reason, so
+the job fails only on new ones — fix a genuine finding rather than baselining
+it, and regenerate with `composer worker-state-baseline` only after a deliberate
+change.
+
 `FRANKENPHP_RESET_KERNEL=1` (Symfony 8.1+) clones the kernel between requests
 and papers over all of this, at the cost of a boot per request. Treat it as a
 measurement baseline, not a fix.

@@ -188,6 +188,27 @@ deliberate, implement `Symfony\Contracts\Service\ResetInterface` –
 For an object you do not own, clear it at the call site, the way every
 `AdminUrlGenerator` chain here opens with `unsetAll()`.
 
+That rule is enforced. [igor-php](https://github.com/igor-php/igor-php) audits
+every shared service in the compiled container for state that would leak between
+requests, and runs on every pull request:
+
+```sh
+docker compose exec frankenphp composer worker-state-check
+```
+
+Existing findings live in `igor-baseline.json`, so the job fails only on new
+ones. Every entry there carries a reason – most are Doctrine entities returned
+from a repository, which igor reads as shared services, and `AdminUrlGenerator`
+chains it cannot see are already cleared by `unsetAll()`. Read the reasons before
+adding to them; if a finding is genuine, fix it rather than baseline it. After a
+deliberate change, regenerate with `composer worker-state-baseline` and write a
+reason for each new entry.
+
+The audit needs the service map that `IgorPhpBundle` writes during
+`cache:clear`, so run that first if the cache is cold. Vendor code is out of
+scope (`ignore_vendors` in `igor.json`): it reported 341 findings there, none of
+them ours to fix.
+
 `FRANKENPHP_RESET_KERNEL=1`, on Symfony 8.1 and later, clones the kernel between
 requests instead. It hides this class of bug at the cost of a boot per request,
 which is most of what worker mode is for – useful to compare against, not to
