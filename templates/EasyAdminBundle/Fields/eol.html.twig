@@ -11,11 +11,11 @@
 {% endif %}
 
 {% if field.formattedValue is empty %}
-    <span class="badge badge-secondary">?</span>
+    <twig:ea:Badge variant="secondary">?</twig:ea:Badge>
 {% elseif 'Expired' in field.formattedValue %}
-    <span class="badge badge-danger">{{ outputValue }}</span>
+    <twig:ea:Badge variant="danger">{{ outputValue }}</twig:ea:Badge>
 {% elseif date('01/' ~ slicedDate) < date('+180days') %}
-    <span class="badge badge-warning">{{ outputValue }}</span>
+    <twig:ea:Badge variant="warning">{{ outputValue }}</twig:ea:Badge>
 {% else %}
-    <span class="badge badge-success">{{ outputValue }}</span>
+    <twig:ea:Badge variant="success">{{ outputValue }}</twig:ea:Badge>
 {% endif %}
