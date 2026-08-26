@@ -40,7 +40,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Implement `ResetInterface` on `LeantimeService`, whose memoised user
     directory has to stay a cache — `resolveUserName()` runs in a loop over
     tickets — but must not outlive the request
-  - Cover all three with tests: the factories had none
+  - Call `unsetAll()` before `setController()` on the injected
+    `AdminUrlGenerator` in `DashboardController` and
+    `SecurityContractCrudController`, which `AppExtension` and
+    `RepoAdvisoryService` already did. The instance is held for as long as its
+    consumer, which in a worker outlives the request
+  - Cover all of it with tests: the factories had none, and neither the
+    dashboard nor the Security Contract CRUD was in the admin smoke test
 - [#96](https://github.com/itk-dev/devops_itksites/pull/96)
   Show the Service Agreements monthly price as Danish kroner,
   `12.500,50 kr.`, on index and detail

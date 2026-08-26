@@ -132,6 +132,7 @@ class SecurityContractCrudController extends AbstractCrudController
 
         return $this->redirect(
             $this->adminUrlGenerator
+                ->unsetAll()
                 ->setController(static::class)
                 ->setAction(Crud::PAGE_INDEX)
                 ->generateUrl()

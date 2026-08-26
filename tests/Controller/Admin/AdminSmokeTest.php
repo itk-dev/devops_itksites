@@ -17,6 +17,7 @@ use App\Controller\Admin\ModuleVersionCrudController;
 use App\Controller\Admin\OIDCCrudController;
 use App\Controller\Admin\PackageCrudController;
 use App\Controller\Admin\PackageVersionCrudController;
+use App\Controller\Admin\SecurityContractCrudController;
 use App\Controller\Admin\ServerCrudController;
 use App\Controller\Admin\ServiceCertificateCrudController;
 use App\Controller\Admin\SiteCrudController;
@@ -68,6 +69,7 @@ class AdminSmokeTest extends WebTestCase
         yield 'OIDC' => [OIDCCrudController::class];
         yield 'Package' => [PackageCrudController::class];
         yield 'PackageVersion' => [PackageVersionCrudController::class];
+        yield 'SecurityContract' => [SecurityContractCrudController::class];
         yield 'Server' => [ServerCrudController::class];
         yield 'ServiceCertificate' => [ServiceCertificateCrudController::class];
         yield 'Site' => [SiteCrudController::class];
