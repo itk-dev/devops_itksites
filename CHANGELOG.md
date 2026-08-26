@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#96](https://github.com/itk-dev/devops_itksites/pull/96)
+  Show the Service Agreements monthly price as Danish kroner,
+  `12.500,50 kr.`, on index and detail
+- [#95](https://github.com/itk-dev/devops_itksites/pull/95)
+  Update `vincentlanglet/twig-cs-fixer` to 4.0. Every other dependency is
+  already at its latest minor; the remaining majors are held back by their
+  dependents
+- [#94](https://github.com/itk-dev/devops_itksites/pull/94)
+  Use EasyAdmin's own components in the admin templates
+  - Replace hand-rolled badge and icon markup with `<twig:ea:Badge>` and
+    `<twig:ea:Icon>`, so the admin follows EasyAdmin's theming
+  - Drop the unused `AutoBadgeMenuItem`/`AutoBadgeCrudMenuItem` pair: EasyAdmin
+    hides a badge whose content is null
+  - Set the ITK blue with the theme API instead of overriding EasyAdmin's
+    colour variables one by one
+  - Load the admin stylesheet again: it was added as `css/admin.css`, a file
+    deleted in #81, so every admin page carried a 404 and no ITK styling
 - [#93](https://github.com/itk-dev/devops_itksites/pull/93)
   Update composer dependencies, clearing 15 security advisories
   - `api-platform/core` 4.3.7 → 4.3.17, `easycorp/easyadmin-bundle` 5.0.11 → 5.5.1,
@@ -27,6 +44,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     exception, in `OpenIdConnectFailureListener`
   - Add an `oidc_client_secret` health check, so a client secret nearing its
     expiry shows up in `/health/detail` instead of in a login loop
+- [#83](https://github.com/itk-dev/devops_itksites/pull/83) 7523: Service agreements
+  - Add Project entity top-level Economics project.
+  - Add CodeOwner entity
+  - Add Leantime integration
+- [#80](https://github.com/itk-dev/devops_itksites/pull/80  ) 5566: Service agreements
 - [#91](https://github.com/itk-dev/devops_itksites/pull/91) Health endpoints
   - Add `/health/live`, `/health/ready` and `/health/detail` endpoints
   - Add health checks for database, RabbitMQ transport and detection result freshness
@@ -49,6 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Add economics service and sync action/command for service agreement synchronization
 - [#81](https://github.com/itk-dev/devops_itksites/pull/81) 5564: Asset Mapper migration
   - Add Symfony Asset Mapper bundle and importmap
+- Add Renovate auto-patch + auto-release pipeline (Phase 1 fork validation)
 - [#87](https://github.com/itk-dev/devops_itksites/pull/87) Update `codecov/codecov-action` to v7
 
 ## [1.11.2] - 2026-06-02

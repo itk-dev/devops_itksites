@@ -2,9 +2,9 @@
 {# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
 {% if field.formattedValue == 'unknown' %}
-    <span class="badge badge-secondary">?</span>
+    <twig:ea:Badge variant="secondary">?</twig:ea:Badge>
 {% elseif field.formattedValue starts with '${' %}
-    <span class="badge badge-warning">{{ field.formattedValue }}</span>
+    <twig:ea:Badge variant="warning">{{ field.formattedValue }}</twig:ea:Badge>
 {% else %}
-    <span class="badge badge-info">{{ field.formattedValue }}</span>
+    <twig:ea:Badge variant="info">{{ field.formattedValue }}</twig:ea:Badge>
 {% endif %}

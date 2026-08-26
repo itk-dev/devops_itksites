@@ -2,13 +2,13 @@
 {# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
 {% if field.formattedValue is empty %}
-    <span class="badge badge-warning">?</span>
+    <twig:ea:Badge variant="warning">?</twig:ea:Badge>
 {% elseif field.formattedValue == constant('App\\Types\\HostingProviderType::AZURE') %}
-    <span class="badge badge-light">{{ field.formattedValue }}</span>
+    <twig:ea:Badge variant="light">{{ field.formattedValue }}</twig:ea:Badge>
 {% elseif field.formattedValue == constant('App\\Types\\HostingProviderType::IT_RELATION') %}
-    <span class="badge badge-secondary">{{ field.formattedValue }}</span>
+    <twig:ea:Badge variant="secondary">{{ field.formattedValue }}</twig:ea:Badge>
 {% elseif field.formattedValue == constant('App\\Types\\HostingProviderType::DBC') %}
-    <span class="badge badge-dark">{{ field.formattedValue }}</span>
+    <twig:ea:Badge variant="dark">{{ field.formattedValue }}</twig:ea:Badge>
 {% else %}
-    <span class="badge badge-secondary">{{ field.formattedValue }}</span>
+    <twig:ea:Badge variant="secondary">{{ field.formattedValue }}</twig:ea:Badge>
 {% endif %}
