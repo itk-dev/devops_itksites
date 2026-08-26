@@ -9,10 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#59](https://github.com/itk-dev/devops_itksites/pull/59)
   4544: POC for using FrankenPHP behind Traefik
-  - Replace the phpfpm and nginx pair with a single FrankenPHP service
-    built from a `Dockerfile`
-  - Worker mode stays off: `runtime/frankenphp-symfony` has no Symfony 8
-    release
+  - Serve the site from a single FrankenPHP container. The `frankenphp` service
+    is added in `docker-compose.override.yml` and
+    `docker-compose.server.override.yml`; `phpfpm` and `nginx` move into a
+    profile that is never enabled
+  - Port the nginx configuration to `.docker/Caddyfile` and the PHP settings the
+    fpm image took from `PHP_*` environment variables to `.docker/php.ini`
+  - Traefik keeps terminating TLS: `auto_https` is off and Caddy serves plain
+    HTTP on 8080
+  - Move the whole stack to PHP 8.5, `itkdev/php8.5-fpm` and
+    `itkdev/supervisor-php8.5` included
+  - Point Taskfile, workflows, Woodpecker and the README at the `frankenphp`
+    service
+  - Worker mode stays off: `runtime/frankenphp-symfony` has no Symfony 8 release
 - [#96](https://github.com/itk-dev/devops_itksites/pull/96)
   Show the Service Agreements monthly price as Danish kroner,
   `12.500,50 kr.`, on index and detail

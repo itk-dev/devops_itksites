@@ -54,7 +54,7 @@ Authenticated users can access a simple read-only API – see the API documentat
 Run the `app:user:set-api-key` console command to set the API for a user:
 
 ``` shell
-docker compose exec phpfpm php bin/console app:user:set-api-key <user-id>
+docker compose exec frankenphp php bin/console app:user:set-api-key <user-id>
 ```
 
 Use the API key to make an authenticated request, e.g.
@@ -105,11 +105,38 @@ that the database is down.
 ```sh
 docker compose pull
 docker compose up --detach
-docker compose exec phpfpm composer install
-docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interaction
+docker compose exec frankenphp composer install
+docker compose exec frankenphp bin/console doctrine:migrations:migrate --no-interaction
 ```
 
 Then create a `.env.local` file to set secrets for your local setup.
+
+### Web server
+
+The site is served by a single [FrankenPHP](https://frankenphp.dev) container
+instead of the usual phpfpm and nginx pair. `docker-compose.override.yml`
+locally, and `docker-compose.server.override.yml` on the servers, add the
+`frankenphp` service and park `phpfpm` and `nginx` in a profile that is never
+enabled, so neither starts. Commands that used to run against `phpfpm` run
+against `frankenphp`.
+
+Traefik still terminates TLS. Caddy listens on plain HTTP on port 8080 and
+`auto_https` is off, so it neither requests nor serves certificates.
+
+Two files carry the configuration that used to live on the phpfpm and nginx
+images:
+
+- `.docker/Caddyfile` – a port of `.docker/nginx.conf` and
+  `.docker/templates/default.conf.template`.
+- `.docker/php.ini` – the PHP settings the `itkdev/php8.5-fpm` image derives
+  from its `PHP_*` environment variables, plus its tuned baseline. The compose
+  files still set the same variables; the ini file interpolates them.
+
+Coming from the phpfpm stack, remove the containers it left behind once:
+
+```sh
+docker compose rm --stop --force phpfpm nginx
+```
 
 ### OpenID Connect
 
@@ -145,13 +172,13 @@ all the above data.
 #### Load fixtures
 
 ```sh
-docker compose exec phpfpm composer fixtures
+docker compose exec frankenphp composer fixtures
 ```
 
 After loading fixtures you can sign in as an admin user:
 
 ```sh
-docker compose exec phpfpm bin/console itk-dev:openid-connect:login admin@example.com
+docker compose exec frankenphp bin/console itk-dev:openid-connect:login admin@example.com
 ```
 
 ### Job queues and handlers
@@ -160,13 +187,13 @@ All processing of Detctionresults is done in a series of message handlers. To
 run these do either:
 
 ```shell
-docker compose exec phpfpm composer queues
+docker compose exec frankenphp composer queues
 ```
 
 or
 
 ```shell
-docker compose exec phpfpm bin/console messenger:consume async --failure-limit=1 -vvv
+docker compose exec frankenphp bin/console messenger:consume async --failure-limit=1 -vvv
 ```
 
 ### Assets

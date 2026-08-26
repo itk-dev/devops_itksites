@@ -26,19 +26,19 @@ jobs:
 
             - name: Run Composer Install
               run: |
-                  docker compose run --rm phpfpm composer install
+                  docker compose run --rm frankenphp composer install
 
             - name: Run Doctrine Migrations
               run: |
-                  docker compose run --rm phpfpm bin/console doctrine:migrations:migrate --no-interaction
+                  docker compose run --rm frankenphp bin/console doctrine:migrations:migrate --no-interaction
 
             - name: Setup messenger "failed" doctrine transport to ensure db schema is updated
               run: |
-                  docker compose run --rm phpfpm bin/console messenger:setup-transports failed
+                  docker compose run --rm frankenphp bin/console messenger:setup-transports failed
 
             - name: Validate Doctrine schema
               run: |
-                  docker compose run --rm phpfpm bin/console doctrine:schema:validate
+                  docker compose run --rm frankenphp bin/console doctrine:schema:validate
 
     load-fixtures:
         name: Load Doctrine fixtures
@@ -53,15 +53,15 @@ jobs:
 
             - name: Run Composer Install
               run: |
-                  docker compose run --rm phpfpm composer install --no-interaction
+                  docker compose run --rm frankenphp composer install --no-interaction
 
             - name: Run Doctrine Migrations
               run: |
-                  docker compose run --rm phpfpm bin/console doctrine:migrations:migrate --no-interaction
+                  docker compose run --rm frankenphp bin/console doctrine:migrations:migrate --no-interaction
 
             - name: Load fixtures
               run: |
-                  docker compose run --rm phpfpm composer fixtures
+                  docker compose run --rm frankenphp composer fixtures
 
     # The jobs above migrate an empty database. A deployment migrates a database
     # that already holds rows, so a migration that cannot cope with existing
@@ -92,15 +92,15 @@ jobs:
 
             - name: Run Composer Install
               run: |
-                  docker compose run --rm phpfpm composer install --no-interaction
+                  docker compose run --rm frankenphp composer install --no-interaction
 
             - name: Run Doctrine Migrations
               run: |
-                  docker compose run --rm phpfpm bin/console doctrine:migrations:migrate --no-interaction
+                  docker compose run --rm frankenphp bin/console doctrine:migrations:migrate --no-interaction
 
             - name: Load fixtures
               run: |
-                  docker compose run --rm phpfpm composer fixtures
+                  docker compose run --rm frankenphp composer fixtures
 
             - name: Check out the pull request
               run: |
@@ -108,8 +108,8 @@ jobs:
 
             - name: Run Composer Install
               run: |
-                  docker compose run --rm phpfpm composer install --no-interaction
+                  docker compose run --rm frankenphp composer install --no-interaction
 
             - name: Run Doctrine Migrations on the populated database
               run: |
-                  docker compose run --rm phpfpm bin/console doctrine:migrations:migrate --no-interaction
+                  docker compose run --rm frankenphp bin/console doctrine:migrations:migrate --no-interaction

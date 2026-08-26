@@ -63,23 +63,23 @@ truncated and rebuilt by replaying DetectionResults. Manually maintained data
 ## Development Environment
 
 ```sh
-# Start services (MariaDB, PHP-FPM 8.5, Nginx, Mailpit)
+# Start services (MariaDB, FrankenPHP 8.5, Mailpit)
 docker compose pull && docker compose up --detach
 
 # Install dependencies
-docker compose exec phpfpm composer install
+docker compose exec frankenphp composer install
 
 # Run migrations
-docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interaction
+docker compose exec frankenphp bin/console doctrine:migrations:migrate --no-interaction
 
 # Load fixtures
-docker compose exec phpfpm composer fixtures
+docker compose exec frankenphp composer fixtures
 
 # Login as admin (after fixtures)
-docker compose exec phpfpm bin/console itk-dev:openid-connect:login admin@example.com
+docker compose exec frankenphp bin/console itk-dev:openid-connect:login admin@example.com
 
 # Process message queues
-docker compose exec phpfpm composer queues
+docker compose exec frankenphp composer queues
 
 # Build frontend assets
 docker compose run --rm node yarn install && docker compose run --rm node yarn build
@@ -91,17 +91,17 @@ All commands run inside Docker containers:
 
 ```sh
 # PHP coding standards (PHP-CS-Fixer)
-docker compose exec phpfpm composer coding-standards-check
-docker compose exec phpfpm composer coding-standards-apply
+docker compose exec frankenphp composer coding-standards-check
+docker compose exec frankenphp composer coding-standards-apply
 
 # PHPUnit tests (creates test DB, runs migrations, executes tests)
-docker compose exec phpfpm composer tests
+docker compose exec frankenphp composer tests
 
 # Frontend coding standards
 docker compose run --rm node yarn coding-standards-check
 
 # API spec export (must be committed)
-docker compose exec phpfpm composer update-api-spec
+docker compose exec frankenphp composer update-api-spec
 ```
 
 ## CI/CD
