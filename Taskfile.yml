@@ -16,12 +16,18 @@ tasks:
             - task: compose
               vars:
                   COMPOSE_ARGS: pull
+            # Start before installing, then wait: the frankenphp health check
+            # calls into the application, which cannot answer until its
+            # dependencies are in place.
             - task: compose
               vars:
-                  COMPOSE_ARGS: up --detach --wait
+                  COMPOSE_ARGS: up --detach
             - task: composer
               vars:
                   COMPOSER_ARGS: install
+            - task: compose
+              vars:
+                  COMPOSE_ARGS: up --detach --wait
 
     site:migrate:
         desc: Run database migrations

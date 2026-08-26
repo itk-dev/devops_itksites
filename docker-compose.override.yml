@@ -19,6 +19,7 @@ services:
       context: .
       # Xdebug, and OPcache rechecking files so an edit takes effect.
       target: dev
+    user: ${COMPOSE_USER:-deploy}
     networks:
       - app
       - frontend
@@ -42,6 +43,21 @@ services:
     depends_on:
       mariadb:
         condition: service_healthy
+    # /health/live is public and touches nothing, so it reports whether this
+    # container is serving without depending on the database or the broker.
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "--fail",
+          "--silent",
+          "http://localhost:8080/health/live",
+        ]
+      start_period: 30s
+      interval: 10s
+      timeout: 5s
+      retries: 3
     ports:
       - "8080"
     volumes:

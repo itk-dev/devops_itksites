@@ -47,6 +47,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     consumer, which in a worker outlives the request
   - Cover all of it with tests: the factories had none, and neither the
     dashboard nor the Security Contract CRUD was in the admin smoke test
+  - Run the container as `deploy` rather than root, dropping Caddy's
+    `cap_net_bind_service` since port 8080 needs none. `DEPLOY_UID` is a build
+    argument defaulting to 1042, the id the alpine images the servers run give
+    `deploy`
+  - Give the container a health check on `/health/live`, so `up --wait` waits for
+    the application rather than the process, and reorder `task site:update` to
+    install before waiting
   - Split the image into `dev` and `prod` stages. Production drops Xdebug and
     sets `opcache.validate_timestamps=0`, so it no longer loads a debugger it
     never uses or stats every file on every request; Xdebug's ini moves to

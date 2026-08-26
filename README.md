@@ -156,6 +156,29 @@ Coming from the phpfpm stack, remove the containers it left behind once:
 docker compose rm --stop --force phpfpm nginx
 ```
 
+#### Container user and health check
+
+The container runs as `deploy`, not root, and Caddy's `cap_net_bind_service` is
+removed – nothing needs it on port 8080. `DEPLOY_UID` is a build argument
+because the id has to match whoever owns the checkout being bind-mounted, and in
+`devops_docker-images` that depends on the base distro: the ubuntu tags put
+`deploy` at 1000, the alpine ones at 1042. The servers run the alpine tags, so
+1042 is the default. Local development runs the ubuntu tag at 1000, which does
+not matter because Docker Desktop virtualises bind-mount ownership, and CI picks
+`runner` through `COMPOSE_USER` as it always did.
+
+Coming from the root-run container, hand the files it wrote to `deploy` once:
+
+```sh
+docker compose run --rm --user root frankenphp chown -R deploy:deploy /app/var
+```
+
+`/health/live` backs a container health check, so `docker compose up --wait`
+waits for the application to answer rather than merely for the process to exist.
+That check calls into the application, which cannot answer before its
+dependencies are installed – which is why `task site:update` starts the stack,
+installs, and only then waits.
+
 #### Logging
 
 php-fpm sent its error log, its slowlog and everything a worker wrote to stderr

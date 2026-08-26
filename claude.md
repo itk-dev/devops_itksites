@@ -100,6 +100,11 @@ The `Dockerfile` is multi-stage: `target: dev` adds Xdebug and lets OPcache
 recheck files, `target: prod` has neither. The override files pick the target, so
 build through compose rather than a bare `docker build`.
 
+The container runs as `deploy`, not root. `DEPLOY_UID` is a build argument
+because the id must match the owner of the bind-mounted checkout — 1042 on the
+servers, which run the alpine tags. `/health/live` backs a container health
+check, so `up --wait` waits for the application to answer.
+
 `messenger:consume` is already long-running in production regardless, so the
 rules below apply whether or not worker mode is on.
 
