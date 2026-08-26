@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Controller\Admin;
 
 use App\Controller\Admin\SecurityContractCrudController;
+use App\Entity\Project;
 use App\Entity\SecurityContract;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,10 +32,16 @@ class SecurityContractCurrencyTest extends WebTestCase
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
         $client->loginUser($entityManager->getRepository(User::class)->findOneBy([]));
 
+        $project = new Project();
+        $project->setEconomicsId(4711);
+        $project->setName('Kroner probe');
+
         $contract = new SecurityContract();
         $contract->setEconomicsId(4711);
-        $contract->setProjectName('Kroner probe');
+        $contract->setProject($project);
         $contract->setMonthlyPrice(12500.5);
+
+        $entityManager->persist($project);
         $entityManager->persist($contract);
         $entityManager->flush();
 

@@ -13,7 +13,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -37,8 +36,8 @@ class SecurityContractCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setDefaultSort(['projectName' => 'ASC'])
-            ->setSearchFields(['projectName', 'clientName', 'hostingProvider'])
+            ->setDefaultSort(['project.name' => 'ASC'])
+            ->setSearchFields(['project.name', 'hostingProvider', 'serverSize'])
             ->showEntityActionsInlined()
             ->setPageTitle(Crud::PAGE_INDEX, 'Service Agreements')
             ->setHelp(Crud::PAGE_INDEX, 'Service agreements are synced from Economics. Click "Sync all" to update.');
@@ -59,12 +58,13 @@ class SecurityContractCrudController extends AbstractCrudController
         yield FormField::addFieldset('Project');
         yield BooleanField::new('active')->renderAsSwitch(false)->setColumns(2);
         yield BooleanField::new('eol')->setLabel('EOL')->renderAsSwitch(false)->setColumns(2);
-        yield TextField::new('projectName')->setColumns(8);
-        yield TextField::new('clientName')->hideOnIndex();
+        yield TextField::new('project.name')->setLabel('Project')->setColumns(8);
+        yield TextField::new('project.leantimeId')->setLabel('Leantime ID')->hideOnIndex();
+        yield TextField::new('projectGitRepos')->setLabel('GitHub repos')->hideOnIndex();
         yield TextField::new('hostingProvider');
 
         yield FormField::addFieldset('Links');
-        yield UrlField::new('leantimeUrl')->setLabel('Leantime URL')->hideOnIndex();
+        yield UrlField::new('project.leantimeUrl')->setLabel('Leantime URL')->hideOnIndex();
         yield UrlField::new('documentUrl')->setLabel('Document URL')->hideOnIndex();
 
         yield FormField::addFieldset('Contact');
@@ -72,28 +72,22 @@ class SecurityContractCrudController extends AbstractCrudController
         yield TextField::new('clientContactEmail')->hideOnIndex();
 
         yield FormField::addFieldset('Budget');
-        // The amounts are Danish kroner, which until now the admin never said
-        // anywhere. 5.5's prepend()/append() addons would be the way to show a
-        // unit inside an input, but they render on form pages only and this CRUD
-        // disables NEW and EDIT (see configureActions), so the only pages that
-        // exist are index and detail. Hence formatting instead of an addon.
+        // The amount is Danish kroner, which the admin never said anywhere.
+        // 5.5's prepend()/append() addons would be the way to show a unit inside
+        // an input, but they render on form pages only and this CRUD disables
+        // NEW and EDIT (see configureActions), so index and detail are the only
+        // pages it has. Hence formatting instead of an addon.
         yield NumberField::new('monthlyPrice')->setTextAlign('right')->setColumns(6)->formatValue(self::formatKroner(...));
-        yield NumberField::new('quarterlyHours')->setTextAlign('right')->setColumns(6);
-        yield NumberField::new('cybersecurityPrice')->setTextAlign('right')->hideOnIndex()->setColumns(6)->formatValue(self::formatKroner(...));
-        yield TextareaField::new('cybersecurityNote')->hideOnIndex()->setColumns(12);
 
         yield FormField::addFieldset('Infrastructure');
         yield BooleanField::new('dedicatedServer')->renderAsSwitch(false)->hideOnIndex();
         yield TextField::new('serverSize')->hideOnIndex();
-        yield TextareaField::new('gitRepos')->hideOnIndex();
-        yield TextField::new('projectTrackerKey')->hideOnIndex();
 
         yield FormField::addFieldset('Validity');
         yield DateField::new('validFrom')->setColumns(6);
         yield DateField::new('validTo')->setColumns(6);
     }
 
-    #[AdminRoute]
     /**
      * An amount as Danish kroner: 12.500,50 kr.
      *
@@ -121,9 +115,17 @@ class SecurityContractCrudController extends AbstractCrudController
     public function syncAll(): RedirectResponse
     {
         try {
-            $count = $this->syncService->syncAll();
+            $result = $this->syncService->syncAll();
 
-            $this->addFlash('info', sprintf('Synced %d service agreements.', $count));
+            $this->addFlash('info', sprintf('Synced %d projects.', $result['projects']));
+
+            if (!empty($result['unmatchedRepoNames'])) {
+                $this->addFlash('warning', sprintf(
+                    'Could not link %d GitHub repo name(s) to existing GitRepo entries: %s',
+                    count($result['unmatchedRepoNames']),
+                    implode(', ', $result['unmatchedRepoNames']),
+                ));
+            }
         } catch (\Throwable $e) {
             $this->addFlash('error', sprintf('An error occurred while syncing: %s', $e->getMessage()));
         }

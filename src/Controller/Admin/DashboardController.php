@@ -65,6 +65,7 @@ class DashboardController extends AbstractDashboardController
         // `?: null` because EasyAdmin hides a badge whose content is null but
         // renders a literal "0" for a zero count, which is noise on a menu item.
         yield MenuItem::linkTo(AdvisoryCrudController::class, 'Advisories', 'fas fa-skull-crossbones')->setBadge($this->advisoryRepository->count([]) ?: null, 'dark');
+        yield MenuItem::linkToRoute('Repo advisories', 'fas fa-shield-virus', 'admin_repo_advisories');
         yield MenuItem::linkTo(ModuleCrudController::class, 'Modules', 'fas fa-cube');
         yield MenuItem::linkTo(ModuleVersionCrudController::class, 'Modules Versions', 'fas fa-cubes');
         yield MenuItem::linkTo(DockerImageCrudController::class, 'Docker Images', 'fas fa-cube');

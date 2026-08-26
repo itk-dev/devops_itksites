@@ -26,9 +26,17 @@ class SyncServiceAgreementsCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         try {
-            $count = $this->syncService->syncAll();
+            $result = $this->syncService->syncAll();
 
-            $io->success(sprintf('Synced %d service agreements successfully.', $count));
+            $io->success(sprintf('Synced %d projects successfully.', $result['projects']));
+
+            if (!empty($result['unmatchedRepoNames'])) {
+                $io->warning(sprintf(
+                    'Could not link %d GitHub repo name(s) to existing GitRepo entries: %s',
+                    count($result['unmatchedRepoNames']),
+                    implode(', ', $result['unmatchedRepoNames']),
+                ));
+            }
         } catch (\Throwable $e) {
             $io->error($e->getMessage());
 
