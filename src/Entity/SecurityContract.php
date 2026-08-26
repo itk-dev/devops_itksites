@@ -12,11 +12,9 @@ class SecurityContract extends AbstractBaseEntity implements \Stringable
     #[ORM\Column(unique: true)]
     private ?int $economicsId = null;
 
-    #[ORM\Column(length: 255)]
-    private string $projectName = '';
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $clientName = null;
+    #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'serviceAgreements')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Project $project = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $hostingProvider = null;
@@ -40,9 +38,6 @@ class SecurityContract extends AbstractBaseEntity implements \Stringable
     private bool $eol = false;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $leantimeUrl = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
     private ?string $clientContactName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -54,27 +49,26 @@ class SecurityContract extends AbstractBaseEntity implements \Stringable
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $serverSize = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $gitRepos = null;
-
     #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $systemOwnerNotices = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $projectTrackerKey = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?float $quarterlyHours = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?float $cybersecurityPrice = null;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $cybersecurityNote = null;
-
     public function __toString(): string
     {
-        return $this->projectName;
+        return $this->project?->getName() ?? (string) $this->economicsId;
+    }
+
+    public function getProjectGitRepos(): ?string
+    {
+        if (null === $this->project) {
+            return null;
+        }
+
+        $names = array_map(
+            static fn (GitRepo $repo): string => (string) $repo,
+            $this->project->getGitRepos()->toArray(),
+        );
+
+        return [] === $names ? null : implode(', ', $names);
     }
 
     public function getEconomicsId(): ?int
@@ -89,26 +83,14 @@ class SecurityContract extends AbstractBaseEntity implements \Stringable
         return $this;
     }
 
-    public function getProjectName(): string
+    public function getProject(): ?Project
     {
-        return $this->projectName;
+        return $this->project;
     }
 
-    public function setProjectName(string $projectName): static
+    public function setProject(?Project $project): static
     {
-        $this->projectName = $projectName;
-
-        return $this;
-    }
-
-    public function getClientName(): ?string
-    {
-        return $this->clientName;
-    }
-
-    public function setClientName(?string $clientName): static
-    {
-        $this->clientName = $clientName;
+        $this->project = $project;
 
         return $this;
     }
@@ -197,18 +179,6 @@ class SecurityContract extends AbstractBaseEntity implements \Stringable
         return $this;
     }
 
-    public function getLeantimeUrl(): ?string
-    {
-        return $this->leantimeUrl;
-    }
-
-    public function setLeantimeUrl(?string $leantimeUrl): static
-    {
-        $this->leantimeUrl = $leantimeUrl;
-
-        return $this;
-    }
-
     public function getClientContactName(): ?string
     {
         return $this->clientContactName;
@@ -257,18 +227,6 @@ class SecurityContract extends AbstractBaseEntity implements \Stringable
         return $this;
     }
 
-    public function getGitRepos(): ?string
-    {
-        return $this->gitRepos;
-    }
-
-    public function setGitRepos(?string $gitRepos): static
-    {
-        $this->gitRepos = $gitRepos;
-
-        return $this;
-    }
-
     public function getSystemOwnerNotices(): ?array
     {
         return $this->systemOwnerNotices;
@@ -277,54 +235,6 @@ class SecurityContract extends AbstractBaseEntity implements \Stringable
     public function setSystemOwnerNotices(?array $systemOwnerNotices): static
     {
         $this->systemOwnerNotices = $systemOwnerNotices;
-
-        return $this;
-    }
-
-    public function getProjectTrackerKey(): ?string
-    {
-        return $this->projectTrackerKey;
-    }
-
-    public function setProjectTrackerKey(?string $projectTrackerKey): static
-    {
-        $this->projectTrackerKey = $projectTrackerKey;
-
-        return $this;
-    }
-
-    public function getQuarterlyHours(): ?float
-    {
-        return $this->quarterlyHours;
-    }
-
-    public function setQuarterlyHours(?float $quarterlyHours): static
-    {
-        $this->quarterlyHours = $quarterlyHours;
-
-        return $this;
-    }
-
-    public function getCybersecurityPrice(): ?float
-    {
-        return $this->cybersecurityPrice;
-    }
-
-    public function setCybersecurityPrice(?float $cybersecurityPrice): static
-    {
-        $this->cybersecurityPrice = $cybersecurityPrice;
-
-        return $this;
-    }
-
-    public function getCybersecurityNote(): ?string
-    {
-        return $this->cybersecurityNote;
-    }
-
-    public function setCybersecurityNote(?string $cybersecurityNote): static
-    {
-        $this->cybersecurityNote = $cybersecurityNote;
 
         return $this;
     }

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#96](https://github.com/itk-dev/devops_itksites/pull/96)
+  Show the Service Agreements monthly price as Danish kroner,
+  `12.500,50 kr.`, on index and detail
+- [#95](https://github.com/itk-dev/devops_itksites/pull/95)
+  Update `vincentlanglet/twig-cs-fixer` to 4.0. Every other dependency is
+  already at its latest minor; the remaining majors are held back by their
+  dependents
 - [#94](https://github.com/itk-dev/devops_itksites/pull/94)
   Use EasyAdmin's own components in the admin templates
   - Replace hand-rolled badge and icon markup with `<twig:ea:Badge>` and
@@ -23,6 +30,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `guzzlehttp/guzzle` 7.10.6 → 7.15.5, `guzzlehttp/psr7` 2.10.4 → 2.13.1
   - Regenerated the API spec: `symfony/yaml` now writes sequence items on their
     own line. No API changes
+- [#83](https://github.com/itk-dev/devops_itksites/pull/83) 7523: Service agreements
+  - Add Project entity top-level Economics project.
+  - Add CodeOwner entity
+  - Add Leantime integration
+- [#80](https://github.com/itk-dev/devops_itksites/pull/80  ) 5566: Service agreements
 - [#91](https://github.com/itk-dev/devops_itksites/pull/91) Health endpoints
   - Add `/health/live`, `/health/ready` and `/health/detail` endpoints
   - Add health checks for database, RabbitMQ transport and detection result freshness
@@ -45,6 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Add economics service and sync action/command for service agreement synchronization
 - [#81](https://github.com/itk-dev/devops_itksites/pull/81) 5564: Asset Mapper migration
   - Add Symfony Asset Mapper bundle and importmap
+- Add Renovate auto-patch + auto-release pipeline (Phase 1 fork validation)
 - [#87](https://github.com/itk-dev/devops_itksites/pull/87) Update `codecov/codecov-action` to v7
 
 ## [1.11.2] - 2026-06-02
