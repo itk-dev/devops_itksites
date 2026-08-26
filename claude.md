@@ -96,6 +96,10 @@ nginx. Worker mode is off but available — `symfony/runtime` has shipped
 FRANKENPHP_CONFIG: worker /app/public/index.php
 ```
 
+The `Dockerfile` is multi-stage: `target: dev` adds Xdebug and lets OPcache
+recheck files, `target: prod` has neither. The override files pick the target, so
+build through compose rather than a bare `docker build`.
+
 `messenger:consume` is already long-running in production regardless, so the
 rules below apply whether or not worker mode is on.
 

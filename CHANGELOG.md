@@ -47,6 +47,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     consumer, which in a worker outlives the request
   - Cover all of it with tests: the factories had none, and neither the
     dashboard nor the Security Contract CRUD was in the admin smoke test
+  - Split the image into `dev` and `prod` stages. Production drops Xdebug and
+    sets `opcache.validate_timestamps=0`, so it no longer loads a debugger it
+    never uses or stats every file on every request; Xdebug's ini moves to
+    `.docker/php-dev.ini`, which only development mounts
   - Gate pull requests on `igor-php`, which audits every shared service in the
     compiled container for state that would leak between requests.
     `igor-baseline.json` records the 33 existing findings with a reason each, so
