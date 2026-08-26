@@ -14,7 +14,7 @@
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate, nocache" />
     <meta content="width=device-width, initial-scale=1" name="viewport">
 
-    <title>Login failed - ITKsites</title>
+    <title>{% if declined %}Login declined{% else %}Login failed{% endif %} - ITKsites</title>
 
     <style>
         :root {
@@ -49,19 +49,30 @@
 <article>
     <h1>ITKsites</h1>
 
-    <p>
-        We <strong>could not complete your login</strong>.
-    </p>
+    {% if declined %}
+        <p>
+            The login was <strong>not completed</strong>.
+        </p>
 
-    <p>
-        This happens if the login was left half-finished for too long — in that
-        case <a href="{{ login_url }}">try again</a>.
-    </p>
+        <p>
+            This happens if you cancelled at the login screen, or if your session
+            there had expired — in either case <a href="{{ login_url }}">try again</a>.
+        </p>
+    {% else %}
+        <p>
+            We <strong>could not complete your login</strong>.
+        </p>
 
-    <p>
-        If it keeps failing, the login setup itself needs attention: tell ITK Dev,
-        and mention the time you tried. The details are in the log.
-    </p>
+        <p>
+            This happens if the login was left half-finished for too long — in that
+            case <a href="{{ login_url }}">try again</a>.
+        </p>
+
+        <p>
+            If it keeps failing, the login setup itself needs attention: tell ITK Dev,
+            and mention the time you tried. The details are in the log.
+        </p>
+    {% endif %}
 </article>
 </body>
 </html>

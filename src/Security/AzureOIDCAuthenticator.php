@@ -63,7 +63,10 @@ class AzureOIDCAuthenticator extends OpenIdLoginAuthenticator
 
             return new SelfValidatingPassport(new UserBadge($user->getUserIdentifier()));
         } catch (OpenIdConnectExceptionInterface $exception) {
-            throw new CustomUserMessageAuthenticationException($exception->getMessage());
+            // Chained: the bundle reads the cause back in onAuthenticationFailure()
+            // to decide what the user is shown. Dropping it turns a refusal the
+            // user caused into an unexplained 500.
+            throw new CustomUserMessageAuthenticationException($exception->getMessage(), previous: $exception);
         }
     }
 
