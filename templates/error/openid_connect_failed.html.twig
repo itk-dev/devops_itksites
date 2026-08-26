@@ -1,0 +1,78 @@
+{#
+    Shown by App\EventListener\OpenIdConnectFailureListener when an OIDC login
+    could not be completed.
+
+    Self-contained on purpose: an error page should not depend on the asset
+    build, and "Try again" is a link the user clicks rather than a redirect —
+    the bundle stopped redirecting to the identity provider precisely to end
+    the loop a broken login used to cause.
+#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate, nocache" />
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <title>{% if declined %}Login declined{% else %}Login failed{% endif %} - ITKsites</title>
+
+    <style>
+        :root {
+            --body-bg: #f8fafc;
+            --text-color: #475569;
+            --content-bg: #fff;
+        }
+
+        body {
+            color: var(--text-color);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+            line-height: 1.5;
+            margin: 0;
+        }
+        strong { font-weight: 600; }
+        article { background: var(--content-bg); padding: 32px 12px 0; }
+        article h1 { font-size: 28px; line-height: 1.3; margin: 0 0 16px; padding: 0 12px; }
+        article p { margin: 0 0 16px; padding: 0 12px; }
+        article p:last-child { margin-bottom: 0; }
+        a { color: #2563eb; }
+
+        @media (min-width: 768px) {
+            body { background: var(--body-bg); }
+            article { border-radius: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); margin: 45px auto; max-width: 700px; padding: 48px 88px; }
+            article h1 { font-size: 36px; padding: 0; }
+            article p { font-size: 18px; padding: 0; }
+        }
+    </style>
+</head>
+
+<body>
+<article>
+    <h1>ITKsites</h1>
+
+    {% if declined %}
+        <p>
+            The login was <strong>not completed</strong>.
+        </p>
+
+        <p>
+            This happens if you cancelled at the login screen, or if your session
+            there had expired — in either case <a href="{{ login_url }}">try again</a>.
+        </p>
+    {% else %}
+        <p>
+            We <strong>could not complete your login</strong>.
+        </p>
+
+        <p>
+            This happens if the login was left half-finished for too long — in that
+            case <a href="{{ login_url }}">try again</a>.
+        </p>
+
+        <p>
+            If it keeps failing, the login setup itself needs attention: tell ITK Dev,
+            and mention the time you tried. The details are in the log.
+        </p>
+    {% endif %}
+</article>
+</body>
+</html>

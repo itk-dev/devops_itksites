@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "896639a35d4c350fd3b2b3fdfe6542fc",
+    "content-hash": "64cb1b11b5e4c3da1bdc1f83e64b414f",
     "packages": [
         {
             "name": "api-platform/core",
@@ -1928,31 +1928,31 @@
         },
         {
             "name": "itk-dev/openid-connect",
-            "version": "5.0.0",
+            "version": "5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/itk-dev/openid-connect.git",
-                "reference": "f241f6794a2e74eab8c4808bc22f341a98e96f0b"
+                "reference": "950758b97397ab529f1df787c377ca54b321af79"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itk-dev/openid-connect/zipball/f241f6794a2e74eab8c4808bc22f341a98e96f0b",
-                "reference": "f241f6794a2e74eab8c4808bc22f341a98e96f0b",
+                "url": "https://api.github.com/repos/itk-dev/openid-connect/zipball/950758b97397ab529f1df787c377ca54b321af79",
+                "reference": "950758b97397ab529f1df787c377ca54b321af79",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-openssl": "*",
                 "firebase/php-jwt": "^7.0",
-                "league/oauth2-client": "^2.6",
+                "league/oauth2-client": "^2.8.1",
                 "php": "^8.3",
                 "psr/cache": "^2.0 || ^3.0",
-                "psr/http-client": "^1.0",
-                "robrichards/xmlseclibs": "^3.1.5"
+                "psr/http-client": "^1.0"
             },
             "require-dev": {
                 "ergebnis/composer-normalize": "^2.50",
                 "friendsofphp/php-cs-fixer": "^3.75",
+                "infection/infection": "^0.35.2",
                 "mockery/mockery": "^1.6.12",
                 "phpstan/phpstan": "^2.1.41",
                 "phpstan/phpstan-mockery": "^2.0",
@@ -1986,34 +1986,33 @@
             "description": "OpenID connect configuration package",
             "support": {
                 "issues": "https://github.com/itk-dev/openid-connect/issues",
-                "source": "https://github.com/itk-dev/openid-connect/tree/5.0.0"
+                "source": "https://github.com/itk-dev/openid-connect/tree/5.1.0"
             },
-            "time": "2026-06-02T09:01:56+00:00"
+            "time": "2026-08-26T12:01:21+00:00"
         },
         {
             "name": "itk-dev/openid-connect-bundle",
-            "version": "5.1.1",
+            "version": "6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/itk-dev/openid-connect-bundle.git",
-                "reference": "5021974bb605d3c5130b06e05bd0a277587277bc"
+                "reference": "c990bd64fca599de02766671b99eab4cc260915b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itk-dev/openid-connect-bundle/zipball/5021974bb605d3c5130b06e05bd0a277587277bc",
-                "reference": "5021974bb605d3c5130b06e05bd0a277587277bc",
+                "url": "https://api.github.com/repos/itk-dev/openid-connect-bundle/zipball/c990bd64fca599de02766671b99eab4cc260915b",
+                "reference": "c990bd64fca599de02766671b99eab4cc260915b",
                 "shasum": ""
             },
             "require": {
                 "doctrine/orm": "^2.8 || ^3.0",
                 "ext-json": "*",
                 "ext-openssl": "*",
-                "itk-dev/openid-connect": "^5.0",
+                "itk-dev/openid-connect": "^5.1",
                 "php": "^8.3",
                 "psr/log": "^3.0",
                 "symfony/cache": "^6.4 || ^7.0 || ^8.0",
                 "symfony/clock": "^6.4 || ^7.0 || ^8.0",
-                "symfony/deprecation-contracts": "^2.5 || ^3.0",
                 "symfony/event-dispatcher": "^6.4 || ^7.0 || ^8.0",
                 "symfony/framework-bundle": "^6.4.13 || ^7.0 || ^8.0",
                 "symfony/security-bundle": "^6.4.13 || ^7.0 || ^8.0",
@@ -2023,6 +2022,7 @@
             "require-dev": {
                 "ergebnis/composer-normalize": "^2.28",
                 "friendsofphp/php-cs-fixer": "^3.11",
+                "igor-php/igor-php": "^0.9",
                 "infection/infection": "*",
                 "phpstan/phpstan": "^2.1.41",
                 "phpstan/phpstan-deprecation-rules": "^2.0",
@@ -2056,9 +2056,9 @@
             "description": "Symfony bundle for openid-connect",
             "support": {
                 "issues": "https://github.com/itk-dev/openid-connect-bundle/issues",
-                "source": "https://github.com/itk-dev/openid-connect-bundle/tree/5.1.1"
+                "source": "https://github.com/itk-dev/openid-connect-bundle/tree/6.1.0"
             },
-            "time": "2026-08-19T13:41:15+00:00"
+            "time": "2026-08-26T14:22:26+00:00"
         },
         {
             "name": "itk-dev/vault",
@@ -3149,48 +3149,6 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
-        },
-        {
-            "name": "robrichards/xmlseclibs",
-            "version": "3.1.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/robrichards/xmlseclibs.git",
-                "reference": "03062be78178cbb5e8f605cd255dc32a14981f92"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/robrichards/xmlseclibs/zipball/03062be78178cbb5e8f605cd255dc32a14981f92",
-                "reference": "03062be78178cbb5e8f605cd255dc32a14981f92",
-                "shasum": ""
-            },
-            "require": {
-                "ext-openssl": "*",
-                "php": ">= 5.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "RobRichards\\XMLSecLibs\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "A PHP library for XML Security",
-            "homepage": "https://github.com/robrichards/xmlseclibs",
-            "keywords": [
-                "security",
-                "signature",
-                "xml",
-                "xmldsig"
-            ],
-            "support": {
-                "issues": "https://github.com/robrichards/xmlseclibs/issues",
-                "source": "https://github.com/robrichards/xmlseclibs/tree/3.1.5"
-            },
-            "time": "2026-03-13T10:31:56+00:00"
         },
         {
             "name": "symfony/amqp-messenger",

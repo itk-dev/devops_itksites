@@ -15,6 +15,9 @@ itkdev_openid_connect:
                 metadata_url: '%env(string:AZURE_AZ_OIDC_METADATA_URL)%'
                 client_id: '%env(AZURE_AZ_OIDC_CLIENT_ID)%'
                 client_secret: '%env(AZURE_AZ_OIDC_CLIENT_SECRET)%'
+                # Date the client secret expires. Lets the bundle warn before it
+                # breaks every login, as it did on 2026-08-12.
+                client_secret_expires_at: '%env(string:AZURE_AZ_OIDC_CLIENT_SECRET_EXPIRES_AT)%'
                 # Specify redirect URI
                 redirect_uri: '%env(string:AZURE_AZ_OIDC_REDIRECT_URI)%'
                 allow_http: '%env(bool:AZURE_AZ_OIDC_ALLOW_HTTP)%'

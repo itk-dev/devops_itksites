@@ -81,13 +81,20 @@ read `/health/detail` when it goes red:
 curl --silent https://itksites.local.itkdev.dk/health/detail | jq
 ```
 
-The checks cover the database, the RabbitMQ messenger transport and the
-freshness of the most recent detection result. The last one catches an ingest
-pipeline that has stopped while the application itself is still serving
-requests.
+The checks cover the database, the RabbitMQ messenger transport, the freshness
+of the most recent detection result and the expiry of the OIDC client secret.
+The freshness check catches an ingest pipeline that has stopped while the
+application itself is still serving requests. The client secret check catches
+the expiry that breaks every login at once.
 
 `HEALTH_INGEST_MAX_AGE` sets how old the most recent detection result may be
 before ingest is reported as degraded.
+
+`AZURE_AZ_OIDC_CLIENT_SECRET_EXPIRES_AT` is where the client secret check reads
+the date. It reports degraded only once that date has passed, so watch
+`days_remaining` in the detail payload rather than waiting for it to go red. With
+no date configured the check reports skipped, which means nothing is watching the
+secret.
 
 Results are cached for `HEALTH_CACHE_TTL` seconds so that polling does not turn
 into load on the dependencies. The cache is the dedicated, filesystem-backed
