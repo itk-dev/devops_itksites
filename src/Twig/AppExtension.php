@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Twig;
 
 use App\Entity\AbstractBaseEntity;
-use EasyCorp\Bundle\EasyAdminBundle\Registry\CrudControllerRegistry;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Registry\AdminControllerRegistryInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class AppExtension extends AbstractExtension
 {
-    public function __construct(private readonly AdminUrlGenerator $adminUrlGenerator, private readonly CrudControllerRegistry $crudControllerRegistry)
+    public function __construct(private readonly AdminUrlGenerator $adminUrlGenerator, private readonly AdminControllerRegistryInterface $crudControllerRegistry)
     {
     }
 
@@ -36,9 +36,9 @@ class AppExtension extends AbstractExtension
         if (method_exists($entity, 'display')) {
             if ('detail' == $action) {
                 return $entity->display(1);
-            } else {
-                return $entity->display(0);
             }
+
+            return $entity->display(0);
         }
 
         return $entity->__toString();
@@ -46,7 +46,7 @@ class AppExtension extends AbstractExtension
 
     public function url(AbstractBaseEntity $entity): string
     {
-        $crudController = $this->crudControllerRegistry->findCrudFqcnByEntityFqcn($entity::class);
+        $crudController = $this->crudControllerRegistry->findCrudControllerByEntity($entity::class);
         $id = $entity->getId();
         if (null === $id || null === $crudController) {
             return '';

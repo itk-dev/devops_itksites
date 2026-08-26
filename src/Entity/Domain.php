@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Repository\DomainRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DomainRepository::class)]
@@ -19,10 +20,12 @@ class Domain extends AbstractHandlerResult implements \Stringable
         minMessage: 'Your address must be longer than {{ limit }} characters',
         maxMessage: 'Your address cannot be longer than {{ limit }} characters',
     )]
+    #[Groups(['export'])]
     private string $address;
 
     #[ORM\ManyToOne(targetEntity: Site::class, inversedBy: 'domains')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[Groups(['export'])]
     private Site $site;
 
     #[\Override]

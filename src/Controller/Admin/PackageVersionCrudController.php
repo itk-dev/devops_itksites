@@ -8,6 +8,8 @@ use App\Admin\Field\AdvisoryCountField;
 use App\Admin\Field\LatestStatusField;
 use App\Admin\Field\VersionField;
 use App\Entity\PackageVersion;
+use App\Form\Type\Admin\SemverFilter;
+use App\Trait\SemverSortableCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -19,6 +21,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
 class PackageVersionCrudController extends AbstractCrudController
 {
+    use SemverSortableCrudControllerTrait;
+
     public static function getEntityFqcn(): string
     {
         return PackageVersion::class;
@@ -36,12 +40,8 @@ class PackageVersionCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
-            ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ->remove(Crud::PAGE_INDEX, Action::NEW)
-            ->remove(Crud::PAGE_INDEX, Action::EDIT)
-            ->remove(Crud::PAGE_INDEX, Action::DELETE)
-            ->remove(Crud::PAGE_DETAIL, Action::EDIT)
-            ->remove(Crud::PAGE_DETAIL, Action::DELETE);
+            ->disable(Action::DELETE, Action::NEW, Action::EDIT)
+            ->add(Crud::PAGE_INDEX, Action::DETAIL);
     }
 
     #[\Override]
@@ -63,9 +63,15 @@ class PackageVersionCrudController extends AbstractCrudController
     {
         return $filters
             ->add('package')
-            ->add('version')
-            ->add('latest')
+            ->add(SemverFilter::new('version'))
+            ->add(SemverFilter::new('latest'))
             ->add('latestStatus')
         ;
+    }
+
+    #[\Override]
+    protected function semverSortedProperties(): array
+    {
+        return ['version', 'latest'];
     }
 }

@@ -32,7 +32,7 @@ class DockerImageTagFactory
         $dockerImageTags = new ArrayCollection();
         $images = [];
         foreach ($containersKeyed as $container) {
-            $parts = explode('/', $container->image);
+            $parts = explode('/', (string) $container->image);
             $organization = $parts[0];
             $repository = $parts[1] ?? '';
 

@@ -23,8 +23,6 @@ class InstallationFactory
     /**
      * Get Installations from detection result.
      *
-     * @param DetectionResult $detectionResult
-     *
      * @return Collection<int, Installation>
      */
     public function getInstallations(DetectionResult $detectionResult): Collection

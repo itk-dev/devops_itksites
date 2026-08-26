@@ -13,6 +13,20 @@ framework:
     #esi: true
     #fragments: true
 
+    http_client:
+        scoped_clients:
+            economics.client:
+                base_uri: '%env(APP_ECONOMICS_URI)%'
+                scope: '%env(APP_ECONOMICS_URI)%'
+                headers:
+                    x-api-key: '%env(APP_ECONOMICS_API_KEY)%'
+            leantime.client:
+                base_uri: '%env(APP_LEANTIME_URI)%'
+                scope: '%env(APP_LEANTIME_URI)%'
+                headers:
+                    Content-Type: 'application/json'
+                    x-api-key: '%env(APP_LEANTIME_API_KEY)%'
+
 when@test:
     framework:
         test: true

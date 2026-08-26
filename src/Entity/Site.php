@@ -4,15 +4,22 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\SiteRepository;
 use App\Types\SiteType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[ApiResource(
+    normalizationContext: ['groups' => ['export']],
+    security: "is_granted('ROLE_USER')",
+)]
+#[GetCollection()]
 #[ORM\Entity(repositoryClass: SiteRepository::class)]
 #[ORM\UniqueConstraint(name: 'server_rootDir_configFilePath_idx', fields: ['server', 'rootDir', 'configFilePath'])]
 class Site extends AbstractHandlerResult implements \Stringable
@@ -167,8 +174,6 @@ class Site extends AbstractHandlerResult implements \Stringable
      * these domains the first is the primary:
      * - 360.aarhuskommune.dk
      * - 360.aarhuskommune.dk.srvitkphp74.itkdev.dk
-     *
-     * @return void
      */
     private function updatePrimaryDomain(): void
     {
@@ -202,7 +207,10 @@ class Site extends AbstractHandlerResult implements \Stringable
         return $this;
     }
 
-    public function getAdvisoryCount(): int
+    /**
+     * @return Collection<int, Advisory>
+     */
+    public function getAdvisories(): Collection
     {
         $advisories = new ArrayCollection();
         foreach ($this->installation->getPackageVersions() as $packageVersion) {
@@ -211,6 +219,11 @@ class Site extends AbstractHandlerResult implements \Stringable
             }
         }
 
-        return $advisories->count();
+        return $advisories;
+    }
+
+    public function getAdvisoryCount(): int
+    {
+        return $this->getAdvisories()->count();
     }
 }

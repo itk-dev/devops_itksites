@@ -1,11 +1,14 @@
 openapi: 3.1.0
 info:
-  title: ''
-  description: ''
-  version: 0.0.0
+  title: 'ITKsites API'
+  description: |-
+    REST API for ingesting server detection results from the ITK sites server harvester. Detection results are processed asynchronously to track servers, sites, domains, packages, modules, Docker images, and git repositories.
+
+    The API also provides read-only access to information on servers and sites created by processing detection results.
+  version: 1.0.0
 servers:
   -
-    url: /
+    url: 'https://itksites.local.itkdev.dk'
     description: ''
 paths:
   /api/detection_results:
@@ -15,15 +18,10 @@ paths:
         - DetectionResult
       responses:
         '202':
-          description: 'DetectionResult resource created'
-          content:
-            application/json:
-              schema: {  }
-            application/ld+json:
-              schema: {  }
-          links: {  }
+          description: 'Detection result accepted for processing'
+          links: {}
         '400':
-          description: 'Invalid input'
+          description: 'Invalid input — malformed request body'
           content:
             application/ld+json:
               schema:
@@ -34,22 +32,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          links: {  }
+          links: {}
+        '401':
+          description: 'Unauthorized — missing or invalid API key. The Authorization header must use the format: Apikey {key}'
+        '403':
+          description: 'Forbidden — the authenticated server does not have the required ROLE_SERVER role'
         '422':
-          description: 'An error occurred'
+          description: 'Validation error — one or more fields failed constraint validation'
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/ConstraintViolation.jsonld-jsonld'
+                $ref: '#/components/schemas/ConstraintViolation.jsonld'
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/ConstraintViolation-json'
+                $ref: '#/components/schemas/ConstraintViolation'
             application/json:
               schema:
-                $ref: '#/components/schemas/ConstraintViolation-json'
-          links: {  }
-      summary: 'Creates a DetectionResult resource.'
-      description: 'Creates a DetectionResult resource.'
+                $ref: '#/components/schemas/ConstraintViolation'
+          links: {}
+      summary: 'Submit a detection result for async processing'
+      description: 'Accepts a detection result from the server harvester and queues it for asynchronous processing. The result is deduplicated by content hash — identical submissions update the last contact timestamp without triggering reprocessing. Returns 202 Accepted with an empty body.'
       parameters: []
       requestBody:
         description: 'The new DetectionResult resource'
@@ -61,17 +63,106 @@ paths:
             schema:
               $ref: '#/components/schemas/DetectionResult-write'
         required: true
-      deprecated: false
+  /api/servers:
+    get:
+      operationId: api_servers_get_collection
+      tags:
+        - Server
+      responses:
+        '200':
+          description: 'Server collection'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Server-export'
+            application/ld+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Server-export'
+        '403':
+          description: Forbidden
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Error.jsonld'
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          links: {}
+      summary: 'Retrieves the collection of Server resources.'
+      description: 'Retrieves the collection of Server resources.'
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'The collection page number'
+          required: false
+          deprecated: false
+          schema:
+            type: integer
+            default: 1
+          style: form
+          explode: true
+  /api/sites:
+    get:
+      operationId: api_sites_get_collection
+      tags:
+        - Site
+      responses:
+        '200':
+          description: 'Site collection'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Site-export'
+            application/ld+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Site-export'
+        '403':
+          description: Forbidden
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Error.jsonld'
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          links: {}
+      summary: 'Retrieves the collection of Site resources.'
+      description: 'Retrieves the collection of Site resources.'
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'The collection page number'
+          required: false
+          deprecated: false
+          schema:
+            type: integer
+            default: 1
+          style: form
+          explode: true
 components:
   schemas:
-    ConstraintViolation-json:
+    ConstraintViolation:
       type: object
       description: 'Unprocessable entity'
-      deprecated: false
       properties:
         status:
           default: 422
-          example: 422
           type: integer
         violations:
           type: array
@@ -84,6 +175,19 @@ components:
               message:
                 type: string
                 description: 'The message associated with the violation'
+              code:
+                type: string
+                description: 'The code of the violation'
+              hint:
+                type: string
+                description: 'An extra hint to understand the violation'
+              payload:
+                type: object
+                additionalProperties: true
+                description: 'The serialized payload of the violation'
+            required:
+              - propertyPath
+              - message
         detail:
           readOnly: true
           type: string
@@ -100,14 +204,12 @@ components:
           type:
             - string
             - 'null'
-    ConstraintViolation.jsonld-jsonld:
+    ConstraintViolation.jsonld:
       type: object
       description: 'Unprocessable entity'
-      deprecated: false
       properties:
         status:
           default: 422
-          example: 422
           type: integer
         violations:
           type: array
@@ -120,6 +222,19 @@ components:
               message:
                 type: string
                 description: 'The message associated with the violation'
+              code:
+                type: string
+                description: 'The code of the violation'
+              hint:
+                type: string
+                description: 'An extra hint to understand the violation'
+              payload:
+                type: object
+                additionalProperties: true
+                description: 'The serialized payload of the violation'
+            required:
+              - propertyPath
+              - message
         detail:
           readOnly: true
           type: string
@@ -141,25 +256,28 @@ components:
             - 'null'
     DetectionResult-write:
       type: object
-      description: ''
-      deprecated: false
       properties:
         type:
-          default: ''
-          example: ''
-          type: string
+          enum:
+            - dir
+            - docker
+            - drupal
+            - git
+            - nginx
+            - symfony
         rootDir:
+          description: 'Absolute path to the root directory of the detected installation on the server'
           default: ''
-          example: ''
+          example: /data/www/example-site/htdocs
           type: string
         data:
+          description: 'JSON-encoded payload from the server harvester containing the detection details. Structure varies by type.'
           default: ''
-          example: ''
+          example: '{"packages":{"symfony/framework-bundle":{"version":"7.2.1"}}}'
           type: string
     Error:
       type: object
       description: 'A representation of common errors.'
-      deprecated: false
       properties:
         title:
           readOnly: true
@@ -174,7 +292,9 @@ components:
             - string
             - 'null'
         status:
-          type: number
+          type:
+            - integer
+            - 'null'
           examples:
             - 404
           default: 400
@@ -191,7 +311,6 @@ components:
     Error.jsonld:
       type: object
       description: 'A representation of common errors.'
-      deprecated: false
       properties:
         title:
           readOnly: true
@@ -206,7 +325,9 @@ components:
             - string
             - 'null'
         status:
-          type: number
+          type:
+            - integer
+            - 'null'
           examples:
             - 404
           default: 400
@@ -225,15 +346,41 @@ components:
           type:
             - string
             - 'null'
-  responses: {  }
-  parameters: {  }
-  examples: {  }
-  requestBodies: {  }
-  headers: {  }
+    Server-export:
+      type: object
+      properties:
+        Name:
+          default: ''
+          type: string
+    Site-export:
+      type: object
+      required:
+        - 'PHP version'
+      properties:
+        'PHP version':
+          minLength: 1
+          maxLength: 10
+          default: ''
+          type: string
+        'Primary domain':
+          readOnly: true
+          type: string
+        Type:
+          default: ''
+          type: string
+        Server:
+          $ref: '#/components/schemas/Server-export'
+        rootDir:
+          type: string
+  responses: {}
+  parameters: {}
+  examples: {}
+  requestBodies: {}
+  headers: {}
   securitySchemes:
     apiKey:
       type: apiKey
-      description: 'Value for the Authorization header parameter.'
+      description: 'Server API key. Use the format: Apikey {your-api-key}'
       name: Authorization
       in: header
 security:
@@ -242,4 +389,11 @@ security:
 tags:
   -
     name: DetectionResult
-webhooks: {  }
+    description: "Resource 'DetectionResult' operations."
+  -
+    name: Server
+    description: "Resource 'Server' operations."
+  -
+    name: Site
+    description: "Resource 'Site' operations."
+webhooks: {}

@@ -18,10 +18,6 @@ readonly class DrupalHandler implements DetectionResultHandlerInterface
 {
     /**
      * DirectoryHandler constructor.
-     *
-     * @param InstallationFactory $installationFactory
-     * @param PackageVersionFactory $packageVersionFactory
-     * @param ModuleVersionFactory $moduleVersionFactory
      */
     public function __construct(
         private InstallationFactory $installationFactory,
@@ -30,9 +26,6 @@ readonly class DrupalHandler implements DetectionResultHandlerInterface
     ) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function handleResult(DetectionResult $detectionResult): void
     {
         try {
@@ -56,7 +49,6 @@ readonly class DrupalHandler implements DetectionResultHandlerInterface
         }
     }
 
-    /** {@inheritDoc} */
     public function supportsType(string $type): bool
     {
         return DetectionType::DRUPAL === $type;

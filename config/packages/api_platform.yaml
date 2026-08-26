@@ -1,4 +1,11 @@
 api_platform:
+    title: 'ITKsites API'
+    description: |
+        REST API for ingesting server detection results from the ITK sites server harvester. Detection results are processed asynchronously to track servers, sites, domains, packages, modules, Docker images, and git repositories.
+
+        The API also provides read-only access to information on servers and sites created by processing detection results.
+    version: '1.0.0'
+
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     formats:
@@ -10,7 +17,7 @@ api_platform:
     enable_swagger: true
     enable_swagger_ui: true
     swagger:
-        versions: [ 3 ]
+        versions: [3]
         api_keys:
             apiKey:
                 name: Authorization

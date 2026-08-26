@@ -1,14 +1,14 @@
 {# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
 {# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
-{% if ea.crud.currentAction == 'detail' %}
+{% if ea().crud.currentAction == 'detail' %}
     <span class="text-danger" title="{{ field.value }}">{{ field.formattedValue|raw|nl2br }}</span>
 {% else %}
     {% if field.formattedValue is null %}
-        <span class="badge badge-secondary"></span>
+        <twig:ea:Badge variant="secondary"></twig:ea:Badge>
     {% else %}
         <span class="text-danger text-center">
-            <i class="fa fa-warning"></i>
+            <twig:ea:Icon name="fa fa-warning" />
         </span>
     {% endif %}
 {% endif %}

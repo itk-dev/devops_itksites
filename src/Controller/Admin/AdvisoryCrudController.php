@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\AffectedSitesField;
 use App\Admin\Field\SourcesField;
 use App\Admin\Field\TextMonospaceField;
 use App\Entity\Advisory;
@@ -17,6 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 
 class AdvisoryCrudController extends AbstractCrudController
 {
@@ -58,13 +60,15 @@ class AdvisoryCrudController extends AbstractCrudController
         yield DateField::new('reportedAt')->setColumns(6)->onlyOnIndex();
         yield DateTimeField::new('reportedAt')->setColumns(6)->onlyOnDetail();
         yield SourcesField::new('sourceLinks')->setColumns(6)->onlyOnDetail();
+        yield AffectedSitesField::new('sites')->setLabel('Affected Sites');
     }
 
     #[\Override]
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            ->add('package')
+            ->add(EntityFilter::new('package')->canSelectMultiple())
+            ->add(EntityFilter::new('packageVersions')->canSelectMultiple())
             ->add('advisoryId')
             ->add('cve')
             ->add('reportedAt')

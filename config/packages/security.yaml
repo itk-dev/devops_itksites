@@ -12,15 +12,28 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+
+        app_api_users:
+            chain:
+                providers: [app_server_provider, app_user_provider]
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        # The health endpoints must answer while the database is down, so they
+        # cannot go through a firewall: both user providers above are Doctrine
+        # entity providers and authentication would itself fail. /health/detail
+        # is protected by the ITKBasicAuth middleware in Traefik instead.
+        health:
+            pattern: ^/health
+            security: false
+
         api:
             pattern: ^/api
             custom_authenticators:
                 - App\Security\ApiKeyAuthenticator
-            provider: app_server_provider
+            provider: app_api_users
 
         main:
             custom_authenticators:
@@ -41,9 +54,16 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/docs, roles: PUBLIC_ACCESS }
-        - { path: ^/api, roles: ROLE_SERVER }
-        - { path: ^/admin, roles: ROLE_ADMIN  }
+        - { path: ^/api, roles: [ROLE_SERVER, ROLE_USER] }
+        - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+
+# Current AAK OIDC setup doesn't support `itksites.local.itkdev.dk`
+when@dev:
+    security:
+        firewalls:
+            main:
+                security: false
 
 when@test:
     security:

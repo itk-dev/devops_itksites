@@ -8,7 +8,7 @@ parameters:
 services:
     # default configuration for services in *this* file
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
+        autowire: true # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
     # makes classes in src/ available to be used as services
@@ -25,13 +25,29 @@ services:
 
     _instanceof:
         App\Handler\DetectionResultHandlerInterface:
-            tags: [ app.handler.detection_result_handler ]
+            tags: [app.handler.detection_result_handler]
+
+        App\Health\HealthCheckInterface:
+            tags: [app.health.check]
+
+    App\Health\HealthChecker:
+        arguments:
+            $checks: !tagged_iterator app.health.check
+            $cache: '@cache.health'
+            $cacheTtl: '%env(int:HEALTH_CACHE_TTL)%'
+
+    App\Health\Check\RabbitMqHealthCheck:
+        arguments:
+            $transport: '@messenger.transport.async'
+
+    App\Health\Check\IngestFreshnessHealthCheck:
+        arguments:
+            $maxAgeSeconds: '%env(int:HEALTH_INGEST_MAX_AGE)%'
 
     App\EventListener\RemovedRelationsListener:
         tags:
-            -
-                name: 'doctrine.event_listener'
-                event: 'postFlush'
+            - name: 'doctrine.event_listener'
+              event: 'postFlush'
 
     App\MessageHandler\ProcessDetectionResultHandler:
         arguments:

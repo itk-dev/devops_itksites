@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Trait;
 
 use App\Service\Exporter;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -34,11 +35,12 @@ trait ExportCrudControllerTrait
 
     protected function createExportAction(string|TranslatableMessage|null $label = null): Action
     {
-        return Action::new('export', $label ?? new TranslatableMessage('Export'))
+        return Action::new('export', $label ?? new TranslatableMessage('Export'), 'fa fa-file-csv')
             ->createAsGlobalAction()
             ->linkToCrudAction('export');
     }
 
+    #[AdminRoute]
     public function export(AdminContext $context): Response
     {
         if (!isset($this->exporter)) {
@@ -47,7 +49,7 @@ trait ExportCrudControllerTrait
 
         assert($this instanceof AbstractCrudController);
         // Lifted from self::index().
-        $fields = FieldCollection::new($this->configureFields(Crud::PAGE_INDEX));
+        $fields = new FieldCollection($this->configureFields(Crud::PAGE_INDEX));
         $context->getCrud()->setFieldAssets($this->getFieldAssets($fields));
         $filters = $this->filterFactory->create($context->getCrud()->getFiltersConfig(), $fields,
             $context->getEntity());

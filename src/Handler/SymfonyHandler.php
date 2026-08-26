@@ -17,9 +17,6 @@ readonly class SymfonyHandler implements DetectionResultHandlerInterface
 {
     /**
      * DirectoryHandler constructor.
-     *
-     * @param PackageVersionFactory $packageVersionFactory
-     * @param InstallationFactory $installationFactory
      */
     public function __construct(
         private PackageVersionFactory $packageVersionFactory,
@@ -27,9 +24,6 @@ readonly class SymfonyHandler implements DetectionResultHandlerInterface
     ) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function handleResult(DetectionResult $detectionResult): void
     {
         try {
@@ -57,7 +51,6 @@ readonly class SymfonyHandler implements DetectionResultHandlerInterface
         }
     }
 
-    /** {@inheritDoc} */
     public function supportsType(string $type): bool
     {
         return DetectionType::SYMFONY === $type;

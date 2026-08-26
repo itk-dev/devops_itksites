@@ -6,8 +6,7 @@ namespace App\Security;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use ItkDev\OpenIdConnect\Exception\ItkOpenIdConnectException;
-use ItkDev\OpenIdConnectBundle\Exception\InvalidProviderException;
+use ItkDev\OpenIdConnect\Exception\OpenIdConnectExceptionInterface;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdConfigurationProviderManager;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdLoginAuthenticator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -28,10 +27,6 @@ class AzureOIDCAuthenticator extends OpenIdLoginAuthenticator
 
     /**
      * AzureOIDCAuthenticator constructor.
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param UrlGeneratorInterface $router
-     * @param OpenIdConfigurationProviderManager $providerManager
      */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -41,7 +36,6 @@ class AzureOIDCAuthenticator extends OpenIdLoginAuthenticator
         parent::__construct($providerManager);
     }
 
-    /** {@inheritDoc} */
     public function authenticate(Request $request): Passport
     {
         try {
@@ -68,12 +62,11 @@ class AzureOIDCAuthenticator extends OpenIdLoginAuthenticator
             $this->entityManager->flush();
 
             return new SelfValidatingPassport(new UserBadge($user->getUserIdentifier()));
-        } catch (ItkOpenIdConnectException|InvalidProviderException $exception) {
+        } catch (OpenIdConnectExceptionInterface $exception) {
             throw new CustomUserMessageAuthenticationException($exception->getMessage());
         }
     }
 
-    /** {@inheritDoc} */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         $targetUrl = $this->getTargetPath($request->getSession(), $firewallName) ?? $this->router->generate('admin');
@@ -81,7 +74,6 @@ class AzureOIDCAuthenticator extends OpenIdLoginAuthenticator
         return new RedirectResponse($targetUrl);
     }
 
-    /** {@inheritDoc} */
     public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
         return new RedirectResponse($this->router->generate('itkdev_openid_connect_login', [

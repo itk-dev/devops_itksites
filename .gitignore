@@ -30,3 +30,14 @@ yarn-error.log
 phpstan.neon
 ###< phpstan/phpstan ###
 .phpunit.cache
+
+###> symfony/asset-mapper ###
+/public/assets/
+/assets/vendor/
+###< symfony/asset-mapper ###
+
+.twig-cs-fixer.cache
+.playwright-mcp
+
+# Working docs not meant to ship
+RENOVATE_PLAN.md

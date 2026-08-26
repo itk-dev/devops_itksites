@@ -9,16 +9,12 @@ use App\Form\Type\Admin\HostingProviderFilter;
 use App\Form\Type\Admin\MariaDbVersionFilter;
 use App\Form\Type\Admin\ServerTypeFilter;
 use App\Form\Type\Admin\SystemFilter;
-use App\Trait\ExportCrudControllerTrait;
 use App\Types\DatabaseVersionType;
 use App\Types\HostingProviderType;
 use App\Types\ServerTypeType;
 use App\Types\SystemType;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -28,10 +24,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class ServerCrudController extends AbstractCrudController
+class ServerCrudController extends AbstractFullCrudController
 {
-    use ExportCrudControllerTrait;
-
     public function __construct(
         private readonly RequestStack $requestStack,
     ) {
@@ -52,17 +46,6 @@ class ServerCrudController extends AbstractCrudController
         $crud->showEntityActionsInlined();
 
         return $crud;
-    }
-
-    #[\Override]
-    public function configureActions(Actions $actions): Actions
-    {
-        return $actions
-            ->remove(Crud::PAGE_INDEX, Action::EDIT)
-            ->remove(Crud::PAGE_INDEX, Action::DELETE)
-            ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ->add(Crud::PAGE_INDEX, $this->createExportAction())
-        ;
     }
 
     #[\Override]

@@ -1,0 +1,33 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% set sites = entity.instance.sites %}
+{% if ea().crud.currentAction == 'detail' %}
+    {% if sites|length > 0 %}
+        <table class="table table-sm table-borderless">
+            <thead>
+                <tr>
+                    <th>Domain</th>
+                    <th>Server</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for site in sites %}
+                    {% set url = ea_url()
+                        .unsetAll()
+                        .setController('App\\Controller\\Admin\\SiteCrudController')
+                        .setAction('detail')
+                        .setEntityId(site.id) %}
+                    <tr>
+                        <td><a href="{{ url }}">{{ site.primaryDomain }}</a></td>
+                        <td>{{ site.server }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <span class="text-muted">None</span>
+    {% endif %}
+{% else %}
+    <twig:ea:Badge variant="info">{{ sites|length }}</twig:ea:Badge>
+{% endif %}
