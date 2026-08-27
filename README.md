@@ -81,13 +81,20 @@ read `/health/detail` when it goes red:
 curl --silent https://itksites.local.itkdev.dk/health/detail | jq
 ```
 
-The checks cover the database, the RabbitMQ messenger transport and the
-freshness of the most recent detection result. The last one catches an ingest
-pipeline that has stopped while the application itself is still serving
-requests.
+The checks cover the database, the RabbitMQ messenger transport, the freshness
+of the most recent detection result and the expiry of the OIDC client secret.
+The freshness check catches an ingest pipeline that has stopped while the
+application itself is still serving requests. The client secret check catches
+the expiry that breaks every login at once.
 
 `HEALTH_INGEST_MAX_AGE` sets how old the most recent detection result may be
 before ingest is reported as degraded.
+
+`AZURE_AZ_OIDC_CLIENT_SECRET_EXPIRES_AT` is where the client secret check reads
+the date. It reports degraded only once that date has passed, so watch
+`days_remaining` in the detail payload rather than waiting for it to go red. With
+no date configured the check reports skipped, which means nothing is watching the
+secret.
 
 Results are cached for `HEALTH_CACHE_TTL` seconds so that polling does not turn
 into load on the dependencies. The cache is the dedicated, filesystem-backed
@@ -275,8 +282,22 @@ of its own.
 
 ### OpenID Connect
 
-All users access is controlled by OpenID Connect. For local development you must
-add the following to your `.env.local` file:
+All user access is controlled by OpenID Connect. Locally the login runs against a
+mock identity provider, defined as the `idp` service in `docker-compose.override.yml`
+— the real provider has no redirect URI registered for a developer machine.
+
+Start it with the rest of the stack:
+
+```shell
+docker compose up --detach
+```
+
+Then log in as `admin` or `editor`: the mock shows a form where you type the subject,
+and hands back the claims for it. Both identities are defined in the compose file, and
+their claims must include `name` and `upn`, which `AzureOIDCAuthenticator` reads.
+
+`.env.dev` carries the settings, so there is nothing to add to `.env.local` for an
+ordinary setup. To develop against a real provider instead, override them there:
 
 ```dotenv
 ###> itk-dev/openid-connect-bundle ###
@@ -284,13 +305,18 @@ AZURE_AZ_OIDC_METADATA_URL=<value>
 AZURE_AZ_OIDC_CLIENT_ID=<value>
 AZURE_AZ_OIDC_CLIENT_SECRET=<value>
 AZURE_AZ_OIDC_REDIRECT_URI=https://itksites.local.itkdev.dk/openid-connect/generic
+AZURE_AZ_OIDC_ALLOW_HTTP=false
 ###< itk-dev/openid-connect-bundle ###
 ```
 
 > [!NOTE]
-> In the `dev` environment the main firewall security is disabled
-> (`security.yaml` → `when@dev`), so authentication is not required.
-> This is because the current AAK OIDC setup doesn't support `itksites.local.itkdev.dk`.
+> `AZURE_AZ_OIDC_ALLOW_HTTP=true` in `.env.dev` is what lets the application talk to
+> the mock over http inside the docker network. It must never be true anywhere else:
+> since `itk-dev/openid-connect` 5.1 it governs every endpoint the discovery document
+> announces, not only the metadata URL.
+
+The mock accepts the PKCE challenge the bundle sends but does not verify it, so a
+successful login here does not prove PKCE works against Azure.
 
 ### Fixtures
 

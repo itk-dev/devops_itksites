@@ -90,6 +90,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `guzzlehttp/guzzle` 7.10.6 → 7.15.5, `guzzlehttp/psr7` 2.10.4 → 2.13.1
   - Regenerated the API spec: `symfony/yaml` now writes sequence items on their
     own line. No API changes
+- [#92](https://github.com/itk-dev/devops_itksites/pull/92) Update openid-connect-bundle to 6.0
+  - Bump `itk-dev/openid-connect-bundle` to `^6.0`
+  - A failed OIDC callback now raises an error instead of redirecting to the
+    identity provider again, so an expired client secret can no longer put the
+    site in a login loop
+  - Only the provider's callback path is treated as a callback; the configured
+    `redirect_uri` covers this, no `callback_path` needed
+  - Set `client_secret_expires_at` for the `azure_az` provider from the new
+    `AZURE_AZ_OIDC_CLIENT_SECRET_EXPIRES_AT` variable, so the bundle warns
+    before the secret expires
+  - Render a failed login as a page saying so, instead of an unhandled
+    exception, in `OpenIdConnectFailureListener`
+  - Add an `oidc_client_secret` health check, so a client secret nearing its
+    expiry shows up in `/health/detail` instead of in a login loop
 - [#83](https://github.com/itk-dev/devops_itksites/pull/83) 7523: Service agreements
   - Add Project entity top-level Economics project.
   - Add CodeOwner entity
