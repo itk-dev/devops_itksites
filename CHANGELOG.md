@@ -63,10 +63,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `igor-baseline.json` records the 33 existing findings with a reason each, so
     the job fails only on new ones; vendor code is out of scope
   - Document worker mode and the statelessness it requires in `README.md` and
-    `claude.md`. It stays off: measured here it gives roughly 20% more requests
-    per second on `/admin` and half the median latency, but around 40% fewer on
-    `/health/live`, and the numbers come from a laptop sharing CPU with other
-    containers
+    `claude.md`. It stays off. Measured on `/admin` in prod: 1319 requests per
+    second without a worker, 1494 with one, 1395 with one plus
+    `FRANKENPHP_RESET_KERNEL=1` — so the reset keeps about half the gain rather
+    than erasing it. `/health/live` inverts the ranking, and the numbers come
+    from a laptop sharing CPU with other containers
 - [#96](https://github.com/itk-dev/devops_itksites/pull/96)
   Show the Service Agreements monthly price as Danish kroner,
   `12.500,50 kr.`, on index and detail

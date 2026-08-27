@@ -219,14 +219,25 @@ Add a count – `worker /app/public/index.php 8` – to override the default, wh
 is twice the number of CPU cores. Keep `num_threads` × `memory_limit` below the
 memory available to the container.
 
-What it bought here, measured on this project in `prod` with a warm OPcache:
-about 20% more requests per second on `/admin` and half the median latency,
-against about 40% *fewer* on `/health/live`. The trivial endpoint is worker
-mode's worst case – there is no per-request work for the saved kernel boot to be
-weighed against, and the runner's `gc_collect_cycles()` on every request is not
-free. The numbers come from a laptop sharing CPU with other containers and
-running the application over a bind mount, so treat them as a shape rather than
-a figure, and measure again on a server before adopting.
+What it bought here, measured in `prod` with a warm OPcache, 40 seconds at 20
+concurrent on `/admin`:
+
+| | requests/sec | median |
+| --- | --- | --- |
+| no worker | 1319 | 9.0 ms |
+| worker | 1494 | 4.3 ms |
+| worker + `FRANKENPHP_RESET_KERNEL=1` | 1395 | 6.1 ms |
+
+On `/health/live` the ranking inverts – roughly 40% *fewer* requests per second
+with a worker. That endpoint returns a constant, which is worker mode's worst
+case: there is no per-request work for the saved kernel boot to be weighed
+against, and the runner's `gc_collect_cycles()` on every request is not free.
+Worth knowing, since the health endpoints are the polled ones.
+
+The numbers come from a laptop sharing CPU with other containers and running the
+application over a bind mount, so treat them as a shape rather than a figure.
+Short runs on that machine varied by more than tenfold; only 40-second runs were
+reproducible. Measure again on a server before adopting.
 
 **Services must not carry request state.** Under php-fpm a service instance died
 with the request; in a worker it does not, so anything a service remembers leaks
@@ -257,10 +268,18 @@ The audit needs the service map that `IgorPhpBundle` writes during
 scope (`ignore_vendors` in `igor.json`): it reported 341 findings there, none of
 them ours to fix.
 
-`FRANKENPHP_RESET_KERNEL=1`, on Symfony 8.1 and later, clones the kernel between
-requests instead. It hides this class of bug at the cost of a boot per request,
-which is most of what worker mode is for – useful to compare against, not to
-depend on.
+`FRANKENPHP_RESET_KERNEL=1`, on Symfony 8.1 and later, clones the kernel after
+each request instead, which makes this class of bug harmless.
+`AbstractKernel::__clone()` nulls the container and clears `booted`, so the next
+request runs `initializeBundles()` and instantiates the compiled container again
+– a kernel boot, though not a recompile. It is not as expensive as it sounds:
+the PHP runtime, OPcache and autoloader stay warm, and it kept about half the
+worker-mode gain in the table above while still beating no worker on both
+throughput and latency.
+
+That makes it a reasonable first configuration to deploy rather than only a
+diagnostic – most of the latency win, immune to the leaks the audit below
+guards against – with the reset turned off later once there is confidence.
 
 #### Metrics
 

@@ -102,13 +102,17 @@
 		# Uncommenting the worker line is all worker mode needs: FrankenPHP sets
 		# FRANKENPHP_WORKER=1, and symfony/runtime has picked its own
 		# FrankenPhpWorkerRunner off that since 7.4 — no PHP package, no
-		# APP_RUNTIME override. Symfony 8.1 adds FRANKENPHP_RESET_KERNEL=1, which
-		# clones the kernel between requests to mitigate state leaks at the cost
-		# of a boot per request.
+		# APP_RUNTIME override.
 		#
-		# Off until the stateful services are dealt with: LeantimeService caches
-		# the Leantime user directory per instance, and the package/module
-		# factories clear their dedup buffers outside a finally.
+		# Symfony 8.1 adds FRANKENPHP_RESET_KERNEL=1, which clones the kernel
+		# after each request. That does mean a kernel boot per request —
+		# AbstractKernel::__clone() nulls the container and clears `booted`, so
+		# the next handle() runs initializeBundles() and instantiates the
+		# compiled container again — but it keeps the PHP runtime, OPcache and
+		# autoloader warm, so it is not the same as no worker at all. Measured on
+		# /admin in prod: 1319 rps and a 9.0 ms median without a worker, 1494 and
+		# 4.3 ms with one, 1395 and 6.1 ms with one plus the reset. Roughly half
+		# the gain, and immune to state leaking between requests.
 		php_server {
 			#worker /app/public/index.php
 		}

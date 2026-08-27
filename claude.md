@@ -134,9 +134,11 @@ the job fails only on new ones — fix a genuine finding rather than baselining
 it, and regenerate with `composer worker-state-baseline` only after a deliberate
 change.
 
-`FRANKENPHP_RESET_KERNEL=1` (Symfony 8.1+) clones the kernel between requests
-and papers over all of this, at the cost of a boot per request. Treat it as a
-measurement baseline, not a fix.
+`FRANKENPHP_RESET_KERNEL=1` (Symfony 8.1+) clones the kernel after each request,
+which makes all of this harmless. It costs a kernel boot per request but keeps
+the PHP runtime warm, and measured on `/admin` it held about half the worker-mode
+gain while still beating no worker — so it is a usable configuration, not just a
+baseline. It is not a licence to write stateful services: the audit still runs.
 
 ## Quality Checks
 
