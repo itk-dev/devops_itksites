@@ -7,6 +7,67 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#59](https://github.com/itk-dev/devops_itksites/pull/59)
+  4544: POC for using FrankenPHP behind Traefik
+  - Serve the site from a single FrankenPHP container. The `frankenphp` service
+    is added in `docker-compose.override.yml` and
+    `docker-compose.server.override.yml`; `phpfpm` and `nginx` move into a
+    profile that is never enabled
+  - Port the nginx configuration to `.docker/Caddyfile` and the PHP settings the
+    fpm image took from `PHP_*` environment variables to `.docker/php.ini`
+  - Traefik keeps terminating TLS: `auto_https` is off and Caddy serves plain
+    HTTP on 8080
+  - Move the whole stack to PHP 8.5, `itkdev/php8.5-fpm` and
+    `itkdev/supervisor-php8.5` included
+  - Point Taskfile, workflows, Woodpecker and the README at the `frankenphp`
+    service
+  - Serve Prometheus metrics from Caddy at `/metrics`, behind the same
+    `ITKMetricsAuth` middleware `/cron-metrics` used. nginx exported nothing,
+    and the supercronic it proxied to never started without an `/app/crontab`
+  - Log requests as JSON from Caddy, carrying every field nginx's `log_format
+    main` had plus `duration`. The published image has no transform encoder, so
+    the text layout cannot be reproduced exactly
+  - Trust `private_ranges` rather than the template's `172.16.0.0/16`, which
+    covered neither the `frontend` network nor the client, so real-IP resolution
+    never happened
+  - Leave worker mode off for now, but not for want of a runtime: `symfony/runtime`
+    has shipped `FrankenPhpWorkerRunner` since 7.4, so enabling it is one line in
+    `.docker/Caddyfile` and needs no package
+  - Make `PackageVersionFactory` and `ModuleVersionFactory` stateless: their
+    deduplication buffers are locals rather than properties, so a failing flush
+    can no longer leave entities from a closed EntityManager for the next call.
+    This was a live bug in the messenger consumer, which is already long-running
+  - Implement `ResetInterface` on `LeantimeService`, whose memoised user
+    directory has to stay a cache — `resolveUserName()` runs in a loop over
+    tickets — but must not outlive the request
+  - Call `unsetAll()` before `setController()` on the injected
+    `AdminUrlGenerator` in `DashboardController` and
+    `SecurityContractCrudController`, which `AppExtension` and
+    `RepoAdvisoryService` already did. The instance is held for as long as its
+    consumer, which in a worker outlives the request
+  - Cover all of it with tests: the factories had none, and neither the
+    dashboard nor the Security Contract CRUD was in the admin smoke test
+  - Run the container as `deploy` rather than root, dropping Caddy's
+    `cap_net_bind_service` since port 8080 needs none. `DEPLOY_UID` is a build
+    argument defaulting to 1042, the id the alpine images the servers run give
+    `deploy`
+  - Give the container a health check on `/health/live`, so `up --wait` waits for
+    the application rather than the process, and reorder `task site:update` to
+    install before waiting
+  - Split the image into `dev` and `prod` stages. Production drops Xdebug and
+    sets `opcache.validate_timestamps=0`, so it no longer loads a debugger it
+    never uses or stats every file on every request; Xdebug's ini moves to
+    `.docker/php-dev.ini`, which only development mounts
+  - Gate pull requests on `igor-php`, which audits every shared service in the
+    compiled container for state that would leak between requests.
+    `igor-baseline.json` records the 33 existing findings with a reason each, so
+    the job fails only on new ones; vendor code is out of scope
+  - Document worker mode and the statelessness it requires in `README.md` and
+    `claude.md`. It stays off. Measured on `/admin` in prod: 1319 requests per
+    second without a worker, 1494 with one, 1395 with one plus
+    `FRANKENPHP_RESET_KERNEL=1` — so the reset keeps about half the gain rather
+    than erasing it. `/health/live` inverts the ranking, and the numbers come
+    from a laptop sharing CPU with other containers
 - [#96](https://github.com/itk-dev/devops_itksites/pull/96)
   Show the Service Agreements monthly price as Danish kroner,
   `12.500,50 kr.`, on index and detail

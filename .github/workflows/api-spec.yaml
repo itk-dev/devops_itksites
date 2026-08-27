@@ -53,7 +53,7 @@ jobs:
                   Please run the following command, then commit and push the changes:
 
                   ```shell
-                  docker compose exec phpfpm composer update-api-spec
+                  docker compose exec frankenphp composer update-api-spec
                   ```
                   EOF
                   )" \

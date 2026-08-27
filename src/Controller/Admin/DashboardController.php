@@ -28,6 +28,7 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
         $d = $this->adminUrlGenerator
+            ->unsetAll()
             ->setController(ServerCrudController::class)->setAction(Crud::PAGE_INDEX)
             ->generateUrl();
 

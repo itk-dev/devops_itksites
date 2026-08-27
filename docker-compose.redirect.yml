@@ -1,6 +1,6 @@
 # itk-version: 3.2.4
 services:
-  nginx:
+  frankenphp:
     labels:
       # Add www before domain and set redirect to non-www
       - "traefik.http.routers.www_${COMPOSE_PROJECT_NAME:?}-http.rule=Host(`www.${COMPOSE_SERVER_DOMAIN:?}`)"

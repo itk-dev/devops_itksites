@@ -1,10 +1,8 @@
 # itk-version: 3.2.4
 services:
-  phpfpm:
+  frankenphp:
     environment:
-      - PHP_SENDMAIL_PATH=/usr/sbin/sendmail -S mail:1025
-
-  nginx:
+      PHP_SENDMAIL_PATH: /usr/sbin/sendmail -S mail:1025
     labels:
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}.middlewares=ITKBasicAuth@file"
 

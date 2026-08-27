@@ -1,4 +1,91 @@
 services:
+  # FrankenPHP POC: a single container replaces the phpfpm and nginx pair.
+  # Compose cannot delete an inherited service, so both are moved into a
+  # profile that is never enabled. Nothing depends on them once nginx is gone,
+  # so neither is started.
+  #
+  # Commands documented against phpfpm run against frankenphp instead, e.g.
+  # `docker compose exec frankenphp composer install`.
+  phpfpm:
+    profiles:
+      - replaced-by-frankenphp
+
+  nginx:
+    profiles:
+      - replaced-by-frankenphp
+
+  frankenphp:
+    build:
+      context: .
+      # Xdebug, and OPcache rechecking files so an edit takes effect.
+      target: dev
+    user: ${COMPOSE_USER:-deploy}
+    networks:
+      - app
+      - frontend
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      # A bare port keeps Caddy on plain HTTP; Traefik terminates TLS.
+      SERVER_NAME: ":8080"
+      SERVER_ROOT: /app/public
+      PHP_MAX_BODY_SIZE: 5MB
+      # Read by .docker/php.ini, which uses the itkdev/php8.5-fpm image's own
+      # variable names. Everything else is defaulted on the image, so only the
+      # values that differ from the fpm image are set here.
+      PHP_MEMORY_LIMIT: 256M
+      # Depending on the setup, you may have to remove --read-envelope-from from msmtp (cf. https://marlam.de/msmtp/msmtp.html) or use SMTP to send mail
+      PHP_SENDMAIL_PATH: /usr/bin/msmtp --host=mail --port=1025 --read-recipients --read-envelope-from
+      PHP_XDEBUG_MODE: ${PHP_XDEBUG_MODE:-off}
+      PHP_XDEBUG_START_WITH_REQUEST: ${PHP_XDEBUG_WITH_REQUEST:-yes}
+      DOCKER_HOST_DOMAIN: ${COMPOSE_DOMAIN:?}
+      PHP_IDE_CONFIG: serverName=localhost
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    # /health/live is public and touches nothing, so it reports whether this
+    # container is serving without depending on the database or the broker.
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "--fail",
+          "--silent",
+          "http://localhost:8080/health/live",
+        ]
+      start_period: 30s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    ports:
+      - "8080"
+    volumes:
+      - .:/app
+      - ./.docker/Caddyfile:/etc/frankenphp/Caddyfile:ro
+      - ./.docker/php.ini:/usr/local/etc/php/conf.d/zz-app.ini:ro
+      - ./.docker/php-dev.ini:/usr/local/etc/php/conf.d/zz-app-dev.ini:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=frontend"
+      # The image exposes 80, 443 and 2019 as well, so the port Traefik should
+      # talk to has to be spelled out.
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME:?}.loadbalancer.server.port=8080"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}.rule=Host(`${COMPOSE_DOMAIN:?}`)"
+      # HTTPS config - uncomment to enable redirect from :80 to :443
+      # - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}.middlewares=redirect-to-https"
+      # - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      # Metrics protection. Caddy's Prometheus endpoint, where nginx proxied
+      # /cron-metrics to a supercronic that this project never starts.
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-metrics.rule=Host(`${COMPOSE_DOMAIN:?}`) && PathPrefix(`/metrics`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-metrics.middlewares=ITKMetricsAuth@file"
+      # Detailed health check protection. /health/live and /health/ready stay
+      # public; only /health/detail discloses internals.
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-health.rule=Host(`${COMPOSE_DOMAIN:?}`) && PathPrefix(`/health/detail`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-health.middlewares=ITKBasicAuth@file"
+
   # A mock identity provider, so the OpenID Connect login can be exercised locally.
   # The real one has no redirect URI registered for a developer machine.
   #
@@ -54,3 +141,8 @@ services:
     volumes:
       - .:/app
     working_dir: /app
+
+# Caddy keeps its instance identity and last known config here.
+volumes:
+  caddy_data:
+  caddy_config:

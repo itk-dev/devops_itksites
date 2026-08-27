@@ -16,12 +16,18 @@ tasks:
             - task: compose
               vars:
                   COMPOSE_ARGS: pull
+            # Start before installing, then wait: the frankenphp health check
+            # calls into the application, which cannot answer until its
+            # dependencies are in place.
             - task: compose
               vars:
-                  COMPOSE_ARGS: up --detach --wait
+                  COMPOSE_ARGS: up --detach
             - task: composer
               vars:
                   COMPOSER_ARGS: install
+            - task: compose
+              vars:
+                  COMPOSE_ARGS: up --detach --wait
 
     site:migrate:
         desc: Run database migrations
@@ -52,7 +58,7 @@ tasks:
                   CONSOLE_ARGS: --env=test doctrine:migrations:migrate --no-interaction --quiet
             - task: compose
               vars:
-                  COMPOSE_ARGS: exec phpfpm vendor/bin/phpunit --stop-on-failure
+                  COMPOSE_ARGS: exec frankenphp vendor/bin/phpunit --stop-on-failure
 
     queues:
         desc: Consume async messenger queue
@@ -66,7 +72,7 @@ tasks:
         cmds:
             - task: compose
               vars:
-                  COMPOSE_ARGS: exec phpfpm composer {{.COMPOSER_ARGS}}
+                  COMPOSE_ARGS: exec frankenphp composer {{.COMPOSER_ARGS}}
 
     compose:
         desc: "Run `docker compose` command. Example: task compose -- ps"
@@ -78,7 +84,7 @@ tasks:
         cmds:
             - task: compose
               vars:
-                  COMPOSE_ARGS: exec phpfpm bin/console {{.CONSOLE_ARGS}}
+                  COMPOSE_ARGS: exec frankenphp bin/console {{.CONSOLE_ARGS}}
 
     coding-standards:apply:
         aliases: [cs:apply]
@@ -123,7 +129,7 @@ tasks:
         cmds:
             - task: compose
               vars:
-                  COMPOSE_ARGS: exec phpfpm vendor/bin/php-cs-fixer fix
+                  COMPOSE_ARGS: exec frankenphp vendor/bin/php-cs-fixer fix
         silent: true
 
     coding-standards:php:check:
@@ -133,7 +139,7 @@ tasks:
             - task: coding-standards:php:apply
             - task: compose
               vars:
-                  COMPOSE_ARGS: exec phpfpm vendor/bin/php-cs-fixer check
+                  COMPOSE_ARGS: exec frankenphp vendor/bin/php-cs-fixer check
         silent: true
 
     coding-standards:twig:apply:
@@ -142,7 +148,7 @@ tasks:
         cmds:
             - task: compose
               vars:
-                  COMPOSE_ARGS: exec phpfpm vendor/bin/twig-cs-fixer lint --fix
+                  COMPOSE_ARGS: exec frankenphp vendor/bin/twig-cs-fixer lint --fix
         silent: true
 
     coding-standards:twig:check:
@@ -152,7 +158,7 @@ tasks:
             - task: coding-standards:twig:apply
             - task: compose
               vars:
-                  COMPOSE_ARGS: exec phpfpm vendor/bin/twig-cs-fixer lint
+                  COMPOSE_ARGS: exec frankenphp vendor/bin/twig-cs-fixer lint
         silent: true
 
     coding-standards:yaml:apply:
@@ -181,13 +187,13 @@ tasks:
         cmds:
             - task: compose
               vars:
-                  COMPOSE_ARGS: exec phpfpm composer validate --strict
+                  COMPOSE_ARGS: exec frankenphp composer validate --strict
             - task: compose
               vars:
-                  COMPOSE_ARGS: exec phpfpm composer normalize --dry-run
+                  COMPOSE_ARGS: exec frankenphp composer normalize --dry-run
             - task: compose
               vars:
-                  COMPOSE_ARGS: exec phpfpm composer audit
+                  COMPOSE_ARGS: exec frankenphp composer audit
 
     # Analysis
 
@@ -197,7 +203,7 @@ tasks:
         cmds:
             - task: compose
               vars:
-                  COMPOSE_ARGS: exec phpfpm vendor/bin/phpstan
+                  COMPOSE_ARGS: exec frankenphp vendor/bin/phpstan
         silent: true
 
     # Test matrix (mirrors pr.yaml CI jobs)

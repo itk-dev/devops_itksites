@@ -54,7 +54,7 @@ Authenticated users can access a simple read-only API – see the API documentat
 Run the `app:user:set-api-key` console command to set the API for a user:
 
 ``` shell
-docker compose exec phpfpm php bin/console app:user:set-api-key <user-id>
+docker compose exec frankenphp php bin/console app:user:set-api-key <user-id>
 ```
 
 Use the API key to make an authenticated request, e.g.
@@ -112,11 +112,192 @@ that the database is down.
 ```sh
 docker compose pull
 docker compose up --detach
-docker compose exec phpfpm composer install
-docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interaction
+docker compose exec frankenphp composer install
+docker compose exec frankenphp bin/console doctrine:migrations:migrate --no-interaction
 ```
 
 Then create a `.env.local` file to set secrets for your local setup.
+
+### Web server
+
+The site is served by a single [FrankenPHP](https://frankenphp.dev) container
+instead of the usual phpfpm and nginx pair. `docker-compose.override.yml`
+locally, and `docker-compose.server.override.yml` on the servers, add the
+`frankenphp` service and park `phpfpm` and `nginx` in a profile that is never
+enabled, so neither starts. Commands that used to run against `phpfpm` run
+against `frankenphp`.
+
+Traefik still terminates TLS. Caddy listens on plain HTTP on port 8080 and
+`auto_https` is off, so it neither requests nor serves certificates.
+
+The image is built in two flavours from one multi-stage `Dockerfile`, selected
+by `target:` in the override files:
+
+| | `dev` | `prod` |
+| --- | --- | --- |
+| Xdebug | installed | **absent** |
+| `opcache.validate_timestamps` | `1` | **`0`** |
+
+Development keeps Xdebug and lets OPcache recheck files so an edit takes effect.
+Production has neither: the extension is not in the image, and OPcache trusts
+what it compiled rather than stat-ing every file on every request, which
+`validate_timestamps=1` with `revalidate_freq=0` made it do. The cost is that a
+code change needs a new container, which both deployment paths already give it –
+staging runs `up -d --force-recreate` and the release playbook brings the stack
+up again, and a fresh container starts with an empty OPcache. A bare
+`docker build .` resolves to `prod`, the last stage.
+
+Three files carry the configuration that used to live on the phpfpm and nginx
+images:
+
+- `.docker/Caddyfile` – a port of `.docker/nginx.conf` and
+  `.docker/templates/default.conf.template`.
+- `.docker/php.ini` – the PHP settings the `itkdev/php8.5-fpm` image derives
+  from its `PHP_*` environment variables, plus its tuned baseline. The compose
+  files still set the same variables; the ini file interpolates them.
+- `.docker/php-dev.ini` – the Xdebug half of that, mounted only in development.
+
+Coming from the phpfpm stack, remove the containers it left behind once:
+
+```sh
+docker compose rm --stop --force phpfpm nginx
+```
+
+#### Container user and health check
+
+The container runs as `deploy`, not root, and Caddy's `cap_net_bind_service` is
+removed – nothing needs it on port 8080. `DEPLOY_UID` is a build argument
+because the id has to match whoever owns the checkout being bind-mounted, and in
+`devops_docker-images` that depends on the base distro: the ubuntu tags put
+`deploy` at 1000, the alpine ones at 1042. The servers run the alpine tags, so
+1042 is the default. Local development runs the ubuntu tag at 1000, which does
+not matter because Docker Desktop virtualises bind-mount ownership, and CI picks
+`runner` through `COMPOSE_USER` as it always did.
+
+Coming from the root-run container, hand the files it wrote to `deploy` once:
+
+```sh
+docker compose run --rm --user root frankenphp chown -R deploy:deploy /app/var
+```
+
+`/health/live` backs a container health check, so `docker compose up --wait`
+waits for the application to answer rather than merely for the process to exist.
+That check calls into the application, which cannot answer before its
+dependencies are installed – which is why `task site:update` starts the stack,
+installs, and only then waits.
+
+#### Logging
+
+php-fpm sent its error log, its slowlog and everything a worker wrote to stderr
+to `/dev/stderr`, and configured no access log at all – the nginx access log was
+the only per-request record. `.docker/php.ini` keeps `error_log` pointed at
+`${PHP_LOGS}` and Caddy's access log replaces nginx's.
+
+Caddy logs JSON rather than nginx's `log_format main` text. Every field that
+format carried is in it – `client_ip`, `user_id`, `ts`, method, uri, proto,
+`status`, `size` and the `Referer`, `User-Agent` and `X-Forwarded-For` headers –
+plus `duration`, which nginx did not log. The text layout cannot be reproduced
+byte for byte without the Caddy transform encoder, which the published image
+does not carry: this build has `console`, `json`, `append`, `filter` and
+`journald`. JSON also matches supercronic, which the fpm image already runs with
+`-json`.
+
+#### Worker mode
+
+Worker mode is off. Turning it on needs no PHP package and no code change:
+`symfony/runtime` has shipped `FrankenPhpWorkerRunner` since 7.4, FrankenPHP
+sets `FRANKENPHP_WORKER=1` for a worker script, and `SymfonyRuntime::getRunner()`
+switches on that. `.docker/Caddyfile` reads `{$FRANKENPHP_CONFIG}`, so the switch
+is an environment variable on the `frankenphp` service:
+
+```yaml
+environment:
+    FRANKENPHP_CONFIG: worker /app/public/index.php
+```
+
+Add a count – `worker /app/public/index.php 8` – to override the default, which
+is twice the number of CPU cores. Keep `num_threads` × `memory_limit` below the
+memory available to the container.
+
+What it bought here, measured in `prod` with a warm OPcache, 40 seconds at 20
+concurrent on `/admin`:
+
+| | requests/sec | median |
+| --- | --- | --- |
+| no worker | 1319 | 9.0 ms |
+| worker | 1494 | 4.3 ms |
+| worker + `FRANKENPHP_RESET_KERNEL=1` | 1395 | 6.1 ms |
+
+On `/health/live` the ranking inverts – roughly 40% *fewer* requests per second
+with a worker. That endpoint returns a constant, which is worker mode's worst
+case: there is no per-request work for the saved kernel boot to be weighed
+against, and the runner's `gc_collect_cycles()` on every request is not free.
+Worth knowing, since the health endpoints are the polled ones.
+
+The numbers come from a laptop sharing CPU with other containers and running the
+application over a bind mount, so treat them as a shape rather than a figure.
+Short runs on that machine varied by more than tenfold; only 40-second runs were
+reproducible. Measure again on a server before adopting.
+
+**Services must not carry request state.** Under php-fpm a service instance died
+with the request; in a worker it does not, so anything a service remembers leaks
+into the next request. Prefer keeping services stateless. Where state is
+deliberate, implement `Symfony\Contracts\Service\ResetInterface` –
+`autoconfigure` tags it `kernel.reset` and Symfony calls it between requests.
+For an object you do not own, clear it at the call site, the way every
+`AdminUrlGenerator` chain here opens with `unsetAll()`.
+
+That rule is enforced. [igor-php](https://github.com/igor-php/igor-php) audits
+every shared service in the compiled container for state that would leak between
+requests, and runs on every pull request:
+
+```sh
+docker compose exec frankenphp composer worker-state-check
+```
+
+Existing findings live in `igor-baseline.json`, so the job fails only on new
+ones. Every entry there carries a reason – most are Doctrine entities returned
+from a repository, which igor reads as shared services, and `AdminUrlGenerator`
+chains it cannot see are already cleared by `unsetAll()`. Read the reasons before
+adding to them; if a finding is genuine, fix it rather than baseline it. After a
+deliberate change, regenerate with `composer worker-state-baseline` and write a
+reason for each new entry.
+
+The audit needs the service map that `IgorPhpBundle` writes during
+`cache:clear`, so run that first if the cache is cold. Vendor code is out of
+scope (`ignore_vendors` in `igor.json`): it reported 341 findings there, none of
+them ours to fix.
+
+`FRANKENPHP_RESET_KERNEL=1`, on Symfony 8.1 and later, clones the kernel after
+each request instead, which makes this class of bug harmless.
+`AbstractKernel::__clone()` nulls the container and clears `booted`, so the next
+request runs `initializeBundles()` and instantiates the compiled container again
+– a kernel boot, though not a recompile. It is not as expensive as it sounds:
+the PHP runtime, OPcache and autoloader stay warm, and it kept about half the
+worker-mode gain in the table above while still beating no worker on both
+throughput and latency.
+
+That makes it a reasonable first configuration to deploy rather than only a
+diagnostic – most of the latency win, immune to the leaks the audit below
+guards against – with the reset turned off later once there is confidence.
+
+#### Metrics
+
+`/metrics` serves Prometheus metrics from Caddy, behind the `ITKMetricsAuth@file`
+middleware on its own Traefik router.
+
+This is where `/cron-metrics` used to point. That route proxied to supercronic
+on `${NGINX_CRON_METRICS}`, and the fpm entrypoint only starts supercronic when
+`/app/crontab` exists – this project has no crontab, so nothing ever listened
+and the route answered `502`. nginx exported nothing itself: `stub_status` is
+compiled into the image but the template never enabled it, and php-fpm's
+`pm.status_path = /status` was never routed.
+
+Caddy does export, so the endpoint has something behind it: request counts,
+durations and sizes by code, method and handler, requests in flight, and Go
+runtime and process metrics. FrankenPHP's own thread metrics only appear in
+worker mode, which is off. A supercronic sidecar, if one is added, needs a route
+of its own.
 
 ### OpenID Connect
 
@@ -171,13 +352,13 @@ all the above data.
 #### Load fixtures
 
 ```sh
-docker compose exec phpfpm composer fixtures
+docker compose exec frankenphp composer fixtures
 ```
 
 After loading fixtures you can sign in as an admin user:
 
 ```sh
-docker compose exec phpfpm bin/console itk-dev:openid-connect:login admin@example.com
+docker compose exec frankenphp bin/console itk-dev:openid-connect:login admin@example.com
 ```
 
 ### Job queues and handlers
@@ -186,13 +367,13 @@ All processing of Detctionresults is done in a series of message handlers. To
 run these do either:
 
 ```shell
-docker compose exec phpfpm composer queues
+docker compose exec frankenphp composer queues
 ```
 
 or
 
 ```shell
-docker compose exec phpfpm bin/console messenger:consume async --failure-limit=1 -vvv
+docker compose exec frankenphp bin/console messenger:consume async --failure-limit=1 -vvv
 ```
 
 ### Assets
