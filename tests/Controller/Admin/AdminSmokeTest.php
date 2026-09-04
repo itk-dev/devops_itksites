@@ -51,6 +51,63 @@ class AdminSmokeTest extends WebTestCase
     }
 
     /**
+     * The deprecated CRUD controllers are gone from the admin menu but still
+     * routed, so the only way in is a bookmark or an old link. Each page says
+     * so; without the warning it looks like a maintained part of the admin.
+     */
+    #[DataProvider('deprecatedCrudControllerProvider')]
+    public function testDeprecatedCrudIndexPageWarns(string $controllerClass): void
+    {
+        $client = static::createClient();
+
+        $user = static::getContainer()->get('doctrine')->getManager()
+            ->getRepository(User::class)->findOneBy([]);
+        $client->loginUser($user);
+
+        $url = static::getContainer()->get(AdminUrlGenerator::class)
+            ->setController($controllerClass)
+            ->setAction(Crud::PAGE_INDEX)
+            ->generateUrl();
+
+        $crawler = $client->request('GET', $url);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('#flash-messages .alert-title', 'Deprecated');
+        $this->assertStringContainsString(
+            'deprecated and no longer maintained here',
+            $crawler->filter('#flash-messages')->text()
+        );
+    }
+
+    public function testMaintainedCrudIndexPageDoesNotWarn(): void
+    {
+        $client = static::createClient();
+
+        $user = static::getContainer()->get('doctrine')->getManager()
+            ->getRepository(User::class)->findOneBy([]);
+        $client->loginUser($user);
+
+        $url = static::getContainer()->get(AdminUrlGenerator::class)
+            ->setController(ServerCrudController::class)
+            ->setAction(Crud::PAGE_INDEX)
+            ->generateUrl();
+
+        $client->request('GET', $url);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorNotExists('#flash-messages');
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function deprecatedCrudControllerProvider(): iterable
+    {
+        yield 'OIDC' => [OIDCCrudController::class];
+        yield 'ServiceCertificate' => [ServiceCertificateCrudController::class];
+    }
+
+    /**
      * @return iterable<string, array{string}>
      */
     public static function crudControllerProvider(): iterable

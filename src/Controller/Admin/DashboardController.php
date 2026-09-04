@@ -56,8 +56,9 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(InstallationCrudController::class, 'Installations', 'fas fa-folder');
         yield MenuItem::linkTo(SiteCrudController::class, 'Sites', 'fas fa-bookmark');
         yield MenuItem::linkTo(DomainCrudController::class, 'Domains', 'fas fa-link');
-        yield MenuItem::linkTo(OIDCCrudController::class, 'OIDC', 'fas fa-key');
-        yield MenuItem::linkTo(ServiceCertificateCrudController::class, 'Service certificates', 'fas fa-lock');
+        // OIDC and Service certificates are deprecated. The controllers and
+        // entities are kept so existing rows stay reachable by URL, but the
+        // menu no longer invites new registrations.
         yield MenuItem::linkTo(SecurityContractCrudController::class, 'Service Agreements', 'fas fa-file-contract');
         yield MenuItem::section('Dependencies');
         yield MenuItem::linkTo(PackageCrudController::class, 'Packages', 'fas fa-cube');
