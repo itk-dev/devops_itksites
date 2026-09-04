@@ -27,6 +27,23 @@ services:
         App\Handler\DetectionResultHandlerInterface:
             tags: [app.handler.detection_result_handler]
 
+        App\Health\HealthCheckInterface:
+            tags: [app.health.check]
+
+    App\Health\HealthChecker:
+        arguments:
+            $checks: !tagged_iterator app.health.check
+            $cache: '@cache.health'
+            $cacheTtl: '%env(int:HEALTH_CACHE_TTL)%'
+
+    App\Health\Check\RabbitMqHealthCheck:
+        arguments:
+            $transport: '@messenger.transport.async'
+
+    App\Health\Check\IngestFreshnessHealthCheck:
+        arguments:
+            $maxAgeSeconds: '%env(int:HEALTH_INGEST_MAX_AGE)%'
+
     App\EventListener\RemovedRelationsListener:
         tags:
             - name: 'doctrine.event_listener'

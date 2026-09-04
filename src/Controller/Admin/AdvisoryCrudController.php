@@ -18,6 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 
 class AdvisoryCrudController extends AbstractCrudController
 {
@@ -66,7 +67,8 @@ class AdvisoryCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            ->add('package')
+            ->add(EntityFilter::new('package')->canSelectMultiple())
+            ->add(EntityFilter::new('packageVersions')->canSelectMultiple())
             ->add('advisoryId')
             ->add('cve')
             ->add('reportedAt')

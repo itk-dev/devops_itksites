@@ -7,6 +7,78 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.0] - 2026-09-04
+
+- [#99](https://github.com/itk-dev/devops_itksites/pull/99)
+  Fix the staging deploy: `composer install` was passed `-no-dev`
+- [#98](https://github.com/itk-dev/devops_itksites/pull/98)
+  Deprecate OIDC and Service certificates, keeping their data
+- [#96](https://github.com/itk-dev/devops_itksites/pull/96)
+  Show the Service Agreements monthly price as Danish kroner,
+  `12.500,50 kr.`, on index and detail
+- [#95](https://github.com/itk-dev/devops_itksites/pull/95)
+  Update `vincentlanglet/twig-cs-fixer` to 4.0. Every other dependency is
+  already at its latest minor; the remaining majors are held back by their
+  dependents
+- [#94](https://github.com/itk-dev/devops_itksites/pull/94)
+  Use EasyAdmin's own components in the admin templates
+  - Replace hand-rolled badge and icon markup with `<twig:ea:Badge>` and
+    `<twig:ea:Icon>`, so the admin follows EasyAdmin's theming
+  - Drop the unused `AutoBadgeMenuItem`/`AutoBadgeCrudMenuItem` pair: EasyAdmin
+    hides a badge whose content is null
+  - Set the ITK blue with the theme API instead of overriding EasyAdmin's
+    colour variables one by one
+  - Load the admin stylesheet again: it was added as `css/admin.css`, a file
+    deleted in #81, so every admin page carried a 404 and no ITK styling
+- [#93](https://github.com/itk-dev/devops_itksites/pull/93)
+  Update composer dependencies, clearing 15 security advisories
+  - `api-platform/core` 4.3.7 → 4.3.17, `easycorp/easyadmin-bundle` 5.0.11 → 5.5.1,
+    `guzzlehttp/guzzle` 7.10.6 → 7.15.5, `guzzlehttp/psr7` 2.10.4 → 2.13.1
+  - Regenerated the API spec: `symfony/yaml` now writes sequence items on their
+    own line. No API changes
+- [#92](https://github.com/itk-dev/devops_itksites/pull/92) Update openid-connect-bundle to 6.0
+  - Bump `itk-dev/openid-connect-bundle` to `^6.0`
+  - A failed OIDC callback now raises an error instead of redirecting to the
+    identity provider again, so an expired client secret can no longer put the
+    site in a login loop
+  - Only the provider's callback path is treated as a callback; the configured
+    `redirect_uri` covers this, no `callback_path` needed
+  - Set `client_secret_expires_at` for the `azure_az` provider from the new
+    `AZURE_AZ_OIDC_CLIENT_SECRET_EXPIRES_AT` variable, so the bundle warns
+    before the secret expires
+  - Render a failed login as a page saying so, instead of an unhandled
+    exception, in `OpenIdConnectFailureListener`
+  - Add an `oidc_client_secret` health check, so a client secret nearing its
+    expiry shows up in `/health/detail` instead of in a login loop
+- [#83](https://github.com/itk-dev/devops_itksites/pull/83) 7523: Service agreements
+  - Add Project entity top-level Economics project.
+  - Add CodeOwner entity
+  - Add Leantime integration
+- [#91](https://github.com/itk-dev/devops_itksites/pull/91) Health endpoints
+  - Add `/health/live`, `/health/ready` and `/health/detail` endpoints
+  - Add health checks for database, RabbitMQ transport and detection result freshness
+  - Cache check results in a dedicated `cache.health` pool
+  - Exclude `^/health` from the firewalls and protect `/health/detail` with `ITKBasicAuth`
+- [#90](https://github.com/itk-dev/devops_itksites/pull/90)
+  - Fixed user API key migration failing on databases with more than one user
+  - Generated an API key for existing users, as users created since already get
+  - Added users to the fixtures and a CI job running migrations on a populated
+    database
+- [#89](https://github.com/itk-dev/devops_itksites/pull/89)
+  Added `--rm` to `docker compose run` in prod deployment
+- [#88](https://github.com/itk-dev/devops_itksites/pull/88)
+  - Let users use the API
+  - Add security to detection results API endpoint
+  - Add server and site collections API endpoints
+- [#80](https://github.com/itk-dev/devops_itksites/pull/80) 5566: Service agreements
+  - Add security contract entity with crud controller
+  - Add Abstract full crud controller and extend on it in some cases
+  - Add economics service and sync action/command for service agreement synchronization
+- [#81](https://github.com/itk-dev/devops_itksites/pull/81) 5564: Asset Mapper migration
+  - Add Symfony Asset Mapper bundle and importmap
+- Add Renovate auto-patch + auto-release pipeline (Phase 1 fork validation)
+- [#87](https://github.com/itk-dev/devops_itksites/pull/87) Update `codecov/codecov-action` to v7
+
 ## [1.11.2] - 2026-06-02
 
 - [#85](https://github.com/itk-dev/devops_itksites/pull/85)
@@ -191,7 +263,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.11.2...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.12.0...HEAD
+[1.12.0]: https://github.com/itk-dev/devops_itksites/compare/1.11.2...1.12.0
 [1.11.2]: https://github.com/itk-dev/devops_itksites/compare/1.11.1...1.11.2
 [1.11.1]: https://github.com/itk-dev/devops_itksites/compare/1.11.0...1.11.1
 [1.11.0]: https://github.com/itk-dev/devops_itksites/compare/1.10.1...1.11.0

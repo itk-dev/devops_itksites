@@ -2,7 +2,7 @@
 {# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
 {% if field.formattedValue is null %}
-    <span class="badge badge-secondary">{{ 'label.null'|trans(domain: 'EasyAdminBundle') }}</span>
+    <twig:ea:Badge variant="secondary">{{ 'label.null'|trans(domain: 'EasyAdminBundle') }}</twig:ea:Badge>
 {% else %}
     <code>{{ field.formattedValue }}</code>
 {% endif %}

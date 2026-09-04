@@ -23,6 +23,24 @@ class DetectionResultRepository extends ServiceEntityRepository
     }
 
     /**
+     * Get the most recent contact from any harvester.
+     *
+     * Used by the ingest freshness health check.
+     *
+     * @return \DateTimeImmutable|null
+     *                                 Null when no detection results have been received yet
+     */
+    public function findLastContact(): ?\DateTimeImmutable
+    {
+        $lastContact = $this->createQueryBuilder('d')
+            ->select('MAX(d.lastContact)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return is_string($lastContact) ? new \DateTimeImmutable($lastContact) : null;
+    }
+
+    /**
      * Remove detection results base on last contact.
      *
      * @param \dateTime $date

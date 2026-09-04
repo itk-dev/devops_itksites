@@ -6,11 +6,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\OIDC;
 use App\Repository\SiteRepository;
-use App\Trait\ExportCrudControllerTrait;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use App\Trait\DeprecatedCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
@@ -18,9 +15,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use Symfony\Component\Translation\TranslatableMessage;
 
-class OIDCCrudController extends AbstractCrudController
+/**
+ * @deprecated Removed from the admin menu. Kept so existing OIDC rows stay
+ *             reachable by URL until the entity itself goes away.
+ */
+class OIDCCrudController extends AbstractFullCrudController
 {
-    use ExportCrudControllerTrait;
+    use DeprecatedCrudControllerTrait;
 
     public function __construct(
         private readonly SiteRepository $siteRepository)
@@ -33,18 +34,9 @@ class OIDCCrudController extends AbstractCrudController
     }
 
     #[\Override]
-    public function configureCrud(Crud $crud): Crud
+    protected function getDeprecationNotice(): string
     {
-        return $crud->showEntityActionsInlined();
-    }
-
-    #[\Override]
-    public function configureActions(Actions $actions): Actions
-    {
-        return $actions
-            ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ->add(Crud::PAGE_INDEX, $this->createExportAction())
-        ;
+        return 'OIDC registrations are deprecated and no longer maintained here. This page is only reachable by direct link, so that existing entries stay readable. Do not add new ones.';
     }
 
     #[\Override]
