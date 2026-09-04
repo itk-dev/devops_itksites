@@ -7,6 +7,7 @@ namespace App\Controller\Admin;
 use App\Entity\ServiceCertificate;
 use App\Form\Type\ServiceCertificate\ServiceType;
 use App\Repository\SiteRepository;
+use App\Trait\DeprecatedCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -16,8 +17,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use Symfony\Component\Translation\TranslatableMessage;
 
+/**
+ * @deprecated Removed from the admin menu. Kept so existing service certificate
+ *             rows stay reachable by URL until the entity itself goes away.
+ */
 class ServiceCertificateCrudController extends AbstractFullCrudController
 {
+    use DeprecatedCrudControllerTrait;
+
     public function __construct(
         private readonly SiteRepository $siteRepository,
     ) {
@@ -26,6 +33,12 @@ class ServiceCertificateCrudController extends AbstractFullCrudController
     public static function getEntityFqcn(): string
     {
         return ServiceCertificate::class;
+    }
+
+    #[\Override]
+    protected function getDeprecationNotice(): string
+    {
+        return 'Service certificates are deprecated and no longer maintained here. This page is only reachable by direct link, so that existing entries stay readable. Do not add new ones.';
     }
 
     #[\Override]

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#98](https://github.com/itk-dev/devops_itksites/pull/98)
+  Deprecate OIDC and Service certificates
+  - Remove both from the admin menu
+  - Mark the entities, controllers, repositories and supporting classes
+    `@deprecated`
+  - Keep the entities and their tables, so existing rows survive and stay
+    reachable by URL
+  - Warn on every page of the two, since a direct link is now the only way in
 - [#96](https://github.com/itk-dev/devops_itksites/pull/96)
   Show the Service Agreements monthly price as Danish kroner,
   `12.500,50 kr.`, on index and detail
