@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.0] - 2026-09-04
+
 - [#98](https://github.com/itk-dev/devops_itksites/pull/98)
   Deprecate OIDC and Service certificates, keeping their data
 - [#96](https://github.com/itk-dev/devops_itksites/pull/96)
@@ -50,7 +52,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Add Project entity top-level Economics project.
   - Add CodeOwner entity
   - Add Leantime integration
-- [#80](https://github.com/itk-dev/devops_itksites/pull/80  ) 5566: Service agreements
 - [#91](https://github.com/itk-dev/devops_itksites/pull/91) Health endpoints
   - Add `/health/live`, `/health/ready` and `/health/detail` endpoints
   - Add health checks for database, RabbitMQ transport and detection result freshness
@@ -260,7 +261,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.11.2...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.12.0...HEAD
+[1.12.0]: https://github.com/itk-dev/devops_itksites/compare/1.11.2...1.12.0
 [1.11.2]: https://github.com/itk-dev/devops_itksites/compare/1.11.1...1.11.2
 [1.11.1]: https://github.com/itk-dev/devops_itksites/compare/1.11.0...1.11.1
 [1.11.0]: https://github.com/itk-dev/devops_itksites/compare/1.10.1...1.11.0
