@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.12.0] - 2026-09-04
 
+- [#99](https://github.com/itk-dev/devops_itksites/pull/99)
+  Fix the staging deploy: `composer install` was passed `-no-dev`
 - [#98](https://github.com/itk-dev/devops_itksites/pull/98)
   Deprecate OIDC and Service certificates, keeping their data
 - [#96](https://github.com/itk-dev/devops_itksites/pull/96)
