@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#100](https://github.com/itk-dev/devops_itksites/pull/100)
+  Added asset compilation to release build
+
 ## [1.12.0] - 2026-09-04
 
 - [#99](https://github.com/itk-dev/devops_itksites/pull/99)
