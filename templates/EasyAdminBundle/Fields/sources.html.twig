@@ -5,7 +5,7 @@
     <ul class="list-unstyled">
         {% for item in field.value %}
             <li>
-                {%- if item starts with 'https://' or item starts with 'http://' -%}
+                {%- if item starts with 'http' -%}
                     <a target="_blank" rel="noopener" href="{{ item }}">{{ item }}</a>
                 {%- else -%}
                     {{ item }}
