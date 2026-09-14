@@ -15,8 +15,29 @@ jobs:
 
             - name: Run PHPStan
               run: |
-                  docker compose run --rm phpfpm composer install --no-interaction
-                  docker compose run --rm phpfpm vendor/bin/phpstan analyse
+                  docker compose run --rm frankenphp composer install --no-interaction
+                  docker compose run --rm frankenphp vendor/bin/phpstan analyse
+
+    worker-state:
+        runs-on: ubuntu-latest
+        name: Worker state audit
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+
+            - name: Create docker network
+              run: docker network create frontend
+
+            # igor-php audits every shared service in the compiled container for
+            # state that would leak between requests in a worker. It reads the
+            # service map IgorPhpBundle writes during cache:clear, and fails only
+            # on findings absent from igor-baseline.json — every entry in which
+            # carries a reason. Regenerate with `composer worker-state-baseline`.
+            - name: Audit shared services for worker-mode state leaks
+              run: |
+                  docker compose run --rm frankenphp composer install --no-interaction
+                  docker compose run --rm frankenphp bin/console cache:clear
+                  docker compose run --rm frankenphp composer worker-state-check
 
     phpunit:
         runs-on: ubuntu-latest
@@ -31,11 +52,11 @@ jobs:
             - name: Run tests with coverage
               run: |
                   docker compose up --detach
-                  docker compose exec -e XDEBUG_MODE=coverage phpfpm composer install --no-interaction
-                  docker compose exec -e XDEBUG_MODE=coverage phpfpm bin/console --env=test doctrine:database:drop --if-exists --force --quiet
-                  docker compose exec -e XDEBUG_MODE=coverage phpfpm bin/console --env=test doctrine:database:create --no-interaction --if-not-exists --quiet
-                  docker compose exec -e XDEBUG_MODE=coverage phpfpm bin/console --env=test doctrine:migrations:migrate --no-interaction --quiet
-                  docker compose exec -e XDEBUG_MODE=coverage phpfpm vendor/bin/phpunit --coverage-clover=coverage/unit.xml
+                  docker compose exec -e XDEBUG_MODE=coverage frankenphp composer install --no-interaction
+                  docker compose exec -e XDEBUG_MODE=coverage frankenphp bin/console --env=test doctrine:database:drop --if-exists --force --quiet
+                  docker compose exec -e XDEBUG_MODE=coverage frankenphp bin/console --env=test doctrine:database:create --no-interaction --if-not-exists --quiet
+                  docker compose exec -e XDEBUG_MODE=coverage frankenphp bin/console --env=test doctrine:migrations:migrate --no-interaction --quiet
+                  docker compose exec -e XDEBUG_MODE=coverage frankenphp vendor/bin/phpunit --coverage-clover=coverage/unit.xml
 
             - name: Upload coverage to Codecov
               uses: codecov/codecov-action@v7

@@ -14,9 +14,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ModuleVersionFactory
 {
-    private array $createdModules = [];
-    private array $createdModuleVersions = [];
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly ModuleRepository $moduleRepository,
@@ -26,41 +23,42 @@ class ModuleVersionFactory
 
     public function setModuleVersions(Installation $installation, object $installedModules): void
     {
+        // Locals, not properties: see PackageVersionFactory for why. Entities
+        // persisted below are not flushed until the end of the call, so these
+        // maps stand in for the repositories until then, and nothing outlives
+        // the method.
+        $createdModules = [];
+        $createdModuleVersions = [];
+
         $moduleVersions = new ArrayCollection();
         foreach ($installedModules as $name => $installed) {
-            $module = $this->getModule($name, $installed->package);
+            $module = $this->getModule($name, $installed->package, $createdModules);
 
             if (isset($installed->display_name)) {
                 $module->setDisplayName($installed->display_name);
             }
             $module->setEnabled('Enabled' === $installed->status);
 
-            $moduleVersion = $this->getModuleVersion($module, $installed->version);
+            $moduleVersion = $this->getModuleVersion($module, $installed->version, $createdModuleVersions);
             $moduleVersions->add($moduleVersion);
         }
 
         $installation->setModuleVersions($moduleVersions);
 
         $this->entityManager->flush();
-        $this->createdModules = [];
-        $this->createdModuleVersions = [];
     }
 
-    private function getModule(string $name, string $package): Module
+    /**
+     * @param array<string, Module> $createdModules modules persisted in this call but not yet flushed, keyed by name and package
+     */
+    private function getModule(string $name, string $package, array &$createdModules): Module
     {
+        $key = $name."\0".$package;
+
         $module = $this->moduleRepository->findOneBy([
             'name' => $name,
             'package' => $package,
-        ]);
-
-        if (null === $module) {
-            /** @var Module $createdModule */
-            foreach ($this->createdModules as $createdModule) {
-                if ($name === $createdModule->getName() && $package === $createdModule->getPackage()) {
-                    $module = $createdModule;
-                }
-            }
-        }
+        ]) ?? $createdModules[$key] ?? null;
 
         if (null === $module) {
             $module = new Module();
@@ -69,13 +67,16 @@ class ModuleVersionFactory
             $module->setName($name);
             $module->setPackage($package);
 
-            $this->createdModules[] = $module;
+            $createdModules[$key] = $module;
         }
 
         return $module;
     }
 
-    private function getModuleVersion(Module $module, string|int|float|null $version): ModuleVersion
+    /**
+     * @param array<string, ModuleVersion> $createdModuleVersions versions persisted in this call but not yet flushed, keyed by module identity and version
+     */
+    private function getModuleVersion(Module $module, string|int|float|null $version, array &$createdModuleVersions): ModuleVersion
     {
         if (is_int($version) || is_float($version)) {
             $version = (string) $version;
@@ -86,13 +87,15 @@ class ModuleVersionFactory
             'version' => $version,
         ]);
 
-        if (null === $moduleVersion) {
-            /** @var ModuleVersion $createdModuleVersion */
-            foreach ($this->createdModuleVersions as $createdModuleVersion) {
-                if ($module->getId() === $createdModuleVersion->getModule()->getId() && $version === $createdModuleVersion->getVersion()) {
-                    $moduleVersion = $createdModuleVersion;
-                }
-            }
+        // A null version is deliberately left out of the buffer.
+        // ModuleVersion::getVersion() reports 'Unknown' for null, so the scan
+        // this replaced never matched a null-versioned module either. Keeping
+        // that quirk keeps this change about state and nothing else; see the
+        // note in the pull request.
+        $key = null === $version ? null : spl_object_id($module)."\0".$version;
+
+        if (null === $moduleVersion && null !== $key) {
+            $moduleVersion = $createdModuleVersions[$key] ?? null;
         }
 
         if (null === $moduleVersion) {
@@ -102,7 +105,9 @@ class ModuleVersionFactory
             $module->addModuleVersion($moduleVersion);
             $moduleVersion->setVersion($version);
 
-            $this->createdModuleVersions[] = $moduleVersion;
+            if (null !== $key) {
+                $createdModuleVersions[$key] = $moduleVersion;
+            }
         }
 
         return $moduleVersion;

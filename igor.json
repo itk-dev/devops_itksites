@@ -1,0 +1,13 @@
+{
+    "exclude": ["migrations", "tests", "var"],
+    "safe_namespaces": [
+        "Symfony\\",
+        "Doctrine\\",
+        "Psr\\",
+        "IgorPhp\\IgorBundle\\"
+    ],
+    "ignore_vendors": true,
+    "console_path": "bin/console",
+    "env": "dev",
+    "baseline": "igor-baseline.json"
+}

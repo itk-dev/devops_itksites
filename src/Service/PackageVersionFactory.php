@@ -14,9 +14,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class PackageVersionFactory
 {
-    private array $createdPackages = [];
-    private array $createdPackageVersions = [];
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly PackageRepository $packageRepository,
@@ -26,11 +23,22 @@ class PackageVersionFactory
 
     public function setPackageVersions(Installation $installation, array $installedPackages): void
     {
+        // Entities are persisted below but not flushed until the end of this
+        // method, so the repositories cannot find them yet. These two maps
+        // stand in for the repositories for the rest of the call, keeping the
+        // same package from being created twice.
+        //
+        // They are locals, not properties. Nothing survives the method, so the
+        // service holds no state between calls — which is what makes it safe in
+        // a long-running process, the messenger consumer included.
+        $createdPackages = [];
+        $createdPackageVersions = [];
+
         $packageVersions = new ArrayCollection();
         foreach ($installedPackages as $installed) {
             [$vendor, $name] = explode('/', (string) $installed->name);
 
-            $package = $this->getPackage($vendor, $name);
+            $package = $this->getPackage($vendor, $name, $createdPackages);
 
             $package->setDescription($installed->description);
             if (isset($installed->warning)) {
@@ -40,15 +48,12 @@ class PackageVersionFactory
                 $package->setAbandoned($installed->abandoned);
             }
 
-            $packageVersion = $this->getPackageVersion($package, $installed->version);
+            $packageVersion = $this->getPackageVersion($package, $installed->version, $createdPackageVersions);
             $installation->addPackageVersion($packageVersion);
 
             $packageVersion->setVersion($installed->version);
             if (isset($installed->latest)) {
                 $packageVersion->setLatest($installed->latest);
-            }
-            if (isset($installed->{'latest-status'})) {
-                $packageVersion->setLatestStatus($installed->{'latest-status'});
             }
             if (isset($installed->{'latest-status'})) {
                 $packageVersion->setLatestStatus($installed->{'latest-status'});
@@ -60,25 +65,19 @@ class PackageVersionFactory
         $installation->setPackageVersions($packageVersions);
 
         $this->entityManager->flush();
-        $this->createdPackages = [];
-        $this->createdPackageVersions = [];
     }
 
-    private function getPackage(string $vendor, string $name): Package
+    /**
+     * @param array<string, Package> $createdPackages packages persisted in this call but not yet flushed, keyed by vendor and name
+     */
+    private function getPackage(string $vendor, string $name, array &$createdPackages): Package
     {
+        $key = $vendor."\0".$name;
+
         $package = $this->packageRepository->findOneBy([
             'vendor' => $vendor,
             'name' => $name,
-        ]);
-
-        if (null === $package) {
-            /** @var Package $createdPackage */
-            foreach ($this->createdPackages as $createdPackage) {
-                if ($vendor === $createdPackage->getVendor() && $name === $createdPackage->getName()) {
-                    $package = $createdPackage;
-                }
-            }
-        }
+        ]) ?? $createdPackages[$key] ?? null;
 
         if (null === $package) {
             $package = new Package();
@@ -87,27 +86,26 @@ class PackageVersionFactory
             $package->setVendor($vendor);
             $package->setName($name);
 
-            $this->createdPackages[] = $package;
+            $createdPackages[$key] = $package;
         }
 
         return $package;
     }
 
-    private function getPackageVersion(Package $package, string $version): PackageVersion
+    /**
+     * @param array<string, PackageVersion> $createdPackageVersions versions persisted in this call but not yet flushed, keyed by package identity and version
+     */
+    private function getPackageVersion(Package $package, string $version, array &$createdPackageVersions): PackageVersion
     {
+        // Keyed on object identity rather than on the id: within one call the
+        // package may have been created moments ago, and object identity holds
+        // whether or not Doctrine has assigned an id yet.
+        $key = spl_object_id($package)."\0".$version;
+
         $packageVersion = $this->packageVersionRepository->findOneBy([
             'package' => $package,
             'version' => $version,
-        ]);
-
-        if (null === $packageVersion) {
-            /* @var PackageVersion $packageVersion */
-            foreach ($this->createdPackageVersions as $createdPackageVersion) {
-                if ($package->getId() === $createdPackageVersion->getPackage()->getId() && $version === $createdPackageVersion->getVersion()) {
-                    $packageVersion = $createdPackageVersion;
-                }
-            }
-        }
+        ]) ?? $createdPackageVersions[$key] ?? null;
 
         if (null === $packageVersion) {
             $packageVersion = new PackageVersion();
@@ -116,7 +114,7 @@ class PackageVersionFactory
             $package->addPackageVersion($packageVersion);
             $packageVersion->setVersion($version);
 
-            $this->createdPackageVersions[] = $packageVersion;
+            $createdPackageVersions[$key] = $packageVersion;
         }
 
         return $packageVersion;

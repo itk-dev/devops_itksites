@@ -1,4 +1,82 @@
 services:
+  # FrankenPHP POC: a single container replaces the phpfpm and nginx pair.
+  # Compose cannot delete an inherited service, so both are moved into a
+  # profile that is never enabled. Nothing depends on them once nginx is gone,
+  # so neither is started.
+  phpfpm:
+    profiles:
+      - replaced-by-frankenphp
+
+  nginx:
+    profiles:
+      - replaced-by-frankenphp
+
+  frankenphp:
+    build:
+      context: .
+      # No Xdebug, and OPcache trusting what it compiled.
+      target: prod
+    restart: unless-stopped
+    networks:
+      - app
+      - frontend
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      # A bare port keeps Caddy on plain HTTP; Traefik terminates TLS.
+      SERVER_NAME: ":8080"
+      SERVER_ROOT: /app/public
+      PHP_MAX_BODY_SIZE: 5MB
+      # Read by .docker/php.ini, which uses the itkdev/php8.5-fpm image's own
+      # variable names. The image defaults match the fpm image's, so nothing
+      # needs restating here.
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    # /health/live is public and touches nothing, so it reports whether this
+    # container is serving without depending on the database or the broker.
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "--fail",
+          "--silent",
+          "http://localhost:8080/health/live",
+        ]
+      start_period: 30s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - .:/app
+      - ./.docker/Caddyfile:/etc/frankenphp/Caddyfile:ro
+      - ./.docker/php.ini:/usr/local/etc/php/conf.d/zz-app.ini:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=frontend"
+      # The image exposes 80, 443 and 2019 as well, so the port Traefik should
+      # talk to has to be spelled out.
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME:?}.loadbalancer.server.port=8080"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-http.rule=Host(`${COMPOSE_SERVER_DOMAIN:?}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-http.entrypoints=web"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}.rule=Host(`${COMPOSE_SERVER_DOMAIN:?}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}.entrypoints=websecure"
+      # Metrics protection. Caddy's Prometheus endpoint, where nginx proxied
+      # /cron-metrics to a supercronic that this project never starts.
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-metrics.rule=Host(`${COMPOSE_SERVER_DOMAIN:?}`) && PathPrefix(`/metrics`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-metrics.entrypoints=websecure"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-metrics.middlewares=ITKMetricsAuth@file"
+      # Detailed health check protection. /health/live and /health/ready stay
+      # public; only /health/detail discloses internals.
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-health.rule=Host(`${COMPOSE_SERVER_DOMAIN:?}`) && PathPrefix(`/health/detail`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-health.entrypoints=websecure"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-health.middlewares=ITKBasicAuth@file"
+
   rabbit:
     image: rabbitmq:4-management-alpine
     restart: unless-stopped
@@ -18,7 +96,7 @@ services:
       retries: 30
 
   supervisor:
-    image: itkdev/supervisor-php8.4:alpine
+    image: itkdev/supervisor-php8.5:alpine
     restart: unless-stopped
     stop_grace_period: 20s
     environment:
@@ -36,7 +114,7 @@ services:
       rabbit:
         condition: service_healthy
 
-  phpfpm:
-    depends_on:
-      rabbit:
-        condition: service_healthy
+# Caddy keeps its instance identity and last known config here.
+volumes:
+  caddy_data:
+  caddy_config:
