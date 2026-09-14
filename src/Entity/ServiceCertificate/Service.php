@@ -11,6 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @deprecated Together with {@see ServiceCertificate}. The entity is
+ *             kept so the table and its rows survive; do not add new usages.
+ */
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
 #[ORM\Table(name: 'service_certificate_service')]
 class Service extends AbstractBaseEntity implements \Stringable

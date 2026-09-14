@@ -15,6 +15,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ServiceCertificate|null findOneBy(array $criteria, array $orderBy = null)
  * @method ServiceCertificate[]    findAll()
  * @method ServiceCertificate[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @deprecated together with {@see ServiceCertificate}
  */
 class ServiceCertificateRepository extends ServiceEntityRepository
 {

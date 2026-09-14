@@ -10,6 +10,9 @@ use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Events;
 
+/**
+ * @deprecated together with {@see OIDC}
+ */
 #[AsEntityListener(event: Events::preFlush, method: 'preFlush', entity: OIDC::class)]
 class OIDCChangedListener
 {

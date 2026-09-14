@@ -15,6 +15,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method OIDC|null findOneBy(array $criteria, array $orderBy = null)
  * @method OIDC[]    findAll()
  * @method OIDC[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @deprecated together with {@see OIDC}
  */
 class OIDCRepository extends ServiceEntityRepository
 {

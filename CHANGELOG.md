@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#103](https://github.com/itk-dev/devops_itksites/pull/103)
+  Update composer dependencies: Symfony to 8.1.6, `doctrine/orm` 3.6.8 → 3.7.1,
+  `api-platform/core` 4.3.17 → 4.3.19, 47 packages in all. Drop
+  `ocramius/doctrine-batch-utils`, which nothing in the code used
+
 - [#59](https://github.com/itk-dev/devops_itksites/pull/59)
   4544: POC for using FrankenPHP behind Traefik
   - Serve the site from a single FrankenPHP container. The `frankenphp` service
@@ -68,6 +73,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `FRANKENPHP_RESET_KERNEL=1` — so the reset keeps about half the gain rather
     than erasing it. `/health/live` inverts the ranking, and the numbers come
     from a laptop sharing CPU with other containers
+## [1.12.1] - 2026-09-14
+
+- [#101](https://github.com/itk-dev/devops_itksites/pull/101)
+  List only LTS releases as Ubuntu server systems: add 26.04 and drop the
+  non-LTS 21.04, 23.04 and 25.04. Five servers still recorded as 25.04 are
+  migrated to 26.04. Relabel the `deb12` choice as Debian 12
+- [#100](https://github.com/itk-dev/devops_itksites/pull/100)
+  Added asset compilation to release build
+
+## [1.12.0] - 2026-09-04
+
+- [#99](https://github.com/itk-dev/devops_itksites/pull/99)
+  Fix the staging deploy: `composer install` was passed `-no-dev`
+- [#98](https://github.com/itk-dev/devops_itksites/pull/98)
+  Deprecate OIDC and Service certificates, keeping their data
 - [#96](https://github.com/itk-dev/devops_itksites/pull/96)
   Show the Service Agreements monthly price as Danish kroner,
   `12.500,50 kr.`, on index and detail
@@ -109,7 +129,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Add Project entity top-level Economics project.
   - Add CodeOwner entity
   - Add Leantime integration
-- [#80](https://github.com/itk-dev/devops_itksites/pull/80  ) 5566: Service agreements
 - [#91](https://github.com/itk-dev/devops_itksites/pull/91) Health endpoints
   - Add `/health/live`, `/health/ready` and `/health/detail` endpoints
   - Add health checks for database, RabbitMQ transport and detection result freshness
@@ -319,7 +338,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.11.2...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.12.1...HEAD
+[1.12.1]: https://github.com/itk-dev/devops_itksites/compare/1.12.0...1.12.1
+[1.12.0]: https://github.com/itk-dev/devops_itksites/compare/1.11.2...1.12.0
 [1.11.2]: https://github.com/itk-dev/devops_itksites/compare/1.11.1...1.11.2
 [1.11.1]: https://github.com/itk-dev/devops_itksites/compare/1.11.0...1.11.1
 [1.11.0]: https://github.com/itk-dev/devops_itksites/compare/1.10.1...1.11.0

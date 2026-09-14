@@ -11,6 +11,10 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @deprecated OIDC registrations are no longer maintained here. The entity is
+ *             kept so the table and its rows survive; do not add new usages.
+ */
 #[ORM\Entity(repositoryClass: OIDCRepository::class)]
 class OIDC extends AbstractBaseEntity
 {
