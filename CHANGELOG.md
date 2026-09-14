@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Fix 404 on advisory source links: sources from an unknown provider render as a
-  label, not a URL, and are no longer wrapped in a link
+- Fix 404 on advisory source links: link Drupal sources to their advisory on
+  drupal.org, and render sources from an unknown provider as a label instead of
+  wrapping the label in a link
 - [#103](https://github.com/itk-dev/devops_itksites/pull/103)
   Update composer dependencies: Symfony to 8.1.6, `doctrine/orm` 3.6.8 → 3.7.1,
   `api-platform/core` 4.3.17 → 4.3.19, 47 packages in all. Drop

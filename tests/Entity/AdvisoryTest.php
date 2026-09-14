@@ -15,14 +15,16 @@ class AdvisoryTest extends TestCase
         $advisory->setSources([
             ['name' => 'GitHub', 'remoteId' => 'GHSA-mcrj-3wjf-3rmh'],
             ['name' => 'FriendsOfPHP/security-advisories', 'remoteId' => 'drupal/core/2018-10-17-1.yaml'],
-            ['name' => 'Drupal', 'remoteId' => 'SA-CORE-2023-006'],
+            ['name' => 'Drupal core - Moderately critical - Cross Site Scripting - SA-CORE-2025-004', 'remoteId' => 'SA-CORE-2025-004'],
+            ['name' => 'Some day', 'remoteId' => 'a-new-provider'],
         ]);
 
         $this->assertSame([
             'https://github.com/advisories/GHSA-mcrj-3wjf-3rmh',
             'https://github.com/FriendsOfPHP/security-advisories/blob/master/drupal/core/2018-10-17-1.yaml',
+            'https://www.drupal.org/sa-core-2025-004',
             // Unknown sources get a label, not a URL; the template must not link it.
-            'Drupal / SA-CORE-2023-006',
+            'Some day / a-new-provider',
         ], $advisory->getSourceLinks());
     }
 }

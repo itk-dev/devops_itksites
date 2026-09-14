@@ -14,6 +14,7 @@ class Advisory extends AbstractBaseEntity implements \Stringable
 {
     private const string GITHUB_ADVISORY_URL_PATTERN = 'https://github.com/advisories/%s';
     private const string FRIENDS_OF_PHP_ADVISORY_URL_PATTERN = 'https://github.com/FriendsOfPHP/security-advisories/blob/master/%s';
+    private const string DRUPAL_ADVISORY_URL_PATTERN = 'https://www.drupal.org/%s';
 
     #[ORM\Column(length: 255, unique: true)]
     private ?string $advisoryId = null;
@@ -141,7 +142,10 @@ class Advisory extends AbstractBaseEntity implements \Stringable
             $links[] = match ($source['name']) {
                 'GitHub' => sprintf(self::GITHUB_ADVISORY_URL_PATTERN, $source['remoteId']),
                 'FriendsOfPHP/security-advisories' => sprintf(self::FRIENDS_OF_PHP_ADVISORY_URL_PATTERN, $source['remoteId']),
-                default => $source['name'].' / '.$source['remoteId'],
+                // Drupal names its sources after the advisory title, so match on the id instead.
+                default => str_starts_with($source['remoteId'], 'SA-')
+                    ? sprintf(self::DRUPAL_ADVISORY_URL_PATTERN, strtolower($source['remoteId']))
+                    : $source['name'].' / '.$source['remoteId'],
             };
         }
 
