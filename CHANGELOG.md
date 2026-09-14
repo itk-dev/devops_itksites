@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#103](https://github.com/itk-dev/devops_itksites/pull/103)
+  Update composer dependencies: Symfony to 8.1.6, `doctrine/orm` 3.6.8 → 3.7.1,
+  `api-platform/core` 4.3.17 → 4.3.19, 47 packages in all. Drop
+  `ocramius/doctrine-batch-utils`, which nothing in the code used
+
 ## [1.12.1] - 2026-09-14
 
 - [#101](https://github.com/itk-dev/devops_itksites/pull/101)
