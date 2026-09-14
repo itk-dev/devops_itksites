@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#101](https://github.com/itk-dev/devops_itksites/pull/101)
+  List only LTS releases as Ubuntu server systems: add 26.04 and drop the
+  non-LTS 21.04, 23.04 and 25.04. Five servers still recorded as 25.04 are
+  migrated to 26.04. Relabel the `deb12` choice as Debian 12
 - [#100](https://github.com/itk-dev/devops_itksites/pull/100)
   Added asset compilation to release build
 
