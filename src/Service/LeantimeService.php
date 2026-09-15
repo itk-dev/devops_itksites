@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -51,6 +52,7 @@ class LeantimeService
     public function __construct(
         #[Target('leantime.client')]
         private readonly HttpClientInterface $leantimeClient,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -186,7 +188,10 @@ class LeantimeService
      *
      * Wraps the call in the JSON-RPC envelope, decodes the response, and
      * normalizes both transport failures and API-level error objects into
-     * RuntimeException.
+     * RuntimeException. Every failure is logged first: the callers turn the
+     * exception into a flash message and nothing else records it, so without
+     * this the only trace of a broken integration is whoever happened to open
+     * the admin page.
      *
      * @param string               $method JSON-RPC method name (e.g. `leantime.rpc.tickets.getAll`)
      * @param array<string, mixed> $params method parameters to forward verbatim to Leantime
@@ -208,11 +213,32 @@ class LeantimeService
             ]);
             $data = $response->toArray(false);
         } catch (ExceptionInterface $e) {
+            $this->logger->error('Leantime request failed', [
+                'method' => $method,
+                'exception' => $e,
+            ]);
+
             throw new \RuntimeException('Leantime request failed: '.$e->getMessage(), 0, $e);
         }
 
         if (isset($data['error'])) {
-            throw new \RuntimeException(sprintf('Leantime API error (%s): %s', $data['error']['code'] ?? '?', $data['error']['message'] ?? 'Unknown error'));
+            // The spec says `error` is an object, but a malformed one would
+            // otherwise turn an API error into a fatal on the string offset.
+            $error = is_array($data['error']) ? $data['error'] : ['message' => $data['error']];
+
+            $this->logger->error('Leantime API error', [
+                'method' => $method,
+                'params' => $params,
+                'code' => $error['code'] ?? null,
+                'message' => $error['message'] ?? null,
+                // Leantime puts the underlying exception detail in `data`. It is
+                // the only thing separating a rejected API key from an unknown
+                // method or a param shape this instance does not accept, so it
+                // is logged even though the flash message stays short.
+                'data' => $error['data'] ?? null,
+            ]);
+
+            throw new \RuntimeException(sprintf('Leantime API error (%s): %s', $error['code'] ?? '?', $error['message'] ?? 'Unknown error'));
         }
 
         return $data['result'] ?? null;
