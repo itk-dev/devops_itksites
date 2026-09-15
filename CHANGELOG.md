@@ -43,6 +43,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Link an installation to a git tag that already exists. A redeployment, or the
   same release on a second server, left the installation pointing at its
   previous tag, which also dropped it out of the repo advisory rollups
+
+- [#110](https://github.com/itk-dev/devops_itksites/pull/110)
+  Fix the repo advisories page: send the open Leantime statuses as one scalar,
+  and read the user directory from the data-api plugin, which our API key is
+  allowed to call
+
 - [#109](https://github.com/itk-dev/devops_itksites/pull/109)
   Log Leantime API failures, keeping the `data` field that says why a call was
   rejected. Until now a flash message on the repo advisories page was the only
