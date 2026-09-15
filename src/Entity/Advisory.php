@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: AdvisoryRepository::class)]
 class Advisory extends AbstractBaseEntity implements \Stringable
 {
+    private const string CVE_RECORD_URL_PATTERN = 'https://www.cve.org/CVERecord?id=%s';
     private const string PACKAGIST_ADVISORY_URL_PATTERN = 'https://packagist.org/security-advisories/%s';
     private const string GITHUB_ADVISORY_URL_PATTERN = 'https://github.com/advisories/%s';
     private const string FRIENDS_OF_PHP_ADVISORY_URL_PATTERN = 'https://github.com/FriendsOfPHP/security-advisories/blob/master/%s';
@@ -133,6 +134,11 @@ class Advisory extends AbstractBaseEntity implements \Stringable
     public function getSources(): array
     {
         return $this->sources;
+    }
+
+    public function getCveUrl(): ?string
+    {
+        return null === $this->cve ? null : sprintf(self::CVE_RECORD_URL_PATTERN, $this->cve);
     }
 
     /**

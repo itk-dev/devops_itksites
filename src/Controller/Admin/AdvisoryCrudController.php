@@ -56,7 +56,8 @@ class AdvisoryCrudController extends AbstractCrudController
         yield AssociationField::new('package');
         yield TextMonospaceField::new('affectedVersions')->setColumns(6)->onlyOnDetail();
         yield AssociationField::new('packageVersions')->setLabel('Versions');
-        yield TextMonospaceField::new('cve')->setColumns(6)->setLabel('CVE');
+        yield TextMonospaceField::new('cve')->setColumns(6)->setLabel('CVE')
+            ->setTemplatePath('EasyAdminBundle/Fields/cve.html.twig');
         yield TextField::new('title')->setColumns(6);
         yield UrlField::new('link')->setColumns(6)->onlyOnDetail();
         yield DateField::new('reportedAt')->setColumns(6)->onlyOnIndex();

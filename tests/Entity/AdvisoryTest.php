@@ -9,6 +9,15 @@ use PHPUnit\Framework\TestCase;
 
 class AdvisoryTest extends TestCase
 {
+    public function testGetCveUrl(): void
+    {
+        $advisory = new Advisory();
+        $this->assertNull($advisory->getCveUrl());
+
+        $advisory->setCve('CVE-2026-48998');
+        $this->assertSame('https://www.cve.org/CVERecord?id=CVE-2026-48998', $advisory->getCveUrl());
+    }
+
     public function testGetAdvisoryUrl(): void
     {
         $advisory = new Advisory();
