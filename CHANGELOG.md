@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#109](https://github.com/itk-dev/devops_itksites/pull/109)
+  Log Leantime API failures, keeping the `data` field that says why a call was
+  rejected. Until now a flash message on the repo advisories page was the only
+  trace
+
 ## [1.13.0] - 2026-09-15
 
 - [#105](https://github.com/itk-dev/devops_itksites/pull/105)
