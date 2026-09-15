@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.0] - 2026-09-15
+
+- [#105](https://github.com/itk-dev/devops_itksites/pull/105)
+  Make the advisory count on the site index sortable
+- [#104](https://github.com/itk-dev/devops_itksites/pull/104)
+  Fix 404 on advisory source links: link Drupal sources to drupal.org, and
+  render sources from an unknown provider as a label instead of a link
+- [#103](https://github.com/itk-dev/devops_itksites/pull/103)
+  Update composer dependencies: Symfony to 8.1.6, `doctrine/orm` 3.6.8 → 3.7.1,
+  `api-platform/core` 4.3.17 → 4.3.19, 47 packages in all. Drop
+  `ocramius/doctrine-batch-utils`, which nothing in the code used
+
 ## [1.12.1] - 2026-09-14
 
 - [#101](https://github.com/itk-dev/devops_itksites/pull/101)
@@ -272,7 +284,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.12.1...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.13.0...HEAD
+[1.13.0]: https://github.com/itk-dev/devops_itksites/compare/1.12.1...1.13.0
 [1.12.1]: https://github.com/itk-dev/devops_itksites/compare/1.12.0...1.12.1
 [1.12.0]: https://github.com/itk-dev/devops_itksites/compare/1.11.2...1.12.0
 [1.11.2]: https://github.com/itk-dev/devops_itksites/compare/1.11.1...1.11.2

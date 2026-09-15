@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Admin\AdvisoryCountSort;
 use App\Admin\Field\AdvisoryCountField;
 use App\Admin\Field\ConfigFilePathField;
 use App\Admin\Field\DomainField;
@@ -16,18 +17,26 @@ use App\Form\Type\Admin\SemverFilter;
 use App\Form\Type\Admin\ServerTypeFilter;
 use App\Trait\ExportCrudControllerTrait;
 use App\Trait\SemverSortableCrudControllerTrait;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 
 class SiteCrudController extends AbstractCrudController
 {
     use ExportCrudControllerTrait;
-    use SemverSortableCrudControllerTrait;
+    // Aliased so this controller can add its own step after the semver rewrite.
+    use SemverSortableCrudControllerTrait {
+        createIndexQueryBuilder as private semverIndexQueryBuilder;
+    }
 
     public function __construct()
     {
@@ -57,7 +66,7 @@ class SiteCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield DomainField::new('primaryDomain')->setColumns(12);
-        yield AdvisoryCountField::new('advisoryCount')->setLabel('Adv.');
+        yield AdvisoryCountField::new('advisoryCount')->setLabel('Adv.')->setSortable(true);
         yield AssociationField::new('domains')->hideOnIndex();
         yield SiteTypeField::new('type')->setLabel('Stack');
         yield ConfigFilePathField::new('configFilePath')->setColumns(12)->hideOnIndex();
@@ -79,6 +88,14 @@ class SiteCrudController extends AbstractCrudController
             ->add(SemverFilter::new('phpVersion', 'PHP'))
             ->add('server')
             ->add(ServerTypeFilter::new('server.type', 'Server type'));
+    }
+
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+        $qb = $this->semverIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+        AdvisoryCountSort::apply($qb, $searchDto);
+
+        return $qb;
     }
 
     #[\Override]
