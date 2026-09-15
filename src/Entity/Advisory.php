@@ -12,8 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: AdvisoryRepository::class)]
 class Advisory extends AbstractBaseEntity implements \Stringable
 {
+    private const string CVE_RECORD_URL_PATTERN = 'https://www.cve.org/CVERecord?id=%s';
+    private const string PACKAGIST_ADVISORY_URL_PATTERN = 'https://packagist.org/security-advisories/%s';
     private const string GITHUB_ADVISORY_URL_PATTERN = 'https://github.com/advisories/%s';
     private const string FRIENDS_OF_PHP_ADVISORY_URL_PATTERN = 'https://github.com/FriendsOfPHP/security-advisories/blob/master/%s';
+    private const string DRUPAL_ADVISORY_URL_PATTERN = 'https://www.drupal.org/%s';
 
     #[ORM\Column(length: 255, unique: true)]
     private ?string $advisoryId = null;
@@ -133,14 +136,32 @@ class Advisory extends AbstractBaseEntity implements \Stringable
         return $this->sources;
     }
 
+    public function getCveUrl(): ?string
+    {
+        return null === $this->cve ? null : sprintf(self::CVE_RECORD_URL_PATTERN, $this->cve);
+    }
+
+    /**
+     * The advisory's own page at Packagist, which issues the PKSA id. Null for
+     * advisories recorded under another issuer's id.
+     */
+    public function getAdvisoryUrl(): ?string
+    {
+        return str_starts_with((string) $this->advisoryId, 'PKSA-')
+            ? sprintf(self::PACKAGIST_ADVISORY_URL_PATTERN, $this->advisoryId)
+            : null;
+    }
+
     public function getSourceLinks(): array
     {
         $links = [];
 
         foreach ($this->getSources() as $source) {
-            $links[] = match ($source['name']) {
-                'GitHub' => sprintf(self::GITHUB_ADVISORY_URL_PATTERN, $source['remoteId']),
-                'FriendsOfPHP/security-advisories' => sprintf(self::FRIENDS_OF_PHP_ADVISORY_URL_PATTERN, $source['remoteId']),
+            $links[] = match (true) {
+                'GitHub' === $source['name'] => sprintf(self::GITHUB_ADVISORY_URL_PATTERN, $source['remoteId']),
+                'FriendsOfPHP/security-advisories' === $source['name'] => sprintf(self::FRIENDS_OF_PHP_ADVISORY_URL_PATTERN, $source['remoteId']),
+                // Drupal names its sources after the advisory title, never the provider, so match on the id.
+                str_starts_with($source['remoteId'], 'SA-') => sprintf(self::DRUPAL_ADVISORY_URL_PATTERN, strtolower($source['remoteId'])),
                 default => $source['name'].' / '.$source['remoteId'],
             };
         }

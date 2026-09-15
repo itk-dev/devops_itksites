@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#105](https://github.com/itk-dev/devops_itksites/pull/105)
   Make the advisory count on the site index sortable
+- [#104](https://github.com/itk-dev/devops_itksites/pull/104)
+  Fix 404 on advisory source links: link Drupal sources to drupal.org, and
+  render sources from an unknown provider as a label instead of a link
 - [#103](https://github.com/itk-dev/devops_itksites/pull/103)
   Update composer dependencies: Symfony to 8.1.6, `doctrine/orm` 3.6.8 → 3.7.1,
   `api-platform/core` 4.3.17 → 4.3.19, 47 packages in all. Drop

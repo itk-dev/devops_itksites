@@ -3,9 +3,14 @@
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
 {% if ea().crud.currentAction == 'detail' %}
     <ul class="list-unstyled">
-    {% for item in field.value %}
-{# <li>{{ item }}</li> #}
-        <li><a target="_blank" rel="noopener" href="{{ item }}">{{ item }}</a></li>
+        {% for item in field.value %}
+            <li>
+                {%- if item starts with 'http' -%}
+                    <a target="_blank" rel="noopener" href="{{ item }}">{{ item }}</a>
+                {%- else -%}
+                    {{ item }}
+                {%- endif -%}
+            </li>
         {% endfor %}
     </ul>
 {% else %}

@@ -1,0 +1,8 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% if field.formattedValue is null %}
+    <twig:ea:Badge variant="secondary">{{ 'label.null'|trans(domain: 'EasyAdminBundle') }}</twig:ea:Badge>
+{% else %}
+    <a target="_blank" rel="noopener" href="{{ entity.instance.cveUrl }}"><code class="text-reset">{{ field.formattedValue }}</code></a>
+{% endif %}

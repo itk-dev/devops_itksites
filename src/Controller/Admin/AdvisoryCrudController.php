@@ -50,16 +50,19 @@ class AdvisoryCrudController extends AbstractCrudController
     #[\Override]
     public function configureFields(string $pageName): iterable
     {
-        yield TextMonospaceField::new('advisoryId')->setColumns(6)->onlyOnDetail();
+        yield TextMonospaceField::new('advisoryId')->setColumns(6)->onlyOnDetail()
+            // Packagist issues the PKSA id, so the id links to its page there.
+            ->setTemplatePath('EasyAdminBundle/Fields/advisory_id.html.twig');
         yield AssociationField::new('package');
         yield TextMonospaceField::new('affectedVersions')->setColumns(6)->onlyOnDetail();
         yield AssociationField::new('packageVersions')->setLabel('Versions');
-        yield TextMonospaceField::new('cve')->setColumns(6)->setLabel('CVE');
+        yield TextMonospaceField::new('cve')->setColumns(6)->setLabel('CVE')
+            ->setTemplatePath('EasyAdminBundle/Fields/cve.html.twig');
         yield TextField::new('title')->setColumns(6);
         yield UrlField::new('link')->setColumns(6)->onlyOnDetail();
         yield DateField::new('reportedAt')->setColumns(6)->onlyOnIndex();
         yield DateTimeField::new('reportedAt')->setColumns(6)->onlyOnDetail();
-        yield SourcesField::new('sourceLinks')->setColumns(6)->onlyOnDetail();
+        yield SourcesField::new('sourceLinks')->setColumns(6)->setLabel('Reported by')->onlyOnDetail();
         yield AffectedSitesField::new('sites')->setLabel('Affected Sites');
     }
 
