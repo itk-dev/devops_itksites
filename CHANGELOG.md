@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#107](https://github.com/itk-dev/devops_itksites/pull/107)
+  Match the Economics GitHub repos on provider, organization and repo, not the
+  repo name alone, so forks and duplicate names resolve to the right row
+
 ## [1.13.0] - 2026-09-15
 
 - [#105](https://github.com/itk-dev/devops_itksites/pull/105)
