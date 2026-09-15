@@ -51,6 +51,7 @@ class AdvisoryCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield TextMonospaceField::new('advisoryId')->setColumns(6)->onlyOnDetail();
+        yield UrlField::new('advisoryUrl')->setColumns(6)->setLabel('Packagist')->onlyOnDetail();
         yield AssociationField::new('package');
         yield TextMonospaceField::new('affectedVersions')->setColumns(6)->onlyOnDetail();
         yield AssociationField::new('packageVersions')->setLabel('Versions');
@@ -59,7 +60,7 @@ class AdvisoryCrudController extends AbstractCrudController
         yield UrlField::new('link')->setColumns(6)->onlyOnDetail();
         yield DateField::new('reportedAt')->setColumns(6)->onlyOnIndex();
         yield DateTimeField::new('reportedAt')->setColumns(6)->onlyOnDetail();
-        yield SourcesField::new('sourceLinks')->setColumns(6)->onlyOnDetail();
+        yield SourcesField::new('sourceLinks')->setColumns(6)->setLabel('Reported by')->onlyOnDetail();
         yield AffectedSitesField::new('sites')->setLabel('Affected Sites');
     }
 

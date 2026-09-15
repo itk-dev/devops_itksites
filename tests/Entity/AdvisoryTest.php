@@ -9,6 +9,18 @@ use PHPUnit\Framework\TestCase;
 
 class AdvisoryTest extends TestCase
 {
+    public function testGetAdvisoryUrl(): void
+    {
+        $advisory = new Advisory();
+
+        $advisory->setAdvisoryId('PKSA-w7xr-vk7n-rstm');
+        $this->assertSame('https://packagist.org/security-advisories/PKSA-w7xr-vk7n-rstm', $advisory->getAdvisoryUrl());
+
+        // Advisories recorded under another issuer's id have no Packagist page.
+        $advisory->setAdvisoryId('SA-CORE-2025-004');
+        $this->assertNull($advisory->getAdvisoryUrl());
+    }
+
     public function testGetSourceLinks(): void
     {
         $advisory = new Advisory();
