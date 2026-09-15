@@ -50,8 +50,9 @@ class AdvisoryCrudController extends AbstractCrudController
     #[\Override]
     public function configureFields(string $pageName): iterable
     {
-        yield TextMonospaceField::new('advisoryId')->setColumns(6)->onlyOnDetail();
-        yield UrlField::new('advisoryUrl')->setColumns(6)->setLabel('Packagist')->onlyOnDetail();
+        yield TextMonospaceField::new('advisoryId')->setColumns(6)->onlyOnDetail()
+            // Packagist issues the PKSA id, so the id links to its page there.
+            ->setTemplatePath('EasyAdminBundle/Fields/advisory_id.html.twig');
         yield AssociationField::new('package');
         yield TextMonospaceField::new('affectedVersions')->setColumns(6)->onlyOnDetail();
         yield AssociationField::new('packageVersions')->setLabel('Versions');
