@@ -139,13 +139,12 @@ class Advisory extends AbstractBaseEntity implements \Stringable
         $links = [];
 
         foreach ($this->getSources() as $source) {
-            $links[] = match ($source['name']) {
-                'GitHub' => sprintf(self::GITHUB_ADVISORY_URL_PATTERN, $source['remoteId']),
-                'FriendsOfPHP/security-advisories' => sprintf(self::FRIENDS_OF_PHP_ADVISORY_URL_PATTERN, $source['remoteId']),
-                // Drupal names its sources after the advisory title, so match on the id instead.
-                default => str_starts_with($source['remoteId'], 'SA-')
-                    ? sprintf(self::DRUPAL_ADVISORY_URL_PATTERN, strtolower($source['remoteId']))
-                    : $source['name'].' / '.$source['remoteId'],
+            $links[] = match (true) {
+                'GitHub' === $source['name'] => sprintf(self::GITHUB_ADVISORY_URL_PATTERN, $source['remoteId']),
+                'FriendsOfPHP/security-advisories' === $source['name'] => sprintf(self::FRIENDS_OF_PHP_ADVISORY_URL_PATTERN, $source['remoteId']),
+                // Drupal names its sources after the advisory title, never the provider, so match on the id.
+                str_starts_with($source['remoteId'], 'SA-') => sprintf(self::DRUPAL_ADVISORY_URL_PATTERN, strtolower($source['remoteId'])),
+                default => $source['name'].' / '.$source['remoteId'],
             };
         }
 
