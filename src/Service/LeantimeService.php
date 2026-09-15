@@ -14,14 +14,31 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  * Exposes the calls this app needs: listing open "Sikkerhedsopdatering"
  * tickets, mapping codeowner emails to user IDs, and creating security
  * tickets. The scoped HTTP client `$leantimeClient` supplies the base URI and
- * the x-api-key header; this class only assembles the JSON-RPC body and
- * unwraps responses.
+ * the x-api-key header; this class only assembles request bodies and unwraps
+ * responses.
+ *
+ * Two APIs sit behind that one host. Tickets are read and written over
+ * JSON-RPC, because only it can create one. The user directory comes from the
+ * ITK data-api plugin instead: `users.getAll` answers
+ * `-32001 You are not allowed to perform this action` for our API key, while
+ * the plugin serves the same id/name/email over a key we already hold.
+ *
+ * @see https://github.com/ITK-Leantime/data-api
  */
 class LeantimeService
 {
     private const string JSONRPC_VERSION = '2.0';
     private const string API_PATH = '/api/jsonrpc/';
     private const string DATE_FORMAT = 'Y-m-d';
+
+    /**
+     * The data-api plugin's path. Case-sensitive — the lowercase spelling in
+     * the plugin's own README answers 404.
+     */
+    private const string DATA_API_PATH = '/APIData/API/';
+
+    /** Well under the plugin's cap of 1000, which it silently applies. */
+    private const int DATA_API_PAGE_SIZE = 500;
 
     private const string TICKET_STATUS_NEW = '3';
     private const string TICKET_PRIORITY_CRITICAL = '1';
@@ -71,7 +88,10 @@ class LeantimeService
             'searchCriteria' => [
                 'term' => self::SECURITY_TICKET_TITLE,
                 'type' => self::TICKET_TYPE_TASK,
-                'status' => self::OPEN_STATUS_IDS,
+                // Leantime wants one scalar here. Handed the list as an array
+                // it answers -32000 Server error, which is what made this page
+                // show nothing but a flash.
+                'status' => implode(',', self::OPEN_STATUS_IDS),
             ],
         ]);
 
@@ -266,14 +286,13 @@ class LeantimeService
     }
 
     /**
-     * Populate the user id/name/email caches from Leantime.
+     * Populate the user id/name/email caches from the data-api plugin.
      *
-     * Idempotent — fetches the directory at most once per service instance.
-     * Builds an id → display-name map (firstname+lastname, falling back to
-     * username) and an email → id map keyed by lowercase email; entries with
-     * no id are skipped.
+     * Idempotent — fetches the directory at most once per service instance,
+     * paging until a short page arrives. Builds an id → name map and an
+     * email → id map keyed by lowercase email; entries with no id are skipped.
      *
-     * @throws \RuntimeException if the Leantime API rejects the request or the transport fails
+     * @throws \RuntimeException if the request fails or the plugin rejects it
      */
     private function loadUsers(): void
     {
@@ -284,27 +303,81 @@ class LeantimeService
         $this->userNamesById = [];
         $this->userIdsByEmail = [];
 
-        $result = $this->request('leantime.rpc.users.getAll');
-        if (!is_array($result)) {
-            return;
+        $start = 0;
+        do {
+            $page = $this->requestData('workers', ['start' => $start, 'limit' => self::DATA_API_PAGE_SIZE]);
+            $results = $page['results'];
+
+            foreach ($results as $user) {
+                if (!isset($user['id'])) {
+                    continue;
+                }
+                $id = (int) $user['id'];
+                // The endpoint pages on id, ascending, so the next page starts
+                // above the highest one seen.
+                $start = max($start, $id + 1);
+
+                $this->userNamesById[$id] = '' !== trim((string) ($user['name'] ?? ''))
+                    ? trim((string) $user['name'])
+                    : 'Unknown';
+
+                $email = mb_strtolower(trim((string) ($user['email'] ?? '')));
+                if ('' !== $email) {
+                    $this->userIdsByEmail[$email] = $id;
+                }
+            }
+
+            // Against the limit the plugin actually applied, not the one we
+            // asked for: it caps silently, and comparing to our own number
+            // would stop the paging after the first page.
+            $applied = (int) ($page['parameters']['limit'] ?? self::DATA_API_PAGE_SIZE);
+        } while ([] !== $results && count($results) >= $applied);
+    }
+
+    /**
+     * Fetch one page from the data-api plugin.
+     *
+     * @param string               $type   plugin resource, e.g. `workers`
+     * @param array<string, mixed> $params `start`, `limit` and the plugin's other filters
+     *
+     * @return array{results: list<array<string, mixed>>, parameters: array<string, mixed>}
+     *
+     * @throws \RuntimeException on transport error, a non-2xx response, or a malformed body
+     */
+    private function requestData(string $type, array $params): array
+    {
+        try {
+            $response = $this->leantimeClient->request('POST', self::DATA_API_PATH.$type, [
+                'headers' => ['Accept' => 'application/json'],
+                'json' => $params,
+            ]);
+            $statusCode = $response->getStatusCode();
+            $data = $response->toArray(false);
+        } catch (ExceptionInterface $e) {
+            $this->logger->error('Leantime data-api request failed', [
+                'type' => $type,
+                'exception' => $e,
+            ]);
+
+            throw new \RuntimeException('Leantime data-api request failed: '.$e->getMessage(), 0, $e);
         }
 
-        foreach ($result as $user) {
-            if (!is_array($user) || !isset($user['id'])) {
-                continue;
-            }
-            $id = (int) $user['id'];
+        if (200 !== $statusCode || !isset($data['results']) || !is_array($data['results'])) {
+            $this->logger->error('Leantime data-api error', [
+                'type' => $type,
+                'params' => $params,
+                'status_code' => $statusCode,
+                // The plugin answers 400 with an `error` describing the
+                // parameter it could not read.
+                'error' => $data['error'] ?? null,
+            ]);
 
-            $name = trim(((string) ($user['firstname'] ?? '')).' '.((string) ($user['lastname'] ?? '')));
-            if ('' === $name) {
-                $name = (string) ($user['username'] ?? 'Unknown');
-            }
-            $this->userNamesById[$id] = $name;
-
-            $email = mb_strtolower(trim((string) ($user['email'] ?? '')));
-            if ('' !== $email) {
-                $this->userIdsByEmail[$email] = $id;
-            }
+            throw new \RuntimeException(sprintf('Leantime data-api error (%d): %s', $statusCode, $data['error'] ?? 'Unexpected response'));
         }
+
+        return [
+            'results' => array_values(array_filter($data['results'], is_array(...))),
+            'parameters' => is_array($data['parameters'] ?? null) ? $data['parameters'] : [],
+        ];
     }
 }
