@@ -48,6 +48,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   13.3.4 and `firebase/php-jwt` 7.1.0 → 7.1.1, 28 packages in all. No
   security advisories
 
+- [#107](https://github.com/itk-dev/devops_itksites/pull/107)
+  Match the Economics GitHub repos on provider, organization and repo, not the
+  repo name alone, so forks and duplicate names resolve to the right row
+
 ## [1.13.0] - 2026-09-15
 
 - [#105](https://github.com/itk-dev/devops_itksites/pull/105)
