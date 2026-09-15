@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#105](https://github.com/itk-dev/devops_itksites/pull/105)
+  Make the advisory count on the site index sortable
 - [#104](https://github.com/itk-dev/devops_itksites/pull/104)
   Fix 404 on advisory source links: link Drupal sources to drupal.org, and
   render sources from an unknown provider as a label instead of a link
