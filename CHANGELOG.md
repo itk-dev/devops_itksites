@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.0] - 2026-09-15
+
 - [#105](https://github.com/itk-dev/devops_itksites/pull/105)
   Make the advisory count on the site index sortable
 - [#104](https://github.com/itk-dev/devops_itksites/pull/104)
@@ -282,7 +284,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.12.1...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.13.0...HEAD
+[1.13.0]: https://github.com/itk-dev/devops_itksites/compare/1.12.1...1.13.0
 [1.12.1]: https://github.com/itk-dev/devops_itksites/compare/1.12.0...1.12.1
 [1.12.0]: https://github.com/itk-dev/devops_itksites/compare/1.11.2...1.12.0
 [1.11.2]: https://github.com/itk-dev/devops_itksites/compare/1.11.1...1.11.2
