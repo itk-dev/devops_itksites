@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Admin\Field\ChangesField;
+use App\Admin\Field\CodeSourceField;
 use App\Admin\Field\EolTypeField;
 use App\Admin\Field\RootDirField;
 use App\Admin\Field\ServerTypeField;
@@ -65,6 +66,7 @@ class InstallationCrudController extends AbstractCrudController
         yield VersionField::new('composerVersion', 'Comp.');
         yield ChangesField::new('gitChangesCount')->hideOnDetail()->setLabel('Git');
         yield VersionField::new('gitTag.tag')->hideOnDetail()->setLabel('Tag');
+        yield CodeSourceField::new('codeSource')->setLabel('Source');
         yield AssociationField::new('gitTag')->hideOnIndex();
         yield ChangesField::new('gitChangesCount')->hideOnIndex();
         yield CodeEditorField::new('gitChanges')->hideOnIndex();
@@ -90,6 +92,7 @@ class InstallationCrudController extends AbstractCrudController
             ->add('server')
             ->add(ServerTypeFilter::new('server.type', 'Server type'))
             ->add(HostingProviderFilter::new('server.hostingProvider', 'Hosting provider'))
+            ->add('codeSource')
 //            ->add(SystemFilter::new('system')->mapped(false))
         ;
     }

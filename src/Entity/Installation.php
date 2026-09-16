@@ -59,6 +59,14 @@ class Installation extends AbstractHandlerResult implements \Stringable
     #[ORM\Column(length: 10)]
     private ?string $gitClonedScheme = '';
 
+    /**
+     * Whether this installation is a git working copy on disk or an unpacked
+     * release artifact. Nullable because it is only known once a handler that
+     * can tell the difference has seen the installation.
+     */
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $codeSource = null;
+
     #[ORM\ManyToMany(targetEntity: PackageVersion::class, inversedBy: 'installations', cascade: ['persist'])]
     private Collection $packageVersions;
 
@@ -343,6 +351,18 @@ class Installation extends AbstractHandlerResult implements \Stringable
     public function setGitClonedScheme(?string $gitClonedScheme): self
     {
         $this->gitClonedScheme = $gitClonedScheme;
+
+        return $this;
+    }
+
+    public function getCodeSource(): ?string
+    {
+        return $this->codeSource;
+    }
+
+    public function setCodeSource(?string $codeSource): self
+    {
+        $this->codeSource = $codeSource;
 
         return $this;
     }

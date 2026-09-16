@@ -1,4 +1,4 @@
-openapi: 3.2.0
+openapi: 3.1.0
 info:
   title: 'ITKsites API'
   description: |-
@@ -11,6 +11,58 @@ servers:
     url: 'https://itksites.local.itkdev.dk'
     description: ''
 paths:
+  /api/deploy_results:
+    post:
+      operationId: api_deploy_results_post
+      tags:
+        - DeployResult
+      responses:
+        '202':
+          description: 'Deploy result accepted for processing'
+          links: {}
+        '400':
+          description: 'Invalid input — malformed request body'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Error.jsonld'
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          links: {}
+        '401':
+          description: 'Unauthorized — missing or invalid API key. The Authorization header must use the format: Apikey {key}'
+        '403':
+          description: 'Forbidden — the API key does not have the required ROLE_DEPLOYER role'
+        '422':
+          description: 'Validation error — one or more fields failed constraint validation'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolation.jsonld'
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolation'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolation'
+          links: {}
+      summary: 'Report a deployment for async processing'
+      description: 'Accepts a deployment report from a CI pipeline and queues it for asynchronous processing. The target server is identified by name, and the installation by its root directory. Identical submissions update the last contact timestamp without triggering reprocessing. Returns 202 Accepted with an empty body.'
+      parameters: []
+      requestBody:
+        description: 'The new DeployResult resource'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeployResult-write'
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/DeployResult-write'
+        required: true
   /api/detection_results:
     post:
       operationId: api_detection_results_post
@@ -23,6 +75,9 @@ paths:
         '400':
           description: 'Invalid input — malformed request body'
           content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Error.jsonld'
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Error'
@@ -37,6 +92,9 @@ paths:
         '422':
           description: 'Validation error — one or more fields failed constraint validation'
           content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolation.jsonld'
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ConstraintViolation'
@@ -79,6 +137,9 @@ paths:
         '403':
           description: Forbidden
           content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Error.jsonld'
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Error'
@@ -122,6 +183,9 @@ paths:
         '403':
           description: Forbidden
           content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Error.jsonld'
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Error'
@@ -192,6 +256,103 @@ components:
           type:
             - string
             - 'null'
+    ConstraintViolation.jsonld:
+      type: object
+      description: 'Unprocessable entity'
+      properties:
+        status:
+          default: 422
+          type: integer
+        violations:
+          type: array
+          items:
+            type: object
+            properties:
+              propertyPath:
+                type: string
+                description: 'The property path of the violation'
+              message:
+                type: string
+                description: 'The message associated with the violation'
+              code:
+                type: string
+                description: 'The code of the violation'
+              hint:
+                type: string
+                description: 'An extra hint to understand the violation'
+              payload:
+                type: object
+                additionalProperties: true
+                description: 'The serialized payload of the violation'
+            required:
+              - propertyPath
+              - message
+        detail:
+          readOnly: true
+          type: string
+        description:
+          readOnly: true
+          type: string
+        type:
+          readOnly: true
+          type: string
+        title:
+          readOnly: true
+          type:
+            - string
+            - 'null'
+        instance:
+          readOnly: true
+          type:
+            - string
+            - 'null'
+    DeployResult-write:
+      type: object
+      description: |-
+        A deployment reporting what it put on a server.
+
+        Sites deployed from a prebuilt artifact have no .git directory on disk, so the
+        server harvester cannot detect their origin and tag. The deployment is the only
+        party that knows them, so it reports them here.
+
+        This is a source record, not derived data: it is persisted so that the derived
+        tables can be rebuilt from it, the same way detection results are replayed.
+      required:
+        - serverName
+        - rootDir
+        - repoUrl
+        - tag
+      properties:
+        serverName:
+          description: 'Name of the server deployed to, as registered in itksites. This is the host the deployment connects to over SSH.'
+          default: ''
+          example: srvitkphp84.itkdev.dk
+          type: string
+        rootDir:
+          description: 'Absolute path to the root directory of the deployed installation on the server'
+          default: ''
+          example: /data/www/example-site/htdocs
+          type: string
+        repoUrl:
+          description: 'Clone URL of the repository that was deployed'
+          default: ''
+          example: 'https://github.com/itk-dev/example-site.git'
+          type: string
+        tag:
+          description: 'The tag that was deployed'
+          default: ''
+          example: 1.4.2
+          type: string
+        commit:
+          description: 'Commit the deployed tag points at. Optional.'
+          default: ''
+          example: 9fceb02d0ae598e95dc970b74767f19372d61af8
+          type: string
+        pipelineUrl:
+          description: 'URL of the pipeline run that performed the deployment. Optional.'
+          default: ''
+          example: 'https://woodpecker.itkdev.dk/repos/42/pipeline/128'
+          type: string
     DetectionResult-write:
       type: object
       properties:
@@ -246,6 +407,44 @@ components:
           readOnly: true
           description: 'A URI reference that identifies the problem type'
           type: string
+    Error.jsonld:
+      type: object
+      description: 'A representation of common errors.'
+      properties:
+        title:
+          readOnly: true
+          description: 'A short, human-readable summary of the problem.'
+          type:
+            - string
+            - 'null'
+        detail:
+          readOnly: true
+          description: 'A human-readable explanation specific to this occurrence of the problem.'
+          type:
+            - string
+            - 'null'
+        status:
+          type:
+            - integer
+            - 'null'
+          examples:
+            - 404
+          default: 400
+        instance:
+          readOnly: true
+          description: 'A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.'
+          type:
+            - string
+            - 'null'
+        type:
+          readOnly: true
+          description: 'A URI reference that identifies the problem type'
+          type: string
+        description:
+          readOnly: true
+          type:
+            - string
+            - 'null'
     Server-export:
       type: object
       properties:
@@ -287,6 +486,17 @@ security:
   -
     apiKey: []
 tags:
+  -
+    name: DeployResult
+    description: |-
+      A deployment reporting what it put on a server.
+
+      Sites deployed from a prebuilt artifact have no .git directory on disk, so the
+      server harvester cannot detect their origin and tag. The deployment is the only
+      party that knows them, so it reports them here.
+
+      This is a source record, not derived data: it is persisted so that the derived
+      tables can be rebuilt from it, the same way detection results are replayed.
   -
     name: DetectionResult
     description: "Resource 'DetectionResult' operations."
