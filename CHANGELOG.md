@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#111](https://github.com/itk-dev/devops_itksites/pull/111)
+  Link an installation to a git tag that already exists. A redeployment, or the
+  same release on a second server, left the installation pointing at its
+  previous tag, which also dropped it out of the repo advisory rollups
+
 ## [1.13.0] - 2026-09-15
 
 - [#105](https://github.com/itk-dev/devops_itksites/pull/105)
