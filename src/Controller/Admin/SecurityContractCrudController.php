@@ -19,6 +19,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Translation\TranslatableMessage;
 
+/**
+ * @extends AbstractCrudController<SecurityContract>
+ */
 class SecurityContractCrudController extends AbstractCrudController
 {
     public function __construct(

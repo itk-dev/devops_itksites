@@ -14,6 +14,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
+/**
+ * @extends AbstractCrudController<Module>
+ */
 class ModuleCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

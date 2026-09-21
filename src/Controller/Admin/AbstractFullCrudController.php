@@ -10,8 +10,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
+/**
+ * @template TEntity of object
+ *
+ * @extends AbstractCrudController<TEntity>
+ */
 abstract class AbstractFullCrudController extends AbstractCrudController
 {
+    /** @use ExportCrudControllerTrait<TEntity> */
     use ExportCrudControllerTrait;
 
     #[\Override]

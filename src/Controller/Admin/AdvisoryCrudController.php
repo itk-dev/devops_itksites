@@ -20,6 +20,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 
+/**
+ * @extends AbstractCrudController<Advisory>
+ */
 class AdvisoryCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

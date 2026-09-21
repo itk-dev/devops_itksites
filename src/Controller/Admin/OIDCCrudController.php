@@ -18,6 +18,8 @@ use Symfony\Component\Translation\TranslatableMessage;
 /**
  * @deprecated Removed from the admin menu. Kept so existing OIDC rows stay
  *             reachable by URL until the entity itself goes away.
+ *
+ * @extends AbstractFullCrudController<OIDC>
  */
 class OIDCCrudController extends AbstractFullCrudController
 {

@@ -20,6 +20,8 @@ use Symfony\Component\Translation\TranslatableMessage;
 /**
  * @deprecated Removed from the admin menu. Kept so existing service certificate
  *             rows stay reachable by URL until the entity itself goes away.
+ *
+ * @extends AbstractFullCrudController<ServiceCertificate>
  */
 class ServiceCertificateCrudController extends AbstractFullCrudController
 {

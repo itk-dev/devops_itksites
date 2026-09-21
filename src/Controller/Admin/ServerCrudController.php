@@ -24,6 +24,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @extends AbstractFullCrudController<Server>
+ */
 class ServerCrudController extends AbstractFullCrudController
 {
     public function __construct(

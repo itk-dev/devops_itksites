@@ -25,8 +25,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 
+/**
+ * @extends AbstractCrudController<Installation>
+ */
 class InstallationCrudController extends AbstractCrudController
 {
+    /** @use ExportCrudControllerTrait<Installation> */
     use ExportCrudControllerTrait;
     use SemverSortableCrudControllerTrait;
 

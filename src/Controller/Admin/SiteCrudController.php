@@ -30,8 +30,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 
+/**
+ * @extends AbstractCrudController<Site>
+ */
 class SiteCrudController extends AbstractCrudController
 {
+    /** @use ExportCrudControllerTrait<Site> */
     use ExportCrudControllerTrait;
     // Aliased so this controller can add its own step after the semver rewrite.
     use SemverSortableCrudControllerTrait {
