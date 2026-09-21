@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#118](https://github.com/itk-dev/devops_itksites/pull/118)
+  Update API Platform to 5.0. The exported spec and the API contract are
+  unchanged
+
 - [#117](https://github.com/itk-dev/devops_itksites/pull/117)
   Cover the API with tests before the API Platform 5 upgrade: the detection
   result endpoint, access control and error content negotiation

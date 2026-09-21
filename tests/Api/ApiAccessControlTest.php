@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Test\ApiTestCase;
 use App\Entity\Server;
 use App\Security\ApiKeyAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
