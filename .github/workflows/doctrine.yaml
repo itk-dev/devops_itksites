@@ -18,7 +18,7 @@ jobs:
             APP_ENV: prod
 
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
 
             - name: Create docker network
               run: |
@@ -45,7 +45,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
 
             - name: Create docker network
               run: |
@@ -78,7 +78,7 @@ jobs:
         if: github.event_name == 'pull_request'
 
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
               with:
                   fetch-depth: 0
 

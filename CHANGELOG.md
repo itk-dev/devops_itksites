@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#119](https://github.com/itk-dev/devops_itksites/pull/119)
+  Update composer dependencies, including Guzzle 7 → 8, and update the GitHub
+  Actions. The two oasdiff steps are pinned to a release instead of `main`
+
 - [#118](https://github.com/itk-dev/devops_itksites/pull/118)
   Update API Platform to 5.0. The exported spec and the API contract are
   unchanged
