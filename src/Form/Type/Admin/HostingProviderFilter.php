@@ -15,6 +15,7 @@ use Symfony\Contracts\Translation\TranslatableInterface;
 class HostingProviderFilter implements FilterInterface
 {
     use FilterTrait;
+    use NestedPropertyFilterTrait;
 
     public static function new(string $propertyName, false|string|TranslatableInterface|null $label = null): self
     {
@@ -27,7 +28,6 @@ class HostingProviderFilter implements FilterInterface
 
     public function apply(QueryBuilder $queryBuilder, FilterDataDto $filterDataDto, ?FieldDto $fieldDto, EntityDto $entityDto): void
     {
-        $queryBuilder->andWhere(sprintf('%s.%s = :hostingProvider', $filterDataDto->getEntityAlias(), $filterDataDto->getProperty()))
-            ->setParameter('hostingProvider', $filterDataDto->getValue());
+        $this->applyEqualsAcrossRelation($queryBuilder, $filterDataDto);
     }
 }

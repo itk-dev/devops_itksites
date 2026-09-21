@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#120](https://github.com/itk-dev/devops_itksites/pull/120)
+  Filter installations, sites and domains by the hosting provider of the server
+  they run on
+
 - [#119](https://github.com/itk-dev/devops_itksites/pull/119)
   Update composer dependencies, including Guzzle 7 → 8, and update the GitHub
   Actions. The two oasdiff steps are pinned to a release instead of `main`
