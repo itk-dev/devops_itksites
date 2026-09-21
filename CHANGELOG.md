@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.14.0] - 2026-09-21
+
 - [#120](https://github.com/itk-dev/devops_itksites/pull/120)
   Filter installations, sites and domains by the hosting provider of the server
   they run on
@@ -325,7 +327,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.13.0...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.14.0...HEAD
+[1.14.0]: https://github.com/itk-dev/devops_itksites/compare/1.13.0...1.14.0
 [1.13.0]: https://github.com/itk-dev/devops_itksites/compare/1.12.1...1.13.0
 [1.12.1]: https://github.com/itk-dev/devops_itksites/compare/1.12.0...1.12.1
 [1.12.0]: https://github.com/itk-dev/devops_itksites/compare/1.11.2...1.12.0
