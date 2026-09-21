@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#111](https://github.com/itk-dev/devops_itksites/pull/111)
+  Link an installation to a git tag that already exists. A redeployment, or the
+  same release on a second server, left the installation pointing at its
+  previous tag, which also dropped it out of the repo advisory rollups
 - [#108](https://github.com/itk-dev/devops_itksites/pull/108)
   Update composer dependencies: Symfony to 8.1.7, `phpunit/phpunit` 13.3.3 →
   13.3.4 and `firebase/php-jwt` 7.1.0 → 7.1.1, 28 packages in all. No

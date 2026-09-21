@@ -56,11 +56,17 @@ class GitTagFactory
             $gitTag = new GitTag();
             $this->entityManager->persist($gitTag);
 
-            $gitTag->addInstallation($installation);
             $gitTag->setTag($tag);
 
             $gitRepo->addGitTag($gitTag);
         }
+
+        // Linked outside the branch above: the installation must be attached to
+        // the tag whether or not the tag row was created just now. When the tag
+        // already exists - a redeployment, or the same release on a second
+        // server - the installation would otherwise keep pointing at its
+        // previous tag, or at nothing at all.
+        $gitTag->addInstallation($installation);
 
         $installation->setGitClonedScheme($this->getClonedScheme($remote));
         if (isset($data->changes)) {
