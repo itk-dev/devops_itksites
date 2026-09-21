@@ -107,7 +107,8 @@
             "@auto-scripts"
         ],
         "post-update-cmd": [
-            "@auto-scripts"
+            "@auto-scripts",
+            "@php bin/console easyadmin:ai:update"
         ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
