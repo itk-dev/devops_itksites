@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#117](https://github.com/itk-dev/devops_itksites/pull/117)
+  Cover the API with tests before the API Platform 5 upgrade: the detection
+  result endpoint, access control and error content negotiation
+
 - [#116](https://github.com/itk-dev/devops_itksites/pull/116)
   Fix API errors returning 500 instead of the real status code when the client
   asks for `application/ld+json`
