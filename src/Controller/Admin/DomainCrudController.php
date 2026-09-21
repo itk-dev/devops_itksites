@@ -8,6 +8,7 @@ use App\Admin\Field\DomainField;
 use App\Admin\Field\ServerTypeField;
 use App\Admin\Field\SiteTypeField;
 use App\Entity\Domain;
+use App\Form\Type\Admin\HostingProviderFilter;
 use App\Form\Type\Admin\ServerTypeFilter;
 use App\Trait\ExportCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -67,6 +68,7 @@ class DomainCrudController extends AbstractCrudController
             ->add('site')
             ->add('server')
             ->add(ServerTypeFilter::new('server.type', 'Server type'))
+            ->add(HostingProviderFilter::new('server.hostingProvider', 'Hosting provider'))
         ;
     }
 }
