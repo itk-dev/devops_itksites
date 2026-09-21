@@ -40,19 +40,20 @@ graph TD
 
 ### Key Directories
 
-| Directory             | Purpose                                                                                          |
-|-----------------------|--------------------------------------------------------------------------------------------------|
-| `src/Entity/`         | ~20 Doctrine entities (Server, Site, Domain, Installation, Package, DockerImage, Advisory, etc.) |
-| `src/Handler/`        | DetectionResult handlers (Directory, Docker, Drupal, Git, Nginx, Symfony)                        |
-| `src/MessageHandler/` | Async message processing (PersistDetectionResult, ProcessDetectionResult)                        |
-| `src/Admin/`          | EasyAdmin CRUD controllers                                                                       |
-| `src/ApiResource/`    | API Platform resource definitions                                                                |
-| `src/Service/`        | Factories (PackageVersion, ModuleVersion, Advisory) and export services                          |
-| `src/Repository/`     | Doctrine repositories                                                                            |
-| `config/packages/`    | Bundle configurations                                                                            |
-| `migrations/`         | Doctrine migrations                                                                              |
-| `fixtures/`           | Hautelook/Alice test fixtures                                                                    |
-| `tests/`              | PHPUnit tests (Api, Controller, MessageHandler)                                                  |
+| Directory               | Purpose                                                                                          |
+|-------------------------|--------------------------------------------------------------------------------------------------|
+| `src/Entity/`           | ~20 Doctrine entities (Server, Site, Domain, Installation, Package, DockerImage, Advisory, etc.) |
+| `src/Handler/`          | DetectionResult handlers (Directory, Docker, Drupal, Git, Nginx, Symfony)                        |
+| `src/MessageHandler/`   | Async message processing (PersistDetectionResult, ProcessDetectionResult)                        |
+| `src/Controller/Admin/` | EasyAdmin CRUD controllers and the dashboard                                                     |
+| `src/Admin/`            | EasyAdmin custom field types (`Field/`) and sort helpers                                         |
+| `src/ApiResource/`      | API Platform resource definitions                                                                |
+| `src/Service/`          | Factories (PackageVersion, ModuleVersion, Advisory) and export services                          |
+| `src/Repository/`       | Doctrine repositories                                                                            |
+| `config/packages/`      | Bundle configurations                                                                            |
+| `migrations/`           | Doctrine migrations                                                                              |
+| `fixtures/`             | Hautelook/Alice test fixtures                                                                    |
+| `tests/`                | PHPUnit tests (Api, Controller, MessageHandler)                                                  |
 
 ### Data Flow
 

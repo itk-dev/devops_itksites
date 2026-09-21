@@ -18,8 +18,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 
+/**
+ * @extends AbstractCrudController<Domain>
+ */
 class DomainCrudController extends AbstractCrudController
 {
+    /** @use ExportCrudControllerTrait<Domain> */
     use ExportCrudControllerTrait;
 
     public static function getEntityFqcn(): string

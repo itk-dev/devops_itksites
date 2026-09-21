@@ -15,6 +15,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
+/**
+ * @extends AbstractCrudController<DockerImage>
+ */
 class DockerImageCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
