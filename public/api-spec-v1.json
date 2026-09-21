@@ -26,11 +26,6 @@
                     "400": {
                         "description": "Invalid input \u2014 malformed request body",
                         "content": {
-                            "application/ld+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error.jsonld"
-                                }
-                            },
                             "application/problem+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error"
@@ -53,11 +48,6 @@
                     "422": {
                         "description": "Validation error \u2014 one or more fields failed constraint validation",
                         "content": {
-                            "application/ld+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ConstraintViolation.jsonld"
-                                }
-                            },
                             "application/problem+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ConstraintViolation"
@@ -124,11 +114,6 @@
                     "403": {
                         "description": "Forbidden",
                         "content": {
-                            "application/ld+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error.jsonld"
-                                }
-                            },
                             "application/problem+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error"
@@ -193,11 +178,6 @@
                     "403": {
                         "description": "Forbidden",
                         "content": {
-                            "application/ld+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error.jsonld"
-                                }
-                            },
                             "application/problem+json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error"
@@ -299,75 +279,6 @@
                     }
                 }
             },
-            "ConstraintViolation.jsonld": {
-                "type": "object",
-                "description": "Unprocessable entity",
-                "properties": {
-                    "status": {
-                        "default": 422,
-                        "type": "integer"
-                    },
-                    "violations": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "propertyPath": {
-                                    "type": "string",
-                                    "description": "The property path of the violation"
-                                },
-                                "message": {
-                                    "type": "string",
-                                    "description": "The message associated with the violation"
-                                },
-                                "code": {
-                                    "type": "string",
-                                    "description": "The code of the violation"
-                                },
-                                "hint": {
-                                    "type": "string",
-                                    "description": "An extra hint to understand the violation"
-                                },
-                                "payload": {
-                                    "type": "object",
-                                    "additionalProperties": true,
-                                    "description": "The serialized payload of the violation"
-                                }
-                            },
-                            "required": [
-                                "propertyPath",
-                                "message"
-                            ]
-                        }
-                    },
-                    "detail": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
-                    "description": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
-                    "type": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
-                    "title": {
-                        "readOnly": true,
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "instance": {
-                        "readOnly": true,
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    }
-                }
-            },
             "DetectionResult-write": {
                 "type": "object",
                 "properties": {
@@ -437,58 +348,6 @@
                         "readOnly": true,
                         "description": "A URI reference that identifies the problem type",
                         "type": "string"
-                    }
-                }
-            },
-            "Error.jsonld": {
-                "type": "object",
-                "description": "A representation of common errors.",
-                "properties": {
-                    "title": {
-                        "readOnly": true,
-                        "description": "A short, human-readable summary of the problem.",
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "detail": {
-                        "readOnly": true,
-                        "description": "A human-readable explanation specific to this occurrence of the problem.",
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "status": {
-                        "type": [
-                            "integer",
-                            "null"
-                        ],
-                        "examples": [
-                            404
-                        ],
-                        "default": 400
-                    },
-                    "instance": {
-                        "readOnly": true,
-                        "description": "A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.",
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "type": {
-                        "readOnly": true,
-                        "description": "A URI reference that identifies the problem type",
-                        "type": "string"
-                    },
-                    "description": {
-                        "readOnly": true,
-                        "type": [
-                            "string",
-                            "null"
-                        ]
                     }
                 }
             },
