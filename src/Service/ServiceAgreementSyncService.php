@@ -11,6 +11,7 @@ use App\Repository\GitRepoRepository;
 use App\Repository\ProjectRepository;
 use App\Repository\SecurityContractRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -26,6 +27,7 @@ readonly class ServiceAgreementSyncService
 
     public function __construct(
         private EntityManagerInterface $entityManager,
+        #[Target('economics.client')]
         private HttpClientInterface $economicsClient,
         private ProjectRepository $projectRepository,
         private CodeOwnerRepository $codeOwnerRepository,

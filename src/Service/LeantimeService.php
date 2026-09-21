@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -48,6 +49,7 @@ class LeantimeService
     private ?array $userIdsByEmail = null;
 
     public function __construct(
+        #[Target('leantime.client')]
         private readonly HttpClientInterface $leantimeClient,
     ) {
     }

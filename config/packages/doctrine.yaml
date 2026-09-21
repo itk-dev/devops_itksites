@@ -24,8 +24,6 @@ doctrine:
         dql:
             numeric_functions:
                 SEMVER_NUMERIC: App\Doctrine\Functions\SemverNumeric
-        controller_resolver:
-            auto_mapping: false
 
 when@test:
     doctrine:

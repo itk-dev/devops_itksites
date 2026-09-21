@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#115](https://github.com/itk-dev/devops_itksites/pull/115)
+  Update API Platform to 4.4 and clear the remaining framework deprecations.
+  The exported spec moves to OpenAPI 3.2.0
+
 - [#114](https://github.com/itk-dev/devops_itksites/pull/114)
   Type the EasyAdmin CRUD controllers as generics and drop the project-wide
   `missingType.generics` ignore that hid them
