@@ -6,6 +6,7 @@ namespace App\Service;
 
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * Minimal JSON-RPC 2.0 client for the Leantime API.
@@ -16,7 +17,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  * the x-api-key header; this class only assembles the JSON-RPC body and
  * unwraps responses.
  */
-class LeantimeService
+class LeantimeService implements ResetInterface
 {
     private const string JSONRPC_VERSION = '2.0';
     private const string API_PATH = '/api/jsonrpc/';
@@ -280,5 +281,29 @@ class LeantimeService
                 $this->userIdsByEmail[$email] = $id;
             }
         }
+    }
+
+    /**
+     * Drop the memoised user directory.
+     *
+     * loadUsers() fetches the Leantime directory once and every later lookup
+     * reads these two maps. Under php-fpm the instance died with the request,
+     * so "once per service instance" also meant "once per request". In a
+     * long-running worker the instance outlives the request and the directory
+     * would never be refetched, leaving new users, renames and changed
+     * addresses invisible until the worker recycled.
+     *
+     * Unlike the package and module factories, this cache cannot simply become
+     * a local: resolveUserName() is called inside a loop over tickets, so
+     * dropping it would cost one API round trip per ticket. Resetting it
+     * restores the per-request lifetime loadUsers() already documents.
+     *
+     * autoconfigure tags this kernel.reset, and services_resetter calls it
+     * between requests.
+     */
+    public function reset(): void
+    {
+        $this->userNamesById = null;
+        $this->userIdsByEmail = null;
     }
 }

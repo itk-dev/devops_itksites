@@ -3,6 +3,6 @@ services:
     volumes:
       - ../../shared/.env.local:/app/.env.local
 
-  phpfpm:
+  frankenphp:
     volumes:
       - ../../shared/.env.local:/app/.env.local

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0a36fbbd91b956cd91d2972ceb87b5ae",
+    "content-hash": "18ca75834b2d88bc87b39a8019fe16d8",
     "packages": [
         {
             "name": "api-platform/core",
@@ -10519,6 +10519,56 @@
             "time": "2026-03-21T21:21:40+00:00"
         },
         {
+            "name": "igor-php/igor-php",
+            "version": "v0.9.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/igor-php/igor-php.git",
+                "reference": "b56d7e237d7eeeacce598bf4dc22547337b489be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/igor-php/igor-php/zipball/b56d7e237d7eeeacce598bf4dc22547337b489be",
+                "reference": "b56d7e237d7eeeacce598bf4dc22547337b489be",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "bin": [
+                "bin/igor-php"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "IgorPhp\\IgorBundle\\": "src/php/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kevin MARTINS",
+                    "email": "kevin.martins@me.com"
+                }
+            ],
+            "description": "The faithful assistant for your FrankenPHP Workers.",
+            "keywords": [
+                "frankenphp",
+                "linter",
+                "static-analysis",
+                "symfony",
+                "worker"
+            ],
+            "support": {
+                "issues": "https://github.com/igor-php/igor-php/issues",
+                "source": "https://github.com/igor-php/igor-php/tree/v0.9.6"
+            },
+            "time": "2026-09-03T18:31:27+00:00"
+        },
+        {
             "name": "justinrainbow/json-schema",
             "version": "6.12.0",
             "source": {
@@ -14351,7 +14401,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.4",
+        "php": ">=8.5",
         "ext-ctype": "*",
         "ext-iconv": "*"
     },

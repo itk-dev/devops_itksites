@@ -63,27 +63,82 @@ truncated and rebuilt by replaying DetectionResults. Manually maintained data
 ## Development Environment
 
 ```sh
-# Start services (MariaDB, PHP-FPM 8.5, Nginx, Mailpit)
+# Start services (MariaDB, FrankenPHP 8.5, Mailpit)
 docker compose pull && docker compose up --detach
 
 # Install dependencies
-docker compose exec phpfpm composer install
+docker compose exec frankenphp composer install
 
 # Run migrations
-docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interaction
+docker compose exec frankenphp bin/console doctrine:migrations:migrate --no-interaction
 
 # Load fixtures
-docker compose exec phpfpm composer fixtures
+docker compose exec frankenphp composer fixtures
 
 # Login as admin (after fixtures)
-docker compose exec phpfpm bin/console itk-dev:openid-connect:login admin@example.com
+docker compose exec frankenphp bin/console itk-dev:openid-connect:login admin@example.com
 
 # Process message queues
-docker compose exec phpfpm composer queues
+docker compose exec frankenphp composer queues
 
 # Build frontend assets
 docker compose run --rm node yarn install && docker compose run --rm node yarn build
 ```
+
+## Long-running processes
+
+The site is served by a single FrankenPHP container in place of phpfpm and
+nginx. Worker mode is off but available — `symfony/runtime` has shipped
+`FrankenPhpWorkerRunner` since 7.4, and `.docker/Caddyfile` reads
+`{$FRANKENPHP_CONFIG}`, so it is an environment variable, not a code change:
+
+```yaml
+FRANKENPHP_CONFIG: worker /app/public/index.php
+```
+
+The `Dockerfile` is multi-stage: `target: dev` adds Xdebug and lets OPcache
+recheck files, `target: prod` has neither. The override files pick the target, so
+build through compose rather than a bare `docker build`.
+
+The container runs as `deploy`, not root. `DEPLOY_UID` is a build argument
+because the id must match the owner of the bind-mounted checkout — 1042 on the
+servers, which run the alpine tags. `/health/live` backs a container health
+check, so `up --wait` waits for the application to answer.
+
+`messenger:consume` is already long-running in production regardless, so the
+rules below apply whether or not worker mode is on.
+
+**Writing a service that has to remember something:**
+
+1. Prefer statelessness. If the state only needs to live for one method call,
+   make it a local and thread it through the private helpers — see
+   `PackageVersionFactory`, whose deduplication buffers work this way. The
+   `ResetInterface` docblock advises this over the interface where possible.
+2. Where the state is deliberate, implement
+   `Symfony\Contracts\Service\ResetInterface` and clear everything in
+   `reset()`. `autoconfigure` tags it `kernel.reset` with no manual tagging —
+   see `LeantimeService`, which caches the Leantime user directory because
+   `resolveUserName()` runs in a loop.
+3. For an object you do not own, clear it where you use it. Every
+   `AdminUrlGenerator` chain in this codebase opens with `unsetAll()` for this
+   reason: EasyAdmin registers it `shared: no`, but the services holding it are
+   shared, so the instance outlives the request.
+
+Things that break a worker and have no place here: `exit()`/`die()`, writes to
+superglobals, `__destruct()` on a shared service, and mutable `static`
+properties.
+
+`composer worker-state-check` audits this with igor-php and runs on every pull
+request. `igor-baseline.json` holds the known findings, each with a reason, so
+the job fails only on new ones — fix a genuine finding rather than baselining
+it, and regenerate with `composer worker-state-baseline` only after a deliberate
+change.
+
+`FRANKENPHP_RESET_KERNEL=1` (Symfony 8.1+) clones the kernel after each request,
+which makes all of this harmless. It costs a kernel boot per request but keeps
+the PHP runtime warm, and measured on `/admin` it held about half the worker-mode
+gain while still beating no worker — so it is a usable configuration, not just a
+baseline. It is not a licence to write stateful services: the audit still runs.
 
 ## Quality Checks
 
@@ -91,17 +146,17 @@ All commands run inside Docker containers:
 
 ```sh
 # PHP coding standards (PHP-CS-Fixer)
-docker compose exec phpfpm composer coding-standards-check
-docker compose exec phpfpm composer coding-standards-apply
+docker compose exec frankenphp composer coding-standards-check
+docker compose exec frankenphp composer coding-standards-apply
 
 # PHPUnit tests (creates test DB, runs migrations, executes tests)
-docker compose exec phpfpm composer tests
+docker compose exec frankenphp composer tests
 
 # Frontend coding standards
 docker compose run --rm node yarn coding-standards-check
 
 # API spec export (must be committed)
-docker compose exec phpfpm composer update-api-spec
+docker compose exec frankenphp composer update-api-spec
 ```
 
 ## CI/CD
@@ -146,3 +201,6 @@ Pull requests run these checks:
 - Async processing uses Symfony Messenger with AMQP transport
 - Environment-specific config goes in `.env.local` (not committed)
 - API specs (`public/api-spec-v1.yaml` and `.json`) must be regenerated and committed when API changes
+- Services must not carry request state. The web container and the messenger
+  consumer are both long-running, so anything a service remembers outlives the
+  request that put it there

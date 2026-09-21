@@ -24,8 +24,8 @@ steps:
           keep: 4
           playbook: "release"
           pre_up:
-              - itkdev-docker-compose-server run --rm phpfpm bin/console doctrine:migrations:migrate --no-interaction
-              - itkdev-docker-compose-server run --rm phpfpm bin/console messenger:setup-transports
+              - itkdev-docker-compose-server run --rm frankenphp bin/console doctrine:migrations:migrate --no-interaction
+              - itkdev-docker-compose-server run --rm frankenphp bin/console messenger:setup-transports
 
     - name: Run post deploy
       image: itkdev/ansible-plugin:1
@@ -42,4 +42,4 @@ steps:
           user:
               from_secret: user
           actions:
-              - itkdev-docker-compose-server exec phpfpm bin/console cache:clear
+              - itkdev-docker-compose-server exec frankenphp bin/console cache:clear
