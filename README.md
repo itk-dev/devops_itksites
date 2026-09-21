@@ -6,7 +6,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/itk-dev/devops_itksites?style=flat-square&logo=codecov)](https://codecov.io/gh/itk-dev/devops_itksites)
 [![GitHub last commit](https://img.shields.io/github/last-commit/itk-dev/devops_itksites?style=flat-square)](https://github.com/itk-dev/devops_itksites/commits/develop/)
 [![GitHub License](https://img.shields.io/github/license/itk-dev/devops_itksites?style=flat-square)](https://github.com/itk-dev/devops_itksites/blob/develop/LICENSE)
-[![claude.md](https://img.shields.io/badge/%F0%9F%A4%96_claude.md-AI%20ready-8A2BE2?style=flat-square)](https://github.com/itk-dev/devops_itksites/blob/develop/claude.md)
+[![CLAUDE.md](https://img.shields.io/badge/%F0%9F%A4%96_CLAUDE.md-AI%20ready-8A2BE2?style=flat-square)](https://github.com/itk-dev/devops_itksites/blob/develop/CLAUDE.md)
 
 This is our internal server and site registration tool. It works in tandem with our
 [ITK sites server harvester](https://github.com/itk-dev/devops_itkServerHarvest).
@@ -220,7 +220,7 @@ docker compose run --rm node yarn coding-standards-check
 
 ### 🤖 AI coding agents
 
-This project includes an [`claude.md`](claude.md) file that provides project
+This project includes an [`CLAUDE.md`](CLAUDE.md) file that provides project
 context for Claude Code. The file describes the project architecture,
 technology stack, development commands, CI/CD setup, and coding conventions.
 
@@ -230,7 +230,7 @@ and is not portable across tools.
 > [!NOTE]
 > `agents.md` is a vendor-neutral standard supported by tools such as
 > [OpenCode](https://opencode.ai/) and others. Claude Code doesn't currently support
-> `agents.md`, `claude.md` should be renamed to a vendor neutral standard when Claude supports it.
+> `agents.md`, `CLAUDE.md` should be renamed to a vendor neutral standard when Claude supports it.
 
 #### Claude Code plugins
 
