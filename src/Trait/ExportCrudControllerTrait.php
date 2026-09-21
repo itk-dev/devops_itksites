@@ -16,6 +16,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Service\Attribute\Required;
 
+/**
+ * @template TEntity of object
+ *
+ * @phpstan-require-extends AbstractCrudController<TEntity>
+ */
 trait ExportCrudControllerTrait
 {
     private FilterFactory $filterFactory;
@@ -40,6 +45,9 @@ trait ExportCrudControllerTrait
             ->linkToCrudAction('export');
     }
 
+    /**
+     * @param AdminContext<TEntity> $context
+     */
     #[AdminRoute]
     public function export(AdminContext $context): Response
     {
@@ -47,7 +55,6 @@ trait ExportCrudControllerTrait
             throw new \RuntimeException(sprintf('Exporter not set in %s', static::class));
         }
 
-        assert($this instanceof AbstractCrudController);
         // Lifted from self::index().
         $fields = new FieldCollection($this->configureFields(Crud::PAGE_INDEX));
         $context->getCrud()->setFieldAssets($this->getFieldAssets($fields));

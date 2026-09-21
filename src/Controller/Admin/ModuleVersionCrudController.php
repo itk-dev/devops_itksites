@@ -15,6 +15,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
+/**
+ * @extends AbstractCrudController<ModuleVersion>
+ */
 class ModuleVersionCrudController extends AbstractCrudController
 {
     use SemverSortableCrudControllerTrait;

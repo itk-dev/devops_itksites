@@ -13,6 +13,7 @@ use App\Admin\Field\ServerTypeField;
 use App\Admin\Field\SiteTypeField;
 use App\Admin\Field\VersionField;
 use App\Entity\Site;
+use App\Form\Type\Admin\HostingProviderFilter;
 use App\Form\Type\Admin\SemverFilter;
 use App\Form\Type\Admin\ServerTypeFilter;
 use App\Trait\ExportCrudControllerTrait;
@@ -30,8 +31,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 
+/**
+ * @extends AbstractCrudController<Site>
+ */
 class SiteCrudController extends AbstractCrudController
 {
+    /** @use ExportCrudControllerTrait<Site> */
     use ExportCrudControllerTrait;
     // Aliased so this controller can add its own step after the semver rewrite.
     use SemverSortableCrudControllerTrait {
@@ -87,7 +92,8 @@ class SiteCrudController extends AbstractCrudController
             ->add('configFilePath')
             ->add(SemverFilter::new('phpVersion', 'PHP'))
             ->add('server')
-            ->add(ServerTypeFilter::new('server.type', 'Server type'));
+            ->add(ServerTypeFilter::new('server.type', 'Server type'))
+            ->add(HostingProviderFilter::new('server.hostingProvider', 'Hosting provider'));
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder

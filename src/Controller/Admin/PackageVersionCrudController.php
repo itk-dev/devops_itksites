@@ -19,6 +19,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
+/**
+ * @extends AbstractCrudController<PackageVersion>
+ */
 class PackageVersionCrudController extends AbstractCrudController
 {
     use SemverSortableCrudControllerTrait;

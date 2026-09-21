@@ -11,6 +11,7 @@ use App\Admin\Field\ServerTypeField;
 use App\Admin\Field\VersionField;
 use App\Entity\Installation;
 use App\Form\Type\Admin\FrameworkFilter;
+use App\Form\Type\Admin\HostingProviderFilter;
 use App\Form\Type\Admin\SemverFilter;
 use App\Form\Type\Admin\ServerTypeFilter;
 use App\Trait\ExportCrudControllerTrait;
@@ -25,8 +26,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 
+/**
+ * @extends AbstractCrudController<Installation>
+ */
 class InstallationCrudController extends AbstractCrudController
 {
+    /** @use ExportCrudControllerTrait<Installation> */
     use ExportCrudControllerTrait;
     use SemverSortableCrudControllerTrait;
 
@@ -84,6 +89,7 @@ class InstallationCrudController extends AbstractCrudController
             ->add('rootDir')
             ->add('server')
             ->add(ServerTypeFilter::new('server.type', 'Server type'))
+            ->add(HostingProviderFilter::new('server.hostingProvider', 'Hosting provider'))
 //            ->add(SystemFilter::new('system')->mapped(false))
         ;
     }

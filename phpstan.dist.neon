@@ -13,5 +13,15 @@ parameters:
         - identifier: doctrine.associationType
         - identifier: doctrine.columnType
         - identifier: method.unused
-        - identifier: missingType.generics
         - identifier: missingType.iterableValue
+        # Doctrine collections and repositories are not annotated yet.
+        # src/Controller/Admin/ is excluded on purpose: EasyAdmin CRUD
+        # controllers carry @extends, and this keeps them that way.
+        -
+            identifier: missingType.generics
+            paths:
+                - src/Entity/
+                - src/Repository/
+                - src/Form/
+                - src/Service/
+                - src/Handler/

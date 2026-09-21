@@ -19,6 +19,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 
+/**
+ * @extends AbstractCrudController<DetectionResult>
+ */
 class DetectionResultCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

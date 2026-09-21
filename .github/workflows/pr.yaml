@@ -8,7 +8,7 @@ jobs:
         name: PHPStan
         steps:
             - name: Checkout
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
 
             - name: Create docker network
               run: docker network create frontend
@@ -23,7 +23,7 @@ jobs:
         name: PHP Unit tests
         steps:
             - name: Checkout
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
 
             - name: Create docker network
               run: docker network create frontend
@@ -50,7 +50,7 @@ jobs:
         name: Build assets
         steps:
             - name: Checkout
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
 
             - name: Create docker network
               run: docker network create frontend
@@ -59,3 +59,18 @@ jobs:
               run: |
                   docker compose run --rm node yarn install
                   docker compose run --rm node yarn build
+
+    easyadmin-skill:
+        runs-on: ubuntu-latest
+        name: EasyAdmin agent skill up to date
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v7
+
+            - name: Create docker network
+              run: docker network create frontend
+
+            - name: Check the committed skill matches the installed EasyAdmin
+              run: |
+                  docker compose run --rm phpfpm composer install --no-interaction
+                  docker compose run --rm phpfpm bin/console easyadmin:ai:update --check

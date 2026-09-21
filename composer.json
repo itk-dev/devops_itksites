@@ -7,7 +7,7 @@
         "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "api-platform/core": "^4.0",
+        "api-platform/core": "^5.0",
         "composer/semver": "^3.4",
         "doctrine/dbal": "^4.0",
         "doctrine/doctrine-bundle": "^3.2",
@@ -107,7 +107,8 @@
             "@auto-scripts"
         ],
         "post-update-cmd": [
-            "@auto-scripts"
+            "@auto-scripts",
+            "@php bin/console easyadmin:ai:update"
         ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",

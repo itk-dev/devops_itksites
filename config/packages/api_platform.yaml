@@ -12,6 +12,12 @@ api_platform:
         json: ['application/json', 'application/ld+json']
     patch_formats:
         json: ['application/merge-patch+json']
+    # Errors must use the same formats as responses. The default error_formats
+    # map application/ld+json to a "jsonld" format this project does not
+    # register, which made every error on that Accept header a 500.
+    error_formats:
+        jsonproblem: ['application/problem+json']
+        json: ['application/json', 'application/ld+json']
 
     # OpenApi (Swagger).
     enable_swagger: true

@@ -16,6 +16,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 
+/**
+ * @extends AbstractCrudController<DockerImageTag>
+ */
 class DockerImageTagCrudController extends AbstractCrudController
 {
     use SemverSortableCrudControllerTrait;
