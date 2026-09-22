@@ -122,6 +122,16 @@
             "statusMessage": "Starting Docker services..."
           }
         ]
+      },
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "for c in jq intelephense; do command -v $c >/dev/null || m=\"$m $c\"; done; [ -z \"$m\" ] || { echo \"Missing on host:$m. See CLAUDE.md, Claude Code prerequisites.\" >&2; exit 2; }",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "PreToolUse": [
