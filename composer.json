@@ -82,7 +82,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "App\\Tests\\": "tests/",
+            "Mate\\": "mate/src/"
         }
     },
     "config": {
@@ -103,6 +104,15 @@
         "symfony": {
             "allow-contrib": false,
             "require": "8.1.*"
+        },
+        "ai-mate": {
+            "extension": false,
+            "scan-dirs": [
+                "mate/src"
+            ],
+            "includes": [
+                "mate/config.php"
+            ]
         }
     },
     "scripts": {

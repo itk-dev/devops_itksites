@@ -190,3 +190,7 @@ initial classes instead of writing them from scratch.
 Team conventions for EasyAdmin, if any, are in the `## EasyAdmin conventions`
 section of this file, outside this block.
 </easyadmin-guidelines>
+
+<!-- BEGIN AI_MATE_AGENTS_IMPORT -->
+@AGENTS.md
+<!-- END AI_MATE_AGENTS_IMPORT -->
