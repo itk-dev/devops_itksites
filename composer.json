@@ -121,7 +121,8 @@
         ],
         "post-update-cmd": [
             "@auto-scripts",
-            "@php bin/console easyadmin:ai:update"
+            "@php bin/console easyadmin:ai:update",
+            "@php vendor/bin/mate discover"
         ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
