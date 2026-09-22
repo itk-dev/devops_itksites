@@ -101,18 +101,18 @@
         "sort-packages": true
     },
     "extra": {
+        "ai-mate": {
+            "extension": false,
+            "includes": [
+                "mate/config.php"
+            ],
+            "scan-dirs": [
+                "mate/src"
+            ]
+        },
         "symfony": {
             "allow-contrib": false,
             "require": "8.1.*"
-        },
-        "ai-mate": {
-            "extension": false,
-            "scan-dirs": [
-                "mate/src"
-            ],
-            "includes": [
-                "mate/config.php"
-            ]
         }
     },
     "scripts": {
