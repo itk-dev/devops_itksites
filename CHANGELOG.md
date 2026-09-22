@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#125](https://github.com/itk-dev/devops_itksites/pull/125)
+  Add Symfony Language Tools as an optional Claude Code plugin
+
 - [#124](https://github.com/itk-dev/devops_itksites/pull/124)
   Add Symfony AI Mate for coding agents
 
