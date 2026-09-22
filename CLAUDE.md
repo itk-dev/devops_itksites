@@ -124,6 +124,22 @@ docker compose exec -T phpfpm vendor/bin/mate tools:call monolog-tail --limit=20
 The skills, `AGENTS.md` and `mate/AGENT_INSTRUCTIONS.md` are generated. Change
 `mate/config.php` or `mate/extensions.php` and run `mate discover`.
 
+### Symfony Language Tools (optional, beta)
+
+[symfony-lsp](https://github.com/symfony/language-tools) reports invalid
+routes, service ids, templates, translation keys and config.
+`.symfony-lsp.json` runs its PHP in `phpfpm`.
+
+To use it in Claude Code, put the `symfony-lsp` binary from the
+[releases](https://github.com/symfony/language-tools/releases) on your `PATH`
+and run `/plugin install symfony-lsp@itksites`.
+
+It also works as a one-off check:
+
+```sh
+symfony-lsp check src templates config
+```
+
 ## Quality Checks
 
 All commands run inside Docker containers:
