@@ -44,12 +44,13 @@ class DrupalLinkPackagesCommandTest extends KernelTestCase
 
         $tester->execute([]);
         $tester->assertCommandIsSuccessful();
-        $this->assertStringContainsString('Linked 1 modules and 1 module versions (1 module versions changed).', $tester->getDisplay());
+        $this->assertStringContainsString('Linked 1 modules and 1 module versions.', $tester->getDisplay());
         $this->assertSame($packageVersion, $moduleVersion->getComposerPackageVersion());
         $this->assertSame($package, $module->getComposerPackage());
 
         $tester->execute([]);
         $tester->assertCommandIsSuccessful();
-        $this->assertStringContainsString('Linked 1 modules and 1 module versions (0 module versions changed).', $tester->getDisplay());
+        $this->assertStringContainsString('Linked 1 modules and 1 module versions.', $tester->getDisplay());
+        $this->assertSame($packageVersion, $moduleVersion->getComposerPackageVersion());
     }
 }

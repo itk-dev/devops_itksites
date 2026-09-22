@@ -28,13 +28,10 @@ readonly class DrupalLinkPackagesCommand
     {
         $modules = [];
         $moduleVersions = 0;
-        $changed = 0;
 
         // Every link has a module version on one end, so walking them covers both sides.
         foreach ($this->moduleVersionRepository->findAll() as $moduleVersion) {
-            if ($this->drupalPackageLinker->linkModuleVersion($moduleVersion)) {
-                ++$changed;
-            }
+            $this->drupalPackageLinker->linkModuleVersion($moduleVersion);
 
             $module = $moduleVersion->getModule();
             if (null !== $module->getComposerPackage()) {
@@ -48,10 +45,9 @@ readonly class DrupalLinkPackagesCommand
         $this->entityManager->flush();
 
         $io->success(sprintf(
-            'Linked %d modules and %d module versions (%d module versions changed).',
+            'Linked %d modules and %d module versions.',
             count($modules),
             $moduleVersions,
-            $changed,
         ));
 
         return Command::SUCCESS;
