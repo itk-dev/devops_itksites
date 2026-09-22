@@ -128,8 +128,13 @@
           },
           {
             "type": "command",
-            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*.js|\"$CLAUDE_PROJECT_DIR\"/*.css|\"$CLAUDE_PROJECT_DIR\"/*.scss|\"$CLAUDE_PROJECT_DIR\"/*.yaml|\"$CLAUDE_PROJECT_DIR\"/*.yml|\"$CLAUDE_PROJECT_DIR\"/*.md) docker compose run --rm -T node npx prettier --write \"${f#\"$CLAUDE_PROJECT_DIR\"/}\" 2>/dev/null || true ;; esac",
-            "timeout": 15
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*.js|\"$CLAUDE_PROJECT_DIR\"/*.css|\"$CLAUDE_PROJECT_DIR\"/*.scss|\"$CLAUDE_PROJECT_DIR\"/*.yaml|\"$CLAUDE_PROJECT_DIR\"/*.yml) docker compose run --rm -T prettier \"${f#\"$CLAUDE_PROJECT_DIR\"/}\" --write 2>/dev/null || true ;; esac",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*.md) docker compose run --rm -T markdownlint markdownlint \"${f#\"$CLAUDE_PROJECT_DIR\"/}\" --fix 2>/dev/null || true ;; esac",
+            "timeout": 30
           }
         ]
       }
