@@ -119,6 +119,10 @@ All commands run inside Docker containers:
 docker compose exec phpfpm composer coding-standards-check
 docker compose exec phpfpm composer coding-standards-apply
 
+# Rector (check / apply)
+docker compose exec phpfpm vendor/bin/rector process --dry-run
+docker compose exec phpfpm vendor/bin/rector process
+
 # PHPUnit tests (creates test DB, runs migrations, executes tests)
 docker compose exec phpfpm composer tests
 
@@ -139,17 +143,18 @@ Pull requests run these checks:
 2. **Doctrine schema validation** (`doctrine.yaml`) - migrations + schema check against MariaDB
 3. **PHP-CS-Fixer** (`php.yaml`) - PHP coding standards
 4. **PHPStan** (`pr.yaml`) - static analysis (level 6)
-5. **PHPUnit** (`pr.yaml`) - unit/integration tests with MariaDB + coverage
-6. **Twig** (`twig.yaml`) - Twig coding standards (twig-cs-fixer)
-7. **YAML** (`yaml.yaml`) - YAML formatting (Prettier)
-8. **Markdown** (`markdown.yaml`) - Markdown linting (markdownlint)
-9. **JavaScript** (`javascript.yaml`) - JS formatting (Prettier)
-10. **Styles** (`styles.yaml`) - CSS/SCSS formatting (Prettier)
-11. **API spec** (`api-spec.yaml`) - ensures exported OpenAPI spec is up to date
-12. **Fixtures** (`doctrine.yaml`) - verifies fixtures load successfully
-13. **Asset build** (`pr.yaml`) - verifies frontend assets compile
-14. **EasyAdmin skill** (`pr.yaml`) - ensures the committed skill matches the installed EasyAdmin
-15. **Changelog** (`changelog.yaml`) - ensures CHANGELOG.md is updated
+5. **Rector** (`pr.yaml`) - fails when Rector would change code
+6. **PHPUnit** (`pr.yaml`) - unit/integration tests with MariaDB + coverage
+7. **Twig** (`twig.yaml`) - Twig coding standards (twig-cs-fixer)
+8. **YAML** (`yaml.yaml`) - YAML formatting (Prettier)
+9. **Markdown** (`markdown.yaml`) - Markdown linting (markdownlint)
+10. **JavaScript** (`javascript.yaml`) - JS formatting (Prettier)
+11. **Styles** (`styles.yaml`) - CSS/SCSS formatting (Prettier)
+12. **API spec** (`api-spec.yaml`) - ensures exported OpenAPI spec is up to date
+13. **Fixtures** (`doctrine.yaml`) - verifies fixtures load successfully
+14. **Asset build** (`pr.yaml`) - verifies frontend assets compile
+15. **EasyAdmin skill** (`pr.yaml`) - ensures the committed skill matches the installed EasyAdmin
+16. **Changelog** (`changelog.yaml`) - ensures CHANGELOG.md is updated
 
 ### Woodpecker CI (deployment)
 
