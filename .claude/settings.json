@@ -113,7 +113,7 @@
           },
           {
             "type": "command",
-            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*.php) docker compose exec -T phpfpm vendor/bin/phpstan analyse --no-progress --error-format=raw \"${f#\"$CLAUDE_PROJECT_DIR\"/}\" 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*.php) sh \"$CLAUDE_PROJECT_DIR/.claude/hooks/phpfpm-check.sh\" vendor/bin/phpstan analyse --no-progress --error-format=raw \"${f#\"$CLAUDE_PROJECT_DIR\"/}\" ;; esac",
             "timeout": 30
           },
           {
@@ -139,7 +139,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "docker compose exec -T phpfpm bin/console lint:container 2>/dev/null || true",
+            "command": "jq -e '.stop_hook_active' >/dev/null && exit 0; sh \"$CLAUDE_PROJECT_DIR/.claude/hooks/phpfpm-check.sh\" bin/console lint:container",
             "timeout": 30,
             "statusMessage": "Validating Symfony DI container..."
           }
