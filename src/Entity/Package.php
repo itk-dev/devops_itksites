@@ -46,6 +46,9 @@ class Package extends AbstractBaseEntity implements \Stringable
     #[ORM\OneToMany(targetEntity: Advisory::class, mappedBy: 'package')]
     private Collection $advisories;
 
+    #[ORM\OneToMany(targetEntity: Module::class, mappedBy: 'composerPackage')]
+    private Collection $modules;
+
     #[ORM\Column]
     private int $advisoryCount = 0;
 
@@ -56,6 +59,7 @@ class Package extends AbstractBaseEntity implements \Stringable
     {
         $this->packageVersions = new ArrayCollection();
         $this->advisories = new ArrayCollection();
+        $this->modules = new ArrayCollection();
     }
 
     #[\Override]
@@ -244,6 +248,33 @@ class Package extends AbstractBaseEntity implements \Stringable
     private function setAdvisoryCount(int $advisoryCount): self
     {
         $this->advisoryCount = $advisoryCount;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Module>
+     */
+    public function getModules(): Collection
+    {
+        return $this->modules;
+    }
+
+    public function addModule(Module $module): self
+    {
+        if (!$this->modules->contains($module)) {
+            $this->modules->add($module);
+            $module->setComposerPackage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModule(Module $module): self
+    {
+        if ($this->modules->removeElement($module) && $module->getComposerPackage() === $this) {
+            $module->setComposerPackage(null);
+        }
 
         return $this;
     }

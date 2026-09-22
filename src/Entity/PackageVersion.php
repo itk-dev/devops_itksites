@@ -36,10 +36,14 @@ class PackageVersion extends AbstractBaseEntity implements \Stringable
     #[ORM\Column]
     private int $advisoryCount = 0;
 
+    #[ORM\OneToMany(targetEntity: ModuleVersion::class, mappedBy: 'composerPackageVersion')]
+    private Collection $moduleVersions;
+
     public function __construct()
     {
         $this->installations = new ArrayCollection();
         $this->advisories = new ArrayCollection();
+        $this->moduleVersions = new ArrayCollection();
     }
 
     #[\Override]
@@ -156,5 +160,32 @@ class PackageVersion extends AbstractBaseEntity implements \Stringable
     public function getAdvisoryCount(): int
     {
         return $this->advisoryCount;
+    }
+
+    /**
+     * @return Collection<int, ModuleVersion>
+     */
+    public function getModuleVersions(): Collection
+    {
+        return $this->moduleVersions;
+    }
+
+    public function addModuleVersion(ModuleVersion $moduleVersion): self
+    {
+        if (!$this->moduleVersions->contains($moduleVersion)) {
+            $this->moduleVersions->add($moduleVersion);
+            $moduleVersion->setComposerPackageVersion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModuleVersion(ModuleVersion $moduleVersion): self
+    {
+        if ($this->moduleVersions->removeElement($moduleVersion) && $moduleVersion->getComposerPackageVersion() === $this) {
+            $moduleVersion->setComposerPackageVersion(null);
+        }
+
+        return $this;
     }
 }

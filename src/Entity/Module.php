@@ -28,6 +28,10 @@ class Module extends AbstractBaseEntity implements \Stringable
     #[ORM\OneToMany(targetEntity: ModuleVersion::class, mappedBy: 'module')]
     private Collection $moduleVersions;
 
+    #[ORM\ManyToOne(targetEntity: Package::class, inversedBy: 'modules')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?Package $composerPackage = null;
+
     public function __construct()
     {
         $this->moduleVersions = new ArrayCollection();
@@ -110,5 +114,30 @@ class Module extends AbstractBaseEntity implements \Stringable
         $this->moduleVersions->removeElement($moduleVersion);
 
         return $this;
+    }
+
+    public function getComposerPackage(): ?Package
+    {
+        return $this->composerPackage;
+    }
+
+    public function setComposerPackage(?Package $composerPackage): self
+    {
+        $this->composerPackage = $composerPackage;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Advisory>
+     */
+    public function getAdvisories(): Collection
+    {
+        return $this->composerPackage?->getAdvisories() ?? new ArrayCollection();
+    }
+
+    public function getAdvisoryCount(): int
+    {
+        return $this->composerPackage?->getAdvisoryCount() ?? 0;
     }
 }
