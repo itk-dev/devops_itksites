@@ -78,6 +78,16 @@ class DrupalPackageLinkerTest extends KernelTestCase
         $this->assertSame('linker_probe', $moduleVersion->getModule()->getComposerPackage()?->getName());
     }
 
+    public function testUnmatchedVersionLinksOnlyTheModule(): void
+    {
+        $this->packages('drupal/linker_probe', '2.2.0');
+        $this->modules('linker_probe', '2.2.4');
+
+        $moduleVersion = $this->moduleVersion('linker_probe', '2.2.4');
+        $this->assertNull($moduleVersion->getComposerPackageVersion());
+        $this->assertSame('linker_probe', $moduleVersion->getModule()->getComposerPackage()?->getName());
+    }
+
     public function testNonDrupalPackageIsIgnored(): void
     {
         $this->modules('linker_probe', '2.2.0');
