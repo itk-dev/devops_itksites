@@ -86,6 +86,9 @@ class Installation extends AbstractHandlerResult implements \Stringable
         return $this->getServer().$this->getRootDir();
     }
 
+    /**
+     * @return Collection<int, Site>
+     */
     public function getSites(): Collection
     {
         return $this->sites;
@@ -192,6 +195,9 @@ class Installation extends AbstractHandlerResult implements \Stringable
         return $this;
     }
 
+    /**
+     * @return Collection<int, PackageVersion>
+     */
     public function getPackageVersions(): Collection
     {
         return $this->packageVersions;
@@ -264,6 +270,9 @@ class Installation extends AbstractHandlerResult implements \Stringable
         return $this;
     }
 
+    /**
+     * @return Collection<int, ModuleVersion>
+     */
     public function getModuleVersions(): Collection
     {
         return $this->moduleVersions;
@@ -288,6 +297,9 @@ class Installation extends AbstractHandlerResult implements \Stringable
         return $this;
     }
 
+    /**
+     * @return Collection<int, DockerImageTag>
+     */
     public function getDockerImageTags(): Collection
     {
         return $this->dockerImageTags;

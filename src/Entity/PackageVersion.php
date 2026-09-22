@@ -49,7 +49,7 @@ class PackageVersion extends AbstractBaseEntity implements \Stringable
     }
 
     /**
-     * @return Collection<Installation>
+     * @return Collection<int, Installation>
      */
     public function getInstallations(): Collection
     {
