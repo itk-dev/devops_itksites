@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
@@ -11,7 +12,7 @@ use Symfony\Component\Serializer\Attribute\SerializedName;
 #[ORM\MappedSuperclass]
 class AbstractHandlerResult extends AbstractBaseEntity
 {
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     #[Groups(['export'])]
     private string $rootDir;
 

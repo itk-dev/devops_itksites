@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use App\Trait\ApiKeyEntityTrait;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -17,9 +18,9 @@ class User extends AbstractBaseEntity implements UserInterface
     public function __construct(
         #[ORM\Column(length: 255)]
         private string $name,
-        #[ORM\Column(type: 'string', length: 180, unique: true)]
+        #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
         private string $email,
-        #[ORM\Column(type: 'json')]
+        #[ORM\Column(type: Types::JSON)]
         private array $roles = [],
     ) {
         $this->setApiKey($this->generateApiKey());
