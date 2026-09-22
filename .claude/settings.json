@@ -206,6 +206,12 @@
     "itkdev-tools@itkdev-marketplace": true
   },
   "extraKnownMarketplaces": {
+    "itksites": {
+      "source": {
+        "source": "github",
+        "repo": "itk-dev/devops_itksites"
+      }
+    },
     "itkdev-marketplace": {
       "source": {
         "source": "github",
