@@ -153,9 +153,7 @@ class RepoAdvisoryService
                 continue;
             }
             $candidateId = (int) $rawLeantimeId;
-            if (null === $leantimeProjectId) {
-                $leantimeProjectId = $candidateId;
-            }
+            $leantimeProjectId ??= $candidateId;
             if (isset($ticketsByLeantimeId[$candidateId])) {
                 $openTicket = $ticketsByLeantimeId[$candidateId];
                 $leantimeProjectId = $candidateId;

@@ -104,6 +104,6 @@ class ClientSecretExpiryHealthCheckTest extends TestCase
             new NullLogger(),
         );
 
-        return (new ClientSecretExpiryHealthCheck($checker))->check();
+        return new ClientSecretExpiryHealthCheck($checker)->check();
     }
 }

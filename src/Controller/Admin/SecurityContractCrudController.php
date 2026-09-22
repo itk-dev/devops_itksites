@@ -104,7 +104,7 @@ class SecurityContractCrudController extends AbstractCrudController
             return null;
         }
 
-        return (new \NumberFormatter('da_DK', \NumberFormatter::CURRENCY))->formatCurrency($value, 'DKK') ?: null;
+        return new \NumberFormatter('da_DK', \NumberFormatter::CURRENCY)->formatCurrency($value, 'DKK') ?: null;
     }
 
     /**
