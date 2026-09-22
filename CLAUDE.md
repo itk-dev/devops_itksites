@@ -10,8 +10,8 @@ images, packages, modules, CVEs, and git repositories.
 
 ## Technology Stack
 
-- **Language**: PHP 8.5+ (Symfony 8.0)
-- **API**: API Platform 4.0 (REST)
+- **Language**: PHP 8.4+ (Symfony 8.1)
+- **API**: API Platform 5.0 (REST)
 - **Admin UI**: EasyAdmin 5.x
 - **Database**: Doctrine ORM 3.x / DBAL 4.x with MariaDB
 - **Messaging**: Symfony Messenger (AMQP/RabbitMQ)
@@ -64,7 +64,7 @@ truncated and rebuilt by replaying DetectionResults. Manually maintained data
 ## Development Environment
 
 ```sh
-# Start services (MariaDB, PHP-FPM 8.5, Nginx, Mailpit)
+# Start services (MariaDB, PHP-FPM 8.4, Nginx, Mailpit)
 docker compose pull && docker compose up --detach
 
 # Install dependencies
