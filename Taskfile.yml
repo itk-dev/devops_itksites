@@ -200,6 +200,22 @@ tasks:
                   COMPOSE_ARGS: exec phpfpm vendor/bin/phpstan
         silent: true
 
+    rector:check:
+        desc: Check for Rector changes
+        cmds:
+            - task: compose
+              vars:
+                  COMPOSE_ARGS: exec phpfpm vendor/bin/rector process --dry-run
+        silent: true
+
+    rector:apply:
+        desc: Apply Rector changes
+        cmds:
+            - task: compose
+              vars:
+                  COMPOSE_ARGS: exec phpfpm vendor/bin/rector process
+        silent: true
+
     # Test matrix (mirrors pr.yaml CI jobs)
 
     test:matrix:
@@ -242,6 +258,7 @@ tasks:
             - task: composer:check
             - task: coding-standards:check
             - task: analyze:php
+            - task: rector:check
             - task: test:matrix
 
     api:spec:export:
