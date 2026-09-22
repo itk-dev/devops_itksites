@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#122](https://github.com/itk-dev/devops_itksites/pull/122)
+  Fix the Claude Code hooks, plugin and permission settings
+
 ## [1.14.0] - 2026-09-21
 
 - [#120](https://github.com/itk-dev/devops_itksites/pull/120)
