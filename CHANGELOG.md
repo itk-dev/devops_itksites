@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#124](https://github.com/itk-dev/devops_itksites/pull/124)
+  Add Symfony AI Mate for coding agents
+
 - [#123](https://github.com/itk-dev/devops_itksites/pull/123)
   Fix the Rector config, apply its changes and run it in CI
 
