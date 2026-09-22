@@ -160,6 +160,14 @@
     "security-guidance@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
-    "itkdev-skills@itkdev-marketplace": true
+    "itkdev-tools@itkdev-marketplace": true
+  },
+  "extraKnownMarketplaces": {
+    "itkdev-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "itk-dev/itkdev-claude-plugins"
+      }
+    }
   }
 }
