@@ -89,3 +89,20 @@ jobs:
               run: |
                   docker compose run --rm phpfpm composer install --no-interaction
                   docker compose run --rm phpfpm bin/console easyadmin:ai:update --check
+
+    mate:
+        runs-on: ubuntu-latest
+        name: AI Mate files up to date
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v7
+
+            - name: Create docker network
+              run: docker network create frontend
+
+            - name: Check the committed Mate files match the installed Mate
+              run: |
+                  docker compose run --rm phpfpm composer install --no-interaction
+                  docker compose run --rm phpfpm vendor/bin/mate discover
+                  git status --porcelain
+                  test -z "$(git status --porcelain)"
