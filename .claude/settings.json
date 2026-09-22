@@ -97,7 +97,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in */composer.lock|*/yarn.lock|*/.env.local|*/.env.local.*) echo 'BLOCKED: Do not edit lock files or .env.local directly' >&2; exit 1 ;; esac"
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in */composer.lock|*/yarn.lock|*/.env.local|*/.env.local.*) echo 'BLOCKED: Do not edit lock files or .env.local directly' >&2; exit 1 ;; esac"
           }
         ]
       }
@@ -108,27 +108,27 @@
         "hooks": [
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.php) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose exec -T phpfpm vendor/bin/php-cs-fixer fix --quiet \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*.php) docker compose exec -T phpfpm vendor/bin/php-cs-fixer fix --quiet \"${f#\"$CLAUDE_PROJECT_DIR\"/}\" 2>/dev/null || true ;; esac",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.php) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose exec -T phpfpm vendor/bin/phpstan analyse --no-progress --error-format=raw \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*.php) docker compose exec -T phpfpm vendor/bin/phpstan analyse --no-progress --error-format=raw \"${f#\"$CLAUDE_PROJECT_DIR\"/}\" 2>/dev/null || true ;; esac",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.twig) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose exec -T phpfpm vendor/bin/twig-cs-fixer lint --fix \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*.twig) docker compose exec -T phpfpm vendor/bin/twig-cs-fixer lint --fix \"${f#\"$CLAUDE_PROJECT_DIR\"/}\" 2>/dev/null || true ;; esac",
             "timeout": 15
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in */composer.json) docker compose exec -T phpfpm composer normalize --quiet 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/composer.json) docker compose exec -T phpfpm composer normalize --quiet 2>/dev/null || true ;; esac",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.js|*.css|*.scss|*.yaml|*.yml|*.md) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose run --rm -T node npx prettier --write \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*.js|\"$CLAUDE_PROJECT_DIR\"/*.css|\"$CLAUDE_PROJECT_DIR\"/*.scss|\"$CLAUDE_PROJECT_DIR\"/*.yaml|\"$CLAUDE_PROJECT_DIR\"/*.yml|\"$CLAUDE_PROJECT_DIR\"/*.md) docker compose run --rm -T node npx prettier --write \"${f#\"$CLAUDE_PROJECT_DIR\"/}\" 2>/dev/null || true ;; esac",
             "timeout": 15
           }
         ]
