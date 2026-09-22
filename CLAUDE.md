@@ -86,6 +86,30 @@ docker compose exec phpfpm composer queues
 docker compose run --rm node yarn install && docker compose run --rm node yarn build
 ```
 
+`task` lists the same commands as [Taskfile](Taskfile.yml) tasks.
+
+### Claude Code prerequisites
+
+Install once on the host:
+
+- **jq** (`brew install jq`) - the hooks in `.claude/settings.json` read the
+  edited file path with it
+- **Intelephense** (`npm install -g intelephense`) - used by the
+  `php-lsp` plugin
+
+A session start hook warns when either is missing.
+
+### Hooks
+
+- Edits to lock files, `.env.local`, the exported API spec, the EasyAdmin
+  skill, `vendor/`, `node_modules/` and `var/` are blocked.
+- Edited files are formatted with php-cs-fixer, twig-cs-fixer, prettier,
+  markdownlint or `composer normalize`.
+- PHPStan runs on edited PHP files and `lint:container` runs before stopping;
+  errors are reported back.
+
+The hooks skip when the `phpfpm` container is down.
+
 ## Quality Checks
 
 All commands run inside Docker containers:
