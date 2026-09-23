@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#133](https://github.com/itk-dev/devops_itksites/pull/133)
+  Check drupal.org releases every 12 hours with Symfony Scheduler
+
 - [#132](https://github.com/itk-dev/devops_itksites/pull/132)
   Check drupal.org releases with `app:drupal:check-releases` and on the queue
 

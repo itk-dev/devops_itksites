@@ -34,6 +34,7 @@
         "symfony/property-access": "^8.0",
         "symfony/property-info": "^8.0",
         "symfony/runtime": "^8.0",
+        "symfony/scheduler": "^8.0",
         "symfony/security-bundle": "^8.0",
         "symfony/serializer": "^8.0",
         "symfony/twig-bundle": "^8.0",
@@ -139,7 +140,7 @@
             "bin/console hautelook:fixtures:load --no-interaction"
         ],
         "queues": [
-            "bin/console messenger:consume async --failure-limit=1 -vvv"
+            "bin/console messenger:consume async scheduler_drupal_releases --failure-limit=1 -vvv"
         ],
         "tests": [
             "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",
