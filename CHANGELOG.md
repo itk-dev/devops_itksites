@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#130](https://github.com/itk-dev/devops_itksites/pull/130)
+  Add cached clients for drupal.org release history and security advisories
+
 - [#129](https://github.com/itk-dev/devops_itksites/pull/129)
   Show advisories on Drupal modules and module versions, and the linked
   modules on packages
