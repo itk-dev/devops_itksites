@@ -9,6 +9,7 @@ use App\Entity\ModuleVersion;
 use App\Entity\Package;
 use App\Entity\PackageVersion;
 use App\Repository\ModuleRepository;
+use App\Repository\ModuleVersionRepository;
 use App\Repository\PackageRepository;
 use App\Repository\PackageVersionRepository;
 use App\Utils\DrupalVersion;
@@ -25,9 +26,35 @@ class DrupalPackageLinker
 
     public function __construct(
         private readonly ModuleRepository $moduleRepository,
+        private readonly ModuleVersionRepository $moduleVersionRepository,
         private readonly PackageRepository $packageRepository,
         private readonly PackageVersionRepository $packageVersionRepository,
     ) {
+    }
+
+    /**
+     * Link every module version. Every link has a module version on one end,
+     * so walking them covers both sides. The caller flushes.
+     *
+     * @return array{int, int} linked modules and linked module versions
+     */
+    public function linkAll(): array
+    {
+        $modules = [];
+        $moduleVersions = 0;
+        foreach ($this->moduleVersionRepository->findAll() as $moduleVersion) {
+            $this->linkModuleVersion($moduleVersion);
+
+            $module = $moduleVersion->getModule();
+            if (null !== $module->getComposerPackage()) {
+                $modules[spl_object_id($module)] = true;
+            }
+            if (null !== $moduleVersion->getComposerPackageVersion()) {
+                ++$moduleVersions;
+            }
+        }
+
+        return [count($modules), $moduleVersions];
     }
 
     /**

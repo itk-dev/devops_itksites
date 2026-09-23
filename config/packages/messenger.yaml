@@ -25,6 +25,8 @@ framework:
 
             App\Message\PersistDetectionResult: async
             App\Message\ProcessDetectionResult: async
+            App\Message\CheckDrupalReleases: async
+            App\Message\CheckDrupalPackageRelease: async
 
 when@test:
     framework:
