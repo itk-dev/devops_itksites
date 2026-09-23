@@ -24,6 +24,10 @@ class ModuleVersion extends AbstractBaseEntity implements \Stringable
     #[ORM\ManyToMany(targetEntity: Installation::class, mappedBy: 'moduleVersions')]
     private Collection $installations;
 
+    #[ORM\ManyToOne(targetEntity: PackageVersion::class, inversedBy: 'moduleVersions')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?PackageVersion $composerPackageVersion = null;
+
     #[\Override]
     public function __toString(): string
     {
@@ -93,5 +97,30 @@ class ModuleVersion extends AbstractBaseEntity implements \Stringable
         $this->installations->removeElement($installation);
 
         return $this;
+    }
+
+    public function getComposerPackageVersion(): ?PackageVersion
+    {
+        return $this->composerPackageVersion;
+    }
+
+    public function setComposerPackageVersion(?PackageVersion $composerPackageVersion): self
+    {
+        $this->composerPackageVersion = $composerPackageVersion;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Advisory>
+     */
+    public function getAdvisories(): Collection
+    {
+        return $this->composerPackageVersion?->getAdvisories() ?? new ArrayCollection();
+    }
+
+    public function getAdvisoryCount(): int
+    {
+        return $this->composerPackageVersion?->getAdvisoryCount() ?? 0;
     }
 }
