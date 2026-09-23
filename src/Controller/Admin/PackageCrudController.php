@@ -56,6 +56,7 @@ class PackageCrudController extends AbstractCrudController
         yield TextField::new('description')->setColumns(12)->hideOnIndex();
         yield WarningField::new('warning')->onlyOnDetail();
         yield AssociationField::new('advisories')->onlyOnDetail();
+        yield AssociationField::new('modules')->onlyOnDetail();
         yield TextField::new('description')->setColumns(12)->hideOnDetail();
         yield DateTimeField::new('createdAt')->hideOnIndex();
     }
