@@ -206,6 +206,7 @@ Pull requests run these checks:
 - Detection handlers implement `DetectionResultHandlerInterface`
 - Handlers are auto-tagged and injected via tagged iterator in `services.yaml`
 - Async processing uses Symfony Messenger with AMQP transport
+- Console commands are named `app:<group>:<action>`, e.g. `app:data:purge`
 - Environment-specific config goes in `.env.local` (not committed)
 - API specs (`public/api-spec-v1.yaml` and `.json`) must be regenerated and committed when API changes
 
