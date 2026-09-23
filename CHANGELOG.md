@@ -16,7 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#128](https://github.com/itk-dev/devops_itksites/pull/128)
   Link Drupal modules to their Composer packages on ingest, with an
+<<<<<<< HEAD
   `itksites:drupal:link-packages` backfill command
+=======
+  `app:drupal:link-packages` backfill command
+
+>>>>>>> feature/8406-module-advisories-admin
 
 - [#127](https://github.com/itk-dev/devops_itksites/pull/127)
   Link Drupal modules and module versions to their Composer packages

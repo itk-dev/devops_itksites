@@ -40,7 +40,7 @@ class DrupalLinkPackagesCommandTest extends KernelTestCase
             ->addModuleVersion($moduleVersion);
         $entityManager->flush();
 
-        $tester = new CommandTester(new Application(self::$kernel)->find('itksites:drupal:link-packages'));
+        $tester = new CommandTester(new Application(self::$kernel)->find('app:drupal:link-packages'));
 
         $tester->execute([]);
         $tester->assertCommandIsSuccessful();
