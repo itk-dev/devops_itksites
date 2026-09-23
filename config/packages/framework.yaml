@@ -26,6 +26,12 @@ framework:
                 headers:
                     Content-Type: 'application/json'
                     x-api-key: '%env(APP_LEANTIME_API_KEY)%'
+            drupal_updates.client:
+                base_uri: 'https://updates.drupal.org/'
+            drupal_org.client:
+                base_uri: 'https://www.drupal.org/'
+                headers:
+                    Accept: 'application/json'
 
 when@test:
     framework:
