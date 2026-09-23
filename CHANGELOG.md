@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#127](https://github.com/itk-dev/devops_itksites/pull/127)
+  Link Drupal modules and module versions to their Composer packages
+
 - [#126](https://github.com/itk-dev/devops_itksites/pull/126)
   Map Drupal module versions to Composer versions
 
