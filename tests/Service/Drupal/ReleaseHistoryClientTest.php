@@ -46,6 +46,15 @@ class ReleaseHistoryClientTest extends TestCase
         self::assertNull($history->get('8.x-1.1'));
     }
 
+    public function testFetchSkipsReleasesWithoutVersion(): void
+    {
+        $body = '<project><releases><release><version></version></release><release><version>2.2.4</version></release></releases></project>';
+        $history = new ReleaseHistoryClient(new MockHttpClient(new MockResponse($body)), new ArrayAdapter())->fetch('key_auth');
+
+        self::assertNotNull($history);
+        self::assertSame(['2.2.4'], array_keys($history->releases));
+    }
+
     public function testFetchReturnsNullForNonProject(): void
     {
         $client = new ReleaseHistoryClient($this->http('release-history-error.xml'), new ArrayAdapter());
