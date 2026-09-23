@@ -2,12 +2,13 @@
 
 namespace App\Trait;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait ApiKeyEntityTrait
 {
-    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     #[Assert\Length(
         min: 40,
         max: 255,

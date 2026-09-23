@@ -7,25 +7,30 @@ namespace App\Entity;
 use App\Repository\ModuleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ModuleRepository::class)]
 class Module extends AbstractBaseEntity implements \Stringable
 {
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $package;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $name;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $displayName = null;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $enabled;
 
     #[ORM\OneToMany(targetEntity: ModuleVersion::class, mappedBy: 'module')]
     private Collection $moduleVersions;
+
+    #[ORM\ManyToOne(targetEntity: Package::class, inversedBy: 'modules')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?Package $composerPackage = null;
 
     public function __construct()
     {
@@ -109,5 +114,30 @@ class Module extends AbstractBaseEntity implements \Stringable
         $this->moduleVersions->removeElement($moduleVersion);
 
         return $this;
+    }
+
+    public function getComposerPackage(): ?Package
+    {
+        return $this->composerPackage;
+    }
+
+    public function setComposerPackage(?Package $composerPackage): self
+    {
+        $this->composerPackage = $composerPackage;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Advisory>
+     */
+    public function getAdvisories(): Collection
+    {
+        return $this->composerPackage?->getAdvisories() ?? new ArrayCollection();
+    }
+
+    public function getAdvisoryCount(): int
+    {
+        return $this->composerPackage?->getAdvisoryCount() ?? 0;
     }
 }

@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.15.0] - 2026-09-23
+
+- [#134](https://github.com/itk-dev/devops_itksites/pull/134)
+  Check drupal.org for new releases and advisories from the admin
+
+- [#133](https://github.com/itk-dev/devops_itksites/pull/133)
+  Check drupal.org releases every 12 hours with Symfony Scheduler
+
+- [#132](https://github.com/itk-dev/devops_itksites/pull/132)
+  Check drupal.org releases with `app:drupal:check-releases` and on the queue
+
+- [#131](https://github.com/itk-dev/devops_itksites/pull/131)
+  Record drupal.org release status on Drupal packages and add advisories for
+  insecure versions
+
+- [#130](https://github.com/itk-dev/devops_itksites/pull/130)
+  Add cached clients for drupal.org release history and security advisories
+
+- [#129](https://github.com/itk-dev/devops_itksites/pull/129)
+  Show advisories on Drupal modules and module versions, and the linked
+  modules on packages
+
+- [#128](https://github.com/itk-dev/devops_itksites/pull/128)
+  Link Drupal modules to their Composer packages on ingest, with an
+  `app:drupal:link-packages` backfill command
+
+- [#127](https://github.com/itk-dev/devops_itksites/pull/127)
+  Link Drupal modules and module versions to their Composer packages
+
+- [#126](https://github.com/itk-dev/devops_itksites/pull/126)
+  Map Drupal module versions to Composer versions
+
+- [#125](https://github.com/itk-dev/devops_itksites/pull/125)
+  Add Symfony Language Tools as an optional Claude Code plugin
+
+- [#124](https://github.com/itk-dev/devops_itksites/pull/124)
+  Add Symfony AI Mate for coding agents
+
+- [#123](https://github.com/itk-dev/devops_itksites/pull/123)
+  Fix the Rector config, apply its changes and run it in CI
+
+- [#122](https://github.com/itk-dev/devops_itksites/pull/122)
+  Fix the Claude Code hooks, plugin and permission settings
+
 ## [1.14.0] - 2026-09-21
 
 - [#120](https://github.com/itk-dev/devops_itksites/pull/120)
@@ -327,7 +371,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.14.0...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.15.0...HEAD
+[1.15.0]: https://github.com/itk-dev/devops_itksites/compare/1.14.0...1.15.0
 [1.14.0]: https://github.com/itk-dev/devops_itksites/compare/1.13.0...1.14.0
 [1.13.0]: https://github.com/itk-dev/devops_itksites/compare/1.12.1...1.13.0
 [1.12.1]: https://github.com/itk-dev/devops_itksites/compare/1.12.0...1.12.1

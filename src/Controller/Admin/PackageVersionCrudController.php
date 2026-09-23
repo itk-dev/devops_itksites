@@ -44,7 +44,8 @@ class PackageVersionCrudController extends AbstractCrudController
     {
         return $actions
             ->disable(Action::DELETE, Action::NEW, Action::EDIT)
-            ->add(Crud::PAGE_INDEX, Action::DETAIL);
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_INDEX, DrupalReleaseCheckController::action($this->container->get('security.csrf.token_manager')));
     }
 
     #[\Override]
@@ -58,6 +59,7 @@ class PackageVersionCrudController extends AbstractCrudController
         yield AssociationField::new('installations')->setColumns(6);
         yield LatestStatusField::new('latestStatus')->setColumns(6);
         yield AssociationField::new('advisories')->onlyOnDetail();
+        yield AssociationField::new('moduleVersions')->onlyOnDetail();
         yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 

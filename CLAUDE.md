@@ -10,8 +10,8 @@ images, packages, modules, CVEs, and git repositories.
 
 ## Technology Stack
 
-- **Language**: PHP 8.5+ (Symfony 8.0)
-- **API**: API Platform 4.0 (REST)
+- **Language**: PHP 8.4+ (Symfony 8.1)
+- **API**: API Platform 5.0 (REST)
 - **Admin UI**: EasyAdmin 5.x
 - **Database**: Doctrine ORM 3.x / DBAL 4.x with MariaDB
 - **Messaging**: Symfony Messenger (AMQP/RabbitMQ)
@@ -64,7 +64,7 @@ truncated and rebuilt by replaying DetectionResults. Manually maintained data
 ## Development Environment
 
 ```sh
-# Start services (MariaDB, PHP-FPM 8.5, Nginx, Mailpit)
+# Start services (MariaDB, PHP-FPM 8.4, Nginx, Mailpit)
 docker compose pull && docker compose up --detach
 
 # Install dependencies
@@ -86,6 +86,60 @@ docker compose exec phpfpm composer queues
 docker compose run --rm node yarn install && docker compose run --rm node yarn build
 ```
 
+`task` lists the same commands as [Taskfile](Taskfile.yml) tasks.
+
+### Claude Code prerequisites
+
+Install once on the host:
+
+- **jq** (`brew install jq`) - the hooks in `.claude/settings.json` read the
+  edited file path with it
+- **Intelephense** (`npm install -g intelephense`) - used by the
+  `php-lsp` plugin
+
+A session start hook warns when either is missing.
+
+### Hooks
+
+- Edits to lock files, `.env.local`, the exported API spec, the EasyAdmin
+  and Mate skills, `vendor/`, `node_modules/` and `var/` are blocked.
+- Edited files are formatted with php-cs-fixer, twig-cs-fixer, prettier,
+  markdownlint or `composer normalize`.
+- PHPStan runs on edited PHP files and `lint:container` runs before stopping;
+  errors are reported back.
+
+The hooks skip when the `phpfpm` container is down.
+
+### Symfony AI Mate
+
+[Mate](https://symfony.com/doc/current/ai/components/mate.html) reads logs,
+profiler data and the compiled container without booting the app. See
+`AGENTS.md` and the `mate-*` skills.
+
+```sh
+docker compose exec -T phpfpm vendor/bin/mate tools:list
+docker compose exec -T phpfpm vendor/bin/mate tools:call monolog-tail --limit=20
+```
+
+The skills, `AGENTS.md` and `mate/AGENT_INSTRUCTIONS.md` are generated. Change
+`mate/config.php` or `mate/extensions.php` and run `mate discover`.
+
+### Symfony Language Tools (optional, beta)
+
+[symfony-lsp](https://github.com/symfony/language-tools) reports invalid
+routes, service ids, templates, translation keys and config.
+`.symfony-lsp.json` runs its PHP in `phpfpm`.
+
+To use it in Claude Code, put the `symfony-lsp` binary from the
+[releases](https://github.com/symfony/language-tools/releases) on your `PATH`
+and run `/plugin install symfony-lsp@itksites`.
+
+It also works as a one-off check:
+
+```sh
+symfony-lsp check src templates config
+```
+
 ## Quality Checks
 
 All commands run inside Docker containers:
@@ -94,6 +148,10 @@ All commands run inside Docker containers:
 # PHP coding standards (PHP-CS-Fixer)
 docker compose exec phpfpm composer coding-standards-check
 docker compose exec phpfpm composer coding-standards-apply
+
+# Rector (check / apply)
+docker compose exec phpfpm vendor/bin/rector process --dry-run
+docker compose exec phpfpm vendor/bin/rector process
 
 # PHPUnit tests (creates test DB, runs migrations, executes tests)
 docker compose exec phpfpm composer tests
@@ -112,19 +170,22 @@ docker compose exec phpfpm composer update-api-spec
 Pull requests run these checks:
 
 1. **Composer** (`composer.yaml`) - validates, normalizes, and audits
-2. **Doctrine schema validation** (`pr.yaml`) - migrations + schema check against MariaDB
+2. **Doctrine schema validation** (`doctrine.yaml`) - migrations + schema check against MariaDB
 3. **PHP-CS-Fixer** (`php.yaml`) - PHP coding standards
 4. **PHPStan** (`pr.yaml`) - static analysis (level 6)
-5. **PHPUnit** (`pr.yaml`) - unit/integration tests with MariaDB + coverage
-6. **Twig** (`twig.yaml`) - Twig coding standards (twig-cs-fixer)
-7. **YAML** (`yaml.yaml`) - YAML formatting (Prettier)
-8. **Markdown** (`markdown.yaml`) - Markdown linting (markdownlint)
-9. **JavaScript** (`javascript.yaml`) - JS formatting (Prettier)
-10. **Styles** (`styles.yaml`) - CSS/SCSS formatting (Prettier)
-11. **API spec** (`api-spec.yaml`) - ensures exported OpenAPI spec is up to date
-12. **Fixtures** (`pr.yaml`) - verifies fixtures load successfully
-13. **Asset build** (`pr.yaml`) - verifies frontend assets compile
-14. **Changelog** (`changelog.yaml`) - ensures CHANGELOG.md is updated
+5. **Rector** (`pr.yaml`) - fails when Rector would change code
+6. **PHPUnit** (`pr.yaml`) - unit/integration tests with MariaDB + coverage
+7. **Twig** (`twig.yaml`) - Twig coding standards (twig-cs-fixer)
+8. **YAML** (`yaml.yaml`) - YAML formatting (Prettier)
+9. **Markdown** (`markdown.yaml`) - Markdown linting (markdownlint)
+10. **JavaScript** (`javascript.yaml`) - JS formatting (Prettier)
+11. **Styles** (`styles.yaml`) - CSS/SCSS formatting (Prettier)
+12. **API spec** (`api-spec.yaml`) - ensures exported OpenAPI spec is up to date
+13. **Fixtures** (`doctrine.yaml`) - verifies fixtures load successfully
+14. **Asset build** (`pr.yaml`) - verifies frontend assets compile
+15. **EasyAdmin skill** (`pr.yaml`) - ensures the committed skill matches the installed EasyAdmin
+16. **AI Mate files** (`pr.yaml`) - ensures `mate discover` leaves the committed files unchanged
+17. **Changelog** (`changelog.yaml`) - ensures CHANGELOG.md is updated
 
 ### Woodpecker CI (deployment)
 
@@ -145,6 +206,7 @@ Pull requests run these checks:
 - Detection handlers implement `DetectionResultHandlerInterface`
 - Handlers are auto-tagged and injected via tagged iterator in `services.yaml`
 - Async processing uses Symfony Messenger with AMQP transport
+- Console commands are named `app:<group>:<action>`, e.g. `app:data:purge`
 - Environment-specific config goes in `.env.local` (not committed)
 - API specs (`public/api-spec-v1.yaml` and `.json`) must be regenerated and committed when API changes
 
@@ -160,3 +222,7 @@ initial classes instead of writing them from scratch.
 Team conventions for EasyAdmin, if any, are in the `## EasyAdmin conventions`
 section of this file, outside this block.
 </easyadmin-guidelines>
+
+<!-- BEGIN AI_MATE_AGENTS_IMPORT -->
+@AGENTS.md
+<!-- END AI_MATE_AGENTS_IMPORT -->

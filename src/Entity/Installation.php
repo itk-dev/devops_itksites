@@ -8,6 +8,7 @@ use App\Repository\InstallationRepository;
 use App\Types\FrameworkTypes;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
@@ -26,34 +27,34 @@ class Installation extends AbstractHandlerResult implements \Stringable
     #[ORM\OneToMany(targetEntity: Site::class, mappedBy: 'installation')]
     private Collection $sites;
 
-    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
     #[Groups(['export'])]
     private ?string $type = 'unknown';
 
-    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
     #[Groups(['export'])]
     private ?string $phpVersion = 'unknown';
 
-    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
     #[Groups(['export'])]
     private ?string $composerVersion = 'unknown';
 
-    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
     #[Groups(['export'])]
     private ?string $frameworkVersion = FrameworkTypes::UNKNOWN;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     #[Groups(['export'])]
     private bool $lts = false;
 
-    #[ORM\Column(type: 'string', length: 30)]
+    #[ORM\Column(type: Types::STRING, length: 30)]
     #[Groups(['export'])]
     private string $eol = '';
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private string $gitChanges = '';
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $gitChangesCount = 0;
 
     #[ORM\Column(length: 10)]
@@ -85,6 +86,9 @@ class Installation extends AbstractHandlerResult implements \Stringable
         return $this->getServer().$this->getRootDir();
     }
 
+    /**
+     * @return Collection<int, Site>
+     */
     public function getSites(): Collection
     {
         return $this->sites;
@@ -191,6 +195,9 @@ class Installation extends AbstractHandlerResult implements \Stringable
         return $this;
     }
 
+    /**
+     * @return Collection<int, PackageVersion>
+     */
     public function getPackageVersions(): Collection
     {
         return $this->packageVersions;
@@ -263,6 +270,9 @@ class Installation extends AbstractHandlerResult implements \Stringable
         return $this;
     }
 
+    /**
+     * @return Collection<int, ModuleVersion>
+     */
     public function getModuleVersions(): Collection
     {
         return $this->moduleVersions;
@@ -287,6 +297,9 @@ class Installation extends AbstractHandlerResult implements \Stringable
         return $this;
     }
 
+    /**
+     * @return Collection<int, DockerImageTag>
+     */
     public function getDockerImageTags(): Collection
     {
         return $this->dockerImageTags;

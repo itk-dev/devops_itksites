@@ -20,7 +20,14 @@ use App\Controller\Admin\PackageVersionCrudController;
 use App\Controller\Admin\ServerCrudController;
 use App\Controller\Admin\ServiceCertificateCrudController;
 use App\Controller\Admin\SiteCrudController;
+use App\Entity\Advisory;
+use App\Entity\Installation;
+use App\Entity\Module;
+use App\Entity\ModuleVersion;
+use App\Entity\Package;
+use App\Entity\PackageVersion;
 use App\Entity\User;
+use Doctrine\Persistence\ObjectManager;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
@@ -96,6 +103,130 @@ class AdminSmokeTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorNotExists('#flash-messages');
+    }
+
+    /**
+     * A module reads its advisories through the linked Composer package, so
+     * the count, its sort and the detail table have to render through it.
+     */
+    #[DataProvider('moduleCrudControllerProvider')]
+    public function testModuleAdvisoriesRender(string $controllerClass, string $sortProperty, int $entityIndex): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get('doctrine')->getManager();
+        $client->loginUser($entityManager->getRepository(User::class)->findOneBy([]));
+        $entities = $this->createModuleWithAdvisory($entityManager);
+        $linkedId = (string) $entities[$entityIndex]->getId();
+        // A reboot between requests drops the rows created above.
+        $client->disableReboot();
+
+        foreach (['DESC' => true, 'ASC' => false] as $direction => $linkedFirst) {
+            $url = static::getContainer()->get(AdminUrlGenerator::class)
+                ->setController($controllerClass)
+                ->setAction(Crud::PAGE_INDEX)
+                ->set('sort', [$sortProperty => $direction])
+                ->generateUrl();
+
+            $crawler = $client->request('GET', $url);
+
+            $this->assertResponseIsSuccessful();
+            $firstId = $crawler->filter('tbody tr[data-id]')->first()->attr('data-id');
+            $this->assertSame($linkedFirst, $linkedId === $firstId, $direction);
+        }
+        $this->assertSelectorTextContains('tr[data-id="'.$linkedId.'"] .badge-danger', '1');
+
+        $url = static::getContainer()->get(AdminUrlGenerator::class)
+            ->setController($controllerClass)
+            ->setAction(Crud::PAGE_DETAIL)
+            ->setEntityId($linkedId)
+            ->generateUrl();
+
+        $client->request('GET', $url);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertAnySelectorTextContains('td', 'Module smoke advisory');
+        $this->assertAnySelectorTextContains('a', 'drupal/smoke_probe');
+    }
+
+    /**
+     * @return iterable<string, array{string, string, int}>
+     */
+    public static function moduleCrudControllerProvider(): iterable
+    {
+        yield 'Module' => [ModuleCrudController::class, 'composerPackage.advisoryCount', 0];
+        yield 'ModuleVersion' => [ModuleVersionCrudController::class, 'composerPackageVersion.advisoryCount', 1];
+    }
+
+    #[DataProvider('packageCrudControllerProvider')]
+    public function testPackageDetailShowsLinkedModules(string $controllerClass, int $entityIndex, int $linkedIndex): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get('doctrine')->getManager();
+        $client->loginUser($entityManager->getRepository(User::class)->findOneBy([]));
+        $entities = $this->createModuleWithAdvisory($entityManager);
+
+        $url = static::getContainer()->get(AdminUrlGenerator::class)
+            ->setController($controllerClass)
+            ->setAction(Crud::PAGE_DETAIL)
+            ->setEntityId($entities[$entityIndex]->getId())
+            ->generateUrl();
+
+        $client->request('GET', $url);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorExists('a[href*="'.$entities[$linkedIndex]->getId().'"]');
+    }
+
+    /**
+     * @return iterable<string, array{string, int, int}>
+     */
+    public static function packageCrudControllerProvider(): iterable
+    {
+        yield 'Package' => [PackageCrudController::class, 2, 0];
+        yield 'PackageVersion' => [PackageVersionCrudController::class, 3, 1];
+    }
+
+    /**
+     * A linked module and module version with one advisory, next to an
+     * unlinked module and module version to sort against.
+     *
+     * @return array{Module, ModuleVersion, Package, PackageVersion}
+     */
+    private function createModuleWithAdvisory(ObjectManager $entityManager): array
+    {
+        $package = new Package()->setVendor('drupal')->setName('smoke_probe');
+        $packageVersion = new PackageVersion()->setVersion('1.0.0');
+        $package->addPackageVersion($packageVersion);
+        $advisory = new Advisory()
+            ->setAdvisoryId('SA-CONTRIB-2026-999')
+            ->setAffectedVersions('<1.0.1')
+            ->setTitle('Module smoke advisory')
+            ->setLink('https://www.drupal.org/sa-contrib-2026-999')
+            ->setReportedAt(new \DateTimeImmutable());
+        $package->addAdvisory($advisory);
+        $packageVersion->addAdvisory($advisory);
+
+        $module = new Module()->setName('smoke_probe')->setPackage('Other')->setEnabled(true);
+        $moduleVersion = new ModuleVersion()->setVersion('1.0.0');
+        $module->addModuleVersion($moduleVersion);
+        $package->addModule($module);
+        $packageVersion->addModuleVersion($moduleVersion);
+
+        $unlinkedModule = new Module()->setName('smoke_unlinked')->setPackage('Other')->setEnabled(true);
+        $unlinkedModuleVersion = new ModuleVersion()->setVersion('1.0.0');
+        $unlinkedModule->addModuleVersion($unlinkedModuleVersion);
+
+        foreach ([$package, $packageVersion, $advisory, $module, $moduleVersion, $unlinkedModule, $unlinkedModuleVersion] as $entity) {
+            $entityManager->persist($entity);
+        }
+        // Rows no installation uses are deleted on flush.
+        $entityManager->getRepository(Installation::class)->findOneBy([])
+            ->addPackageVersion($packageVersion)
+            ->addModuleVersion($moduleVersion)
+            ->addModuleVersion($unlinkedModuleVersion);
+        $entityManager->flush();
+
+        return [$module, $moduleVersion, $package, $packageVersion];
     }
 
     /**

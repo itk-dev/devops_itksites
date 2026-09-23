@@ -7,30 +7,21 @@ namespace App\Twig;
 use App\Entity\AbstractBaseEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Registry\AdminControllerRegistryInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use Twig\Attribute\AsTwigFunction;
 
-class AppExtension extends AbstractExtension
+class AppExtension
 {
     public function __construct(private readonly AdminUrlGenerator $adminUrlGenerator, private readonly AdminControllerRegistryInterface $crudControllerRegistry)
     {
     }
 
-    #[\Override]
-    public function getFunctions(): array
-    {
-        return [
-            new TwigFunction('admin_detail_url', $this->url(...)),
-            new TwigFunction('entity_display', $this->entityDisplay(...)),
-            new TwigFunction('has_display', $this->hasDisplay(...)),
-        ];
-    }
-
+    #[AsTwigFunction(name: 'has_display')]
     public function hasDisplay(AbstractBaseEntity $entity): bool
     {
         return method_exists($entity, 'display');
     }
 
+    #[AsTwigFunction(name: 'entity_display')]
     public function entityDisplay(AbstractBaseEntity $entity, string $action): string
     {
         if (method_exists($entity, 'display')) {
@@ -44,6 +35,7 @@ class AppExtension extends AbstractExtension
         return $entity->__toString();
     }
 
+    #[AsTwigFunction(name: 'admin_detail_url')]
     public function url(AbstractBaseEntity $entity): string
     {
         $crudController = $this->crudControllerRegistry->findCrudControllerByEntity($entity::class);

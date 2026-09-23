@@ -7,6 +7,7 @@ namespace App\Tests\Admin;
 use App\Admin\AdvisoryCountSort;
 use App\Entity\Site;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -50,7 +51,7 @@ class AdvisoryCountSortTest extends KernelTestCase
         yield 'nonsense' => [['advisoryCount' => 'SIDEWAYS']];
     }
 
-    private function queryBuilder(): \Doctrine\ORM\QueryBuilder
+    private function queryBuilder(): QueryBuilder
     {
         return self::getContainer()->get(EntityManagerInterface::class)
             ->getRepository(Site::class)

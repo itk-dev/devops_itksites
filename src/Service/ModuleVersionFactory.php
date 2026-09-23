@@ -21,6 +21,7 @@ class ModuleVersionFactory
         private readonly EntityManagerInterface $entityManager,
         private readonly ModuleRepository $moduleRepository,
         private readonly ModuleVersionRepository $moduleVersionRepository,
+        private readonly DrupalPackageLinker $drupalPackageLinker,
     ) {
     }
 
@@ -101,6 +102,7 @@ class ModuleVersionFactory
 
             $module->addModuleVersion($moduleVersion);
             $moduleVersion->setVersion($version);
+            $this->drupalPackageLinker->linkModuleVersion($moduleVersion);
 
             $this->createdModuleVersions[] = $moduleVersion;
         }

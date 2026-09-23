@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Controller\Admin\AdvisoryCrudController;
 use App\Entity\CodeOwner;
+use App\Entity\GitRepo;
 use App\Repository\CodeOwnerRepository;
 use App\Repository\GitRepoRepository;
 use App\Repository\ProjectRepository;
@@ -106,7 +107,7 @@ class RepoAdvisoryService
      * deep-link, and picks the Leantime project id — preferring one with an
      * open ticket, otherwise the first non-empty project id.
      *
-     * @param array{repo: \App\Entity\GitRepo, advisoryCount: int}                  $entry                  repo + precomputed advisory count
+     * @param array{repo: GitRepo, advisoryCount: int}                              $entry                  repo + precomputed advisory count
      * @param array<string, list<string>>                                           $packageVersionsPerRepo map of repo-id → package version ids that have advisories
      * @param array<int, array{assigneeName: ?string, createdAt: ?string, id: int}> $ticketsByLeantimeId    open security tickets keyed by Leantime project id
      *
@@ -152,9 +153,7 @@ class RepoAdvisoryService
                 continue;
             }
             $candidateId = (int) $rawLeantimeId;
-            if (null === $leantimeProjectId) {
-                $leantimeProjectId = $candidateId;
-            }
+            $leantimeProjectId ??= $candidateId;
             if (isset($ticketsByLeantimeId[$candidateId])) {
                 $openTicket = $ticketsByLeantimeId[$candidateId];
                 $leantimeProjectId = $candidateId;

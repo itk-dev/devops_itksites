@@ -14,6 +14,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Installation|null findOneBy(array $criteria, array $orderBy = null)
  * @method Installation[]    findAll()
  * @method Installation[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<Installation>
  */
 class InstallationRepository extends ServiceEntityRepository
 {

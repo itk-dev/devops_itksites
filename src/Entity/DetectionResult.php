@@ -7,10 +7,12 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\OpenApi\Model;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Response;
 use App\Repository\DetectionResultRepository;
 use App\Types\DetectionType;
 use App\Utils\RootDirNormalizer;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
@@ -21,23 +23,23 @@ use Symfony\Component\Serializer\Attribute\Groups;
             status: 202,
             output: false,
             messenger: true,
-            openapi: new Model\Operation(
+            openapi: new Operation(
                 summary: 'Submit a detection result for async processing',
                 description: 'Accepts a detection result from the server harvester and queues it for asynchronous processing. The result is deduplicated by content hash — identical submissions update the last contact timestamp without triggering reprocessing. Returns 202 Accepted with an empty body.',
                 responses: [
-                    '202' => new Model\Response(
+                    '202' => new Response(
                         description: 'Detection result accepted for processing',
                     ),
-                    '400' => new Model\Response(
+                    '400' => new Response(
                         description: 'Invalid input — malformed request body',
                     ),
-                    '401' => new Model\Response(
+                    '401' => new Response(
                         description: 'Unauthorized — missing or invalid API key. The Authorization header must use the format: Apikey {key}',
                     ),
-                    '403' => new Model\Response(
+                    '403' => new Response(
                         description: 'Forbidden — the authenticated server does not have the required ROLE_SERVER role',
                     ),
-                    '422' => new Model\Response(
+                    '422' => new Response(
                         description: 'Validation error — one or more fields failed constraint validation',
                     ),
                 ],
@@ -51,7 +53,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Index(name: 'type_idx', columns: ['type'])]
 class DetectionResult extends AbstractBaseEntity implements \Stringable
 {
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     #[Groups(['write'])]
     #[ApiProperty(
         description: 'The type of detection result, determines which handler processes the data',
@@ -60,7 +62,7 @@ class DetectionResult extends AbstractBaseEntity implements \Stringable
     )]
     private string $type = '';
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     #[Groups(['write'])]
     #[ApiProperty(
         description: 'Absolute path to the root directory of the detected installation on the server',
@@ -72,7 +74,7 @@ class DetectionResult extends AbstractBaseEntity implements \Stringable
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Server $server;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     #[Groups(['write'])]
     #[ApiProperty(
         description: 'JSON-encoded payload from the server harvester containing the detection details. Structure varies by type.',
@@ -80,10 +82,10 @@ class DetectionResult extends AbstractBaseEntity implements \Stringable
     )]
     private string $data = '';
 
-    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     private string $hash;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $lastContact;
 
     #[\Override]

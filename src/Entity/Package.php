@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\PackageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PackageRepository::class)]
@@ -15,22 +16,22 @@ class Package extends AbstractBaseEntity implements \Stringable
 {
     private const string PACKAGIST_URL_PATTERN = 'https://packagist.org/packages/%s/%s';
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $vendor;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $name;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $homepage = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $type = null;
 
-    #[ORM\Column(type: 'string', length: 25, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 25, nullable: true)]
     private ?string $license = null;
 
     #[ORM\Column(nullable: true)]
@@ -45,6 +46,9 @@ class Package extends AbstractBaseEntity implements \Stringable
     #[ORM\OneToMany(targetEntity: Advisory::class, mappedBy: 'package')]
     private Collection $advisories;
 
+    #[ORM\OneToMany(targetEntity: Module::class, mappedBy: 'composerPackage')]
+    private Collection $modules;
+
     #[ORM\Column]
     private int $advisoryCount = 0;
 
@@ -55,6 +59,7 @@ class Package extends AbstractBaseEntity implements \Stringable
     {
         $this->packageVersions = new ArrayCollection();
         $this->advisories = new ArrayCollection();
+        $this->modules = new ArrayCollection();
     }
 
     #[\Override]
@@ -243,6 +248,33 @@ class Package extends AbstractBaseEntity implements \Stringable
     private function setAdvisoryCount(int $advisoryCount): self
     {
         $this->advisoryCount = $advisoryCount;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Module>
+     */
+    public function getModules(): Collection
+    {
+        return $this->modules;
+    }
+
+    public function addModule(Module $module): self
+    {
+        if (!$this->modules->contains($module)) {
+            $this->modules->add($module);
+            $module->setComposerPackage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModule(Module $module): self
+    {
+        if ($this->modules->removeElement($module) && $module->getComposerPackage() === $this) {
+            $module->setComposerPackage(null);
+        }
 
         return $this;
     }
