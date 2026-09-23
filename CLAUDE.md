@@ -102,13 +102,27 @@ A session start hook warns when either is missing.
 ### Hooks
 
 - Edits to lock files, `.env.local`, the exported API spec, the EasyAdmin
-  skill, `vendor/`, `node_modules/` and `var/` are blocked.
+  and Mate skills, `vendor/`, `node_modules/` and `var/` are blocked.
 - Edited files are formatted with php-cs-fixer, twig-cs-fixer, prettier,
   markdownlint or `composer normalize`.
 - PHPStan runs on edited PHP files and `lint:container` runs before stopping;
   errors are reported back.
 
 The hooks skip when the `phpfpm` container is down.
+
+### Symfony AI Mate
+
+[Mate](https://symfony.com/doc/current/ai/components/mate.html) reads logs,
+profiler data and the compiled container without booting the app. See
+`AGENTS.md` and the `mate-*` skills.
+
+```sh
+docker compose exec -T phpfpm vendor/bin/mate tools:list
+docker compose exec -T phpfpm vendor/bin/mate tools:call monolog-tail --limit=20
+```
+
+The skills, `AGENTS.md` and `mate/AGENT_INSTRUCTIONS.md` are generated. Change
+`mate/config.php` or `mate/extensions.php` and run `mate discover`.
 
 ## Quality Checks
 
@@ -154,7 +168,8 @@ Pull requests run these checks:
 13. **Fixtures** (`doctrine.yaml`) - verifies fixtures load successfully
 14. **Asset build** (`pr.yaml`) - verifies frontend assets compile
 15. **EasyAdmin skill** (`pr.yaml`) - ensures the committed skill matches the installed EasyAdmin
-16. **Changelog** (`changelog.yaml`) - ensures CHANGELOG.md is updated
+16. **AI Mate files** (`pr.yaml`) - ensures `mate discover` leaves the committed files unchanged
+17. **Changelog** (`changelog.yaml`) - ensures CHANGELOG.md is updated
 
 ### Woodpecker CI (deployment)
 
@@ -190,3 +205,7 @@ initial classes instead of writing them from scratch.
 Team conventions for EasyAdmin, if any, are in the `## EasyAdmin conventions`
 section of this file, outside this block.
 </easyadmin-guidelines>
+
+<!-- BEGIN AI_MATE_AGENTS_IMPORT -->
+@AGENTS.md
+<!-- END AI_MATE_AGENTS_IMPORT -->

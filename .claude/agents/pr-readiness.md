@@ -25,8 +25,9 @@ holds data that cannot be rebuilt.
 11. **YAML, JS and styles**: `docker compose run --rm -T prettier '**/*.{yml,yaml}' 'assets/**/*.{js,css,scss}' --check --no-error-on-unmatched-pattern`
 12. **Asset build**: `docker compose run --rm -T node yarn build`
 13. **EasyAdmin skill up to date**: `docker compose exec -T phpfpm bin/console easyadmin:ai:update --check`
-14. **API spec up to date**: Run `docker compose exec -T phpfpm composer update-api-spec`, then check `git diff --exit-code public/api-spec-v1.*`
-15. **CHANGELOG updated**: Verify CHANGELOG.md has changes compared to the base branch (`git diff develop -- CHANGELOG.md`)
+14. **AI Mate files up to date**: Run `docker compose exec -T phpfpm vendor/bin/mate discover`, then check `git status --porcelain` is empty
+15. **API spec up to date**: Run `docker compose exec -T phpfpm composer update-api-spec`, then check `git diff --exit-code public/api-spec-v1.*`
+16. **CHANGELOG updated**: Verify CHANGELOG.md has changes compared to the base branch (`git diff develop -- CHANGELOG.md`)
 
 ## Output
 

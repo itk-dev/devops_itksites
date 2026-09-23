@@ -49,3 +49,7 @@ RENOVATE_PLAN.md
 !.claude/hooks/
 !.claude/skills/
 ###< anthropic/claude-code ###
+
+###> symfony/ai-mate ###
+/mate/.env.local
+###< symfony/ai-mate ###

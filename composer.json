@@ -54,6 +54,9 @@
         "phpstan/phpstan-symfony": "^2.0",
         "phpunit/phpunit": "^13.0",
         "rector/rector": "^2.0",
+        "symfony/ai-mate": "^0.13.0",
+        "symfony/ai-monolog-mate-extension": "^0.13.0",
+        "symfony/ai-symfony-mate-extension": "^0.13.0",
         "symfony/css-selector": "^8.0",
         "symfony/debug-bundle": "^8.0",
         "symfony/maker-bundle": "^1.37",
@@ -79,7 +82,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "App\\Tests\\": "tests/",
+            "Mate\\": "mate/src/"
         }
     },
     "config": {
@@ -97,6 +101,15 @@
         "sort-packages": true
     },
     "extra": {
+        "ai-mate": {
+            "extension": false,
+            "includes": [
+                "mate/config.php"
+            ],
+            "scan-dirs": [
+                "mate/src"
+            ]
+        },
         "symfony": {
             "allow-contrib": false,
             "require": "8.1.*"
@@ -108,7 +121,8 @@
         ],
         "post-update-cmd": [
             "@auto-scripts",
-            "@php bin/console easyadmin:ai:update"
+            "@php bin/console easyadmin:ai:update",
+            "@php vendor/bin/mate discover"
         ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",

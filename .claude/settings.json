@@ -140,7 +140,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in */composer.lock|*/yarn.lock|*/symfony.lock|*/.env.local|*/.env.*.local|*/public/api-spec-v1.yaml|*/public/api-spec-v1.json|*/.claude/skills/easyadmin/*|*/vendor/*|*/node_modules/*|*/var/*) echo 'BLOCKED: generated, locked or local-only file; change the source instead' >&2; exit 2 ;; esac"
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in */composer.lock|*/yarn.lock|*/symfony.lock|*/.env.local|*/.env.*.local|*/public/api-spec-v1.yaml|*/public/api-spec-v1.json|*/.claude/skills/easyadmin/*|*/.claude/skills/mate-*|*/.agents/*|*/mate/AGENT_INSTRUCTIONS.md|*/vendor/*|*/node_modules/*|*/var/*) echo 'BLOCKED: generated, locked or local-only file; change the source instead' >&2; exit 2 ;; esac"
           }
         ]
       }
