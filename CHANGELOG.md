@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#132](https://github.com/itk-dev/devops_itksites/pull/132)
+  Check drupal.org releases with `itksites:drupal:check-releases` and on the
+  queue
+
 - [#131](https://github.com/itk-dev/devops_itksites/pull/131)
   Record drupal.org release status on Drupal packages and add advisories for
   insecure versions
