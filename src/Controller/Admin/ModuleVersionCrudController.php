@@ -39,7 +39,8 @@ class ModuleVersionCrudController extends AbstractCrudController
     {
         return $actions
             ->disable(Action::DELETE, Action::NEW, Action::EDIT)
-            ->add(Crud::PAGE_INDEX, Action::DETAIL);
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_INDEX, DrupalReleaseCheckController::action($this->container->get('security.csrf.token_manager')));
     }
 
     #[\Override]
