@@ -74,11 +74,6 @@ readonly class ServiceAgreementSyncService
             $existingContracts[$contract->getEconomicsId()] = $contract;
         }
 
-        $existingGitReposByRepo = [];
-        foreach ($this->gitRepoRepository->findAll() as $repo) {
-            $existingGitReposByRepo[$repo->getRepo()] = $repo;
-        }
-
         $seenProjectIds = [];
         $seenCodeOwnerIds = [];
         $seenContractIds = [];
@@ -92,7 +87,7 @@ readonly class ServiceAgreementSyncService
             $project->setLeantimeUrl($data['leantimeUrl'] ?? null);
 
             $this->syncCodeOwners($project, $data['codeowners'] ?? [], $existingCodeOwners, $seenCodeOwnerIds);
-            $this->syncGitRepos($project, $data['githubRepos'] ?? null, $existingGitReposByRepo, $unmatchedRepoNames);
+            $this->syncGitRepos($project, $data['githubRepos'] ?? null, $unmatchedRepoNames);
 
             $this->entityManager->persist($project);
             $existingProjects[$data['id']] = $project;
@@ -186,18 +181,19 @@ readonly class ServiceAgreementSyncService
      * Reconcile a project's GitHub repo associations against the Economics payload.
      *
      * Splits the multi-line `githubRepos` string and links the project to
-     * exactly the matching GitRepo entries. Unknown repo names are recorded
-     * in `$unmatchedRepoNames`; GitRepo entries are not created on the fly
-     * because that would hide the underlying harvester onboarding gap.
+     * exactly the matching GitRepo entries, resolving each line through the
+     * same remote parser the harvester registers repos with. Unresolvable
+     * lines are recorded in `$unmatchedRepoNames`; GitRepo entries are not
+     * created on the fly because that would hide the underlying harvester
+     * onboarding gap.
      *
-     * @param Project                $project                project being synced
-     * @param string|null            $githubReposString      raw multi-line list from Economics, or null when the field is unset
-     * @param array<string, GitRepo> $existingGitReposByRepo lookup keyed by GitRepo::getRepo()
-     * @param array<string, true>    $unmatchedRepoNames     by-reference accumulator across all projects (set-like)
+     * @param Project             $project            project being synced
+     * @param string|null         $githubReposString  raw multi-line list from Economics, or null when the field is unset
+     * @param array<string, true> $unmatchedRepoNames by-reference accumulator across all projects (set-like)
      *
      * @param-out array<string, true> $unmatchedRepoNames
      */
-    private function syncGitRepos(Project $project, ?string $githubReposString, array $existingGitReposByRepo, array &$unmatchedRepoNames): void
+    private function syncGitRepos(Project $project, ?string $githubReposString, array &$unmatchedRepoNames): void
     {
         $names = [];
         if (null !== $githubReposString && '' !== $githubReposString) {
@@ -211,8 +207,9 @@ readonly class ServiceAgreementSyncService
 
         $desired = [];
         foreach ($names as $repoName) {
-            if (isset($existingGitReposByRepo[$repoName])) {
-                $repo = $existingGitReposByRepo[$repoName];
+            $criteria = GitTagFactory::parseRemote($repoName);
+            $repo = null === $criteria ? null : $this->gitRepoRepository->findOneBy($criteria);
+            if ($repo instanceof GitRepo) {
                 $desired[spl_object_id($repo)] = $repo;
             } else {
                 $unmatchedRepoNames[$repoName] = true;
