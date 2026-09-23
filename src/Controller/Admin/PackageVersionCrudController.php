@@ -58,6 +58,7 @@ class PackageVersionCrudController extends AbstractCrudController
         yield AssociationField::new('installations')->setColumns(6);
         yield LatestStatusField::new('latestStatus')->setColumns(6);
         yield AssociationField::new('advisories')->onlyOnDetail();
+        yield AssociationField::new('moduleVersions')->onlyOnDetail();
         yield DateTimeField::new('createdAt')->hideOnIndex();
     }
 
