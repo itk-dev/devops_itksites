@@ -39,6 +39,16 @@ class PackageVersion extends AbstractBaseEntity implements \Stringable
     #[ORM\OneToMany(targetEntity: ModuleVersion::class, mappedBy: 'composerPackageVersion')]
     private Collection $moduleVersions;
 
+    /** @var list<string>|null drupal.org release-history terms, null when the release is unknown */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $drupalReleaseTerms = null;
+
+    #[ORM\Column(options: ['default' => false])]
+    private bool $drupalInsecure = false;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $drupalReleaseCheckedAt = null;
+
     public function __construct()
     {
         $this->installations = new ArrayCollection();
@@ -176,6 +186,48 @@ class PackageVersion extends AbstractBaseEntity implements \Stringable
             $this->moduleVersions->add($moduleVersion);
             $moduleVersion->setComposerPackageVersion($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return list<string>|null
+     */
+    public function getDrupalReleaseTerms(): ?array
+    {
+        return $this->drupalReleaseTerms;
+    }
+
+    /**
+     * @param list<string>|null $drupalReleaseTerms
+     */
+    public function setDrupalReleaseTerms(?array $drupalReleaseTerms): self
+    {
+        $this->drupalReleaseTerms = $drupalReleaseTerms;
+
+        return $this;
+    }
+
+    public function isDrupalInsecure(): bool
+    {
+        return $this->drupalInsecure;
+    }
+
+    public function setDrupalInsecure(bool $drupalInsecure): self
+    {
+        $this->drupalInsecure = $drupalInsecure;
+
+        return $this;
+    }
+
+    public function getDrupalReleaseCheckedAt(): ?\DateTimeImmutable
+    {
+        return $this->drupalReleaseCheckedAt;
+    }
+
+    public function setDrupalReleaseCheckedAt(?\DateTimeImmutable $drupalReleaseCheckedAt): self
+    {
+        $this->drupalReleaseCheckedAt = $drupalReleaseCheckedAt;
 
         return $this;
     }
