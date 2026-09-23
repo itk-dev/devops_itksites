@@ -76,7 +76,7 @@ class ReleaseChecker
                     return true;
                 }
             } catch (\UnexpectedValueException) {
-                return false;
+                continue;
             }
         }
 

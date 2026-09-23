@@ -123,7 +123,10 @@ class ReleaseCheckerTest extends KernelTestCase
         $this->checker(
             $this->fixture('release-history-key_auth.xml'),
             $this->fixture('project-key_auth.json'),
-            (string) json_encode(['list' => []]),
+            (string) json_encode(['list' => [
+                ['title' => 'Key auth - Older - SA-CONTRIB-2026-001', 'field_affected_versions' => '<2.0.0'],
+                ['title' => 'Key auth - Unparsable - SA-CONTRIB-2026-002', 'field_affected_versions' => ''],
+            ]]),
         )->check($this->package('key_auth'));
         $this->entityManager->clear();
 
