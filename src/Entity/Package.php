@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\PackageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PackageRepository::class)]
@@ -15,22 +16,22 @@ class Package extends AbstractBaseEntity implements \Stringable
 {
     private const string PACKAGIST_URL_PATTERN = 'https://packagist.org/packages/%s/%s';
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $vendor;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $name;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $homepage = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $type = null;
 
-    #[ORM\Column(type: 'string', length: 25, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 25, nullable: true)]
     private ?string $license = null;
 
     #[ORM\Column(nullable: true)]

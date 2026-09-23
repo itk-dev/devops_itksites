@@ -7,19 +7,20 @@ namespace App\Entity;
 use App\Repository\DockerImageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DockerImageRepository::class)]
 #[ORM\UniqueConstraint(name: 'organization_repository', columns: ['organization', 'repository'])]
 class DockerImage extends AbstractBaseEntity implements \Stringable
 {
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $organization = '';
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $repository = '';
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private string $description = '';
 
     #[ORM\OneToMany(targetEntity: DockerImageTag::class, mappedBy: 'dockerImage', orphanRemoval: true)]

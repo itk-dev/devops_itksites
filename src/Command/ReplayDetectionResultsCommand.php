@@ -7,7 +7,9 @@ namespace App\Command;
 use App\Entity\DetectionResult;
 use App\Message\ProcessDetectionResult;
 use App\Types\DetectionType;
+use Doctrine\DBAL\Logging\Middleware;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -113,7 +115,7 @@ class ReplayDetectionResultsCommand extends Command
 
         $count = $this->entityManager->getRepository(DetectionResult::class)->count($criteria);
 
-        $this->entityManager->getConnection()->getConfiguration()->setMiddlewares([new \Doctrine\DBAL\Logging\Middleware(new \Psr\Log\NullLogger())]);
+        $this->entityManager->getConnection()->getConfiguration()->setMiddlewares([new Middleware(new NullLogger())]);
         $iterable = $queryBuilder->getQuery()->toIterable();
 
         $limit = intval($input->getOption('limit'));

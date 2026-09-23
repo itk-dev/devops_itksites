@@ -10,6 +10,7 @@ use App\Repository\SiteRepository;
 use App\Types\SiteType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
@@ -24,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\UniqueConstraint(name: 'server_rootDir_configFilePath_idx', fields: ['server', 'rootDir', 'configFilePath'])]
 class Site extends AbstractHandlerResult implements \Stringable
 {
-    #[ORM\Column(type: 'string', length: 10)]
+    #[ORM\Column(type: Types::STRING, length: 10)]
     #[Assert\Length(
         min: 1,
         max: 10,
@@ -36,7 +37,7 @@ class Site extends AbstractHandlerResult implements \Stringable
     #[SerializedName('PHP version')]
     private string $phpVersion = '';
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\Length(
         min: 1,
         max: 255,
@@ -58,12 +59,12 @@ class Site extends AbstractHandlerResult implements \Stringable
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Installation $installation;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
     #[Groups(['export'])]
     #[SerializedName('Primary domain')]
     private string $primaryDomain;
 
-    #[ORM\Column(type: 'string', length: 25)]
+    #[ORM\Column(type: Types::STRING, length: 25)]
     #[Groups(['export'])]
     #[SerializedName('Type')]
     private string $type = '';

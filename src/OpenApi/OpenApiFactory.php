@@ -15,11 +15,11 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class OpenApiFactory implements OpenApiFactoryInterface
 {
     public function __construct(
-        private OpenApiFactoryInterface $decorated,
+        private readonly OpenApiFactoryInterface $decorated,
         #[Autowire('%env(default::COMPOSE_SERVER_DOMAIN)%')]
-        private ?string $serverDomain,
+        private readonly ?string $serverDomain,
         #[Autowire('%env(default::COMPOSE_DOMAIN)%')]
-        private ?string $fallbackDomain,
+        private readonly ?string $fallbackDomain,
     ) {
     }
 
