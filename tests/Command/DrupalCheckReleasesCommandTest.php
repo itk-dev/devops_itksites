@@ -94,6 +94,6 @@ class DrupalCheckReleasesCommandTest extends KernelTestCase
 
     private function tester(): CommandTester
     {
-        return new CommandTester(new Application(self::$kernel)->find('itksites:drupal:check-releases'));
+        return new CommandTester(new Application(self::$kernel)->find('app:drupal:check-releases'));
     }
 }

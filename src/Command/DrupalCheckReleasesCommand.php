@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 #[AsCommand(
-    name: 'itksites:drupal:check-releases',
+    name: 'app:drupal:check-releases',
     description: 'Check drupal.org release status and security advisories for drupal/* packages',
 )]
 readonly class DrupalCheckReleasesCommand
