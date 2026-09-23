@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\AdvisoryCountField;
 use App\Admin\Field\VersionField;
 use App\Entity\ModuleVersion;
 use App\Form\Type\Admin\SemverFilter;
@@ -47,6 +48,9 @@ class ModuleVersionCrudController extends AbstractCrudController
         yield AssociationField::new('module')->setColumns(6);
         yield VersionField::new('version')->setColumns(6);
         yield AssociationField::new('installations')->setColumns(6);
+        yield AdvisoryCountField::new('composerPackageVersion.advisoryCount')->onlyOnIndex()->setLabel('Adv.')->setCssClass('text-center');
+        yield AssociationField::new('composerPackageVersion')->onlyOnDetail()->setLabel('Composer package version');
+        yield AdvisoryCountField::new('advisories')->onlyOnDetail();
     }
 
     #[\Override]
