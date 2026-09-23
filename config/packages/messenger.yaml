@@ -23,6 +23,10 @@ framework:
             # able to access the security context
             App\Entity\DetectionResult: sync
 
+            # DeployResults name their own server, so unlike DetectionResults
+            # they need no synchronous hop to read the security context.
+            App\Entity\DeployResult: async
+
             App\Message\PersistDetectionResult: async
             App\Message\ProcessDetectionResult: async
 

@@ -54,7 +54,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/docs, roles: PUBLIC_ACCESS }
-        - { path: ^/api, roles: [ROLE_SERVER, ROLE_USER] }
+        - { path: ^/api, roles: [ROLE_SERVER, ROLE_USER, ROLE_DEPLOYER] }
         - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 

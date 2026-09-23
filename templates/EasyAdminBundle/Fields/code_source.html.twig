@@ -1,0 +1,8 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% if field.formattedValue == 'artifact' %}
+    <twig:ea:Badge variant="info">{{ field.formattedValue }}</twig:ea:Badge>
+{% elseif field.formattedValue == 'git' %}
+    <twig:ea:Badge variant="dark">{{ field.formattedValue }}</twig:ea:Badge>
+{% endif %}

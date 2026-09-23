@@ -6,6 +6,7 @@ namespace App\Security;
 
 use App\Repository\ServerRepository;
 use App\Repository\UserRepository;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
@@ -22,10 +24,13 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
 {
     public const string AUTH_HEADER = 'Authorization';
     public const string AUTH_HEADER_PREFIX = 'Apikey ';
+    public const string DEPLOYER_IDENTIFIER = 'woodpecker';
 
     public function __construct(
         private readonly ServerRepository $serverRepository,
         private readonly UserRepository $userRepository,
+        #[Autowire('%env(APP_WOODPECKER_API_KEY)%')]
+        private readonly string $woodpeckerApiKey,
     ) {
     }
 
@@ -47,6 +52,20 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
             // The token header was empty, authentication fails with HTTP Status
             // Code 401 "Unauthorized"
             throw new CustomUserMessageAuthenticationException('No API token provided');
+        }
+
+        // The deployment pipeline authenticates with a key held in the
+        // environment rather than in the database, so that rotating it does not
+        // touch our data and can later be moved to the vault. It is not a user
+        // or a server: it may only report deployments, so it carries neither
+        // ROLE_USER nor ROLE_SERVER.
+        if ('' !== $this->woodpeckerApiKey && hash_equals($this->woodpeckerApiKey, $apiKey)) {
+            return new SelfValidatingPassport(
+                new UserBadge(
+                    self::DEPLOYER_IDENTIFIER,
+                    static fn (string $identifier): InMemoryUser => new InMemoryUser($identifier, null, ['ROLE_DEPLOYER']),
+                )
+            );
         }
 
         // Users and servers can authenticate to use the API.

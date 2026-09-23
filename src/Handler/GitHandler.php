@@ -7,6 +7,7 @@ namespace App\Handler;
 use App\Entity\DetectionResult;
 use App\Service\GitTagFactory;
 use App\Service\InstallationFactory;
+use App\Types\CodeSourceType;
 use App\Types\DetectionType;
 
 /**
@@ -30,7 +31,14 @@ readonly class GitHandler implements DetectionResultHandlerInterface
             $installation = $this->installationFactory->getInstallation($detectionResult);
 
             if (null === $data) {
-                $installation->setGitTag(null);
+                // An artifact deployment leaves no .git directory behind, so the
+                // git detection reports nothing for it and we would clear a tag
+                // that only the deployment can know. Clearing it would not merely
+                // unlink it either: RemovedRelationsListener deletes a git tag,
+                // and its repository, as soon as no installation points at it.
+                if (CodeSourceType::ARTIFACT !== $installation->getCodeSource()) {
+                    $installation->setGitTag(null);
+                }
 
                 return;
             }
