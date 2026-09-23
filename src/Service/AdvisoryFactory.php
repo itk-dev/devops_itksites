@@ -86,7 +86,10 @@ class AdvisoryFactory
         throw new \InvalidArgumentException(sprintf('Installation "%s", Package "%s" not found', $installation, $vendorPackage));
     }
 
-    private function setAdvisoryForAffectedVersions(Package $package, Advisory $advisory): void
+    /**
+     * Attaches the advisory to every version of the package its affected versions constraint matches.
+     */
+    public function setAdvisoryForAffectedVersions(Package $package, Advisory $advisory): void
     {
         foreach ($package->getPackageVersions() as $packageVersion) {
             if (Semver::satisfies($packageVersion->getVersion(), $advisory->getAffectedVersions())) {
