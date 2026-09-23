@@ -11,7 +11,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'itksites:drupal:link-packages',
+    name: 'app:drupal:link-packages',
     description: 'Link Drupal modules and module versions to their Composer packages',
 )]
 readonly class DrupalLinkPackagesCommand

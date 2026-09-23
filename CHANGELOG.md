@@ -11,8 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Check drupal.org releases every 12 hours with Symfony Scheduler
 
 - [#132](https://github.com/itk-dev/devops_itksites/pull/132)
-  Check drupal.org releases with `itksites:drupal:check-releases` and on the
-  queue
+  Check drupal.org releases with `app:drupal:check-releases` and on the queue
 
 - [#131](https://github.com/itk-dev/devops_itksites/pull/131)
   Record drupal.org release status on Drupal packages and add advisories for
@@ -27,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#128](https://github.com/itk-dev/devops_itksites/pull/128)
   Link Drupal modules to their Composer packages on ingest, with an
-  `itksites:drupal:link-packages` backfill command
+  `app:drupal:link-packages` backfill command
 
 - [#127](https://github.com/itk-dev/devops_itksites/pull/127)
   Link Drupal modules and module versions to their Composer packages
