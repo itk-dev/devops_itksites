@@ -10,8 +10,8 @@ images, packages, modules, CVEs, and git repositories.
 
 ## Technology Stack
 
-- **Language**: PHP 8.5+ (Symfony 8.0)
-- **API**: API Platform 4.0 (REST)
+- **Language**: PHP 8.4+ (Symfony 8.1)
+- **API**: API Platform 5.0 (REST)
 - **Admin UI**: EasyAdmin 5.x
 - **Database**: Doctrine ORM 3.x / DBAL 4.x with MariaDB
 - **Messaging**: Symfony Messenger (AMQP/RabbitMQ)
@@ -64,7 +64,7 @@ truncated and rebuilt by replaying DetectionResults. Manually maintained data
 ## Development Environment
 
 ```sh
-# Start services (MariaDB, PHP-FPM 8.5, Nginx, Mailpit)
+# Start services (MariaDB, PHP-FPM 8.4, Nginx, Mailpit)
 docker compose pull && docker compose up --detach
 
 # Install dependencies
@@ -85,6 +85,30 @@ docker compose exec phpfpm composer queues
 # Build frontend assets
 docker compose run --rm node yarn install && docker compose run --rm node yarn build
 ```
+
+`task` lists the same commands as [Taskfile](Taskfile.yml) tasks.
+
+### Claude Code prerequisites
+
+Install once on the host:
+
+- **jq** (`brew install jq`) - the hooks in `.claude/settings.json` read the
+  edited file path with it
+- **Intelephense** (`npm install -g intelephense`) - used by the
+  `php-lsp` plugin
+
+A session start hook warns when either is missing.
+
+### Hooks
+
+- Edits to lock files, `.env.local`, the exported API spec, the EasyAdmin
+  skill, `vendor/`, `node_modules/` and `var/` are blocked.
+- Edited files are formatted with php-cs-fixer, twig-cs-fixer, prettier,
+  markdownlint or `composer normalize`.
+- PHPStan runs on edited PHP files and `lint:container` runs before stopping;
+  errors are reported back.
+
+The hooks skip when the `phpfpm` container is down.
 
 ## Quality Checks
 
@@ -112,7 +136,7 @@ docker compose exec phpfpm composer update-api-spec
 Pull requests run these checks:
 
 1. **Composer** (`composer.yaml`) - validates, normalizes, and audits
-2. **Doctrine schema validation** (`pr.yaml`) - migrations + schema check against MariaDB
+2. **Doctrine schema validation** (`doctrine.yaml`) - migrations + schema check against MariaDB
 3. **PHP-CS-Fixer** (`php.yaml`) - PHP coding standards
 4. **PHPStan** (`pr.yaml`) - static analysis (level 6)
 5. **PHPUnit** (`pr.yaml`) - unit/integration tests with MariaDB + coverage
@@ -122,9 +146,10 @@ Pull requests run these checks:
 9. **JavaScript** (`javascript.yaml`) - JS formatting (Prettier)
 10. **Styles** (`styles.yaml`) - CSS/SCSS formatting (Prettier)
 11. **API spec** (`api-spec.yaml`) - ensures exported OpenAPI spec is up to date
-12. **Fixtures** (`pr.yaml`) - verifies fixtures load successfully
+12. **Fixtures** (`doctrine.yaml`) - verifies fixtures load successfully
 13. **Asset build** (`pr.yaml`) - verifies frontend assets compile
-14. **Changelog** (`changelog.yaml`) - ensures CHANGELOG.md is updated
+14. **EasyAdmin skill** (`pr.yaml`) - ensures the committed skill matches the installed EasyAdmin
+15. **Changelog** (`changelog.yaml`) - ensures CHANGELOG.md is updated
 
 ### Woodpecker CI (deployment)
 

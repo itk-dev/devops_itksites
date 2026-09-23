@@ -41,3 +41,11 @@ phpstan.neon
 
 # Working docs not meant to ship
 RENOVATE_PLAN.md
+
+###> anthropic/claude-code ###
+.claude/*
+!.claude/settings.json
+!.claude/agents/
+!.claude/hooks/
+!.claude/skills/
+###< anthropic/claude-code ###
