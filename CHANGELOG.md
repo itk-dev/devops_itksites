@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.15.0] - 2026-09-23
+
 - [#134](https://github.com/itk-dev/devops_itksites/pull/134)
   Check drupal.org for new releases and advisories from the admin
 
@@ -369,7 +371,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.14.0...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.15.0...HEAD
+[1.15.0]: https://github.com/itk-dev/devops_itksites/compare/1.14.0...1.15.0
 [1.14.0]: https://github.com/itk-dev/devops_itksites/compare/1.13.0...1.14.0
 [1.13.0]: https://github.com/itk-dev/devops_itksites/compare/1.12.1...1.13.0
 [1.12.1]: https://github.com/itk-dev/devops_itksites/compare/1.12.0...1.12.1
