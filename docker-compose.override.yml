@@ -51,6 +51,9 @@ services:
     profiles:
       - dev
     image: node:24
+    environment:
+      # Yarn 1 calls url.parse(), and Yarn 1 gets no more fixes
+      NODE_OPTIONS: --disable-warning=DEP0169
     volumes:
       - .:/app
     working_dir: /app
