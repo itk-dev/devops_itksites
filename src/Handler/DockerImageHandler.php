@@ -65,6 +65,9 @@ readonly class DockerImageHandler implements DetectionResultHandlerInterface
                 }
                 if (isset($container->drupal) && is_object($container->drupal)) {
                     $this->moduleVersionFactory->setModuleVersions($site->getInstallation(), $container->drupal);
+                    if (!isset($container->packages) || !is_object($container->packages)) {
+                        $this->packageVersionFactory->setPackageVersionsFromModules($site->getInstallation());
+                    }
                     $this->setDrupal($site->getInstallation(), $container->drupal);
                 }
                 if (isset($container->symfony) && is_object($container->symfony)) {

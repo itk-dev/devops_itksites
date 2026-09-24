@@ -43,6 +43,9 @@ readonly class DrupalHandler implements DetectionResultHandlerInterface
 
             if (isset($data->modules)) {
                 $this->moduleVersionFactory->setModuleVersions($installation, $data->modules);
+                if (!isset($data->packages->installed)) {
+                    $this->packageVersionFactory->setPackageVersionsFromModules($installation);
+                }
             }
         } catch (\JsonException) {
             // @TODO log exceptions
