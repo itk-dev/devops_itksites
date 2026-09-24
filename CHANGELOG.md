@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#136](https://github.com/itk-dev/devops_itksites/pull/136)
+  Fall back to Drupal module versions for `drupal/*` packages when a detection
+  result has no Composer packages
+
 ## [1.15.0] - 2026-09-23
 
 - [#134](https://github.com/itk-dev/devops_itksites/pull/134)
