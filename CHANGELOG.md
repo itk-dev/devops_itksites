@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#138](https://github.com/itk-dev/devops_itksites/pull/138)
+  Run GitHub Actions on `ubuntu-26.04`
+
 ## [1.15.1] - 2026-09-24
 
 - [#136](https://github.com/itk-dev/devops_itksites/pull/136)
