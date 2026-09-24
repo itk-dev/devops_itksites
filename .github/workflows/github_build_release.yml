@@ -10,7 +10,7 @@ permissions:
 
 jobs:
     create-release:
-        runs-on: ubuntu-26.04
+        runs-on: ubuntu-latest
         env:
             COMPOSER_ALLOW_SUPERUSER: 1
             APP_ENV: prod

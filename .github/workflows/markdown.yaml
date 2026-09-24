@@ -32,7 +32,7 @@ on:
 
 jobs:
     markdown-lint:
-        runs-on: ubuntu-26.04
+        runs-on: ubuntu-latest
         steps:
             - name: Checkout
               uses: actions/checkout@v7
