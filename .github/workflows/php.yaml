@@ -52,7 +52,7 @@ on:
 jobs:
     coding-standards:
         name: PHP - Check Coding Standards
-        runs-on: ubuntu-26.04
+        runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v7
 

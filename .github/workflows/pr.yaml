@@ -4,7 +4,7 @@ env:
     COMPOSE_USER: runner
 jobs:
     phpstan:
-        runs-on: ubuntu-26.04
+        runs-on: ubuntu-latest
         name: PHPStan
         steps:
             - name: Checkout
@@ -19,7 +19,7 @@ jobs:
                   docker compose run --rm phpfpm vendor/bin/phpstan analyse
 
     rector:
-        runs-on: ubuntu-26.04
+        runs-on: ubuntu-latest
         name: Rector
         steps:
             - name: Checkout
@@ -34,7 +34,7 @@ jobs:
                   docker compose run --rm phpfpm vendor/bin/rector process --dry-run
 
     phpunit:
-        runs-on: ubuntu-26.04
+        runs-on: ubuntu-latest
         name: PHP Unit tests
         steps:
             - name: Checkout
@@ -61,7 +61,7 @@ jobs:
                   flags: unittests
 
     build-assets:
-        runs-on: ubuntu-26.04
+        runs-on: ubuntu-latest
         name: Build assets
         steps:
             - name: Checkout
@@ -76,7 +76,7 @@ jobs:
                   docker compose run --rm node yarn build
 
     easyadmin-skill:
-        runs-on: ubuntu-26.04
+        runs-on: ubuntu-latest
         name: EasyAdmin agent skill up to date
         steps:
             - name: Checkout
@@ -91,7 +91,7 @@ jobs:
                   docker compose run --rm phpfpm bin/console easyadmin:ai:update --check
 
     mate:
-        runs-on: ubuntu-26.04
+        runs-on: ubuntu-latest
         name: AI Mate files up to date
         steps:
             - name: Checkout
