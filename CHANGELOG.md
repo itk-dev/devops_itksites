@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#140](https://github.com/itk-dev/devops_itksites/pull/140)
+  Use `SortDirection` in the service certificate `OrderBy` mapping
+
 - [#139](https://github.com/itk-dev/devops_itksites/pull/139)
   Silence the Yarn 1 `url.parse()` deprecation warning
 
