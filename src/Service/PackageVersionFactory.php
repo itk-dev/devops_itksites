@@ -9,6 +9,7 @@ use App\Entity\Package;
 use App\Entity\PackageVersion;
 use App\Repository\PackageRepository;
 use App\Repository\PackageVersionRepository;
+use App\Utils\DrupalVersion;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -62,6 +63,34 @@ class PackageVersionFactory
 
         $this->entityManager->flush();
         $this->createdPackages = [];
+        $this->createdPackageVersions = [];
+    }
+
+    /**
+     * Set the installation's drupal/* package versions from its Drupal modules.
+     *
+     * Fallback for detection results without Composer packages. Packages with
+     * no linked module keep their last known version.
+     */
+    public function setPackageVersionsFromModules(Installation $installation): void
+    {
+        foreach ($installation->getModuleVersions() as $moduleVersion) {
+            $package = $moduleVersion->getModule()->getComposerPackage();
+            $version = DrupalVersion::toComposer($moduleVersion->getVersion());
+            if (null === $package || null === $version) {
+                continue;
+            }
+
+            foreach ($installation->getPackageVersions()->toArray() as $packageVersion) {
+                if ($package === $packageVersion->getPackage()) {
+                    $installation->removePackageVersion($packageVersion);
+                }
+            }
+
+            $installation->addPackageVersion($this->getPackageVersion($package, $version));
+        }
+
+        $this->entityManager->flush();
         $this->createdPackageVersions = [];
     }
 
