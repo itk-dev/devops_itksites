@@ -13,7 +13,7 @@ on:
 jobs:
     validate-doctrine-schema:
         name: Validate Doctrine Schema
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         env:
             APP_ENV: prod
 
@@ -42,7 +42,7 @@ jobs:
 
     load-fixtures:
         name: Load Doctrine fixtures
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
 
         steps:
             - uses: actions/checkout@v7
@@ -70,7 +70,7 @@ jobs:
     # request's migrations on top of it.
     migrate-populated-database:
         name: Run migrations on a populated database
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         # This workflow also runs on pushes to main and develop, where there is
         # no pull request to read a base branch from: the checkout steps below
         # would get an empty revision and fail. A push has no base to compare

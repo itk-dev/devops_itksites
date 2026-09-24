@@ -42,7 +42,7 @@ on:
 
 jobs:
     composer-validate:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         steps:
             - uses: actions/checkout@v7
 
@@ -54,7 +54,7 @@ jobs:
                   docker compose run --rm phpfpm composer validate --strict
 
     composer-normalized:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         steps:
             - uses: actions/checkout@v7
 
@@ -67,7 +67,7 @@ jobs:
                   docker compose run --rm phpfpm composer normalize --dry-run
 
     composer-audit:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         steps:
             - uses: actions/checkout@v7
 
