@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.16.0] - 2026-09-30
+
+- [#154](https://github.com/itk-dev/devops_itksites/pull/154)
+  Replace Webpack Encore and AssetMapper with Symfony Reprise and Vite
+- [#153](https://github.com/itk-dev/devops_itksites/pull/153)
+  Copy the server name instead of an ssh link, and load the admin JS and CSS
+  on every admin page
+- [#152](https://github.com/itk-dev/devops_itksites/pull/152)
+  Stop the oasdiff review upload and comment in the API spec workflow
+- [#151](https://github.com/itk-dev/devops_itksites/pull/151)
+  Drop the CLI login and log in to the mock identity provider as the fixture
+  users
+- [#150](https://github.com/itk-dev/devops_itksites/pull/150)
+  Store server types in lower case and show PROD, STG and GPU in upper case
+- [#149](https://github.com/itk-dev/devops_itksites/pull/149)
+  Filter the site API collection like the site admin
+- [#148](https://github.com/itk-dev/devops_itksites/pull/148)
+  Theme ReDoc with the ITK Development palette
+- [#147](https://github.com/itk-dev/devops_itksites/pull/147)
+  Theme Scalar with the ITK Development palette
+- [#146](https://github.com/itk-dev/devops_itksites/pull/146)
+  Theme Swagger UI with the ITK Development palette
+- [#145](https://github.com/itk-dev/devops_itksites/pull/145)
+  Theme EasyAdmin with the ITK Development palette
+- [#144](https://github.com/itk-dev/devops_itksites/pull/144)
+  Update Composer dependencies, including API Platform 5.0.1 to fix ReDoc on
+  OpenAPI 3.2
+- [#143](https://github.com/itk-dev/devops_itksites/pull/143)
+  Check RabbitMQ health with `nc` every 10s instead of `rabbitmq-diagnostics`
+  every second
+- [#142](https://github.com/itk-dev/devops_itksites/pull/142)
+  Serve JSON-LD, default to 100 items per page and let clients disable
+  pagination with `?pagination=false`
+- [#140](https://github.com/itk-dev/devops_itksites/pull/140)
+  Use `SortDirection` in the service certificate `OrderBy` mapping
+
+- [#139](https://github.com/itk-dev/devops_itksites/pull/139)
+  Silence the Yarn 1 `url.parse()` deprecation warning
+
 ## [1.15.1] - 2026-09-24
 
 - [#136](https://github.com/itk-dev/devops_itksites/pull/136)
@@ -377,7 +416,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.15.1...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.16.0...HEAD
+[1.16.0]: https://github.com/itk-dev/devops_itksites/compare/1.15.1...1.16.0
 [1.15.1]: https://github.com/itk-dev/devops_itksites/compare/1.15.0...1.15.1
 [1.15.0]: https://github.com/itk-dev/devops_itksites/compare/1.14.0...1.15.0
 [1.14.0]: https://github.com/itk-dev/devops_itksites/compare/1.13.0...1.14.0

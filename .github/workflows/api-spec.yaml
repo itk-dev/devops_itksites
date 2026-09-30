@@ -84,6 +84,9 @@ jobs:
                   base: "origin/${{ github.base_ref }}:public/api-spec-v1.yaml"
                   revision: "public/api-spec-v1.yaml"
                   fail-on: ERR
+                  # No upload to oasdiff.com and no review comment, which
+                  # would also be what --edit-last below overwrites.
+                  review: false
 
             - name: Generate changelog
               id: changelog
@@ -94,6 +97,7 @@ jobs:
                   revision: "public/api-spec-v1.yaml"
                   format: markdown
                   output-to-file: changelog.md
+                  review: false
 
             - name: Comment PR - no changes
               if: steps.breaking.outcome == 'success' && hashFiles('changelog.md') == ''

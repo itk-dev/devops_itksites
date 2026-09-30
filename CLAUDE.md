@@ -16,7 +16,7 @@ images, packages, modules, CVEs, and git repositories.
 - **Database**: Doctrine ORM 3.x / DBAL 4.x with MariaDB
 - **Messaging**: Symfony Messenger (AMQP/RabbitMQ)
 - **Auth**: OpenID Connect (`itk-dev/openid-connect-bundle`)
-- **Frontend**: Webpack Encore, Stimulus.js
+- **Frontend**: Symfony Reprise with Vite (`vite.config.js`)
 - **Testing**: PHPUnit 13+
 - **Code Quality**: PHP-CS-Fixer, PHPStan, Rector
 
@@ -64,7 +64,7 @@ truncated and rebuilt by replaying DetectionResults. Manually maintained data
 ## Development Environment
 
 ```sh
-# Start services (MariaDB, PHP-FPM 8.4, Nginx, Mailpit)
+# Start services (MariaDB, PHP-FPM 8.4, Nginx, RabbitMQ, Mailpit, mock OIDC IdP)
 docker compose pull && docker compose up --detach
 
 # Install dependencies
@@ -76,8 +76,10 @@ docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interact
 # Load fixtures
 docker compose exec phpfpm composer fixtures
 
-# Login as admin (after fixtures)
-docker compose exec phpfpm bin/console itk-dev:openid-connect:login admin@example.com
+# Log in: open https://itksites.local.itkdev.dk/admin and pick "Authorize as
+# admin" or "Authorize as user" at the mock identity provider. With fixtures,
+# admin has ROLE_ADMIN and user ROLE_USER; unknown users get ROLE_ADMIN.
+# After the idp container restarts: bin/console cache:pool:clear cache.app
 
 # Process message queues
 docker compose exec phpfpm composer queues
@@ -211,7 +213,7 @@ Pull requests run these checks:
 - API specs (`public/api-spec-v1.yaml` and `.json`) must be regenerated and committed when API changes
 
 <easyadmin-guidelines>
-This project uses EasyAdmin 5.6.0.
+This project uses EasyAdmin 5.6.1.
 
 Before creating or modifying admin dashboards, CRUD controllers, fields, actions,
 filters or their tests, read and follow the `easyadmin` skill at `.claude/skills/easyadmin/SKILL.md`.

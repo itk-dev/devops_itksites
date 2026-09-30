@@ -31,6 +31,9 @@ steps:
               - git checkout ${CI_COMMIT_BRANCH}
               - git pull
               - itkdev-docker-compose-server up -d --force-recreate --remove-orphans
+              # The old container would otherwise boot during composer's cache:clear
+              # and fail on bundles the release removes.
+              - itkdev-docker-compose-server exec phpfpm rm -rf var/cache/prod
               - itkdev-docker-compose-server exec phpfpm composer install --no-dev -o --classmap-authoritative
               - itkdev-docker-compose-server exec phpfpm bin/console doctrine:migrations:migrate --no-interaction
               - itkdev-docker-compose-server exec phpfpm bin/console messenger:setup-transports
