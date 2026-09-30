@@ -22,6 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[GetCollection(
     paginationEnabled: false,
+    order: ['primaryDomain' => 'ASC'],
 )]
 #[ORM\Entity(repositoryClass: SiteRepository::class)]
 #[ORM\UniqueConstraint(name: 'server_rootDir_configFilePath_idx', fields: ['server', 'rootDir', 'configFilePath'])]

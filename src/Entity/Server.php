@@ -23,6 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[GetCollection(
     paginationEnabled: false,
+    order: ['name' => 'ASC'],
 )]
 #[ORM\Entity(repositoryClass: ServerRepository::class)]
 class Server extends AbstractBaseEntity implements UserInterface, \Stringable
