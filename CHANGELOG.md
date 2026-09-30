@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#144](https://github.com/itk-dev/devops_itksites/pull/144)
+  Update Composer dependencies, including API Platform 5.0.1 to fix ReDoc on
+  OpenAPI 3.2
 - [#143](https://github.com/itk-dev/devops_itksites/pull/143)
   Check RabbitMQ health with `nc` every 10s instead of `rabbitmq-diagnostics`
   every second

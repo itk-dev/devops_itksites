@@ -211,7 +211,7 @@ Pull requests run these checks:
 - API specs (`public/api-spec-v1.yaml` and `.json`) must be regenerated and committed when API changes
 
 <easyadmin-guidelines>
-This project uses EasyAdmin 5.6.0.
+This project uses EasyAdmin 5.6.1.
 
 Before creating or modifying admin dashboards, CRUD controllers, fields, actions,
 filters or their tests, read and follow the `easyadmin` skill at `.claude/skills/easyadmin/SKILL.md`.
