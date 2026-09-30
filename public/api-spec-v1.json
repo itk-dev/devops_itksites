@@ -285,6 +285,253 @@
                         },
                         "style": "form",
                         "explode": true
+                    },
+                    {
+                        "name": "primaryDomain",
+                        "in": "query",
+                        "description": "Primary domain contains",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "primaryDomain[]",
+                        "in": "query",
+                        "description": "Primary domain contains",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "deepObject",
+                        "explode": true
+                    },
+                    {
+                        "name": "configFilePath",
+                        "in": "query",
+                        "description": "Config file path contains",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "configFilePath[]",
+                        "in": "query",
+                        "description": "Config file path contains",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "deepObject",
+                        "explode": true
+                    },
+                    {
+                        "name": "phpVersion",
+                        "in": "query",
+                        "description": "PHP version equal to, e.g. 8.3",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "phpVersion[gt]",
+                        "in": "query",
+                        "description": "PHP version greater than",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "phpVersion[gte]",
+                        "in": "query",
+                        "description": "PHP version greater than or equal to",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "phpVersion[lt]",
+                        "in": "query",
+                        "description": "PHP version less than",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "phpVersion[lte]",
+                        "in": "query",
+                        "description": "PHP version less than or equal to",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "phpVersion[ne]",
+                        "in": "query",
+                        "description": "PHP version not equal to",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "phpVersion[between]",
+                        "in": "query",
+                        "description": "PHP version between two versions, inclusive, e.g. 8.1..8.3",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "serverName",
+                        "in": "query",
+                        "description": "Server name",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "serverName[]",
+                        "in": "query",
+                        "description": "Server name",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "deepObject",
+                        "explode": true
+                    },
+                    {
+                        "name": "serverType",
+                        "in": "query",
+                        "description": "Server type",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "prod",
+                                "stg",
+                                "devops",
+                                "GPU"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "serverType[]",
+                        "in": "query",
+                        "description": "Server type",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "prod",
+                                    "stg",
+                                    "devops",
+                                    "GPU"
+                                ]
+                            }
+                        },
+                        "style": "deepObject",
+                        "explode": true
+                    },
+                    {
+                        "name": "hostingProvider",
+                        "in": "query",
+                        "description": "Hosting provider",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "Azure",
+                                "DBC",
+                                "It Relation",
+                                "It Relation (ADM)",
+                                "It Relation (DMZ)",
+                                "Hetzner"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": true
+                    },
+                    {
+                        "name": "hostingProvider[]",
+                        "in": "query",
+                        "description": "Hosting provider",
+                        "required": false,
+                        "deprecated": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "Azure",
+                                    "DBC",
+                                    "It Relation",
+                                    "It Relation (ADM)",
+                                    "It Relation (DMZ)",
+                                    "Hetzner"
+                                ]
+                            }
+                        },
+                        "style": "deepObject",
+                        "explode": true
                     }
                 ]
             }

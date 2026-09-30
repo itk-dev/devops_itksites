@@ -7,8 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#152](https://github.com/itk-dev/devops_itksites/pull/152)
+  Stop the oasdiff review upload and comment in the API spec workflow
 - [#150](https://github.com/itk-dev/devops_itksites/pull/150)
   Store server types in lower case and show PROD, STG and GPU in upper case
+- [#149](https://github.com/itk-dev/devops_itksites/pull/149)
+  Filter the site API collection like the site admin
 - [#148](https://github.com/itk-dev/devops_itksites/pull/148)
   Theme ReDoc with the ITK Development palette
 - [#147](https://github.com/itk-dev/devops_itksites/pull/147)
