@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#143](https://github.com/itk-dev/devops_itksites/pull/143)
+  Check RabbitMQ health with `nc` every 10s instead of `rabbitmq-diagnostics`
+  every second
 - [#140](https://github.com/itk-dev/devops_itksites/pull/140)
   Use `SortDirection` in the service certificate `OrderBy` mapping
 
