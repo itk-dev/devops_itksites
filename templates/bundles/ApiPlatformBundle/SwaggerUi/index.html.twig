@@ -1,0 +1,17 @@
+{% extends '@!ApiPlatform/SwaggerUi/index.html.twig' %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block stylesheet %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('api-docs') }}
+    <link rel="icon" href="{{ asset('img/favicon.ico') }}">
+{% endblock %}
+
+{% block header %}
+    <header>
+        <a id="logo" href="{{ path('admin') }}"><img src="{{ asset('img/itk-sites-logo.png') }}" alt="ITK sites"></a>
+    </header>
+{% endblock %}

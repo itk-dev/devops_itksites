@@ -25,6 +25,7 @@ Encore
   // CSS-only entry, loaded by DashboardController for every admin page. The
   // stylesheet is EasyAdmin-specific despite living at styles/app.css.
   .addStyleEntry("admin", "./assets/styles/app.css")
+  .addStyleEntry("api-docs", "./assets/styles/api-docs.css")
 
   // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
   .splitEntryChunks()
