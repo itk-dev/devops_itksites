@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#151](https://github.com/itk-dev/devops_itksites/pull/151)
+  Drop the CLI login and log in to the mock identity provider as the fixture
+  users
 - [#148](https://github.com/itk-dev/devops_itksites/pull/148)
   Theme ReDoc with the ITK Development palette
 - [#147](https://github.com/itk-dev/devops_itksites/pull/147)
