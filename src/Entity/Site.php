@@ -4,9 +4,15 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+use App\Doctrine\Filter\SemverFilter;
 use App\Repository\SiteRepository;
+use App\Types\HostingProviderType;
+use App\Types\ServerTypeType;
 use App\Types\SiteType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -20,7 +26,32 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['export']],
     security: "is_granted('ROLE_USER')",
 )]
-#[GetCollection()]
+// Mirrors the filters in App\Controller\Admin\SiteCrudController.
+#[GetCollection(parameters: [
+    'primaryDomain' => new QueryParameter(filter: new PartialSearchFilter(), property: 'primaryDomain', description: 'Primary domain contains'),
+    'configFilePath' => new QueryParameter(filter: new PartialSearchFilter(), property: 'configFilePath', description: 'Config file path contains'),
+    'phpVersion' => new QueryParameter(filter: new SemverFilter(), property: 'phpVersion', description: 'PHP version, e.g. 8.3, phpVersion[gte]=8.1 or phpVersion[between]=8.1..8.3'),
+    'server' => new QueryParameter(filter: new ExactFilter(), property: 'server.name', description: 'Server name'),
+    'serverType' => new QueryParameter(
+        filter: new ExactFilter(),
+        property: 'server.type',
+        schema: ['type' => 'string', 'enum' => [ServerTypeType::PROD, ServerTypeType::STG, ServerTypeType::DEVOPS, ServerTypeType::GPU]],
+        description: 'Server type',
+    ),
+    'hostingProvider' => new QueryParameter(
+        filter: new ExactFilter(),
+        property: 'server.hostingProvider',
+        schema: ['type' => 'string', 'enum' => [
+            HostingProviderType::AZURE,
+            HostingProviderType::DBC,
+            HostingProviderType::IT_RELATION,
+            HostingProviderType::IT_RELATION_ADM,
+            HostingProviderType::IT_RELATION_DMZ,
+            HostingProviderType::HETZNER,
+        ]],
+        description: 'Hosting provider',
+    ),
+])]
 #[ORM\Entity(repositoryClass: SiteRepository::class)]
 #[ORM\UniqueConstraint(name: 'server_rootDir_configFilePath_idx', fields: ['server', 'rootDir', 'configFilePath'])]
 class Site extends AbstractHandlerResult implements \Stringable

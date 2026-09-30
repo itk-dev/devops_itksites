@@ -1,0 +1,122 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Doctrine\Filter;
+
+use ApiPlatform\Doctrine\Orm\Filter\FilterInterface;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Metadata\BackwardCompatibleFilterDescriptionTrait;
+use ApiPlatform\Metadata\OpenApiParameterFilterInterface;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\Metadata\Parameter;
+use ApiPlatform\OpenApi\Model\Parameter as OpenApiParameter;
+use App\Doctrine\Functions\SemverNumeric;
+use Composer\Semver\VersionParser;
+use Doctrine\ORM\QueryBuilder;
+
+/**
+ * API Platform filter comparing a version string column by semantic version,
+ * the API counterpart of the EasyAdmin App\Form\Type\Admin\SemverFilter.
+ *
+ * ?phpVersion=8.3 matches exactly, ?phpVersion[gte]=8.1&phpVersion[lt]=8.4
+ * combines operators, and ?phpVersion[between]=8.1..8.3 is inclusive. A value
+ * that is not a version matches nothing.
+ */
+final class SemverFilter implements FilterInterface, OpenApiParameterFilterInterface
+{
+    use BackwardCompatibleFilterDescriptionTrait;
+
+    private const array OPERATORS = [
+        'gt' => '>',
+        'gte' => '>=',
+        'lt' => '<',
+        'lte' => '<=',
+        'ne' => '!=',
+    ];
+
+    private const string BETWEEN = 'between';
+
+    /**
+     * @param array<string, mixed> $context
+     */
+    #[\Override]
+    public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
+    {
+        /** @var Parameter $parameter */
+        $parameter = $context['parameter'];
+        $values = $parameter->getValue();
+        $field = sprintf('SEMVER_NUMERIC(%s.%s)', $queryBuilder->getRootAliases()[0], $parameter->getProperty());
+
+        foreach (is_array($values) ? $values : ['=' => $values] as $operator => $value) {
+            if (!is_string($value) || '' === trim($value)) {
+                continue;
+            }
+
+            if (self::BETWEEN === $operator) {
+                $bounds = explode('..', $value, 2);
+                if (2 !== count($bounds) || !$this->isVersion($bounds[0]) || !$this->isVersion($bounds[1])) {
+                    $queryBuilder->andWhere('1 = 0');
+
+                    return;
+                }
+
+                $a = SemverNumeric::toNumeric(trim($bounds[0]));
+                $b = SemverNumeric::toNumeric(trim($bounds[1]));
+                $min = $queryNameGenerator->generateParameterName($parameter->getKey());
+                $max = $queryNameGenerator->generateParameterName($parameter->getKey());
+                $queryBuilder
+                    ->andWhere(sprintf('%s BETWEEN :%s AND :%s', $field, $min, $max))
+                    ->setParameter($min, min($a, $b))
+                    ->setParameter($max, max($a, $b));
+
+                continue;
+            }
+
+            $sqlOperator = '=' === $operator ? '=' : (self::OPERATORS[$operator] ?? null);
+            if (null === $sqlOperator) {
+                continue;
+            }
+
+            if (!$this->isVersion($value)) {
+                $queryBuilder->andWhere('1 = 0');
+
+                return;
+            }
+
+            $name = $queryNameGenerator->generateParameterName($parameter->getKey());
+            $queryBuilder
+                ->andWhere(sprintf('%s %s :%s', $field, $sqlOperator, $name))
+                ->setParameter($name, SemverNumeric::toNumeric(trim($value)));
+        }
+    }
+
+    /**
+     * @return list<OpenApiParameter>
+     */
+    #[\Override]
+    public function getOpenApiParameters(Parameter $parameter): array
+    {
+        $key = $parameter->getKey();
+        $description = $parameter->getDescription();
+
+        return [
+            new OpenApiParameter(name: $key, in: 'query', description: (string) $description, schema: ['type' => 'string']),
+            ...array_map(
+                static fn (string $operator): OpenApiParameter => new OpenApiParameter(name: sprintf('%s[%s]', $key, $operator), in: 'query', schema: ['type' => 'string']),
+                [...array_keys(self::OPERATORS), self::BETWEEN],
+            ),
+        ];
+    }
+
+    private function isVersion(string $value): bool
+    {
+        try {
+            new VersionParser()->normalize(trim($value));
+
+            return true;
+        } catch (\UnexpectedValueException) {
+            return false;
+        }
+    }
+}
