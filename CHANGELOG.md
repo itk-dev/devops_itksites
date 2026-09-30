@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#141](https://github.com/itk-dev/devops_itksites/pull/141)
+  Disabled pagination for Server and Site API endpoints and defined order of items.
 - [#140](https://github.com/itk-dev/devops_itksites/pull/140)
   Use `SortDirection` in the service certificate `OrderBy` mapping
 
