@@ -88,18 +88,7 @@ paths:
           links: {}
       summary: 'Retrieves the collection of Server resources.'
       description: 'Retrieves the collection of Server resources.'
-      parameters:
-        -
-          name: page
-          in: query
-          description: 'The collection page number'
-          required: false
-          deprecated: false
-          schema:
-            type: integer
-            default: 1
-          style: form
-          explode: true
+      parameters: []
   /api/sites:
     get:
       operationId: api_sites_get_collection
@@ -131,18 +120,7 @@ paths:
           links: {}
       summary: 'Retrieves the collection of Site resources.'
       description: 'Retrieves the collection of Site resources.'
-      parameters:
-        -
-          name: page
-          in: query
-          description: 'The collection page number'
-          required: false
-          deprecated: false
-          schema:
-            type: integer
-            default: 1
-          style: form
-          explode: true
+      parameters: []
 components:
   schemas:
     ConstraintViolation:

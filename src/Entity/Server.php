@@ -21,7 +21,9 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['export']],
     security: "is_granted('ROLE_USER')",
 )]
-#[GetCollection()]
+#[GetCollection(
+    paginationEnabled: false,
+)]
 #[ORM\Entity(repositoryClass: ServerRepository::class)]
 class Server extends AbstractBaseEntity implements UserInterface, \Stringable
 {

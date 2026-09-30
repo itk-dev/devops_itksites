@@ -130,21 +130,7 @@
                 },
                 "summary": "Retrieves the collection of Server resources.",
                 "description": "Retrieves the collection of Server resources.",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "The collection page number",
-                        "required": false,
-                        "deprecated": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 1
-                        },
-                        "style": "form",
-                        "explode": true
-                    }
-                ]
+                "parameters": []
             }
         },
         "/api/sites": {
@@ -194,21 +180,7 @@
                 },
                 "summary": "Retrieves the collection of Site resources.",
                 "description": "Retrieves the collection of Site resources.",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "The collection page number",
-                        "required": false,
-                        "deprecated": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 1
-                        },
-                        "style": "form",
-                        "explode": true
-                    }
-                ]
+                "parameters": []
             }
         }
     },

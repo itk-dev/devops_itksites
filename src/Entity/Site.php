@@ -20,7 +20,9 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['export']],
     security: "is_granted('ROLE_USER')",
 )]
-#[GetCollection()]
+#[GetCollection(
+    paginationEnabled: false,
+)]
 #[ORM\Entity(repositoryClass: SiteRepository::class)]
 #[ORM\UniqueConstraint(name: 'server_rootDir_configFilePath_idx', fields: ['server', 'rootDir', 'configFilePath'])]
 class Site extends AbstractHandlerResult implements \Stringable
