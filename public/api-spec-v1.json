@@ -425,7 +425,7 @@
                         "explode": true
                     },
                     {
-                        "name": "server",
+                        "name": "serverName",
                         "in": "query",
                         "description": "Server name",
                         "required": false,
@@ -437,7 +437,7 @@
                         "explode": true
                     },
                     {
-                        "name": "server[]",
+                        "name": "serverName[]",
                         "in": "query",
                         "description": "Server name",
                         "required": false,
