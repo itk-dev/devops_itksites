@@ -10,6 +10,32 @@
     <link rel="icon" href="{{ asset('img/favicon.ico') }}">
 {% endblock %}
 
+{% block javascript %}
+    {{ parent() }}
+    {# ReDoc styles itself in JS, so its colours are set with the theme option.
+       API Platform's init script passes no options and runs on window.onload,
+       so wrapping Redoc.init here adds the ITK Development palette. Redoc is a
+       module namespace whose exports cannot be reassigned, hence the new
+       global object. #}
+    <script{{ csp_nonce_attr|raw }}>
+        if (window.Redoc) {
+            const { init } = window.Redoc;
+            window.Redoc = { ...window.Redoc, init: (spec, options, element, callback) => init(spec, {
+                ...options,
+                theme: {
+                    colors: {
+                        primary: { main: '#007ba6' },
+                        success: { main: '#008d3d' },
+                        error: { main: '#e44930' },
+                        http: { get: '#007ba6', post: '#008d3d', put: '#89bd23', patch: '#89bd23', delete: '#e44930' },
+                    },
+                    rightPanel: { backgroundColor: '#111318' },
+                },
+            }, element, callback) };
+        }
+    </script>
+{% endblock %}
+
 {% block header %}
     <header>
         <a id="logo" href="{{ path('admin') }}"><img src="{{ asset('img/itk-sites-logo.png') }}" alt="ITK sites"></a>
