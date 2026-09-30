@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.16.0] - 2026-09-30
+
 - [#154](https://github.com/itk-dev/devops_itksites/pull/154)
   Replace Webpack Encore and AssetMapper with Symfony Reprise and Vite
 - [#153](https://github.com/itk-dev/devops_itksites/pull/153)
@@ -414,7 +416,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.15.1...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.16.0...HEAD
+[1.16.0]: https://github.com/itk-dev/devops_itksites/compare/1.15.1...1.16.0
 [1.15.1]: https://github.com/itk-dev/devops_itksites/compare/1.15.0...1.15.1
 [1.15.0]: https://github.com/itk-dev/devops_itksites/compare/1.14.0...1.15.0
 [1.14.0]: https://github.com/itk-dev/devops_itksites/compare/1.13.0...1.14.0
