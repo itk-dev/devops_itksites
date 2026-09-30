@@ -1,4 +1,6 @@
+import "microlighter/themes/github.css";
 import "./styles/admin.css";
+import "microlighter/micro-lighter-element.js";
 import TomSelect from "tom-select";
 
 const tomSelectHandler = () => {
