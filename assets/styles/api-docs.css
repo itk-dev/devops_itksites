@@ -1,8 +1,9 @@
-/* API docs overrides: the API Platform Swagger UI theme recoloured with the
-   ITK Development palette. */
+/* API docs overrides: the API Platform Swagger UI and Scalar themes
+   recoloured with the ITK Development palette. */
 :root {
     --itk-blue: #007ba6;
     --itk-blue-hover: #006385;
+    --itk-cyan: #00a5cd;
     --itk-green: #008d3d;
     --itk-lime: #89bd23;
     --itk-red: #e44930;
@@ -108,4 +109,25 @@ header #logo img {
 
 #swagger-ui.api-platform .btn:focus-visible {
     outline-color: var(--itk-blue);
+}
+
+/* Scalar (?ui=scalar). Its themes live in cascade layers, so these unlayered
+   rules win without !important. */
+.light-mode,
+.dark-mode {
+    --scalar-color-blue: var(--itk-blue);
+    --scalar-color-green: var(--itk-green);
+    --scalar-color-orange: var(--itk-lime);
+    --scalar-color-purple: var(--itk-lime);
+    --scalar-color-red: var(--itk-red);
+}
+
+.light-mode {
+    --scalar-color-accent: var(--itk-blue);
+    --scalar-background-accent: rgb(0 123 166 / 10%);
+}
+
+.dark-mode {
+    --scalar-color-accent: var(--itk-cyan);
+    --scalar-background-accent: rgb(0 165 205 / 15%);
 }
