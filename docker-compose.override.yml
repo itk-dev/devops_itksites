@@ -42,10 +42,12 @@ services:
       - RABBITMQ_DEFAULT_PASS=password
       - RABBITMQ_ERLANG_COOKIE='local-dev-cookie-not-a-secret'
     healthcheck:
-      test: rabbitmq-diagnostics check_port_connectivity
-      interval: 1s
+      test: ["CMD", "nc", "-z", "-w", "2", "127.0.0.1", "5672"]
+      interval: 10s
       timeout: 3s
-      retries: 30
+      retries: 3
+      start_period: 60s
+      start_interval: 1s
 
   node:
     profiles:
