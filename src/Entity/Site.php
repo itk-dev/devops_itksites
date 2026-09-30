@@ -31,7 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     'primaryDomain' => new QueryParameter(filter: new PartialSearchFilter(), property: 'primaryDomain', description: 'Primary domain contains'),
     'configFilePath' => new QueryParameter(filter: new PartialSearchFilter(), property: 'configFilePath', description: 'Config file path contains'),
     'phpVersion' => new QueryParameter(filter: new SemverFilter('PHP version'), property: 'phpVersion'),
-    'server' => new QueryParameter(filter: new ExactFilter(), property: 'server.name', description: 'Server name'),
+    'serverName' => new QueryParameter(filter: new ExactFilter(), property: 'server.name', description: 'Server name'),
     'serverType' => new QueryParameter(
         filter: new ExactFilter(),
         property: 'server.type',

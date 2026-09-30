@@ -74,7 +74,7 @@ class SiteFilterTest extends ApiTestCase
         yield 'php version range' => ['phpVersion[gt]=8.1.2&phpVersion[lte]=8.3', ['prod.example.com']];
         yield 'php version between' => ['phpVersion[between]=8.3..8.1', ['dev.example.com', 'prod.example.com']];
         yield 'php version not a version' => ['phpVersion=latest', []];
-        yield 'server name' => ['server=alpha.example.com', ['dev.example.com']];
+        yield 'server name' => ['serverName=alpha.example.com', ['dev.example.com']];
         yield 'server type' => ['serverType=prod', ['prod.example.com']];
         yield 'hosting provider' => ['hostingProvider=Azure', ['dev.example.com']];
         yield 'combined' => ['serverType=stg&hostingProvider=Hetzner', []];
