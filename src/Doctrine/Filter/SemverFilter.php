@@ -38,6 +38,15 @@ final class SemverFilter implements FilterInterface, OpenApiParameterFilterInter
     private const string BETWEEN = 'between';
 
     /**
+     * Describe each operator with $label ("PHP version") in the OpenAPI
+     * document. A description on the QueryParameter itself would replace all
+     * of them with the same text.
+     */
+    public function __construct(private readonly string $label = 'Version')
+    {
+    }
+
+    /**
      * @param array<string, mixed> $context
      */
     #[\Override]
@@ -98,15 +107,26 @@ final class SemverFilter implements FilterInterface, OpenApiParameterFilterInter
     public function getOpenApiParameters(Parameter $parameter): array
     {
         $key = $parameter->getKey();
-        $description = $parameter->getDescription();
-
-        return [
-            new OpenApiParameter(name: $key, in: 'query', description: (string) $description, schema: ['type' => 'string']),
-            ...array_map(
-                static fn (string $operator): OpenApiParameter => new OpenApiParameter(name: sprintf('%s[%s]', $key, $operator), in: 'query', schema: ['type' => 'string']),
-                [...array_keys(self::OPERATORS), self::BETWEEN],
-            ),
+        $descriptions = [
+            $key => '%s equal to, e.g. 8.3',
+            $key.'[gt]' => '%s greater than',
+            $key.'[gte]' => '%s greater than or equal to',
+            $key.'[lt]' => '%s less than',
+            $key.'[lte]' => '%s less than or equal to',
+            $key.'[ne]' => '%s not equal to',
+            $key.'['.self::BETWEEN.']' => '%s between two versions, inclusive, e.g. 8.1..8.3',
         ];
+
+        return array_map(
+            fn (string $name, string $description): OpenApiParameter => new OpenApiParameter(
+                name: $name,
+                in: 'query',
+                description: sprintf($description, $this->label),
+                schema: ['type' => 'string'],
+            ),
+            array_keys($descriptions),
+            $descriptions,
+        );
     }
 
     private function isVersion(string $value): bool
