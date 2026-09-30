@@ -39,3 +39,13 @@
         background: var(--button-invisible-danger-hover-hover-bg);
     }
 }
+
+/* Code highlighted with <micro-lighter> follows the EasyAdmin light/dark
+   switch rather than the OS setting its theme uses. */
+.ea-light-scheme [data-syntax-theme] {
+    color-scheme: light;
+}
+
+.ea-dark-scheme [data-syntax-theme] {
+    color-scheme: dark;
+}
