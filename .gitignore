@@ -31,11 +31,6 @@ phpstan.neon
 ###< phpstan/phpstan ###
 .phpunit.cache
 
-###> symfony/asset-mapper ###
-/public/assets/
-/assets/vendor/
-###< symfony/asset-mapper ###
-
 .twig-cs-fixer.cache
 .playwright-mcp
 
@@ -53,3 +48,8 @@ RENOVATE_PLAN.md
 ###> symfony/ai-mate ###
 /mate/.env.local
 ###< symfony/ai-mate ###
+
+###> symfony/reprise ###
+/node_modules/
+/public/build/
+###< symfony/reprise ###

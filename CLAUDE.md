@@ -16,7 +16,7 @@ images, packages, modules, CVEs, and git repositories.
 - **Database**: Doctrine ORM 3.x / DBAL 4.x with MariaDB
 - **Messaging**: Symfony Messenger (AMQP/RabbitMQ)
 - **Auth**: OpenID Connect (`itk-dev/openid-connect-bundle`)
-- **Frontend**: Webpack Encore, Stimulus.js
+- **Frontend**: Symfony Reprise with Vite (`vite.config.js`)
 - **Testing**: PHPUnit 13+
 - **Code Quality**: PHP-CS-Fixer, PHPStan, Rector
 

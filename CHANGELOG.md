@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#154](https://github.com/itk-dev/devops_itksites/pull/154)
+  Replace Webpack Encore and AssetMapper with Symfony Reprise and Vite
 - [#153](https://github.com/itk-dev/devops_itksites/pull/153)
   Copy the server name instead of an ssh link, and load the admin JS and CSS
   on every admin page
