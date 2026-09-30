@@ -1,15 +1,30 @@
-/* EasyAdmin overrides. The ITK blue is set with the theme API in
-   DashboardController; what is left here is what that API cannot express. */
+/* EasyAdmin overrides. The ITK blue, grays and radius are set with the theme
+   API in DashboardController; what is left here is what that API cannot
+   express: the rest of the ITK Development palette. */
 :root {
+    --itk-red: #e44930;
+    --itk-red-hover: #c93d28;
+    --itk-green: #008d3d;
+    --itk-slate-700: #3f4654;
+
     --body-max-width: 100%;
     --sidebar-bg: #fff;
+    --sidebar-menu-color: var(--itk-slate-700);
+
     /* ITK red, for a false boolean badge and for danger states */
-    --badge-boolean-false-bg: rgb(228, 73, 48);
+    --badge-boolean-false-bg: var(--itk-red);
     --badge-boolean-false-color: var(--white);
     --bs-danger-rgb: 228, 73, 48;
-    /* the theme API only takes named gray ramps, not an arbitrary gray */
-    --sidebar-menu-color: rgb(66, 66, 66);
-    --text-color-dark: rgb(66, 66, 66);
+    --color-danger: var(--itk-red);
+    --button-danger-color: var(--itk-red);
+    --button-danger-hover-bg: var(--itk-red);
+    --button-danger-active-bg: var(--itk-red-hover);
+
+    /* ITK green, for success states */
+    --bs-success-rgb: 0, 141, 61;
+    --color-success: var(--itk-green);
+    --button-success-color: var(--itk-green);
+    --button-success-hover-bg: var(--itk-green);
 }
 
 /* Grouped dropdown group styling for index pages */
