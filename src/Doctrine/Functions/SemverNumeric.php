@@ -22,7 +22,7 @@ use Doctrine\ORM\Query\TokenType;
  * 64-bit PHP_INT_MAX (~9.22·10^18), so callers can mirror this arithmetic
  * in PHP to bind a single BIGINT parameter rather than feeding the
  * raw string back through the DQL function (which would expand the
- * argument-placeholder several times — see SemverFilter::toSemverNumeric()).
+ * argument-placeholder several times — see toNumeric()).
  *
  * Non-semver inputs (anything that doesn't match the dotted-number shape)
  * collapse to NULL via the outer CASE so they're excluded from any
@@ -67,5 +67,25 @@ class SemverNumeric extends FunctionNode
             $segment(3),
             $segment(4),
         );
+    }
+
+    /**
+     * Mirrors the SQL above: strips a leading v/V, splits on '.', pads to four
+     * segments with zeros, then packs major/minor/patch/extra into a BIGINT
+     * with 10^4 of headroom per segment. Max value is ~10^16, comfortably
+     * below PHP_INT_MAX (~9.22·10^18).
+     */
+    public static function toNumeric(string $version): int
+    {
+        $segments = explode('.', ltrim($version, 'vV'));
+        $major = (int) $segments[0];
+        $minor = (int) ($segments[1] ?? 0);
+        $patch = (int) ($segments[2] ?? 0);
+        $extra = (int) ($segments[3] ?? 0);
+
+        return $major * 1_000_000_000_000
+            + $minor * 100_000_000
+            + $patch * 10_000
+            + $extra;
     }
 }
