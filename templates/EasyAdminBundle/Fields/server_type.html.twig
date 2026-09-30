@@ -1,14 +1,17 @@
 {# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
 {# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{# Types are stored in lower case; prod, stg and gpu are shown in upper case. #}
 {% if field.value is empty %}
     <twig:ea:Badge variant="secondary">?</twig:ea:Badge>
 {% elseif field.value == constant('App\\Types\\ServerTypeType::PROD') %}
-    <twig:ea:Badge variant="danger">{{ field.formattedValue }}</twig:ea:Badge>
+    <twig:ea:Badge variant="danger" class="text-uppercase">{{ field.value }}</twig:ea:Badge>
 {% elseif field.value == constant('App\\Types\\ServerTypeType::STG') %}
-    <twig:ea:Badge variant="warning">{{ field.formattedValue }}</twig:ea:Badge>
+    <twig:ea:Badge variant="warning" class="text-uppercase">{{ field.value }}</twig:ea:Badge>
 {% elseif field.value == constant('App\\Types\\ServerTypeType::DEVOPS') %}
-    <twig:ea:Badge variant="primary">{{ field.formattedValue }}</twig:ea:Badge>
+    <twig:ea:Badge variant="primary">DevOps</twig:ea:Badge>
+{% elseif field.value == constant('App\\Types\\ServerTypeType::GPU') %}
+    <twig:ea:Badge variant="secondary" class="text-uppercase">{{ field.value }}</twig:ea:Badge>
 {% else %}
     <twig:ea:Badge variant="secondary">{{ field.formattedValue }}</twig:ea:Badge>
 {% endif %}
