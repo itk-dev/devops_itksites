@@ -111,6 +111,32 @@ header #logo img {
     outline-color: var(--itk-blue);
 }
 
+/* Swagger UI dark mode (html.dark-mode, set from prefers-color-scheme): a dark
+   header and light title instead of the fixed light ones above, and cyan for
+   blue text, as in the Scalar dark theme below. */
+html.dark-mode header:before {
+    background-color: var(--apip-page-background);
+    border-bottom-color: var(--apip-block-border);
+}
+
+html.dark-mode #swagger-ui.api-platform .info .title {
+    color: #fff;
+}
+
+html.dark-mode .swagger-ui .info a,
+html.dark-mode #formats a {
+    color: var(--itk-cyan);
+}
+
+html.dark-mode .swagger-ui .scheme-container .btn.authorize {
+    color: var(--itk-cyan);
+    border-color: var(--itk-cyan);
+}
+
+html.dark-mode .swagger-ui .scheme-container .btn.authorize svg {
+    fill: var(--itk-cyan);
+}
+
 /* Scalar (?ui=scalar). Its themes live in cascade layers, so these unlayered
    rules win without !important. */
 .light-mode,
