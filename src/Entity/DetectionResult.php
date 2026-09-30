@@ -143,7 +143,7 @@ class DetectionResult extends AbstractBaseEntity implements \Stringable
             return $this->data;
         }
 
-        return json_encode($json, JSON_PRETTY_PRINT);
+        return json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
     public function setData(string $data): self
