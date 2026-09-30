@@ -1,8 +1,11 @@
 itkdev_openid_connect:
     cache_options:
         cache_pool: 'cache.app' # Cache item pool for caching discovery document and CLI login tokens
+    # Required by the bundle, but the CLI login is not enabled: its
+    # authenticator is not on the firewall. Log in through the mock
+    # identity provider locally instead.
     cli_login_options:
-        route: '%env(OIDC_CLI_LOGIN_ROUTE)%' # Route for CLI login
+        route: admin
     user_provider: 'security.user.provider.concrete.app_user_provider'
     openid_providers:
         # Define one or more providers
