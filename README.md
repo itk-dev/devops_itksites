@@ -206,7 +206,8 @@ docker compose exec phpfpm bin/console messenger:consume async --failure-limit=1
 
 ### Assets
 
-We use [Symfony Reprise](https://symfony.com/bundles/reprise/current/index.html) with [Vite](https://vite.dev) to build assets:
+We use [Symfony Reprise](https://symfony.com/bundles/reprise/current/index.html)
+with [Vite](https://vite.dev) to build assets:
 
 ```sh
 docker compose run --rm node yarn install
