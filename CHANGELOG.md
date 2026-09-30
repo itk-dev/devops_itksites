@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.17.0] - 2026-10-01
+
 - [#157](https://github.com/itk-dev/devops_itksites/pull/157)
   Highlight detection result data with MicroLighter
 - [#156](https://github.com/itk-dev/devops_itksites/pull/156)
@@ -421,7 +423,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.16.0...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.17.0...HEAD
+[1.17.0]: https://github.com/itk-dev/devops_itksites/compare/1.16.0...1.17.0
 [1.16.0]: https://github.com/itk-dev/devops_itksites/compare/1.15.1...1.16.0
 [1.15.1]: https://github.com/itk-dev/devops_itksites/compare/1.15.0...1.15.1
 [1.15.0]: https://github.com/itk-dev/devops_itksites/compare/1.14.0...1.15.0
