@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#148](https://github.com/itk-dev/devops_itksites/pull/148)
+  Theme ReDoc with the ITK Development palette
 - [#147](https://github.com/itk-dev/devops_itksites/pull/147)
   Theme Scalar with the ITK Development palette
 - [#146](https://github.com/itk-dev/devops_itksites/pull/146)
