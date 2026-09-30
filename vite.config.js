@@ -14,5 +14,19 @@ export default defineConfig({
       },
     },
   },
-  plugins: [Symfony()],
+  plugins: [
+    Symfony({
+      copy: [
+        // <micro-lighter> loads grammars with import(`./grammars/${language}.js`)
+        // relative to the bundle, which Vite leaves as is, so ship them next to
+        // it under their own names.
+        {
+          from: "node_modules/microlighter/dist/grammars",
+          to: "grammars",
+          pattern: /\.js$/,
+          hash: false,
+        },
+      ],
+    }),
+  ],
 });

@@ -1,0 +1,8 @@
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# Highlighted with <micro-lighter> from assets/admin.js; the language is the
+   field's "language" custom option. #}
+<div data-syntax-theme="github">
+    <micro-lighter language="{{ field.customOptions.get('language') }}" controls="copy" line-numbers>
+        <pre><code>{{ field.value }}</code></pre>
+    </micro-lighter>
+</div>
