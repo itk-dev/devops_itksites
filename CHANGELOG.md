@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#156](https://github.com/itk-dev/devops_itksites/pull/156)
+  Theme Swagger UI for dark mode
+
 ## [1.16.0] - 2026-09-30
 
 - [#154](https://github.com/itk-dev/devops_itksites/pull/154)
