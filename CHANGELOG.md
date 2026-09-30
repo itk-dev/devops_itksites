@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#142](https://github.com/itk-dev/devops_itksites/pull/142)
+  Serve JSON-LD, default to 100 items per page and let clients disable
+  pagination with `?pagination=false`
 - [#140](https://github.com/itk-dev/devops_itksites/pull/140)
   Use `SortDirection` in the service certificate `OrderBy` mapping
 
