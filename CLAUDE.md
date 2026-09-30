@@ -64,7 +64,7 @@ truncated and rebuilt by replaying DetectionResults. Manually maintained data
 ## Development Environment
 
 ```sh
-# Start services (MariaDB, PHP-FPM 8.4, Nginx, Mailpit)
+# Start services (MariaDB, PHP-FPM 8.4, Nginx, RabbitMQ, Mailpit, mock OIDC IdP)
 docker compose pull && docker compose up --detach
 
 # Install dependencies
@@ -76,8 +76,10 @@ docker compose exec phpfpm bin/console doctrine:migrations:migrate --no-interact
 # Load fixtures
 docker compose exec phpfpm composer fixtures
 
-# Login as admin (after fixtures)
-docker compose exec phpfpm bin/console itk-dev:openid-connect:login admin@example.com
+# Log in: open https://itksites.local.itkdev.dk/admin and pick "Authorize as
+# admin" or "Authorize as user" at the mock identity provider. With fixtures,
+# admin has ROLE_ADMIN and user ROLE_USER; unknown users get ROLE_ADMIN.
+# After the idp container restarts: bin/console cache:pool:clear cache.app
 
 # Process message queues
 docker compose exec phpfpm composer queues
