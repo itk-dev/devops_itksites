@@ -1,3 +1,4 @@
+import "./styles/app.css";
 import TomSelect from "tom-select";
 
 const tomSelectHandler = () => {
@@ -17,3 +18,4 @@ const tomSelectHandler = () => {
 
 window.addEventListener("DOMContentLoaded", tomSelectHandler);
 document.addEventListener("ea.collection.item-added", tomSelectHandler);
+
