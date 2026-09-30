@@ -23,7 +23,7 @@ use Doctrine\ORM\QueryBuilder;
  * combines operators, and ?phpVersion[between]=8.1..8.3 is inclusive. A value
  * that is not a version matches nothing.
  */
-final class SemverFilter implements FilterInterface, OpenApiParameterFilterInterface
+final readonly class SemverFilter implements FilterInterface, OpenApiParameterFilterInterface
 {
     use BackwardCompatibleFilterDescriptionTrait;
 
@@ -42,7 +42,7 @@ final class SemverFilter implements FilterInterface, OpenApiParameterFilterInter
      * document. A description on the QueryParameter itself would replace all
      * of them with the same text.
      */
-    public function __construct(private readonly string $label = 'Version')
+    public function __construct(private string $label = 'Version')
     {
     }
 
