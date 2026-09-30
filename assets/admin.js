@@ -1,4 +1,4 @@
-import "./styles/app.css";
+import "./styles/admin.css";
 import TomSelect from "tom-select";
 
 const tomSelectHandler = () => {
