@@ -226,7 +226,7 @@ paths:
         -
           name: phpVersion
           in: query
-          description: 'PHP version, e.g. 8.3, phpVersion[gte]=8.1 or phpVersion[between]=8.1..8.3'
+          description: 'PHP version equal to, e.g. 8.3'
           required: false
           deprecated: false
           schema:
@@ -236,7 +236,7 @@ paths:
         -
           name: 'phpVersion[gt]'
           in: query
-          description: 'PHP version, e.g. 8.3, phpVersion[gte]=8.1 or phpVersion[between]=8.1..8.3'
+          description: 'PHP version greater than'
           required: false
           deprecated: false
           schema:
@@ -246,7 +246,7 @@ paths:
         -
           name: 'phpVersion[gte]'
           in: query
-          description: 'PHP version, e.g. 8.3, phpVersion[gte]=8.1 or phpVersion[between]=8.1..8.3'
+          description: 'PHP version greater than or equal to'
           required: false
           deprecated: false
           schema:
@@ -256,7 +256,7 @@ paths:
         -
           name: 'phpVersion[lt]'
           in: query
-          description: 'PHP version, e.g. 8.3, phpVersion[gte]=8.1 or phpVersion[between]=8.1..8.3'
+          description: 'PHP version less than'
           required: false
           deprecated: false
           schema:
@@ -266,7 +266,7 @@ paths:
         -
           name: 'phpVersion[lte]'
           in: query
-          description: 'PHP version, e.g. 8.3, phpVersion[gte]=8.1 or phpVersion[between]=8.1..8.3'
+          description: 'PHP version less than or equal to'
           required: false
           deprecated: false
           schema:
@@ -276,7 +276,7 @@ paths:
         -
           name: 'phpVersion[ne]'
           in: query
-          description: 'PHP version, e.g. 8.3, phpVersion[gte]=8.1 or phpVersion[between]=8.1..8.3'
+          description: 'PHP version not equal to'
           required: false
           deprecated: false
           schema:
@@ -286,7 +286,7 @@ paths:
         -
           name: 'phpVersion[between]'
           in: query
-          description: 'PHP version, e.g. 8.3, phpVersion[gte]=8.1 or phpVersion[between]=8.1..8.3'
+          description: 'PHP version between two versions, inclusive, e.g. 8.1..8.3'
           required: false
           deprecated: false
           schema:
