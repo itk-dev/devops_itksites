@@ -1,11 +1,14 @@
-{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
 {# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
-<div class="d-flex justify-content-between">
+{# The copy button is handled in assets/admin.js. It sits at the right edge of
+   the column on the index page and right after the value elsewhere. #}
+{% set copy_label = 'Copy ' ~ field.label|trans|lower %}
+{% set on_index = ea().crud.currentPage == constant('EasyCorp\\Bundle\\EasyAdminBundle\\Config\\Crud::PAGE_INDEX') %}
+<div class="d-flex {{ on_index ? 'justify-content-between' : 'align-items-center' }}">
     <div>{{ field.formattedValue }}</div>
     <div>
-        <a href="ssh://deploy@{{ field.formattedValue }}">
-            <twig:ea:Badge variant="light" icon="fas fa-terminal" class="ms-3" />
-        </a>
+        <button type="button" class="btn btn-sm btn-link p-0 {{ on_index ? 'ms-3' : 'ms-2' }}" data-copy-text="{{ field.value }}" data-bs-toggle="tooltip" title="{{ copy_label }}" aria-label="{{ copy_label }}">
+            <i class="far fa-copy"></i>
+        </button>
     </div>
 </div>
