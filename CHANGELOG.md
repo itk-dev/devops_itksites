@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#152](https://github.com/itk-dev/devops_itksites/pull/152)
   Stop the oasdiff review upload and comment in the API spec workflow
+- [#151](https://github.com/itk-dev/devops_itksites/pull/151)
+  Drop the CLI login and log in to the mock identity provider as the fixture
+  users
 - [#150](https://github.com/itk-dev/devops_itksites/pull/150)
   Store server types in lower case and show PROD, STG and GPU in upper case
 - [#149](https://github.com/itk-dev/devops_itksites/pull/149)

@@ -26,9 +26,9 @@ services:
       - "--port"
       - "80"
       - "--user-claims"
-      - '{"sub": "admin", "name": "Admin Jensen", "upn": "admin@example.org", "email": "admin@example.org"}'
+      - '{"sub": "admin", "name": "Admin", "upn": "admin@example.com", "email": "admin@example.com"}'
       - "--user-claims"
-      - '{"sub": "editor", "name": "Ed Editor", "upn": "editor@example.org", "email": "editor@example.org"}'
+      - '{"sub": "user", "name": "User", "upn": "user@example.com", "email": "user@example.com"}'
 
   rabbit:
     image: rabbitmq:4-management-alpine
