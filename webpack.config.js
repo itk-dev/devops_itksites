@@ -20,11 +20,9 @@ Encore
    * Each entry will result in one JavaScript file (e.g. app.js)
    * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
    */
-  .addEntry("easyadmin", "./assets/easyadmin.js")
-
-  // CSS-only entry, loaded by DashboardController for every admin page. The
-  // stylesheet is EasyAdmin-specific despite living at styles/app.css.
-  .addStyleEntry("admin", "./assets/styles/app.css")
+  // EasyAdmin JS and CSS (admin.js imports styles/app.css), loaded by
+  // DashboardController for every admin page.
+  .addEntry("admin", "./assets/admin.js")
   .addStyleEntry("api-docs", "./assets/styles/api-docs.css")
 
   // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.

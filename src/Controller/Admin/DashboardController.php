@@ -81,12 +81,12 @@ class DashboardController extends AbstractDashboardController
     }
 
     /**
-     * The admin styles reach admin pages only from here.
+     * The admin JS and styles reach admin pages only from here: the `admin`
+     * Encore entry (assets/admin.js, which imports assets/styles/app.css)
+     * loads on every dashboard and CRUD page.
      *
      * EasyAdmin renders its own layout rather than templates/base.html.twig, so
-     * neither `importmap()` nor that template's Encore tags apply to it. Until
-     * now this method added `css/admin.css`, a file deleted in #81, so every
-     * admin page carried a 404 and none of the ITK styling below it.
+     * neither `importmap()` nor that template's Encore tags apply to it.
      */
     #[\Override]
     public function configureAssets(): Assets

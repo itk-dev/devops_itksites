@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#153](https://github.com/itk-dev/devops_itksites/pull/153)
+  Copy the server name instead of an ssh link, and load the admin JS and CSS
+  on every admin page
 - [#152](https://github.com/itk-dev/devops_itksites/pull/152)
   Stop the oasdiff review upload and comment in the API spec workflow
 - [#151](https://github.com/itk-dev/devops_itksites/pull/151)
