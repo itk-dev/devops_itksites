@@ -92,6 +92,7 @@
             "composer/package-versions-deprecated": true,
             "ergebnis/composer-normalize": true,
             "phpstan/extension-installer": true,
+            "symfony/ai-mate-composer-plugin": true,
             "symfony/flex": true,
             "symfony/runtime": true
         },
