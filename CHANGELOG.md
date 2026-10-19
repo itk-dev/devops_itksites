@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#161](https://github.com/itk-dev/devops_itksites/pull/161)
+  Skip and log composer audit advisories for packages the installation does
+  not list
 - [#160](https://github.com/itk-dev/devops_itksites/pull/160)
   Store git checkout versions such as `11.3.x-dev f509c89` on installations
 - [#159](https://github.com/itk-dev/devops_itksites/pull/159)

@@ -11,12 +11,14 @@ use App\Entity\PackageVersion;
 use App\Repository\AdvisoryRepository;
 use Composer\Semver\Semver;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class AdvisoryFactory
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly AdvisoryRepository $advisoryRepository,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -25,8 +27,18 @@ class AdvisoryFactory
         if (isset($audit->advisories) && is_object($audit->advisories)) {
             foreach ($audit->advisories as $package => $advisories) {
                 foreach ($advisories as $advisory) {
-                    $entity = $this->advisoryRepository->findOneBy(['advisoryId' => $advisory->advisoryId]);
                     $packageVersion = $this->getInstalledPackageVersion($installation, $advisory->packageName);
+                    // The audit can name packages the harvester did not list,
+                    // e.g. when it reports "packages": "unknown".
+                    if (null === $packageVersion) {
+                        $this->logger->warning('Skipped advisory {advisory} for {package}, which installation {installation} does not list', [
+                            'advisory' => $advisory->advisoryId,
+                            'package' => $advisory->packageName,
+                            'installation' => (string) $installation,
+                        ]);
+                        continue;
+                    }
+                    $entity = $this->advisoryRepository->findOneBy(['advisoryId' => $advisory->advisoryId]);
 
                     if (null === $entity) {
                         $entity = new Advisory();
@@ -71,7 +83,7 @@ class AdvisoryFactory
         }
     }
 
-    private function getInstalledPackageVersion(Installation $installation, string $vendorPackage): PackageVersion
+    private function getInstalledPackageVersion(Installation $installation, string $vendorPackage): ?PackageVersion
     {
         [$vendor, $name] = explode('/', $vendorPackage);
 
@@ -83,7 +95,7 @@ class AdvisoryFactory
             }
         }
 
-        throw new \InvalidArgumentException(sprintf('Installation "%s", Package "%s" not found', $installation, $vendorPackage));
+        return null;
     }
 
     /**
