@@ -11,15 +11,19 @@ use App\Repository\DeployResultRepository;
 use App\Repository\ServerRepository;
 use App\Service\DeployResultApplier;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Uid\Ulid;
 
 class DeployResultHandlerTest extends TestCase
 {
-    private ServerRepository $serverRepositoryStub;
-    private DeployResultRepository $deployResultRepositoryStub;
-    private DeployResultApplier $applierMock;
-    private EntityManagerInterface $entityManagerMock;
+    private ServerRepository&Stub $serverRepositoryStub;
+    private DeployResultRepository&Stub $deployResultRepositoryStub;
+    private DeployResultApplier&MockObject $applierMock;
+    private EntityManagerInterface&MockObject $entityManagerMock;
+    private LoggerInterface&MockObject $loggerMock;
 
     private DeployResultHandler $handler;
 
@@ -31,12 +35,14 @@ class DeployResultHandlerTest extends TestCase
         $this->deployResultRepositoryStub = $this->createStub(DeployResultRepository::class);
         $this->applierMock = $this->createMock(DeployResultApplier::class);
         $this->entityManagerMock = $this->createMock(EntityManagerInterface::class);
+        $this->loggerMock = $this->createMock(LoggerInterface::class);
 
         $this->handler = new DeployResultHandler(
             $this->serverRepositoryStub,
             $this->deployResultRepositoryStub,
             $this->applierMock,
             $this->entityManagerMock,
+            $this->loggerMock,
         );
     }
 
@@ -47,6 +53,7 @@ class DeployResultHandlerTest extends TestCase
 
         $this->entityManagerMock->expects($this->once())->method('persist');
         $this->applierMock->expects($this->once())->method('apply');
+        $this->loggerMock->expects($this->never())->method('error');
 
         $deployResult = $this->deployResult();
 
@@ -70,6 +77,7 @@ class DeployResultHandlerTest extends TestCase
 
         $this->entityManagerMock->expects($this->never())->method('persist');
         $this->applierMock->expects($this->never())->method('apply');
+        $this->loggerMock->expects($this->never())->method('error');
 
         $this->handler->__invoke($this->deployResult());
 
@@ -81,11 +89,17 @@ class DeployResultHandlerTest extends TestCase
 
     /**
      * The report was already answered with a 202, so an unknown server is
-     * dropped rather than failing a deployment over our own bookkeeping.
+     * logged and dropped rather than failing a deployment over our own
+     * bookkeeping.
      */
-    public function testItDropsAReportForAnUnknownServer(): void
+    public function testItLogsAndDropsAReportForAnUnknownServer(): void
     {
         $this->serverRepositoryStub->method('findOneBy')->willReturn(null);
+
+        $this->loggerMock->expects($this->once())->method('error')->with(
+            $this->anything(),
+            $this->callback(static fn (array $context): bool => 'srvitkphp84.itkdev.dk' === $context['server']),
+        );
 
         $this->entityManagerMock->expects($this->never())->method('persist');
         $this->entityManagerMock->expects($this->never())->method('flush');

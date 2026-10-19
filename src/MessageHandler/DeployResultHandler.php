@@ -9,6 +9,7 @@ use App\Repository\DeployResultRepository;
 use App\Repository\ServerRepository;
 use App\Service\DeployResultApplier;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -19,6 +20,7 @@ final readonly class DeployResultHandler
         private DeployResultRepository $deployResultRepository,
         private DeployResultApplier $applier,
         private EntityManagerInterface $entityManager,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -26,10 +28,18 @@ final readonly class DeployResultHandler
     {
         $server = $this->serverRepository->findOneBy(['name' => $deployResult->getServerName()]);
 
-        // A deployment to a server we do not know about is dropped. The report
-        // was accepted with a 202 before this ran, so that a pipeline is never
-        // failed by our bookkeeping.
+        // Pipelines only deploy to registered servers, so this should never
+        // happen. The report was accepted with a 202 before this ran, so the
+        // pipeline is not failed; the report is logged and dropped.
         if (null === $server) {
+            $this->logger->error('Dropped deploy result for unknown server "{server}"', [
+                'server' => $deployResult->getServerName(),
+                'rootDir' => $deployResult->getRootDir(),
+                'repoUrl' => $deployResult->getRepoUrl(),
+                'tag' => $deployResult->getTag(),
+                'pipelineUrl' => $deployResult->getPipelineUrl(),
+            ]);
+
             return;
         }
 
