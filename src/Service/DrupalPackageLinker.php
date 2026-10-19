@@ -12,10 +12,12 @@ use App\Repository\ModuleRepository;
 use App\Repository\ModuleVersionRepository;
 use App\Repository\PackageRepository;
 use App\Repository\PackageVersionRepository;
+use App\Utils\DrupalProject;
 use App\Utils\DrupalVersion;
 
 /**
- * Links Drupal modules to the drupal/<module name> Composer packages they ship as.
+ * Links Drupal modules to the drupal/<project> Composer packages they ship in.
+ * Modules without a recorded project fall back to their own name.
  *
  * Either side may arrive first, so both factories call this when they create a
  * row, and whichever arrives second completes the link. Linking is idempotent.
@@ -65,7 +67,8 @@ class DrupalPackageLinker
     public function linkModuleVersion(ModuleVersion $moduleVersion): bool
     {
         $module = $moduleVersion->getModule();
-        $package = $this->packageRepository->findOneBy(['vendor' => self::VENDOR, 'name' => $module->getName()]);
+        $name = null === $module->getProject() ? $module->getName() : DrupalProject::toPackageName($module->getProject());
+        $package = $this->packageRepository->findOneBy(['vendor' => self::VENDOR, 'name' => $name]);
         if (null === $package) {
             return false;
         }
@@ -98,7 +101,7 @@ class DrupalPackageLinker
         }
 
         $changed = false;
-        foreach ($this->moduleRepository->findBy(['name' => $package->getName()]) as $module) {
+        foreach ($this->moduleRepository->findByDrupalProject(DrupalProject::fromPackageName($package->getName())) as $module) {
             $changed = $this->linkModule($module, $package) || $changed;
 
             foreach ($module->getModuleVersions() as $moduleVersion) {
