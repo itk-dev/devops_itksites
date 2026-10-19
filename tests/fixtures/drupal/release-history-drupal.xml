@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns:dc="http://purl.org/dc/elements/1.1/">
+<title>Drupal core</title>
+<short_name>drupal</short_name>
+<type>project_core</type>
+<supported_branches>10.6.,11.3.,11.4.,11.5.,12.0.</supported_branches>
+<composer_namespace>drupal/core</composer_namespace>
+<project_status>published</project_status>
+<link>https://www.drupal.org/project/drupal</link>
+<releases>
+<release><name>drupal 11.3.19</name><version>11.3.19</version><terms><term><name>Release type</name><value>Security update</value></term></terms></release>
+<release><name>drupal 11.3.13</name><version>11.3.13</version><terms><term><name>Release type</name><value>Bug fixes</value></term><term><name>Release type</name><value>Insecure</value></term></terms></release>
+<release><name>drupal 10.6.19</name><version>10.6.19</version><terms><term><name>Release type</name><value>Security update</value></term></terms></release>
+<release><name>drupal 10.6.17</name><version>10.6.17</version><terms><term><name>Release type</name><value>Security update</value></term><term><name>Release type</name><value>Insecure</value></term></terms></release>
+</releases>
+</project>

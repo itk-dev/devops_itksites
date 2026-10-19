@@ -8,6 +8,7 @@ use App\Entity\Advisory;
 use App\Entity\Package;
 use App\Repository\AdvisoryRepository;
 use App\Service\AdvisoryFactory;
+use App\Utils\DrupalProject;
 use App\Utils\DrupalVersion;
 use Composer\Semver\Semver;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,10 +33,13 @@ class ReleaseChecker
 
     public function check(Package $package): void
     {
-        $project = (string) $package->getName();
-        if (self::VENDOR !== $package->getVendor()) {
+        $name = (string) $package->getName();
+        // drupal.org machine names have no hyphens, so drupal/core-recommended
+        // and the other core-* packages are Composer meta packages, not projects.
+        if (self::VENDOR !== $package->getVendor() || str_contains($name, '-')) {
             return;
         }
+        $project = DrupalProject::fromPackageName($name);
 
         $history = $this->releaseHistoryClient->fetch($project);
         $checkedAt = new \DateTimeImmutable();

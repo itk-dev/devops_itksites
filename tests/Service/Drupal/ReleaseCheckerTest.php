@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Service\Drupal;
 
+use App\Entity\Advisory;
 use App\Entity\Installation;
 use App\Entity\Module;
 use App\Entity\ModuleVersion;
@@ -34,6 +35,9 @@ class ReleaseCheckerTest extends KernelTestCase
 
     private EntityManagerInterface $entityManager;
     private Installation $installation;
+
+    /** @var list<string> */
+    private array $urls = [];
 
     protected function setUp(): void
     {
@@ -148,6 +152,50 @@ class ReleaseCheckerTest extends KernelTestCase
         $this->assertNotNull($packageVersion->getDrupalReleaseCheckedAt());
     }
 
+    /**
+     * release-history-drupal.xml is trimmed from
+     * https://updates.drupal.org/release-history/drupal/current, captured 2026-10-19.
+     */
+    public function testCoreIsCheckedAsProjectDrupal(): void
+    {
+        $this->install('node_probe', ['11.3.13' => '11.3.13', '11.3.19' => '11.3.19'], 'core', ['project' => '', 'path' => 'core/modules/node_probe']);
+
+        $this->checker(
+            $this->fixture('release-history-drupal.xml'),
+            $this->fixture('project-drupal.json'),
+            $this->fixture('sa-drupal-first.json'),
+            $this->fixture('sa-drupal-last.json'),
+        )->check($this->package('core'));
+        $this->entityManager->clear();
+
+        $this->assertSame('https://updates.drupal.org/release-history/drupal/current', $this->urls[0]);
+        $this->assertSame('https://www.drupal.org/api-d7/node.json?field_project_machine_name=drupal', $this->urls[1]);
+
+        $insecure = $this->packageVersion('core', '11.3.13');
+        $this->assertTrue($insecure->isDrupalInsecure());
+        $advisoryIds = $insecure->getAdvisories()->map(static fn (Advisory $advisory): ?string => $advisory->getAdvisoryId())->toArray();
+        sort($advisoryIds);
+        $this->assertSame(['SA-CORE-2026-014', 'SA-CORE-2026-015', 'SA-CORE-2026-016'], $advisoryIds);
+        $this->assertCount(3, $this->moduleVersion('node_probe', '11.3.13')->getAdvisories());
+
+        $fixed = $this->packageVersion('core', '11.3.19');
+        $this->assertFalse($fixed->isDrupalInsecure());
+        $this->assertCount(0, $fixed->getAdvisories());
+    }
+
+    public function testMetaPackageIsSkipped(): void
+    {
+        self::getContainer()->get(PackageVersionFactory::class)->setPackageVersions($this->installation, [
+            (object) ['name' => 'drupal/core-recommended', 'description' => 'Probe', 'version' => '11.3.13'],
+        ]);
+        $package = $this->package('core-recommended');
+
+        // No mocked responses: any request would fail the test.
+        $this->checker()->check($package);
+
+        $this->assertNull($package->getPackageVersions()->first()->getDrupalReleaseCheckedAt());
+    }
+
     public function testNonDrupalPackageIsIgnored(): void
     {
         self::getContainer()->get(PackageVersionFactory::class)->setPackageVersions($this->installation, [
@@ -163,7 +211,11 @@ class ReleaseCheckerTest extends KernelTestCase
 
     private function checker(string ...$bodies): ReleaseChecker
     {
-        $responses = array_map(static fn (string $body): MockResponse => new MockResponse($body), $bodies);
+        $responses = array_map(fn (string $body): \Closure => function (string $method, string $url) use ($body): MockResponse {
+            $this->urls[] = $url;
+
+            return new MockResponse($body);
+        }, $bodies);
         $releaseHistory = new MockHttpClient(array_slice($responses, 0, 1), 'https://updates.drupal.org/');
         $securityAdvisories = new MockHttpClient(array_slice($responses, 1), 'https://www.drupal.org/');
         $container = self::getContainer();
@@ -184,18 +236,20 @@ class ReleaseCheckerTest extends KernelTestCase
 
     /**
      * @param array<string, string> $versions module version => package version
+     * @param array<string, string> $drush    extra drush fields, e.g. project and path
      */
-    private function install(string $name, array $versions): void
+    private function install(string $name, array $versions, ?string $package = null, array $drush = []): void
     {
+        $package ??= $name;
         // One installation per version: setting versions on an installation replaces its old ones.
         $installations = $this->entityManager->getRepository(Installation::class)->findBy([], limit: count($versions));
         foreach ($versions as $moduleVersion => $packageVersion) {
             $installation = array_shift($installations);
             self::getContainer()->get(PackageVersionFactory::class)->setPackageVersions($installation, [
-                (object) ['name' => 'drupal/'.$name, 'description' => 'Probe', 'version' => $packageVersion],
+                (object) ['name' => 'drupal/'.$package, 'description' => 'Probe', 'version' => $packageVersion],
             ]);
             self::getContainer()->get(ModuleVersionFactory::class)->setModuleVersions($installation, (object) [
-                $name => (object) ['package' => 'Security', 'status' => 'Enabled', 'version' => $moduleVersion],
+                $name => (object) ($drush + ['package' => 'Security', 'status' => 'Enabled', 'version' => $moduleVersion]),
             ]);
         }
     }
