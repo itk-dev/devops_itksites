@@ -11,6 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ModuleRepository::class)]
+#[ORM\Index(columns: ['project'])]
 class Module extends AbstractBaseEntity implements \Stringable
 {
     #[ORM\Column(type: Types::STRING, length: 255)]
@@ -18,6 +19,12 @@ class Module extends AbstractBaseEntity implements \Stringable
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     private string $name;
+
+    /**
+     * The drupal.org project machine name, e.g. "drupal" for core modules.
+     */
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    private ?string $project = null;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $displayName = null;
@@ -63,6 +70,18 @@ class Module extends AbstractBaseEntity implements \Stringable
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getProject(): ?string
+    {
+        return $this->project;
+    }
+
+    public function setProject(?string $project): self
+    {
+        $this->project = $project;
 
         return $this;
     }
