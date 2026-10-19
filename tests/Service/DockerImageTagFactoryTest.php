@@ -68,6 +68,17 @@ class DockerImageTagFactoryTest extends KernelTestCase
         $this->assertCount(2, $images);
     }
 
+    public function testNamesIncludeTheRegistry(): void
+    {
+        $this->images(['hub' => 'probe-itkdev/php8.4-fpm', 'ghcr' => 'ghcr.io/probe-project/probe-serve']);
+
+        $images = $this->entityManager->getRepository(DockerImage::class);
+        $hub = $images->findOneBy(['organization' => 'probe-itkdev']);
+        $this->assertSame('docker.io/probe-itkdev/php8.4-fpm', (string) $hub);
+        $this->assertSame('docker.io/probe-itkdev/php8.4-fpm:1.0.0', (string) $hub->getDockerImageTags()->first());
+        $this->assertSame('ghcr.io/probe-project/probe-serve', (string) $images->findOneBy(['organization' => 'probe-project']));
+    }
+
     public function testSameImageTwiceInOneResult(): void
     {
         $this->images([

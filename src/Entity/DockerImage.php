@@ -46,8 +46,7 @@ class DockerImage extends AbstractBaseEntity implements \Stringable
             $name .= $this->repository;
         }
 
-        // As the image is written: Docker Hub images without the registry.
-        if (!empty($name) && self::DOCKER_HUB !== $this->registry) {
+        if (!empty($name)) {
             $name = $this->registry.'/'.$name;
         }
 
