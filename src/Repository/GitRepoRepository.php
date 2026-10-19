@@ -42,8 +42,8 @@ class GitRepoRepository extends ServiceEntityRepository
             ->innerJoin('pv.advisories', 'a')
             ->groupBy('r.id')
             ->having('COUNT(DISTINCT a.id) > 0')
-            ->orderBy('r.organization', 'ASC')
-            ->addOrderBy('r.repo', 'ASC')
+            ->orderBy('r.organization', \SortDirection::Ascending)
+            ->addOrderBy('r.repo', \SortDirection::Ascending)
             ->getQuery()
             ->getResult();
 

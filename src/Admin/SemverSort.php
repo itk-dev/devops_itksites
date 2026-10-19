@@ -32,9 +32,9 @@ final class SemverSort
         foreach ($orderByParts as $orderBy) {
             foreach ($orderBy->getParts() as $part) {
                 if (preg_match('/^(.+?)\s+(ASC|DESC)$/i', $part, $m)) {
-                    [$expr, $dir] = [$m[1], strtoupper($m[2])];
+                    [$expr, $dir] = [$m[1], 'DESC' === strtoupper($m[2]) ? \SortDirection::Descending : \SortDirection::Ascending];
                 } else {
-                    [$expr, $dir] = [$part, 'ASC'];
+                    [$expr, $dir] = [$part, \SortDirection::Ascending];
                 }
 
                 $expr = $needles[$expr] ?? $expr;

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#164](https://github.com/itk-dev/devops_itksites/pull/164)
+  Clear two Doctrine deprecations: pass `SortDirection` to `orderBy()`, and
+  run migrations without a transaction, which MariaDB never honoured
+
 ## [1.18.0] - 2026-10-19
 
 - [#162](https://github.com/itk-dev/devops_itksites/pull/162)
