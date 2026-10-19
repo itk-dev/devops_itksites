@@ -7,6 +7,7 @@ namespace App\Tests\Service\Drupal;
 use App\Service\Drupal\ReleaseHistoryClient;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -105,7 +106,15 @@ class ReleaseHistoryClientTest extends TestCase
     public static function ttlProvider(): iterable
     {
         yield 'project' => ['release-history-key_auth.xml', 12 * 3600];
-        yield 'not a project' => ['release-history-error.xml', 7 * 86400];
+        yield 'not a project' => ['release-history-error.xml', 86400];
+    }
+
+    public function testNonProjectIsLogged(): void
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())->method('warning')->with(self::anything(), ['project' => 'core']);
+
+        new ReleaseHistoryClient($this->http('release-history-error.xml'), new ArrayAdapter(), $logger)->fetch('core');
     }
 
     private function expectTtl(int $ttl): CacheInterface

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Service\Drupal;
 
 use App\Utils\DrupalVersion;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -18,7 +20,7 @@ class ReleaseHistoryClient
     private const string RELEASE_HISTORY_PATH_PATTERN = 'release-history/%s/current';
     private const string CACHE_KEY_PATTERN = 'release_history.%s';
     private const int TTL = 12 * 3600;
-    private const int NOT_A_PROJECT_TTL = 7 * 86400;
+    private const int NOT_A_PROJECT_TTL = 86400;
 
     private const string TERM_SECURITY_UPDATE = 'Security update';
     private const string TERM_INSECURE = 'Insecure';
@@ -28,6 +30,7 @@ class ReleaseHistoryClient
         private readonly HttpClientInterface $drupalUpdatesClient,
         #[Target('cache.drupal_org')]
         private readonly CacheInterface $cache,
+        private readonly LoggerInterface $logger = new NullLogger(),
     ) {
     }
 
@@ -39,6 +42,9 @@ class ReleaseHistoryClient
         return $this->cache->get(sprintf(self::CACHE_KEY_PATTERN, $project), function (ItemInterface $item) use ($project): ?ReleaseHistory {
             $body = $this->drupalUpdatesClient->request('GET', sprintf(self::RELEASE_HISTORY_PATH_PATTERN, $project))->getContent();
             $history = $this->parse($body);
+            if (null === $history) {
+                $this->logger->warning('updates.drupal.org knows no project {project}', ['project' => $project]);
+            }
             $item->expiresAfter(null === $history ? self::NOT_A_PROJECT_TTL : self::TTL);
 
             return $history;
