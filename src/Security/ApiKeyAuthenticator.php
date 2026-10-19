@@ -29,7 +29,7 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
     public function __construct(
         private readonly ServerRepository $serverRepository,
         private readonly UserRepository $userRepository,
-        #[Autowire('%env(APP_WOODPECKER_API_KEY)%')]
+        #[Autowire(env: 'APP_WOODPECKER_API_KEY')]
         private readonly string $woodpeckerApiKey,
     ) {
     }
