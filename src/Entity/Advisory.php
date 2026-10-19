@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\AdvisoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdvisoryRepository::class)]
@@ -36,7 +37,7 @@ class Advisory extends AbstractBaseEntity implements \Stringable
     #[ORM\Column]
     private ?\DateTimeImmutable $reportedAt = null;
 
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private array $sources = [];
 
     #[ORM\ManyToMany(targetEntity: PackageVersion::class, mappedBy: 'advisories')]

@@ -6,7 +6,6 @@ use App\Trait\ExportCrudControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\ActionGroup;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
@@ -60,12 +59,5 @@ abstract class AbstractFullCrudController extends AbstractCrudController
                 static fn (Action $action) => $action->setIcon('fa fa-plus')
             )
         ;
-    }
-
-    #[\Override]
-    public function configureAssets(Assets $assets): Assets
-    {
-        return $assets
-            ->addWebpackEncoreEntry('easyadmin');
     }
 }

@@ -9,7 +9,23 @@
       "Bash(diff:*)",
       "Bash(echo:*)",
       "Bash(find:*)",
-      "Bash(gh:*)",
+      "Bash(gh auth status*)",
+      "Bash(gh issue list*)",
+      "Bash(gh issue view*)",
+      "Bash(gh pr checks*)",
+      "Bash(gh pr diff*)",
+      "Bash(gh pr list*)",
+      "Bash(gh pr status*)",
+      "Bash(gh pr view*)",
+      "Bash(gh release list*)",
+      "Bash(gh release view*)",
+      "Bash(gh repo view*)",
+      "Bash(gh run list*)",
+      "Bash(gh run view*)",
+      "Bash(gh run watch*)",
+      "Bash(gh search*)",
+      "Bash(gh workflow list*)",
+      "Bash(gh workflow view*)",
       "Bash(git:*)",
       "Bash(grep:*)",
       "Bash(head:*)",
@@ -32,13 +48,27 @@
       "Bash(docker network:*)"
     ],
     "deny": [
-      "Bash(rm -rf:*)",
+      "Bash(rm -rf*)",
+      "Bash(rm -fr*)",
+      "Bash(rm -r *)",
+      "Bash(rm -R*)",
+      "Bash(find * -delete*)",
+      "Bash(find * -exec*)",
       "Bash(gh issue delete:*)",
       "Bash(gh release delete:*)",
       "Bash(gh repo delete:*)",
       "Bash(gh label delete:*)",
+      "Bash(gh api -X POST*)",
+      "Bash(gh api -X PUT*)",
+      "Bash(gh api -X PATCH*)",
+      "Bash(gh api -X DELETE*)",
+      "Bash(gh api --method POST*)",
+      "Bash(gh api --method PUT*)",
+      "Bash(gh api --method PATCH*)",
+      "Bash(gh api --method DELETE*)",
+      "Bash(*.env.local*)",
       "Read(./.env.local)",
-      "Read(./.env.local.*)",
+      "Read(./.env.*.local)",
       "Read(./config/secrets/*)"
     ],
     "ask": [
@@ -46,14 +76,16 @@
       "Bash(docker compose stop:*)",
       "Bash(docker compose rm:*)",
       "Bash(docker compose restart:*)",
+      "Bash(docker compose * doctrine:database:drop*)",
+      "Bash(docker compose * doctrine:schema:drop*)",
+      "Bash(docker compose * hautelook:fixtures:load*)",
+      "Bash(docker compose * composer fixtures*)",
       "Bash(gh issue create:*)",
       "Bash(gh issue close:*)",
       "Bash(gh issue edit:*)",
       "Bash(gh issue comment:*)",
-      "Bash(gh pr create:*)",
       "Bash(gh pr close:*)",
       "Bash(gh pr merge:*)",
-      "Bash(gh pr edit:*)",
       "Bash(gh pr comment:*)",
       "Bash(gh pr review:*)",
       "Bash(gh release create:*)",
@@ -61,7 +93,6 @@
       "Bash(gh repo create:*)",
       "Bash(gh label create:*)",
       "Bash(gh label edit:*)",
-      "Bash(git push:*)",
       "Bash(git branch -d:*)",
       "Bash(git branch -D:*)",
       "Bash(git tag -d:*)",
@@ -73,8 +104,7 @@
       "Bash(git stash drop:*)",
       "Bash(git clean:*)",
       "Bash(git checkout -- :*)",
-      "Bash(git restore:*)",
-      "Bash(git commit:*)"
+      "Bash(git restore:*)"
     ]
   },
   "hooks": {
@@ -89,6 +119,16 @@
             "statusMessage": "Starting Docker services..."
           }
         ]
+      },
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "for c in jq intelephense; do command -v $c >/dev/null || m=\"$m $c\"; done; [ -z \"$m\" ] || { echo \"Missing on host:$m. See CLAUDE.md, Claude Code prerequisites.\" >&2; exit 2; }",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -97,7 +137,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in */composer.lock|*/yarn.lock|*/.env.local|*/.env.local.*) echo 'BLOCKED: Do not edit lock files or .env.local directly' >&2; exit 1 ;; esac"
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in */composer.lock|*/yarn.lock|*/symfony.lock|*/.env.local|*/.env.*.local|*/public/api-spec-v1.yaml|*/public/api-spec-v1.json|*/.claude/skills/easyadmin/*|*/.claude/skills/mate-*|*/.agents/*|*/mate/AGENT_INSTRUCTIONS.md|*/vendor/*|*/node_modules/*|*/var/*) echo 'BLOCKED: generated, locked or local-only file; change the source instead' >&2; exit 2 ;; esac"
           }
         ]
       }
@@ -108,28 +148,33 @@
         "hooks": [
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.php) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose exec -T phpfpm vendor/bin/php-cs-fixer fix --quiet \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*.php) docker compose exec -T phpfpm vendor/bin/php-cs-fixer fix --quiet \"${f#\"$CLAUDE_PROJECT_DIR\"/}\" 2>/dev/null || true ;; esac",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.php) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose exec -T phpfpm vendor/bin/phpstan analyse --no-progress --error-format=raw \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*.php) sh \"$CLAUDE_PROJECT_DIR/.claude/hooks/phpfpm-check.sh\" vendor/bin/phpstan analyse --no-progress --error-format=raw \"${f#\"$CLAUDE_PROJECT_DIR\"/}\" ;; esac",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.twig) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose exec -T phpfpm vendor/bin/twig-cs-fixer lint --fix \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*.twig) docker compose exec -T phpfpm vendor/bin/twig-cs-fixer lint --fix \"${f#\"$CLAUDE_PROJECT_DIR\"/}\" 2>/dev/null || true ;; esac",
             "timeout": 15
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in */composer.json) docker compose exec -T phpfpm composer normalize --quiet 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/composer.json) docker compose exec -T phpfpm composer normalize --quiet 2>/dev/null || true ;; esac",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.js|*.css|*.scss|*.yaml|*.yml|*.md) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose run --rm -T node npx prettier --write \"$REL_PATH\" 2>/dev/null || true ;; esac",
-            "timeout": 15
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*.js|\"$CLAUDE_PROJECT_DIR\"/*.css|\"$CLAUDE_PROJECT_DIR\"/*.scss|\"$CLAUDE_PROJECT_DIR\"/*.yaml|\"$CLAUDE_PROJECT_DIR\"/*.yml) docker compose run --rm -T prettier \"${f#\"$CLAUDE_PROJECT_DIR\"/}\" --write 2>/dev/null || true ;; esac",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*.md) docker compose run --rm -T markdownlint markdownlint \"${f#\"$CLAUDE_PROJECT_DIR\"/}\" --fix 2>/dev/null || true ;; esac",
+            "timeout": 30
           }
         ]
       }
@@ -139,7 +184,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "docker compose exec -T phpfpm bin/console lint:container 2>/dev/null || true",
+            "command": "jq -e '.stop_hook_active' >/dev/null && exit 0; sh \"$CLAUDE_PROJECT_DIR/.claude/hooks/phpfpm-check.sh\" bin/console lint:container",
             "timeout": 30,
             "statusMessage": "Validating Symfony DI container..."
           }
@@ -155,6 +200,20 @@
     "security-guidance@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
-    "itkdev-skills@itkdev-marketplace": true
+    "itkdev-tools@itkdev-marketplace": true
+  },
+  "extraKnownMarketplaces": {
+    "itksites": {
+      "source": {
+        "source": "github",
+        "repo": "itk-dev/devops_itksites"
+      }
+    },
+    "itkdev-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "itk-dev/itkdev-claude-plugins"
+      }
+    }
   }
 }

@@ -25,8 +25,6 @@ jobs:
                   docker compose run --rm --user=root --env APP_ENV=prod phpfpm composer clear-cache
                   docker compose run --rm node yarn install
                   docker compose run --rm node yarn build
-                  # https://symfony.com/doc/current/frontend/asset_mapper.html#serving-assets-in-dev-vs-prod
-                  docker compose run --rm --user=root --env APP_ENV=prod phpfpm php bin/console asset-map:compile
 
             - name: Make assets dir
               run: |

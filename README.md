@@ -130,9 +130,21 @@ Start it with the rest of the stack:
 docker compose up --detach
 ```
 
-Then log in as `admin` or `editor`: the mock shows a form where you type the subject,
-and hands back the claims for it. Both identities are defined in the compose file, and
-their claims must include `name` and `upn`, which `AzureOIDCAuthenticator` reads.
+Then open <https://itksites.local.itkdev.dk/admin> and pick "Authorize as admin" or
+"Authorize as user" on the mock's page, which hands back the claims for that subject.
+Both identities are defined in the compose file, and their claims must include `name`
+and `upn`, which `AzureOIDCAuthenticator` reads.
+
+The identities are the fixture users: `admin` is `admin@example.com` (`ROLE_ADMIN`) and
+`user` is `user@example.com` (`ROLE_USER`, denied access to the admin). Without
+fixtures, the first login creates the user with `ROLE_ADMIN`.
+
+The mock creates new signing keys when its container restarts, while the application
+caches the old ones. If a login then fails with `"kid" invalid`, clear the cache:
+
+```shell
+docker compose exec phpfpm bin/console cache:pool:clear cache.app
+```
 
 `.env.dev` carries the settings, so there is nothing to add to `.env.local` for an
 ordinary setup. To develop against a real provider instead, override them there:
@@ -174,11 +186,8 @@ all the above data.
 docker compose exec phpfpm composer fixtures
 ```
 
-After loading fixtures you can sign in as an admin user:
-
-```sh
-docker compose exec phpfpm bin/console itk-dev:openid-connect:login admin@example.com
-```
+After loading fixtures, log in as `admin` through the mock identity provider, see
+[OpenID Connect](#openid-connect).
 
 ### Job queues and handlers
 
@@ -197,7 +206,8 @@ docker compose exec phpfpm bin/console messenger:consume async --failure-limit=1
 
 ### Assets
 
-We use [Webpack Encore](https://symfony.com/doc/current/frontend.html#webpack-encore) to build assets:
+We use [Symfony Reprise](https://symfony.com/bundles/reprise/current/index.html)
+with [Vite](https://vite.dev) to build assets:
 
 ```sh
 docker compose run --rm node yarn install

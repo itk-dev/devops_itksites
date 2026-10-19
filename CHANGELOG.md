@@ -7,6 +7,130 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#164](https://github.com/itk-dev/devops_itksites/pull/164)
+  Clear two Doctrine deprecations: pass `SortDirection` to `orderBy()`, and
+  run migrations without a transaction, which MariaDB never honoured
+
+- [#112](https://github.com/itk-dev/devops_itksites/pull/112)
+  Accept deploy reports from the deployment pipeline, so sites deployed from a
+  prebuilt artifact get the repository and tag the harvester cannot detect.
+  Installations now record whether they are a git working copy or a release
+  artifact
+
+## [1.18.0] - 2026-10-19
+
+- [#162](https://github.com/itk-dev/devops_itksites/pull/162)
+  Store the registry of docker images, defaulting to Docker Hub, so images
+  such as `ghcr.io/docling-project/*` are told apart, and track one tag per
+  image and tag regardless of the Compose service name
+- [#161](https://github.com/itk-dev/devops_itksites/pull/161)
+  Skip and log composer audit advisories for packages the installation does
+  not list
+- [#160](https://github.com/itk-dev/devops_itksites/pull/160)
+  Store git checkout versions such as `11.3.x-dev f509c89` on installations
+- [#159](https://github.com/itk-dev/devops_itksites/pull/159)
+  Link core modules and submodules to their drupal.org project's package, and
+  check drupal/core on drupal.org as a stopgap until the harvester's
+  `composer audit` works again
+
+## [1.17.0] - 2026-10-01
+
+- [#157](https://github.com/itk-dev/devops_itksites/pull/157)
+  Highlight detection result data with MicroLighter
+- [#156](https://github.com/itk-dev/devops_itksites/pull/156)
+  Theme Swagger UI for dark mode
+
+## [1.16.0] - 2026-09-30
+
+- [#154](https://github.com/itk-dev/devops_itksites/pull/154)
+  Replace Webpack Encore and AssetMapper with Symfony Reprise and Vite
+- [#153](https://github.com/itk-dev/devops_itksites/pull/153)
+  Copy the server name instead of an ssh link, and load the admin JS and CSS
+  on every admin page
+- [#152](https://github.com/itk-dev/devops_itksites/pull/152)
+  Stop the oasdiff review upload and comment in the API spec workflow
+- [#151](https://github.com/itk-dev/devops_itksites/pull/151)
+  Drop the CLI login and log in to the mock identity provider as the fixture
+  users
+- [#150](https://github.com/itk-dev/devops_itksites/pull/150)
+  Store server types in lower case and show PROD, STG and GPU in upper case
+- [#149](https://github.com/itk-dev/devops_itksites/pull/149)
+  Filter the site API collection like the site admin
+- [#148](https://github.com/itk-dev/devops_itksites/pull/148)
+  Theme ReDoc with the ITK Development palette
+- [#147](https://github.com/itk-dev/devops_itksites/pull/147)
+  Theme Scalar with the ITK Development palette
+- [#146](https://github.com/itk-dev/devops_itksites/pull/146)
+  Theme Swagger UI with the ITK Development palette
+- [#145](https://github.com/itk-dev/devops_itksites/pull/145)
+  Theme EasyAdmin with the ITK Development palette
+- [#144](https://github.com/itk-dev/devops_itksites/pull/144)
+  Update Composer dependencies, including API Platform 5.0.1 to fix ReDoc on
+  OpenAPI 3.2
+- [#143](https://github.com/itk-dev/devops_itksites/pull/143)
+  Check RabbitMQ health with `nc` every 10s instead of `rabbitmq-diagnostics`
+  every second
+- [#142](https://github.com/itk-dev/devops_itksites/pull/142)
+  Serve JSON-LD, default to 100 items per page and let clients disable
+  pagination with `?pagination=false`
+- [#140](https://github.com/itk-dev/devops_itksites/pull/140)
+  Use `SortDirection` in the service certificate `OrderBy` mapping
+
+- [#139](https://github.com/itk-dev/devops_itksites/pull/139)
+  Silence the Yarn 1 `url.parse()` deprecation warning
+
+## [1.15.1] - 2026-09-24
+
+- [#136](https://github.com/itk-dev/devops_itksites/pull/136)
+  Fall back to Drupal module versions for `drupal/*` packages when a detection
+  result has no Composer packages
+
+## [1.15.0] - 2026-09-23
+
+- [#134](https://github.com/itk-dev/devops_itksites/pull/134)
+  Check drupal.org for new releases and advisories from the admin
+
+- [#133](https://github.com/itk-dev/devops_itksites/pull/133)
+  Check drupal.org releases every 12 hours with Symfony Scheduler
+
+- [#132](https://github.com/itk-dev/devops_itksites/pull/132)
+  Check drupal.org releases with `app:drupal:check-releases` and on the queue
+
+- [#131](https://github.com/itk-dev/devops_itksites/pull/131)
+  Record drupal.org release status on Drupal packages and add advisories for
+  insecure versions
+
+- [#130](https://github.com/itk-dev/devops_itksites/pull/130)
+  Add cached clients for drupal.org release history and security advisories
+
+- [#129](https://github.com/itk-dev/devops_itksites/pull/129)
+  Show advisories on Drupal modules and module versions, and the linked
+  modules on packages
+
+- [#128](https://github.com/itk-dev/devops_itksites/pull/128)
+  Link Drupal modules to their Composer packages on ingest, with an
+  `app:drupal:link-packages` backfill command
+
+- [#127](https://github.com/itk-dev/devops_itksites/pull/127)
+  Link Drupal modules and module versions to their Composer packages
+
+- [#126](https://github.com/itk-dev/devops_itksites/pull/126)
+  Map Drupal module versions to Composer versions
+
+- [#125](https://github.com/itk-dev/devops_itksites/pull/125)
+  Add Symfony Language Tools as an optional Claude Code plugin
+
+- [#124](https://github.com/itk-dev/devops_itksites/pull/124)
+  Add Symfony AI Mate for coding agents
+
+- [#123](https://github.com/itk-dev/devops_itksites/pull/123)
+  Fix the Rector config, apply its changes and run it in CI
+
+- [#122](https://github.com/itk-dev/devops_itksites/pull/122)
+  Fix the Claude Code hooks, plugin and permission settings
+
+## [1.14.0] - 2026-09-21
+
 - [#120](https://github.com/itk-dev/devops_itksites/pull/120)
   Filter installations, sites and domains by the hosting provider of the server
   they run on
@@ -38,12 +162,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#113](https://github.com/itk-dev/devops_itksites/pull/113)
   Update EasyAdmin to 5.6 and install its agent skill for Claude Code. The skill
   is regenerated by `composer update`; CI fails if it drifts
-
-- [#112](https://github.com/itk-dev/devops_itksites/pull/112)
-  Accept deploy reports from the deployment pipeline, so sites deployed from a
-  prebuilt artifact get the repository and tag the harvester cannot detect.
-  Installations now record whether they are a git working copy or a release
-  artifact
 
 - [#111](https://github.com/itk-dev/devops_itksites/pull/111)
   Link an installation to a git tag that already exists. A redeployment, or the
@@ -331,7 +449,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.13.0...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.18.0...HEAD
+[1.18.0]: https://github.com/itk-dev/devops_itksites/compare/1.17.0...1.18.0
+[1.17.0]: https://github.com/itk-dev/devops_itksites/compare/1.16.0...1.17.0
+[1.16.0]: https://github.com/itk-dev/devops_itksites/compare/1.15.1...1.16.0
+[1.15.1]: https://github.com/itk-dev/devops_itksites/compare/1.15.0...1.15.1
+[1.15.0]: https://github.com/itk-dev/devops_itksites/compare/1.14.0...1.15.0
+[1.14.0]: https://github.com/itk-dev/devops_itksites/compare/1.13.0...1.14.0
 [1.13.0]: https://github.com/itk-dev/devops_itksites/compare/1.12.1...1.13.0
 [1.12.1]: https://github.com/itk-dev/devops_itksites/compare/1.12.0...1.12.1
 [1.12.0]: https://github.com/itk-dev/devops_itksites/compare/1.11.2...1.12.0

@@ -16,8 +16,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 
 /**
  * @extends AbstractCrudController<DetectionResult>
@@ -54,7 +54,9 @@ class DetectionResultCrudController extends AbstractCrudController
         yield DateTimeField::new('createdAt')->hideOnIndex();
         yield DateTimeField::new('modifiedAt')->hideOnIndex();
         yield DateTimeField::new('lastContact');
-        yield CodeEditorField::new('prettyData')->hideOnIndex()->setLabel('Data');
+        yield Field::new('prettyData')->onlyOnDetail()->setLabel('Data')
+            ->setTemplatePath('EasyAdminBundle/Fields/code_highlight.html.twig')
+            ->setCustomOption('language', 'json');
     }
 
     #[\Override]

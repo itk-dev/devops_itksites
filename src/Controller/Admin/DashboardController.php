@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Option\GrayScale;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Theme;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -41,11 +42,13 @@ class DashboardController extends AbstractDashboardController
             ->setTitle('<img src="/img/itk-sites-logo.png" width="170px" alt="ITK sites logo">')
             ->setFaviconPath('img/favicon.ico')
             ->renderContentMaximized()
-            // ITK blue. Since EasyAdmin 5.4 one primary colour drives buttons,
-            // links, the active sidebar item and boolean badges, and the theme
-            // computes the text colour that sits on top of it — which the
-            // stylesheet used to approximate variable by variable.
-            ->setTheme(Theme::new()->primaryColor('#007ba6'));
+            // The ITK Development design system: ITK blue (ITK cyan in dark
+            // mode), cool slate grays and 6px corners, which EasyAdmin doubles
+            // to the 12px the design uses for cards.
+            ->setTheme(Theme::new()
+                ->primaryColor('#007ba6', '#00a5cd')
+                ->grays(GrayScale::SLATE)
+                ->radius('6px'));
     }
 
     #[\Override]
@@ -78,17 +81,14 @@ class DashboardController extends AbstractDashboardController
     }
 
     /**
-     * The admin styles reach admin pages only from here.
-     *
-     * EasyAdmin renders its own layout rather than templates/base.html.twig, so
-     * neither `importmap()` nor that template's Encore tags apply to it. Until
-     * now this method added `css/admin.css`, a file deleted in #81, so every
-     * admin page carried a 404 and none of the ITK styling below it.
+     * The admin JS and styles reach admin pages only from here: the `admin`
+     * Reprise entry (assets/admin.js, which imports assets/styles/admin.css)
+     * loads on every dashboard and CRUD page.
      */
     #[\Override]
     public function configureAssets(): Assets
     {
-        return Assets::new()->addWebpackEncoreEntry('admin');
+        return Assets::new()->addRepriseEntry('admin');
     }
 
     #[\Override]

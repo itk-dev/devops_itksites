@@ -14,6 +14,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method DetectionResult|null findOneBy(array $criteria, array $orderBy = null)
  * @method DetectionResult[]    findAll()
  * @method DetectionResult[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<DetectionResult>
  */
 class DetectionResultRepository extends ServiceEntityRepository
 {

@@ -27,3 +27,7 @@ framework:
             # FPM workers, at the cost of being cleared on every FPM restart.
             cache.health:
                 adapter: cache.adapter.filesystem
+
+            # drupal.org release-history and security advisory lookups.
+            # TTLs are set per item by the clients in src/Service/Drupal/.
+            cache.drupal_org: ~

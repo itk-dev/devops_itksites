@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form\Type\Admin;
 
+use App\Doctrine\Functions\SemverNumeric;
 use Composer\Semver\VersionParser;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Filter\FilterInterface;
@@ -94,8 +95,8 @@ class SemverFilter implements FilterInterface
             // Sort the two values numerically so the user can enter them in any
             // order — "< 11.3.0" with value2 = "10.0.0" still produces a sane
             // range, not an unsatisfiable WHERE.
-            $a = self::toSemverNumeric($value);
-            $b = self::toSemverNumeric($value2);
+            $a = SemverNumeric::toNumeric($value);
+            $b = SemverNumeric::toNumeric($value2);
             [$min, $max] = $a <= $b ? [$a, $b] : [$b, $a];
 
             $queryBuilder
@@ -122,27 +123,7 @@ class SemverFilter implements FilterInterface
                 $comparison,
                 $parameter,
             ))
-            ->setParameter($parameter, self::toSemverNumeric($value))
+            ->setParameter($parameter, SemverNumeric::toNumeric($value))
         ;
-    }
-
-    /**
-     * Mirrors the SEMVER_NUMERIC DQL function: strips a leading v/V, splits
-     * on '.', pads to four segments with zeros, then packs major/minor/patch/
-     * extra into a BIGINT with 10^4 of headroom per segment. Max value is
-     * ~10^16, comfortably below PHP_INT_MAX (~9.22·10^18).
-     */
-    private static function toSemverNumeric(string $version): int
-    {
-        $segments = explode('.', ltrim($version, 'vV'));
-        $major = (int) $segments[0];
-        $minor = (int) ($segments[1] ?? 0);
-        $patch = (int) ($segments[2] ?? 0);
-        $extra = (int) ($segments[3] ?? 0);
-
-        return $major * 1_000_000_000_000
-            + $minor * 100_000_000
-            + $patch * 10_000
-            + $extra;
     }
 }

@@ -5,7 +5,21 @@
 {% block content_title %}Repositories with advisories{% endblock %}
 
 {% block main %}
-    <div class="d-flex justify-content-end mb-3">
+    <div class="d-flex justify-content-end gap-2 mb-3">
+        {# Same action and confirmation as the Check drupal.org global action on the CRUD indexes. #}
+        <form method="post" action="{{ path('admin_drupal_check_releases', {token: csrf_token(constant('App\\Controller\\Admin\\DrupalReleaseCheckController::CSRF_INTENT'))}) }}" class="d-inline">
+            <button type="submit"
+                    class="btn btn-secondary action-checkDrupalReleases"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal-action-confirmation"
+                    data-action-confirmation="true"
+                    data-action-variant="default"
+                    data-action-confirmation-message="Check drupal.org for new releases and security advisories?"
+                    data-action-confirmation-content="The check runs in the background and takes a few minutes. Refresh the page to see the results."
+                    data-action-confirmation-button="Start check">
+                <i class="fa fa-rotate"></i> Check drupal.org
+            </button>
+        </form>
         <form method="post" action="{{ path('admin_repo_advisories_sync') }}" class="d-inline">
             <input type="hidden" name="_token" value="{{ csrf_token(csrf_intent) }}">
             <button type="submit"
@@ -112,4 +126,6 @@
             </tbody>
         </table>
     {% endif %}
+
+    {{ include('@EasyAdmin/crud/includes/_action_confirmation_modal.html.twig') }}
 {% endblock %}

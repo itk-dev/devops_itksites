@@ -4,27 +4,28 @@ declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\Config\RectorConfig;
-use Rector\Set\ValueObject\LevelSetList;
+use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\Symfony\Set\SymfonySetList;
 
-return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->paths([
+return RectorConfig::configure()
+    ->withPaths([
         __DIR__.'/src',
         __DIR__.'/tests',
-    ]);
-
-    // register a single rule
-    $rectorConfig->rule(InlineConstructorDefaultToPropertyRector::class);
-
-    // define sets of rules
-    $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_85,
-        SymfonySetList::SYMFONY_74,
+    ])
+    ->withRules([
+        InlineConstructorDefaultToPropertyRector::class,
+    ])
+    // Import classes with `use` instead of inline FQCNs; keep global classes
+    // like \DateTime inline, as php-cs-fixer's @Symfony set does.
+    ->withImportNames(importShortClasses: false)
+    // PHP level from composer.json, upgrade sets from the installed versions
+    // in composer.lock, so neither goes stale on an upgrade.
+    ->withPhpSets()
+    ->withComposerBased(twig: true, doctrine: true, phpunit: true, symfony: true)
+    ->withAttributesSets(symfony: true, doctrine: true)
+    ->withSets([
+        DoctrineSetList::DOCTRINE_CODE_QUALITY,
         SymfonySetList::CONFIGS,
         SymfonySetList::SYMFONY_CODE_QUALITY,
         SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
-        Rector\PHPUnit\Set\PHPUnitSetList::PHPUNIT_100,
-        Rector\PHPUnit\Set\PHPUnitSetList::PHPUNIT_110,
-        Rector\PHPUnit\Set\PHPUnitSetList::PHPUNIT_120,
     ]);
-};

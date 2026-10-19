@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\PackageVersionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PackageVersionRepository::class)]
@@ -20,13 +21,13 @@ class PackageVersion extends AbstractBaseEntity implements \Stringable
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Package $package;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $version;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $latest = null;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 50, nullable: true)]
     private ?string $latestStatus = null;
 
     #[ORM\ManyToMany(targetEntity: Advisory::class, inversedBy: 'packageVersions')]
@@ -35,10 +36,24 @@ class PackageVersion extends AbstractBaseEntity implements \Stringable
     #[ORM\Column]
     private int $advisoryCount = 0;
 
+    #[ORM\OneToMany(targetEntity: ModuleVersion::class, mappedBy: 'composerPackageVersion')]
+    private Collection $moduleVersions;
+
+    /** @var list<string>|null drupal.org release-history terms, null when the release is unknown */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $drupalReleaseTerms = null;
+
+    #[ORM\Column(options: ['default' => false])]
+    private bool $drupalInsecure = false;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $drupalReleaseCheckedAt = null;
+
     public function __construct()
     {
         $this->installations = new ArrayCollection();
         $this->advisories = new ArrayCollection();
+        $this->moduleVersions = new ArrayCollection();
     }
 
     #[\Override]
@@ -48,7 +63,7 @@ class PackageVersion extends AbstractBaseEntity implements \Stringable
     }
 
     /**
-     * @return Collection<Installation>
+     * @return Collection<int, Installation>
      */
     public function getInstallations(): Collection
     {
@@ -155,5 +170,74 @@ class PackageVersion extends AbstractBaseEntity implements \Stringable
     public function getAdvisoryCount(): int
     {
         return $this->advisoryCount;
+    }
+
+    /**
+     * @return Collection<int, ModuleVersion>
+     */
+    public function getModuleVersions(): Collection
+    {
+        return $this->moduleVersions;
+    }
+
+    public function addModuleVersion(ModuleVersion $moduleVersion): self
+    {
+        if (!$this->moduleVersions->contains($moduleVersion)) {
+            $this->moduleVersions->add($moduleVersion);
+            $moduleVersion->setComposerPackageVersion($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return list<string>|null
+     */
+    public function getDrupalReleaseTerms(): ?array
+    {
+        return $this->drupalReleaseTerms;
+    }
+
+    /**
+     * @param list<string>|null $drupalReleaseTerms
+     */
+    public function setDrupalReleaseTerms(?array $drupalReleaseTerms): self
+    {
+        $this->drupalReleaseTerms = $drupalReleaseTerms;
+
+        return $this;
+    }
+
+    public function isDrupalInsecure(): bool
+    {
+        return $this->drupalInsecure;
+    }
+
+    public function setDrupalInsecure(bool $drupalInsecure): self
+    {
+        $this->drupalInsecure = $drupalInsecure;
+
+        return $this;
+    }
+
+    public function getDrupalReleaseCheckedAt(): ?\DateTimeImmutable
+    {
+        return $this->drupalReleaseCheckedAt;
+    }
+
+    public function setDrupalReleaseCheckedAt(?\DateTimeImmutable $drupalReleaseCheckedAt): self
+    {
+        $this->drupalReleaseCheckedAt = $drupalReleaseCheckedAt;
+
+        return $this;
+    }
+
+    public function removeModuleVersion(ModuleVersion $moduleVersion): self
+    {
+        if ($this->moduleVersions->removeElement($moduleVersion) && $moduleVersion->getComposerPackageVersion() === $this) {
+            $moduleVersion->setComposerPackageVersion(null);
+        }
+
+        return $this;
     }
 }

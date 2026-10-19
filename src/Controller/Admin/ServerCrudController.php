@@ -55,7 +55,7 @@ class ServerCrudController extends AbstractFullCrudController
     public function configureFields(string $pageName): iterable
     {
         yield FormField::addFieldset('Provider Details');
-        yield TextField::new('name')->setColumns(8)->setTemplatePath('EasyAdminBundle/Fields/ssh_link.html.twig');
+        yield TextField::new('name')->setColumns(8)->setTemplatePath('EasyAdminBundle/Fields/copy_text.html.twig');
         yield TextField::new('hostingProviderName')->setColumns(4)->hideOnIndex();
         yield AssociationField::new('installations');
         yield ChoiceField::new('type')->setChoices(ServerTypeType::CHOICES)->renderExpanded()->setColumns(8)->setTemplatePath('EasyAdminBundle/Fields/server_type.html.twig');

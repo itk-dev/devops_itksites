@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
@@ -20,16 +21,16 @@ abstract class AbstractBaseEntity implements \Stringable
     #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
     protected Ulid $id;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: false)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
     protected \DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: false)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
     protected \DateTimeImmutable $modifiedAt;
 
-    #[ORM\Column(type: 'string', nullable: false, options: ['default' => ''])]
+    #[ORM\Column(type: Types::STRING, nullable: false, options: ['default' => ''])]
     protected string $createdBy = '';
 
-    #[ORM\Column(type: 'string', nullable: false, options: ['default' => ''])]
+    #[ORM\Column(type: Types::STRING, nullable: false, options: ['default' => ''])]
     protected string $modifiedBy = '';
 
     public function __toString(): string

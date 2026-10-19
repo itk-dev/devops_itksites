@@ -7,6 +7,7 @@ namespace App\Tests\Admin;
 use App\Admin\SemverSort;
 use App\Entity\Installation;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class SemverSortTest extends KernelTestCase
@@ -73,7 +74,7 @@ class SemverSortTest extends KernelTestCase
         self::assertSame([], $qb->getDQLPart('orderBy'));
     }
 
-    private function makeQb(): \Doctrine\ORM\QueryBuilder
+    private function makeQb(): QueryBuilder
     {
         return $this->getEntityManager()->getRepository(Installation::class)->createQueryBuilder('entity');
     }

@@ -124,9 +124,9 @@ class ApiAccessControlTest extends ApiTestCase
     }
 
     /**
-     * Errors are rendered as JSON for every format the API serves. The default
-     * error_formats map application/ld+json to a jsonld format this project
-     * does not register, which turned every such error into a 500.
+     * Errors keep their status code for every format the API serves. Before
+     * jsonld was registered, the default error_formats turned every error on
+     * application/ld+json into a 500.
      */
     #[DataProvider('errorContentTypes')]
     public function testErrorsAreRenderedForEveryAcceptedContentType(string $accept): void

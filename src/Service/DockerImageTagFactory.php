@@ -23,23 +23,18 @@ class DockerImageTagFactory
 
     public function setDockerImageTags(Installation $installation, array $containers): void
     {
-        // Some detection results have duplicated containers
-        $containersKeyed = [];
-        foreach ($containers as $container) {
-            $containersKeyed[$container->name] = $container;
-        }
-
-        $dockerImageTags = new ArrayCollection();
         $images = [];
-        foreach ($containersKeyed as $container) {
-            $parts = explode('/', (string) $container->image);
-            $organization = $parts[0];
-            $repository = $parts[1] ?? '';
+        $tags = [];
+        foreach ($containers as $container) {
+            [$registry, $organization, $repository] = $this->parseImage((string) $container->image);
+            // Keyed like the unique constraint and the lookup below.
+            $imageKey = $registry.'/'.$organization.'/'.$repository;
 
-            $dockerImage = array_key_exists($container->image, $images) ? $images[$container->image] : null;
+            $dockerImage = $images[$imageKey] ?? null;
 
             if (null === $dockerImage) {
                 $dockerImage = $this->dockerImageRepository->findOneBy([
+                    'registry' => $registry,
                     'organization' => $organization,
                     'repository' => $repository,
                 ]);
@@ -48,18 +43,20 @@ class DockerImageTagFactory
                     $dockerImage = new DockerImage();
                     $this->entityManager->persist($dockerImage);
 
+                    $dockerImage->setRegistry($registry);
                     $dockerImage->setOrganization($organization);
                     $dockerImage->setRepository($repository);
                 }
 
-                $images[$container->image] = $dockerImage;
+                $images[$imageKey] = $dockerImage;
             }
 
             $tag = $container->version ?? '';
+            // One tag per image:tag, however many services in the result run it.
+            $tagKey = $imageKey.':'.$tag;
 
-            $dockerImageTag = $this->dockerImageTagRepository->findOneBy([
+            $dockerImageTag = $tags[$tagKey] ?? $this->dockerImageTagRepository->findOneBy([
                 'dockerImage' => $dockerImage,
-                'name' => $container->name,
                 'tag' => $tag,
             ]);
 
@@ -67,16 +64,32 @@ class DockerImageTagFactory
                 $dockerImageTag = new DockerImageTag();
                 $this->entityManager->persist($dockerImageTag);
 
+                $dockerImageTag->setTag($tag);
                 $dockerImage->addDockerImageTag($dockerImageTag);
-                $installation->addDockerImageTag($dockerImageTag);
             }
 
-            $dockerImageTag->setName($container->name);
-            $dockerImageTag->setTag($tag);
-
-            $dockerImageTags->add($dockerImageTag);
+            $tags[$tagKey] = $dockerImageTag;
         }
 
-        $installation->setDockerImageTags($dockerImageTags);
+        $installation->setDockerImageTags(new ArrayCollection(array_values($tags)));
+    }
+
+    /**
+     * Registry, organization and repository, by Docker's rule: the first
+     * segment names a registry when it has a "." or ":" or is "localhost",
+     * otherwise the image is on Docker Hub.
+     *
+     * @return array{string, string, string}
+     */
+    private function parseImage(string $image): array
+    {
+        $parts = explode('/', $image);
+        $registry = DockerImage::DOCKER_HUB;
+        if (count($parts) > 1 && (str_contains($parts[0], '.') || str_contains($parts[0], ':') || 'localhost' === $parts[0])) {
+            $registry = array_shift($parts);
+        }
+        $organization = array_shift($parts);
+
+        return [$registry, $organization, implode('/', $parts)];
     }
 }

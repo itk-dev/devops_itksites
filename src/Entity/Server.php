@@ -10,6 +10,7 @@ use App\Repository\ServerRepository;
 use App\Trait\ApiKeyEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -28,65 +29,65 @@ class Server extends AbstractBaseEntity implements UserInterface, \Stringable
 
     private const array ROLES = ['ROLE_USER', 'ROLE_SERVER'];
 
-    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     #[Groups(['export'])]
     #[SerializedName('Name')]
     private string $name = '';
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $hostingProviderName = null;
 
-    #[ORM\Column(type: 'string', length: 15, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 15, nullable: true)]
     #[Assert\Ip]
     private ?string $internalIp = null;
 
-    #[ORM\Column(type: 'string', length: 15, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 15, nullable: true)]
     #[Assert\Ip]
     private ?string $externalIp = null;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $aarhusSsl = false;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $letsEncryptSsl = false;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $veeam = false;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $azureBackup = false;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $monitoring = false;
 
-    #[ORM\Column(type: 'string', length: 5, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 5, nullable: true)]
     private ?string $databaseVersion = null;
 
-    #[ORM\Column(type: 'string', length: 15)]
+    #[ORM\Column(type: Types::STRING, length: 15)]
     private string $system;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $note = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $serviceDeskTicket = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $usedFor = null;
 
     #[ORM\OneToMany(targetEntity: DetectionResult::class, mappedBy: 'server', cascade: ['persist'], orphanRemoval: true)]
     private Collection $detectionResults;
 
-    #[ORM\Column(type: 'string', length: 25)]
+    #[ORM\Column(type: Types::STRING, length: 25)]
     private string $hostingProvider;
 
     #[ORM\OneToMany(targetEntity: Installation::class, mappedBy: 'server', cascade: ['persist'], orphanRemoval: true)]
     private Collection $installations;
 
-    #[ORM\Column(type: 'string', length: 10)]
+    #[ORM\Column(type: Types::STRING, length: 10)]
     private string $type;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $lastContactAt = null;
 
     /**

@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+use App\Doctrine\Filter\SemverFilter;
 use App\Repository\SiteRepository;
+use App\Types\HostingProviderType;
+use App\Types\ServerTypeType;
 use App\Types\SiteType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
@@ -19,12 +26,37 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['export']],
     security: "is_granted('ROLE_USER')",
 )]
-#[GetCollection()]
+// Mirrors the filters in App\Controller\Admin\SiteCrudController.
+#[GetCollection(parameters: [
+    'primaryDomain' => new QueryParameter(filter: new PartialSearchFilter(), property: 'primaryDomain', description: 'Primary domain contains'),
+    'configFilePath' => new QueryParameter(filter: new PartialSearchFilter(), property: 'configFilePath', description: 'Config file path contains'),
+    'phpVersion' => new QueryParameter(filter: new SemverFilter('PHP version'), property: 'phpVersion'),
+    'serverName' => new QueryParameter(filter: new ExactFilter(), property: 'server.name', description: 'Server name'),
+    'serverType' => new QueryParameter(
+        filter: new ExactFilter(),
+        property: 'server.type',
+        schema: ['type' => 'string', 'enum' => [ServerTypeType::PROD, ServerTypeType::STG, ServerTypeType::DEVOPS, ServerTypeType::GPU]],
+        description: 'Server type',
+    ),
+    'hostingProvider' => new QueryParameter(
+        filter: new ExactFilter(),
+        property: 'server.hostingProvider',
+        schema: ['type' => 'string', 'enum' => [
+            HostingProviderType::AZURE,
+            HostingProviderType::DBC,
+            HostingProviderType::IT_RELATION,
+            HostingProviderType::IT_RELATION_ADM,
+            HostingProviderType::IT_RELATION_DMZ,
+            HostingProviderType::HETZNER,
+        ]],
+        description: 'Hosting provider',
+    ),
+])]
 #[ORM\Entity(repositoryClass: SiteRepository::class)]
 #[ORM\UniqueConstraint(name: 'server_rootDir_configFilePath_idx', fields: ['server', 'rootDir', 'configFilePath'])]
 class Site extends AbstractHandlerResult implements \Stringable
 {
-    #[ORM\Column(type: 'string', length: 10)]
+    #[ORM\Column(type: Types::STRING, length: 10)]
     #[Assert\Length(
         min: 1,
         max: 10,
@@ -36,7 +68,7 @@ class Site extends AbstractHandlerResult implements \Stringable
     #[SerializedName('PHP version')]
     private string $phpVersion = '';
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\Length(
         min: 1,
         max: 255,
@@ -58,12 +90,12 @@ class Site extends AbstractHandlerResult implements \Stringable
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Installation $installation;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
     #[Groups(['export'])]
     #[SerializedName('Primary domain')]
     private string $primaryDomain;
 
-    #[ORM\Column(type: 'string', length: 25)]
+    #[ORM\Column(type: Types::STRING, length: 25)]
     #[Groups(['export'])]
     #[SerializedName('Type')]
     private string $type = '';

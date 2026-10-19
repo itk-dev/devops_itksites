@@ -1,0 +1,29 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "itksites",
+  "description": "Claude Code plugins for ITKsites development",
+  "owner": {
+    "name": "ITK Dev",
+    "email": "itkdev@mkb.aarhus.dk"
+  },
+  "plugins": [
+    {
+      "name": "symfony-lsp",
+      "description": "Symfony Language Tools: routes, services, templates, translations and config diagnostics",
+      "source": "./.claude-plugin",
+      "strict": false,
+      "lspServers": {
+        "symfony": {
+          "command": "symfony-lsp",
+          "extensionToLanguage": {
+            ".php": "php",
+            ".twig": "twig",
+            ".yaml": "yaml",
+            ".yml": "yaml"
+          },
+          "startupTimeout": 300000
+        }
+      }
+    }
+  ]
+}

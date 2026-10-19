@@ -57,13 +57,7 @@ readonly class HealthChecker
      */
     public function isHealthy(array $results): bool
     {
-        foreach ($results as $result) {
-            if ($result->isDegraded()) {
-                return false;
-            }
-        }
-
-        return true;
+        return array_all($results, fn ($result) => !$result->isDegraded());
     }
 
     /**

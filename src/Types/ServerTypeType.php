@@ -12,7 +12,7 @@ class ServerTypeType
     public const PROD = 'prod';
     public const STG = 'stg';
     public const DEVOPS = 'devops';
-    public const GPU = 'GPU';
+    public const GPU = 'gpu';
 
     public const CHOICES = [
         'Prod' => self::PROD,

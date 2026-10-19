@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Admin\Field\AdvisoryCountField;
 use App\Admin\Field\TextMonospaceField;
 use App\Entity\Module;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -35,7 +36,8 @@ class ModuleCrudController extends AbstractCrudController
     {
         return $actions
             ->disable(Action::DELETE, Action::NEW, Action::EDIT)
-            ->add(Crud::PAGE_INDEX, Action::DETAIL);
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_INDEX, DrupalReleaseCheckController::action($this->container->get('security.csrf.token_manager')));
     }
 
     #[\Override]
@@ -45,6 +47,9 @@ class ModuleCrudController extends AbstractCrudController
         yield TextMonospaceField::new('package')->setColumns(6);
         yield TextMonospaceField::new('name')->setColumns(6);
         yield AssociationField::new('moduleVersions')->setColumns(6);
+        yield AdvisoryCountField::new('composerPackage.advisoryCount')->onlyOnIndex()->setLabel('Adv.')->setCssClass('text-center');
+        yield AssociationField::new('composerPackage')->onlyOnDetail()->setLabel('Composer package');
+        yield AdvisoryCountField::new('advisories')->onlyOnDetail();
     }
 
     #[\Override]
