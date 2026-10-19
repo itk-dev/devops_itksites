@@ -183,6 +183,25 @@ class ReleaseCheckerTest extends KernelTestCase
         $this->assertCount(0, $fixed->getAdvisories());
     }
 
+    /**
+     * A git checkout reports a version Composer cannot parse; it must not stop the check.
+     */
+    public function testUnparsableVersionIsSkipped(): void
+    {
+        $this->install('core', ['11.3.13' => '11.3.13', '11.3.x-dev f509c89' => '11.3.x-dev f509c89']);
+
+        $this->checker(
+            $this->fixture('release-history-drupal.xml'),
+            $this->fixture('project-drupal.json'),
+            $this->fixture('sa-drupal-first.json'),
+            $this->fixture('sa-drupal-last.json'),
+        )->check($this->package('core'));
+        $this->entityManager->clear();
+
+        $this->assertCount(3, $this->packageVersion('core', '11.3.13')->getAdvisories());
+        $this->assertCount(0, $this->packageVersion('core', '11.3.x-dev f509c89')->getAdvisories());
+    }
+
     public function testMetaPackageIsSkipped(): void
     {
         self::getContainer()->get(PackageVersionFactory::class)->setPackageVersions($this->installation, [
