@@ -11,12 +11,14 @@ use App\Entity\PackageVersion;
 use App\Repository\AdvisoryRepository;
 use Composer\Semver\Semver;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class AdvisoryFactory
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly AdvisoryRepository $advisoryRepository,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -29,6 +31,11 @@ class AdvisoryFactory
                     // The audit can name packages the harvester did not list,
                     // e.g. when it reports "packages": "unknown".
                     if (null === $packageVersion) {
+                        $this->logger->warning('Skipped advisory {advisory} for {package}, which installation {installation} does not list', [
+                            'advisory' => $advisory->advisoryId,
+                            'package' => $advisory->packageName,
+                            'installation' => (string) $installation,
+                        ]);
                         continue;
                     }
                     $entity = $this->advisoryRepository->findOneBy(['advisoryId' => $advisory->advisoryId]);

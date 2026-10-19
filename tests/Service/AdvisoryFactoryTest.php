@@ -6,10 +6,12 @@ namespace App\Tests\Service;
 
 use App\Entity\Advisory;
 use App\Entity\Installation;
+use App\Repository\AdvisoryRepository;
 use App\Service\AdvisoryFactory;
 use App\Service\PackageVersionFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -33,7 +35,14 @@ class AdvisoryFactoryTest extends KernelTestCase
             (object) ['name' => 'acme/listed_probe', 'description' => 'Probe', 'version' => '1.0.0'],
         ]);
 
-        self::getContainer()->get(AdvisoryFactory::class)->setAdvisories($installation, (object) ['advisories' => (object) [
+        // Skipped advisories are logged, so known vulnerabilities are not silently dropped.
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())->method('warning')->with(self::anything(), self::callback(
+            static fn (array $context): bool => 'acme/unlisted_probe' === $context['package'] && 'PKSA-unlisted-probe' === $context['advisory'] && isset($context['installation'])
+        ));
+        $factory = new AdvisoryFactory($entityManager, self::getContainer()->get(AdvisoryRepository::class), $logger);
+
+        $factory->setAdvisories($installation, (object) ['advisories' => (object) [
             'acme/unlisted_probe' => [$this->advisory('PKSA-unlisted-probe', 'acme/unlisted_probe')],
             'acme/listed_probe' => [$this->advisory('PKSA-listed-probe', 'acme/listed_probe')],
         ]]);

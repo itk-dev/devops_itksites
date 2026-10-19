@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - [#161](https://github.com/itk-dev/devops_itksites/pull/161)
-  Skip composer audit advisories for packages the installation does not list
+  Skip and log composer audit advisories for packages the installation does
+  not list
 
 ## [1.17.0] - 2026-10-01
 
