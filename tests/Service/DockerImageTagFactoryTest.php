@@ -79,6 +79,10 @@ class DockerImageTagFactoryTest extends KernelTestCase
         $this->assertSame('ghcr.io/probe-project/probe-serve', (string) $images->findOneBy(['organization' => 'probe-project']));
     }
 
+    /**
+     * A tag is an image:tag in use; what the Compose services running it are
+     * called does not matter.
+     */
     public function testSameImageTwiceInOneResult(): void
     {
         $this->images([
@@ -88,7 +92,17 @@ class DockerImageTagFactoryTest extends KernelTestCase
 
         $images = $this->entityManager->getRepository(DockerImage::class)->findBy(['organization' => 'probe-itkdev']);
         $this->assertCount(1, $images);
-        $this->assertCount(2, $images[0]->getDockerImageTags());
+        $this->assertCount(1, $images[0]->getDockerImageTags());
+        $this->assertCount(1, $this->installation->getDockerImageTags());
+    }
+
+    public function testSameTagUnderOtherServiceNames(): void
+    {
+        $this->images(['phpfpm' => 'probe-itkdev/php8.4-fpm']);
+        $this->images(['php' => 'probe-itkdev/php8.4-fpm']);
+
+        $image = $this->entityManager->getRepository(DockerImage::class)->findOneBy(['organization' => 'probe-itkdev']);
+        $this->assertCount(1, $image->getDockerImageTags());
     }
 
     /**

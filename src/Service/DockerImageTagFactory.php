@@ -23,15 +23,9 @@ class DockerImageTagFactory
 
     public function setDockerImageTags(Installation $installation, array $containers): void
     {
-        // Some detection results have duplicated containers
-        $containersKeyed = [];
-        foreach ($containers as $container) {
-            $containersKeyed[$container->name] = $container;
-        }
-
-        $dockerImageTags = new ArrayCollection();
         $images = [];
-        foreach ($containersKeyed as $container) {
+        $tags = [];
+        foreach ($containers as $container) {
             [$registry, $organization, $repository] = $this->parseImage((string) $container->image);
             // Keyed like the unique constraint and the lookup below.
             $imageKey = $registry.'/'.$organization.'/'.$repository;
@@ -58,10 +52,11 @@ class DockerImageTagFactory
             }
 
             $tag = $container->version ?? '';
+            // One tag per image:tag, however many services in the result run it.
+            $tagKey = $imageKey.':'.$tag;
 
-            $dockerImageTag = $this->dockerImageTagRepository->findOneBy([
+            $dockerImageTag = $tags[$tagKey] ?? $this->dockerImageTagRepository->findOneBy([
                 'dockerImage' => $dockerImage,
-                'name' => $container->name,
                 'tag' => $tag,
             ]);
 
@@ -69,17 +64,14 @@ class DockerImageTagFactory
                 $dockerImageTag = new DockerImageTag();
                 $this->entityManager->persist($dockerImageTag);
 
+                $dockerImageTag->setTag($tag);
                 $dockerImage->addDockerImageTag($dockerImageTag);
-                $installation->addDockerImageTag($dockerImageTag);
             }
 
-            $dockerImageTag->setName($container->name);
-            $dockerImageTag->setTag($tag);
-
-            $dockerImageTags->add($dockerImageTag);
+            $tags[$tagKey] = $dockerImageTag;
         }
 
-        $installation->setDockerImageTags($dockerImageTags);
+        $installation->setDockerImageTags(new ArrayCollection(array_values($tags)));
     }
 
     /**
