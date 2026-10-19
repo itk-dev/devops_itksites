@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.18.0] - 2026-10-19
+
+- [#162](https://github.com/itk-dev/devops_itksites/pull/162)
+  Store the registry of docker images, defaulting to Docker Hub, so images
+  such as `ghcr.io/docling-project/*` are told apart, and track one tag per
+  image and tag regardless of the Compose service name
+- [#161](https://github.com/itk-dev/devops_itksites/pull/161)
+  Skip and log composer audit advisories for packages the installation does
+  not list
+- [#160](https://github.com/itk-dev/devops_itksites/pull/160)
+  Store git checkout versions such as `11.3.x-dev f509c89` on installations
+- [#159](https://github.com/itk-dev/devops_itksites/pull/159)
+  Link core modules and submodules to their drupal.org project's package, and
+  check drupal/core on drupal.org as a stopgap until the harvester's
+  `composer audit` works again
+
 ## [1.17.0] - 2026-10-01
 
 - [#157](https://github.com/itk-dev/devops_itksites/pull/157)
@@ -423,7 +439,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.17.0...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.18.0...HEAD
+[1.18.0]: https://github.com/itk-dev/devops_itksites/compare/1.17.0...1.18.0
 [1.17.0]: https://github.com/itk-dev/devops_itksites/compare/1.16.0...1.17.0
 [1.16.0]: https://github.com/itk-dev/devops_itksites/compare/1.15.1...1.16.0
 [1.15.1]: https://github.com/itk-dev/devops_itksites/compare/1.15.0...1.15.1
