@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#160](https://github.com/itk-dev/devops_itksites/pull/160)
+  Store git checkout versions such as `11.3.x-dev f509c89` on installations
 - [#159](https://github.com/itk-dev/devops_itksites/pull/159)
   Link core modules and submodules to their drupal.org project's package, and
   check drupal/core on drupal.org as a stopgap until the harvester's
