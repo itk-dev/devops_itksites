@@ -100,12 +100,17 @@ class AdvisoryFactory
 
     /**
      * Attaches the advisory to every version of the package its affected versions constraint matches.
+     * Versions Composer cannot parse, e.g. a git checkout's "11.3.x-dev f509c89", are skipped.
      */
     public function setAdvisoryForAffectedVersions(Package $package, Advisory $advisory): void
     {
         foreach ($package->getPackageVersions() as $packageVersion) {
-            if (Semver::satisfies($packageVersion->getVersion(), $advisory->getAffectedVersions())) {
-                $advisory->addPackageVersion($packageVersion);
+            try {
+                if (Semver::satisfies($packageVersion->getVersion(), $advisory->getAffectedVersions())) {
+                    $advisory->addPackageVersion($packageVersion);
+                }
+            } catch (\UnexpectedValueException) {
+                continue;
             }
         }
     }

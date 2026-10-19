@@ -31,15 +31,15 @@ class Installation extends AbstractHandlerResult implements \Stringable
     #[Groups(['export'])]
     private ?string $type = 'unknown';
 
-    #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     #[Groups(['export'])]
     private ?string $phpVersion = 'unknown';
 
-    #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     #[Groups(['export'])]
     private ?string $composerVersion = 'unknown';
 
-    #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     #[Groups(['export'])]
     private ?string $frameworkVersion = FrameworkTypes::UNKNOWN;
 
