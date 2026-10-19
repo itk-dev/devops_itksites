@@ -42,6 +42,7 @@ class DockerImageCrudController extends AbstractCrudController
     #[\Override]
     public function configureFields(string $pageName): iterable
     {
+        yield TextField::new('registry')->setColumns(6);
         yield TextMonospaceField::new('organization')->setColumns(6);
         yield TextMonospaceField::new('repository')->setColumns(6);
         yield AssociationField::new('dockerImageTags')->setColumns(6);
@@ -53,6 +54,7 @@ class DockerImageCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
+            ->add('registry')
             ->add('organization')
             ->add('repository')
         ;

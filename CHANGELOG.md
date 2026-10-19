@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#162](https://github.com/itk-dev/devops_itksites/pull/162)
+  Store the registry of docker images, defaulting to Docker Hub, so images
+  such as `ghcr.io/docling-project/*` are told apart, and track one tag per
+  image and tag regardless of the Compose service name
 - [#161](https://github.com/itk-dev/devops_itksites/pull/161)
   Skip and log composer audit advisories for packages the installation does
   not list
