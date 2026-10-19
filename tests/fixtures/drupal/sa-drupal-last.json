@@ -1,0 +1,38 @@
+{
+  "self": "https://www.drupal.org/api-d7/node?type=sa&field_project=3060&sort=created&direction=DESC&page=2",
+  "first": "https://www.drupal.org/api-d7/node?type=sa&field_project=3060&sort=created&direction=DESC&page=0",
+  "next": null,
+  "last": "https://www.drupal.org/api-d7/node?type=sa&field_project=3060&sort=created&direction=DESC&page=2",
+  "list": [
+    {
+      "title": "Drupal core - Highly critical - Remote Code Execution  - SA-CORE-2018-002",
+      "url": "https://www.drupal.org/sa-core-2018-002",
+      "field_sa_cve": [
+        "CVE-2018-7600"
+      ],
+      "field_affected_versions": ">=7.0 <7.58 || >= 8.0.0 <8.3.9 || >=8.4.0 <8.4.6 || >=8.5.0 <8.5.1",
+      "created": "1522260850",
+      "nid": "2956770",
+      "type": "sa",
+      "field_project": {
+        "uri": "https://www.drupal.org/api-d7/node/3060",
+        "id": "3060",
+        "resource": "node"
+      }
+    },
+    {
+      "title": "Drupal core - Critical - Multiple Vulnerabilities  - SA-CORE-2018-001",
+      "url": "https://www.drupal.org/sa-core-2018-001",
+      "field_sa_cve": [],
+      "field_affected_versions": ">=7.0 <7.57 || >= 8.0.0 <8.4.5",
+      "created": "1519233055",
+      "nid": "2946543",
+      "type": "sa",
+      "field_project": {
+        "uri": "https://www.drupal.org/api-d7/node/3060",
+        "id": "3060",
+        "resource": "node"
+      }
+    }
+  ]
+}

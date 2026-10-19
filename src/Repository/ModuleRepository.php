@@ -22,4 +22,20 @@ class ModuleRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Module::class);
     }
+
+    /**
+     * Modules of a drupal.org project. Modules stored before the project was
+     * recorded match by name, as a project's main module is named after it.
+     *
+     * @return list<Module>
+     */
+    public function findByDrupalProject(string $project): array
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.project = :project')
+            ->orWhere('m.project IS NULL AND m.name = :project')
+            ->setParameter('project', $project)
+            ->getQuery()
+            ->getResult();
+    }
 }

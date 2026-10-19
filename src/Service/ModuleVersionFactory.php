@@ -9,6 +9,7 @@ use App\Entity\Module;
 use App\Entity\ModuleVersion;
 use App\Repository\ModuleRepository;
 use App\Repository\ModuleVersionRepository;
+use App\Utils\DrupalProject;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -34,6 +35,7 @@ class ModuleVersionFactory
             if (isset($installed->display_name)) {
                 $module->setDisplayName($installed->display_name);
             }
+            $module->setProject(DrupalProject::fromDrush($installed->project ?? null, $installed->path ?? null));
             $module->setEnabled('Enabled' === $installed->status);
 
             $moduleVersion = $this->getModuleVersion($module, $installed->version);
