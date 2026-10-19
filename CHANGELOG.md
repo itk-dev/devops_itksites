@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#165](https://github.com/itk-dev/devops_itksites/pull/165)
+  Update Composer packages, including `symfony/expression-language` for
+  CVE-2026-109449
 - [#164](https://github.com/itk-dev/devops_itksites/pull/164)
   Clear two Doctrine deprecations: pass `SortDirection` to `orderBy()`, and
   run migrations without a transaction, which MariaDB never honoured
