@@ -11,9 +11,14 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DockerImageRepository::class)]
-#[ORM\UniqueConstraint(name: 'organization_repository', columns: ['organization', 'repository'])]
+#[ORM\UniqueConstraint(name: 'registry_organization_repository', columns: ['registry', 'organization', 'repository'])]
 class DockerImage extends AbstractBaseEntity implements \Stringable
 {
+    public const string DOCKER_HUB = 'docker.io';
+
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private string $registry = self::DOCKER_HUB;
+
     #[ORM\Column(type: Types::STRING, length: 255)]
     private string $organization = '';
 
@@ -41,7 +46,24 @@ class DockerImage extends AbstractBaseEntity implements \Stringable
             $name .= $this->repository;
         }
 
+        // As the image is written: Docker Hub images without the registry.
+        if (!empty($name) && self::DOCKER_HUB !== $this->registry) {
+            $name = $this->registry.'/'.$name;
+        }
+
         return empty($name) ? $this->getId()->jsonSerialize() : $name;
+    }
+
+    public function getRegistry(): ?string
+    {
+        return $this->registry;
+    }
+
+    public function setRegistry(string $registry): self
+    {
+        $this->registry = $registry;
+
+        return $this;
     }
 
     public function getOrganization(): ?string

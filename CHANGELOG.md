@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - [#162](https://github.com/itk-dev/devops_itksites/pull/162)
-  Process results with several images under one organization and repository,
-  e.g. `ghcr.io/docling-project/*`
+  Store the registry of docker images, defaulting to Docker Hub, so images
+  such as `ghcr.io/docling-project/*` are told apart
 
 ## [1.17.0] - 2026-10-01
 

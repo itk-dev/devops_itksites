@@ -32,17 +32,15 @@ class DockerImageTagFactory
         $dockerImageTags = new ArrayCollection();
         $images = [];
         foreach ($containersKeyed as $container) {
-            $parts = explode('/', (string) $container->image);
-            $organization = $parts[0];
-            $repository = $parts[1] ?? '';
-            // Keyed like the unique constraint: images that differ only after
-            // the second segment, e.g. ghcr.io/org/a and ghcr.io/org/b, share one.
-            $imageKey = $organization.'/'.$repository;
+            [$registry, $organization, $repository] = $this->parseImage((string) $container->image);
+            // Keyed like the unique constraint and the lookup below.
+            $imageKey = $registry.'/'.$organization.'/'.$repository;
 
             $dockerImage = $images[$imageKey] ?? null;
 
             if (null === $dockerImage) {
                 $dockerImage = $this->dockerImageRepository->findOneBy([
+                    'registry' => $registry,
                     'organization' => $organization,
                     'repository' => $repository,
                 ]);
@@ -51,6 +49,7 @@ class DockerImageTagFactory
                     $dockerImage = new DockerImage();
                     $this->entityManager->persist($dockerImage);
 
+                    $dockerImage->setRegistry($registry);
                     $dockerImage->setOrganization($organization);
                     $dockerImage->setRepository($repository);
                 }
@@ -81,5 +80,24 @@ class DockerImageTagFactory
         }
 
         $installation->setDockerImageTags($dockerImageTags);
+    }
+
+    /**
+     * Registry, organization and repository, by Docker's rule: the first
+     * segment names a registry when it has a "." or ":" or is "localhost",
+     * otherwise the image is on Docker Hub.
+     *
+     * @return array{string, string, string}
+     */
+    private function parseImage(string $image): array
+    {
+        $parts = explode('/', $image);
+        $registry = DockerImage::DOCKER_HUB;
+        if (count($parts) > 1 && (str_contains($parts[0], '.') || str_contains($parts[0], ':') || 'localhost' === $parts[0])) {
+            $registry = array_shift($parts);
+        }
+        $organization = array_shift($parts);
+
+        return [$registry, $organization, implode('/', $parts)];
     }
 }
