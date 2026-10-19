@@ -35,8 +35,11 @@ class DockerImageTagFactory
             $parts = explode('/', (string) $container->image);
             $organization = $parts[0];
             $repository = $parts[1] ?? '';
+            // Keyed like the unique constraint: images that differ only after
+            // the second segment, e.g. ghcr.io/org/a and ghcr.io/org/b, share one.
+            $imageKey = $organization.'/'.$repository;
 
-            $dockerImage = array_key_exists($container->image, $images) ? $images[$container->image] : null;
+            $dockerImage = $images[$imageKey] ?? null;
 
             if (null === $dockerImage) {
                 $dockerImage = $this->dockerImageRepository->findOneBy([
@@ -52,7 +55,7 @@ class DockerImageTagFactory
                     $dockerImage->setRepository($repository);
                 }
 
-                $images[$container->image] = $dockerImage;
+                $images[$imageKey] = $dockerImage;
             }
 
             $tag = $container->version ?? '';

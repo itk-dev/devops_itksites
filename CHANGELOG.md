@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#162](https://github.com/itk-dev/devops_itksites/pull/162)
+  Process results with several images under one organization and repository,
+  e.g. `ghcr.io/docling-project/*`
+
 ## [1.17.0] - 2026-10-01
 
 - [#157](https://github.com/itk-dev/devops_itksites/pull/157)
