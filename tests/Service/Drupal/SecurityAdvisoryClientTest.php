@@ -71,9 +71,10 @@ class SecurityAdvisoryClientTest extends TestCase
     {
         $page = (string) json_encode(['next' => 'https://www.drupal.org/api-d7/node?page=n', 'list' => []]);
         $project = (string) file_get_contents(self::FIXTURES.'project-key_auth.json');
-        $http = new MockHttpClient(static function (string $method, string $url) use ($project, $page): MockResponse {
-            return new MockResponse(str_contains($url, 'field_project_machine_name') ? $project : $page);
-        }, 'https://www.drupal.org/');
+        $http = new MockHttpClient(
+            static fn (string $method, string $url): MockResponse => new MockResponse(str_contains($url, 'field_project_machine_name') ? $project : $page),
+            'https://www.drupal.org/',
+        );
 
         new SecurityAdvisoryClient($http, new ArrayAdapter())->fetch('key_auth');
 
