@@ -41,6 +41,6 @@ final class AdvisoryCountSort
             self::PROPERTY
         ));
 
-        $qb->addOrderBy(self::PROPERTY, $direction);
+        $qb->addOrderBy(self::PROPERTY, SortOrder::DESC === $direction ? \SortDirection::Descending : \SortDirection::Ascending);
     }
 }

@@ -74,7 +74,7 @@ class ReplayDetectionResultsCommand extends Command
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('r.id')
             ->from(DetectionResult::class, 'r')
-            ->orderBy('r.id', 'ASC');
+            ->orderBy('r.id', \SortDirection::Ascending);
 
         $criteria = [];
 
