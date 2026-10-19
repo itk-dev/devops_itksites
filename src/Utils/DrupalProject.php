@@ -10,6 +10,7 @@ namespace App\Utils;
 class DrupalProject
 {
     public const string CORE = 'drupal';
+    private const string CORE_PACKAGE = 'core';
 
     /**
      * drush reports the "project" key drupal.org packaging writes into
@@ -23,5 +24,22 @@ class DrupalProject
         }
 
         return str_starts_with($path ?? '', 'core/') ? self::CORE : null;
+    }
+
+    /**
+     * The project a drupal/<name> package ships. Core is the one package not
+     * named after its project.
+     */
+    public static function fromPackageName(string $name): string
+    {
+        return self::CORE_PACKAGE === $name ? self::CORE : $name;
+    }
+
+    /**
+     * The name of the drupal/<name> package a project ships as.
+     */
+    public static function toPackageName(string $project): string
+    {
+        return self::CORE === $project ? self::CORE_PACKAGE : $project;
     }
 }

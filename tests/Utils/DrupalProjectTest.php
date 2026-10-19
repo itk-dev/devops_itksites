@@ -28,4 +28,13 @@ class DrupalProjectTest extends TestCase
         yield 'git install' => ['', 'modules/contrib/os2forms', null];
         yield 'nothing known' => [null, null, null];
     }
+
+    public function testPackageNameMapping(): void
+    {
+        self::assertSame('drupal', DrupalProject::fromPackageName('core'));
+        self::assertSame('webform', DrupalProject::fromPackageName('webform'));
+        self::assertSame('core-recommended', DrupalProject::fromPackageName('core-recommended'));
+        self::assertSame('core', DrupalProject::toPackageName('drupal'));
+        self::assertSame('webform', DrupalProject::toPackageName('webform'));
+    }
 }
