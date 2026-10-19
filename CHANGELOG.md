@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#162](https://github.com/itk-dev/devops_itksites/pull/162)
   Store the registry of docker images, defaulting to Docker Hub, so images
-  such as `ghcr.io/docling-project/*` are told apart
+  such as `ghcr.io/docling-project/*` are told apart, and track one tag per
+  image and tag regardless of the Compose service name
 
 ## [1.17.0] - 2026-10-01
 
