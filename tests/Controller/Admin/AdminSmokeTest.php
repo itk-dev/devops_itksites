@@ -27,6 +27,7 @@ use App\Entity\ModuleVersion;
 use App\Entity\Package;
 use App\Entity\PackageVersion;
 use App\Entity\User;
+use App\Service\DockerImageTagFactory;
 use Doctrine\Persistence\ObjectManager;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -184,6 +185,32 @@ class AdminSmokeTest extends WebTestCase
     {
         yield 'Package' => [PackageCrudController::class, 2, 0];
         yield 'PackageVersion' => [PackageVersionCrudController::class, 3, 1];
+    }
+
+    public function testDockerImagesFilterByRegistry(): void
+    {
+        $client = static::createClient();
+        $container = static::getContainer();
+        $entityManager = $container->get('doctrine')->getManager();
+        $client->loginUser($entityManager->getRepository(User::class)->findOneBy([]));
+        $container->get(DockerImageTagFactory::class)->setDockerImageTags($entityManager->getRepository(Installation::class)->findOneBy([]), [
+            (object) ['name' => 'ghcr', 'image' => 'ghcr.io/probe-project/probe-serve', 'version' => '1.0.0'],
+            (object) ['name' => 'hub', 'image' => 'probe-itkdev/php8.4-fpm', 'version' => '1.0.0'],
+        ]);
+        $entityManager->flush();
+
+        $url = $container->get(AdminUrlGenerator::class)
+            ->setController(DockerImageCrudController::class)
+            ->setAction(Crud::PAGE_INDEX)
+            ->set('filters', ['registry' => ['comparison' => '=', 'value' => 'ghcr.io']])
+            ->generateUrl();
+
+        $crawler = $client->request('GET', $url);
+
+        $this->assertResponseIsSuccessful();
+        $rows = $crawler->filter('tbody tr[data-id]');
+        $this->assertCount(1, $rows);
+        $this->assertStringContainsString('probe-project', $rows->text());
     }
 
     /**
