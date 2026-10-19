@@ -19,6 +19,7 @@ use App\Service\ModuleVersionFactory;
 use App\Service\PackageVersionFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\HttpClient\MockHttpClient;
@@ -240,8 +241,8 @@ class ReleaseCheckerTest extends KernelTestCase
         $container = self::getContainer();
 
         return new ReleaseChecker(
-            new ReleaseHistoryClient($releaseHistory, new ArrayAdapter()),
-            new SecurityAdvisoryClient($securityAdvisories, new ArrayAdapter()),
+            new ReleaseHistoryClient($releaseHistory, new ArrayAdapter(), new NullLogger()),
+            new SecurityAdvisoryClient($securityAdvisories, new ArrayAdapter(), new NullLogger()),
             $container->get(AdvisoryFactory::class),
             $container->get(AdvisoryRepository::class),
             $this->entityManager,

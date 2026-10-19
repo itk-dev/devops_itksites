@@ -6,7 +6,6 @@ namespace App\Service\Drupal;
 
 use App\Utils\DrupalVersion;
 use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -30,7 +29,7 @@ class ReleaseHistoryClient
         private readonly HttpClientInterface $drupalUpdatesClient,
         #[Target('cache.drupal_org')]
         private readonly CacheInterface $cache,
-        private readonly LoggerInterface $logger = new NullLogger(),
+        private readonly LoggerInterface $logger,
     ) {
     }
 

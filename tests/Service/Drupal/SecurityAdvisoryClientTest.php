@@ -8,6 +8,7 @@ use App\Service\Drupal\SecurityAdvisory;
 use App\Service\Drupal\SecurityAdvisoryClient;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -26,7 +27,7 @@ class SecurityAdvisoryClientTest extends TestCase
 
     public function testFetchParsesAdvisories(): void
     {
-        $client = new SecurityAdvisoryClient($this->http('project-key_auth.json', 'sa-key_auth.json'), new ArrayAdapter());
+        $client = new SecurityAdvisoryClient($this->http('project-key_auth.json', 'sa-key_auth.json'), new ArrayAdapter(), new NullLogger());
 
         $advisories = $client->fetch('key_auth');
 
@@ -51,7 +52,7 @@ class SecurityAdvisoryClientTest extends TestCase
      */
     public function testFetchFindsCoreAndFollowsPages(): void
     {
-        $client = new SecurityAdvisoryClient($this->http('project-drupal.json', 'sa-drupal-first.json', 'sa-drupal-last.json'), new ArrayAdapter());
+        $client = new SecurityAdvisoryClient($this->http('project-drupal.json', 'sa-drupal-first.json', 'sa-drupal-last.json'), new ArrayAdapter(), new NullLogger());
 
         $advisories = $client->fetch('drupal');
 
@@ -76,7 +77,7 @@ class SecurityAdvisoryClientTest extends TestCase
             'https://www.drupal.org/',
         );
 
-        new SecurityAdvisoryClient($http, new ArrayAdapter())->fetch('key_auth');
+        new SecurityAdvisoryClient($http, new ArrayAdapter(), new NullLogger())->fetch('key_auth');
 
         self::assertSame(1 + 10, $http->getRequestsCount());
     }
@@ -85,7 +86,7 @@ class SecurityAdvisoryClientTest extends TestCase
     {
         $http = new MockHttpClient(new MockResponse((string) json_encode(['list' => [['nid' => '1', 'type' => 'page']]])), 'https://www.drupal.org/');
 
-        self::assertSame([], new SecurityAdvisoryClient($http, new ArrayAdapter())->fetch('key_auth'));
+        self::assertSame([], new SecurityAdvisoryClient($http, new ArrayAdapter(), new NullLogger())->fetch('key_auth'));
         self::assertSame(1, $http->getRequestsCount());
     }
 
@@ -108,7 +109,7 @@ class SecurityAdvisoryClientTest extends TestCase
             new MockResponse($psa),
         ], 'https://www.drupal.org/');
 
-        $advisories = new SecurityAdvisoryClient($http, new ArrayAdapter())->fetch('key_auth');
+        $advisories = new SecurityAdvisoryClient($http, new ArrayAdapter(), new NullLogger())->fetch('key_auth');
 
         self::assertCount(1, $advisories);
         self::assertSame('SA-CORE-2026-001', $advisories[0]->advisoryId);
@@ -118,7 +119,7 @@ class SecurityAdvisoryClientTest extends TestCase
     public function testFetchReturnsEmptyForNonProject(): void
     {
         $http = $this->http('project-none.json');
-        $client = new SecurityAdvisoryClient($http, new ArrayAdapter());
+        $client = new SecurityAdvisoryClient($http, new ArrayAdapter(), new NullLogger());
 
         self::assertSame([], $client->fetch('not_a_real_project_8406'));
         self::assertSame([], $client->fetch('not_a_real_project_8406'));
@@ -128,7 +129,7 @@ class SecurityAdvisoryClientTest extends TestCase
     public function testFetchIsCached(): void
     {
         $http = $this->http('project-key_auth.json', 'sa-key_auth.json');
-        $client = new SecurityAdvisoryClient($http, new ArrayAdapter());
+        $client = new SecurityAdvisoryClient($http, new ArrayAdapter(), new NullLogger());
 
         $client->fetch('key_auth');
         self::assertCount(1, $client->fetch('key_auth'));
@@ -137,7 +138,7 @@ class SecurityAdvisoryClientTest extends TestCase
 
     public function testCacheTtls(): void
     {
-        $client = new SecurityAdvisoryClient($this->http('project-key_auth.json', 'sa-key_auth.json'), $this->ttlRecordingCache());
+        $client = new SecurityAdvisoryClient($this->http('project-key_auth.json', 'sa-key_auth.json'), $this->ttlRecordingCache(), new NullLogger());
 
         $client->fetch('key_auth');
 
@@ -146,7 +147,7 @@ class SecurityAdvisoryClientTest extends TestCase
 
     public function testNotAProjectTtl(): void
     {
-        $client = new SecurityAdvisoryClient($this->http('project-none.json'), $this->ttlRecordingCache());
+        $client = new SecurityAdvisoryClient($this->http('project-none.json'), $this->ttlRecordingCache(), new NullLogger());
 
         $client->fetch('not_a_real_project_8406');
 

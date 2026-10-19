@@ -8,6 +8,7 @@ use App\Service\Drupal\ReleaseHistoryClient;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -23,7 +24,7 @@ class ReleaseHistoryClientTest extends TestCase
     public function testFetchParsesReleases(): void
     {
         $http = $this->http('release-history-key_auth.xml');
-        $history = new ReleaseHistoryClient($http, new ArrayAdapter())->fetch('key_auth');
+        $history = new ReleaseHistoryClient($http, new ArrayAdapter(), new NullLogger())->fetch('key_auth');
 
         self::assertSame('https://updates.drupal.org/release-history/key_auth/current', $this->lastUrl);
         self::assertNotNull($history);
@@ -50,7 +51,7 @@ class ReleaseHistoryClientTest extends TestCase
     public function testFetchSkipsReleasesWithoutVersion(): void
     {
         $body = '<project><releases><release><version></version></release><release><version>2.2.4</version></release></releases></project>';
-        $history = new ReleaseHistoryClient(new MockHttpClient(new MockResponse($body)), new ArrayAdapter())->fetch('key_auth');
+        $history = new ReleaseHistoryClient(new MockHttpClient(new MockResponse($body)), new ArrayAdapter(), new NullLogger())->fetch('key_auth');
 
         self::assertNotNull($history);
         self::assertSame(['2.2.4'], array_keys($history->releases));
@@ -58,14 +59,14 @@ class ReleaseHistoryClientTest extends TestCase
 
     public function testFetchReturnsNullForNonProject(): void
     {
-        $client = new ReleaseHistoryClient($this->http('release-history-error.xml'), new ArrayAdapter());
+        $client = new ReleaseHistoryClient($this->http('release-history-error.xml'), new ArrayAdapter(), new NullLogger());
 
         self::assertNull($client->fetch('not_a_real_project_8406'));
     }
 
     public function testFetchThrowsOnInvalidXml(): void
     {
-        $client = new ReleaseHistoryClient(new MockHttpClient(new MockResponse('<html>')), new ArrayAdapter());
+        $client = new ReleaseHistoryClient(new MockHttpClient(new MockResponse('<html>')), new ArrayAdapter(), new NullLogger());
 
         $this->expectException(\UnexpectedValueException::class);
         $client->fetch('key_auth');
@@ -75,7 +76,7 @@ class ReleaseHistoryClientTest extends TestCase
     {
         $cache = new ArrayAdapter();
         $http = $this->http('release-history-key_auth.xml');
-        $client = new ReleaseHistoryClient($http, $cache);
+        $client = new ReleaseHistoryClient($http, $cache, new NullLogger());
 
         $client->fetch('key_auth');
         self::assertNotNull($client->fetch('key_auth'));
@@ -85,7 +86,7 @@ class ReleaseHistoryClientTest extends TestCase
     public function testNonProjectIsCached(): void
     {
         $http = $this->http('release-history-error.xml');
-        $client = new ReleaseHistoryClient($http, new ArrayAdapter());
+        $client = new ReleaseHistoryClient($http, new ArrayAdapter(), new NullLogger());
 
         $client->fetch('not_a_real_project_8406');
         self::assertNull($client->fetch('not_a_real_project_8406'));
@@ -95,7 +96,7 @@ class ReleaseHistoryClientTest extends TestCase
     #[DataProvider('ttlProvider')]
     public function testCacheTtl(string $fixture, int $ttl): void
     {
-        $client = new ReleaseHistoryClient($this->http($fixture), $this->expectTtl($ttl));
+        $client = new ReleaseHistoryClient($this->http($fixture), $this->expectTtl($ttl), new NullLogger());
 
         $client->fetch('key_auth');
     }

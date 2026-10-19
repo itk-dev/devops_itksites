@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\Drupal;
 
 use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -34,7 +33,7 @@ class SecurityAdvisoryClient
         private readonly HttpClientInterface $drupalOrgClient,
         #[Target('cache.drupal_org')]
         private readonly CacheInterface $cache,
-        private readonly LoggerInterface $logger = new NullLogger(),
+        private readonly LoggerInterface $logger,
     ) {
     }
 
