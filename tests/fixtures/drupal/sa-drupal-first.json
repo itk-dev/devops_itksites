@@ -1,0 +1,70 @@
+{
+  "self": "https://www.drupal.org/api-d7/node?type=sa&field_project=3060&sort=created&direction=DESC",
+  "first": "https://www.drupal.org/api-d7/node?type=sa&field_project=3060&sort=created&direction=DESC&page=0",
+  "next": "https://www.drupal.org/api-d7/node?type=sa&field_project=3060&sort=created&direction=DESC&page=1",
+  "last": "https://www.drupal.org/api-d7/node?type=sa&field_project=3060&sort=created&direction=DESC&page=2",
+  "list": [
+    {
+      "title": "Drupal core - Moderately critical - Cross-site scripting - SA-CORE-2026-016",
+      "url": "https://www.drupal.org/sa-core-2026-016",
+      "field_sa_cve": [
+        "CVE-2026-108514"
+      ],
+      "field_affected_versions": ">= 10.3.0 < 10.6.19 || >= 11.0.0 < 11.3.19 || >= 11.4.0 < 11.4.10 || >= 12.0.0-alpha1 < 12.0.0-beta2",
+      "created": "1791998738",
+      "nid": "3610746",
+      "type": "sa",
+      "field_project": {
+        "uri": "https://www.drupal.org/api-d7/node/3060",
+        "id": "3060",
+        "resource": "node"
+      }
+    },
+    {
+      "title": "Drupal core - Moderately critical - Cross-site scripting - SA-CORE-2026-015",
+      "url": "https://www.drupal.org/sa-core-2026-015",
+      "field_sa_cve": [
+        "CVE-2026-108515"
+      ],
+      "field_affected_versions": ">= 8.9.0 < 10.6.19 || >= 11.0.0 < 11.3.19 || >= 11.4.0 < 11.4.10 || >= 12.0.0-alpha1 < 12.0.0-beta2",
+      "created": "1791998719",
+      "nid": "3624080",
+      "type": "sa",
+      "field_project": {
+        "uri": "https://www.drupal.org/api-d7/node/3060",
+        "id": "3060",
+        "resource": "node"
+      }
+    },
+    {
+      "title": "Drupal core - Critical - Remote code execution - SA-CORE-2026-014",
+      "url": "https://www.drupal.org/sa-core-2026-014",
+      "field_sa_cve": [
+        "CVE-2026-108097"
+      ],
+      "field_affected_versions": ">= 8.9.0 < 10.6.19 || >= 11.0.0 < 11.3.19 || >= 11.4.0 < 11.4.10 || >= 12.0.0-alpha1 < 12.0.0-beta2",
+      "created": "1791994200",
+      "nid": "3630601",
+      "type": "sa",
+      "field_project": {
+        "uri": "https://www.drupal.org/api-d7/node/3060",
+        "id": "3060",
+        "resource": "node"
+      }
+    },
+    {
+      "title": "Upcoming critical Drupal core release on October 14, 2026 - PSA-2026-10-12",
+      "url": "https://www.drupal.org/psa-2026-10-12",
+      "field_sa_cve": [],
+      "field_affected_versions": null,
+      "created": "1791821400",
+      "nid": "3630174",
+      "type": "sa",
+      "field_project": {
+        "uri": "https://www.drupal.org/api-d7/node/3060",
+        "id": "3060",
+        "resource": "node"
+      }
+    }
+  ]
+}

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#159](https://github.com/itk-dev/devops_itksites/pull/159)
+  Link core modules and submodules to their drupal.org project's package, and
+  check drupal/core on drupal.org as a stopgap until the harvester's
+  `composer audit` works again
+
 ## [1.17.0] - 2026-10-01
 
 - [#157](https://github.com/itk-dev/devops_itksites/pull/157)

@@ -1,0 +1,14 @@
+{
+  "self": "https://www.drupal.org/api-d7/node?field_project_machine_name=drupal",
+  "first": "https://www.drupal.org/api-d7/node?field_project_machine_name=drupal&page=0",
+  "last": "https://www.drupal.org/api-d7/node?field_project_machine_name=drupal&page=0",
+  "list": [
+    {
+      "nid": "3060",
+      "type": "project_core",
+      "title": "Drupal core",
+      "url": "https://www.drupal.org/project/drupal",
+      "field_project_machine_name": "drupal"
+    }
+  ]
+}
