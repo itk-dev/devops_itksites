@@ -34,8 +34,11 @@ class ReleaseChecker
     public function check(Package $package): void
     {
         $name = (string) $package->getName();
-        // drupal.org machine names have no hyphens, so drupal/core-recommended
-        // and the other core-* packages are Composer meta packages, not projects.
+        // Skip packages that are not drupal.org projects: drupal/core-recommended,
+        // core-dev and the other core-* packages are Composer meta packages that
+        // core publishes on Packagist (packages.drupal.org has none of them).
+        // Machine names allow only lower-case letters, digits and underscores:
+        // https://www.drupal.org/docs/develop/creating-modules/naming-and-placing-your-drupal-module
         if (self::VENDOR !== $package->getVendor() || str_contains($name, '-')) {
             return;
         }
