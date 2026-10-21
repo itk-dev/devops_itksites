@@ -32,10 +32,12 @@
                             .setController('App\\Controller\\Admin\\AdvisoryCrudController')
                             .setAction('detail')
                             .setEntityId(advisory.id) %}
-                        <tr data-advisory-id="{{ advisory.advisoryId }}" class="{{ assessment ? 'text-body-secondary opacity-50' }}">
-                            <td>{{ advisory.package }}</td>
-                            <td class="text-nowrap"><a href="{{ url }}">{{ advisory.cve ?? advisory.advisoryId }}</a></td>
-                            <td>
+                        {# Fades the cells, not the row, so the Unmark button stays at full strength. #}
+                        {% set faded = assessment ? 'text-body-secondary opacity-50' %}
+                        <tr data-advisory-id="{{ advisory.advisoryId }}">
+                            <td class="{{ faded }}">{{ advisory.package }}</td>
+                            <td class="text-nowrap {{ faded }}"><a href="{{ url }}">{{ advisory.cve ?? advisory.advisoryId }}</a></td>
+                            <td class="{{ faded }}">
                                 {{ advisory.title }}
                                 {% if assessment %}
                                     <div class="small mt-1 mb-2"><twig:ea:Badge variant="success" class="me-1">Not affected</twig:ea:Badge>{{ assessment.reason }} ({{ assessment.assessedBy }}, {{ assessment.createdAt|date('Y-m-d') }})</div>
