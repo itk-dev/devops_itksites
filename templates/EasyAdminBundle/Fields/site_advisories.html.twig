@@ -20,7 +20,7 @@
                         <th>Package</th>
                         <th>CVE</th>
                         <th>Title</th>
-                        <th>Status</th>
+                        <th><span class="visually-hidden">Action</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,12 +38,11 @@
                             <td>
                                 {{ advisory.title }}
                                 {% if assessment %}
-                                    <div class="small">{{ assessment.reason }} ({{ assessment.assessedBy }}, {{ assessment.createdAt|date('Y-m-d') }})</div>
+                                    <div class="small"><twig:ea:Badge variant="success">Not affected</twig:ea:Badge> {{ assessment.reason }} ({{ assessment.assessedBy }}, {{ assessment.createdAt|date('Y-m-d') }})</div>
                                 {% endif %}
                             </td>
                             <td class="text-nowrap">
                                 {% if assessment %}
-                                    <twig:ea:Badge variant="success">Not affected</twig:ea:Badge>
                                     {% if git_repo %}
                                         <form class="advisory-remove d-inline" method="post" data-submit-once action="{{ path('admin_site_advisories_remove_mark', {id: site_id}) }}">
                                             <input type="hidden" name="_token" value="{{ token }}">
