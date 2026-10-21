@@ -59,7 +59,7 @@ tasks:
         cmds:
             - task: console
               vars:
-                  CONSOLE_ARGS: messenger:consume async --failure-limit=1 -vvv
+                  CONSOLE_ARGS: messenger:consume async -vvv
 
     composer:
         desc: "Run `composer` command. Example: task composer -- normalize"
