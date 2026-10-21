@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#166](https://github.com/itk-dev/devops_itksites/pull/166)
+  Update EasyAdmin to 5.7, which adds the UI Kit at `/admin/_ea_ui_kit` in
+  debug mode
 - [#165](https://github.com/itk-dev/devops_itksites/pull/165)
   Update Composer packages, including `symfony/expression-language` for
   CVE-2026-109449
