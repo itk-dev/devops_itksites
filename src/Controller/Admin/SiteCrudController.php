@@ -57,7 +57,9 @@ class SiteCrudController extends AbstractCrudController
     #[\Override]
     public function configureCrud(Crud $crud): Crud
     {
-        return $crud->showEntityActionsInlined();
+        return $crud
+            ->showEntityActionsInlined()
+            ->setDefaultSort([AdvisoryCountSort::PROPERTY => 'DESC']);
     }
 
     #[\Override]
