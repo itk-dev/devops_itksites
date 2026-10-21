@@ -11,7 +11,7 @@
         {% if git_repo %}
             <p class="text-body-secondary">Marks apply to all checkouts of {{ git_repo }}.</p>
         {% else %}
-            <div class="alert alert-info">No git repo linked, so advisories cannot be marked as not affected.</div>
+            <p class="text-body-secondary"><twig:ea:Badge variant="warning">No git repo linked</twig:ea:Badge> Advisories cannot be marked as not affected.</p>
         {% endif %}
         {% if advisories|length > 0 %}
             <table class="table table-sm table-borderless">
