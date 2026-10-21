@@ -49,11 +49,10 @@
                                         </form>
                                     {% endif %}
                                 {% elseif git_repo %}
-                                    <form class="advisory-mark d-flex gap-1" method="post" action="{{ path('admin_site_advisories_not_affected', {id: site_id}) }}">
+                                    <form class="advisory-mark" method="post" action="{{ path('admin_site_advisories_not_affected', {id: site_id}) }}">
                                         <input type="hidden" name="_token" value="{{ token }}">
                                         <input type="hidden" name="advisoryIds[]" value="{{ advisory.advisoryId }}">
-                                        <input type="text" name="reason" class="form-control form-control-sm" placeholder="Reason" aria-label="Reason {{ advisory.advisoryId }} is not affected" required>
-                                        <button type="submit" class="btn btn-sm btn-secondary text-nowrap">Mark as not affected</button>
+                                        {{ include('EasyAdminBundle/Fields/_advisory_reason_modal.html.twig', {id: 'advisory-mark-' ~ loop.index, title: 'Mark ' ~ (advisory.cve ?? advisory.advisoryId) ~ ' as not affected?'}) }}
                                     </form>
                                 {% endif %}
                             </td>
@@ -63,13 +62,12 @@
             </table>
         {% endif %}
         {% if git_repo and open|length > 0 %}
-            <form class="advisory-accept-all d-flex gap-1" method="post" action="{{ path('admin_site_advisories_not_affected', {id: site_id}) }}">
+            <form class="advisory-accept-all" method="post" action="{{ path('admin_site_advisories_not_affected', {id: site_id}) }}">
                 <input type="hidden" name="_token" value="{{ token }}">
                 {% for row in open %}
                     <input type="hidden" name="advisoryIds[]" value="{{ row.advisory.advisoryId }}">
                 {% endfor %}
-                <input type="text" name="reason" class="form-control form-control-sm" placeholder="Reason" aria-label="Reason all current advisories are not affected" required>
-                <button type="submit" class="btn btn-sm btn-secondary text-nowrap">Accept all current</button>
+                {{ include('EasyAdminBundle/Fields/_advisory_reason_modal.html.twig', {id: 'advisory-accept-all', title: 'Mark all ' ~ open|length ~ ' open advisories as not affected?', label: 'Mark all'}) }}
             </form>
         {% endif %}
     </div>
