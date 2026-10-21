@@ -1,0 +1,43 @@
+# Docker images the docker sites run, and their tags. The official nginx image
+# is public; the rest belong to the made-up example-org organization.
+
+App\Entity\DockerImage:
+    docker_image/php8.3-fpm:
+        registry: "docker.io"
+        organization: "example-org"
+        repository: "php8.3-fpm"
+        description: "PHP 8.3 FPM base image"
+    docker_image/php8.4-fpm:
+        registry: "docker.io"
+        organization: "example-org"
+        repository: "php8.4-fpm"
+        description: "PHP 8.4 FPM base image"
+    # An official image is stored with its name as the organization.
+    docker_image/nginx:
+        registry: "docker.io"
+        organization: "nginx"
+        repository: ""
+        description: "Official build of Nginx"
+    # Images outside Docker Hub carry their registry.
+    docker_image/shop-worker:
+        registry: "ghcr.io"
+        organization: "example-org"
+        repository: "shop-worker"
+        description: "Queue worker for the shop"
+
+App\Entity\DockerImageTag:
+    docker_image_tag/php8.3-fpm-latest:
+        dockerImage: "@docker_image/php8.3-fpm"
+        tag: "latest"
+    docker_image_tag/php8.4-fpm-latest:
+        dockerImage: "@docker_image/php8.4-fpm"
+        tag: "latest"
+    docker_image_tag/nginx-1.27-alpine:
+        dockerImage: "@docker_image/nginx"
+        tag: "1.27-alpine"
+    docker_image_tag/shop-worker-2.4.1:
+        dockerImage: "@docker_image/shop-worker"
+        tag: "2.4.1"
+    docker_image_tag/shop-worker-develop:
+        dockerImage: "@docker_image/shop-worker"
+        tag: "develop"

@@ -1,17 +1,94 @@
+# Servers, one or more of each type. Names are example.com hosts, internal IPs
+# are private and external IPs are from the documentation ranges (RFC 5737).
+#
+# - web-prod-02 is hosted in the municipality's DMZ, the rest at Hetzner.
+# - devops-01 is harvested but runs no sites.
+# - gpu-01 has never been harvested.
+
 App\Entity\Server:
-    server_{1..10}:
+    server/web-stg-01:
         # A server id is needed by App\Entity\DetectionResult::generateHash().
         id: '<(new Symfony\Component\Uid\Ulid())>'
         apiKey: <password(40, 255)>
-        name: <domainName()>
-        hostingProvider: <randomElement(['Azure','DBC','IT Relation'])>
-        internalIp: <localIpv4()>
-        externalIp: <ipv4()>
-        aarhusSsl: <boolean()>
-        letsEncryptSsl: <boolean()>
-        veeam: <boolean()>
-        azureBackup: <boolean()>
-        monitoring: <boolean()>
-        databaseVersion: <randomElement(['5.5','5.7','10.3','10.5','10.6'])>
-        system: <randomElement(['Ubuntu 16.04','Ubuntu 18.04','Ubuntu 20.04'])>
-        type: <randomElement(['prod','stg','devops'])>
+        name: "web-stg-01.example.com"
+        hostingProvider: "Hetzner"
+        internalIp: "10.0.1.11"
+        externalIp: "192.0.2.11"
+        aarhusSsl: false
+        letsEncryptSsl: true
+        veeam: false
+        azureBackup: false
+        monitoring: true
+        databaseVersion: "10.11"
+        system: "ubuntu2404"
+        type: "stg"
+        usedFor: "Staging of example-org sites"
+        __calls:
+            - updateLastContactAt: ['<(new DateTimeImmutable("-5 minutes"))>']
+    server/web-prod-01:
+        id: '<(new Symfony\Component\Uid\Ulid())>'
+        apiKey: <password(40, 255)>
+        name: "web-prod-01.example.com"
+        hostingProvider: "Hetzner"
+        internalIp: "10.0.1.21"
+        externalIp: "192.0.2.21"
+        aarhusSsl: false
+        letsEncryptSsl: true
+        veeam: false
+        azureBackup: false
+        monitoring: true
+        databaseVersion: "10.11"
+        system: "ubuntu2404"
+        type: "prod"
+        __calls:
+            - updateLastContactAt: ['<(new DateTimeImmutable("-5 minutes"))>']
+    server/web-prod-02:
+        id: '<(new Symfony\Component\Uid\Ulid())>'
+        apiKey: <password(40, 255)>
+        name: "web-prod-02.example.com"
+        hostingProvider: "It Relation (DMZ)"
+        hostingProviderName: "Example DMZ hosting"
+        internalIp: "10.0.2.22"
+        externalIp: "198.51.100.22"
+        aarhusSsl: true
+        letsEncryptSsl: false
+        veeam: true
+        azureBackup: false
+        monitoring: true
+        databaseVersion: "10.11"
+        system: "ubuntu2204"
+        type: "prod"
+        note: "Firewall changes go through the DMZ change process."
+        __calls:
+            - updateLastContactAt: ['<(new DateTimeImmutable("-15 minutes"))>']
+    server/devops-01:
+        id: '<(new Symfony\Component\Uid\Ulid())>'
+        apiKey: <password(40, 255)>
+        name: "devops-01.example.com"
+        hostingProvider: "Hetzner"
+        internalIp: "10.0.1.31"
+        externalIp: "192.0.2.31"
+        aarhusSsl: false
+        letsEncryptSsl: true
+        veeam: false
+        azureBackup: false
+        monitoring: true
+        system: "ubuntu2604"
+        type: "devops"
+        usedFor: "CI runners"
+        __calls:
+            - updateLastContactAt: ['<(new DateTimeImmutable("-5 minutes"))>']
+    server/gpu-01:
+        id: '<(new Symfony\Component\Uid\Ulid())>'
+        apiKey: <password(40, 255)>
+        name: "gpu-01.example.com"
+        hostingProvider: "Hetzner"
+        internalIp: "10.0.1.41"
+        externalIp: "203.0.113.41"
+        aarhusSsl: false
+        letsEncryptSsl: true
+        veeam: false
+        azureBackup: false
+        monitoring: false
+        system: "ubuntu2404"
+        type: "gpu"

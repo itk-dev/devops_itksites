@@ -35,8 +35,8 @@ class SiteFilterTest extends ApiTestCase
         self::assertInstanceOf(EntityManagerInterface::class, $manager);
 
         $sites = [
-            'dev.example.com' => ['alpha.example.com', ServerTypeType::STG, HostingProviderType::AZURE, '8.1.2', '/etc/nginx/sites-enabled/dev.conf'],
-            'prod.example.com' => ['beta.example.com', ServerTypeType::PROD, HostingProviderType::HETZNER, '8.3', '/etc/nginx/sites-enabled/prod.conf'],
+            'stg.shop.example.com' => ['alpha.example.com', ServerTypeType::STG, HostingProviderType::AZURE, '8.1.2', '/etc/nginx/sites-enabled/stg.conf'],
+            'shop.example.com' => ['beta.example.com', ServerTypeType::PROD, HostingProviderType::HETZNER, '8.3', '/etc/nginx/sites-enabled/prod.conf'],
         ];
         $servers = $manager->getRepository(Server::class)->findAll();
 
@@ -69,19 +69,19 @@ class SiteFilterTest extends ApiTestCase
      */
     public static function filters(): iterable
     {
-        yield 'no filter' => ['', ['dev.example.com', 'prod.example.com']];
-        yield 'primary domain contains' => ['primaryDomain=prod', ['prod.example.com']];
-        yield 'config file path contains' => ['configFilePath=dev.conf', ['dev.example.com']];
-        yield 'php version equals' => ['phpVersion=8.3.0', ['prod.example.com']];
-        yield 'php version gte' => ['phpVersion[gte]=8.2', ['prod.example.com']];
-        yield 'php version lt' => ['phpVersion[lt]=8.2', ['dev.example.com']];
-        yield 'php version ne' => ['phpVersion[ne]=8.3', ['dev.example.com']];
-        yield 'php version range' => ['phpVersion[gt]=8.1.2&phpVersion[lte]=8.3', ['prod.example.com']];
-        yield 'php version between' => ['phpVersion[between]=8.3..8.1', ['dev.example.com', 'prod.example.com']];
+        yield 'no filter' => ['', ['shop.example.com', 'stg.shop.example.com']];
+        yield 'primary domain contains' => ['primaryDomain=stg', ['stg.shop.example.com']];
+        yield 'config file path contains' => ['configFilePath=stg.conf', ['stg.shop.example.com']];
+        yield 'php version equals' => ['phpVersion=8.3.0', ['shop.example.com']];
+        yield 'php version gte' => ['phpVersion[gte]=8.2', ['shop.example.com']];
+        yield 'php version lt' => ['phpVersion[lt]=8.2', ['stg.shop.example.com']];
+        yield 'php version ne' => ['phpVersion[ne]=8.3', ['stg.shop.example.com']];
+        yield 'php version range' => ['phpVersion[gt]=8.1.2&phpVersion[lte]=8.3', ['shop.example.com']];
+        yield 'php version between' => ['phpVersion[between]=8.3..8.1', ['shop.example.com', 'stg.shop.example.com']];
         yield 'php version not a version' => ['phpVersion=latest', []];
-        yield 'server name' => ['serverName=alpha.example.com', ['dev.example.com']];
-        yield 'server type' => ['serverType=prod', ['prod.example.com']];
-        yield 'hosting provider' => ['hostingProvider=Azure', ['dev.example.com']];
+        yield 'server name' => ['serverName=alpha.example.com', ['stg.shop.example.com']];
+        yield 'server type' => ['serverType=prod', ['shop.example.com']];
+        yield 'hosting provider' => ['hostingProvider=Azure', ['stg.shop.example.com']];
         yield 'combined' => ['serverType=stg&hostingProvider=Hetzner', []];
     }
 

@@ -214,9 +214,10 @@ class AdminSmokeTest extends WebTestCase
         $crawler = $client->request('GET', $url);
 
         $this->assertResponseIsSuccessful();
-        $rows = $crawler->filter('tbody tr[data-id]');
-        $this->assertCount(1, $rows);
-        $this->assertStringContainsString('probe-project', $rows->text());
+        // The fixtures hold ghcr.io images too.
+        $rows = implode("\n", $crawler->filter('tbody tr[data-id]')->each(static fn (Crawler $row): string => $row->text()));
+        $this->assertStringContainsString('probe-project', $rows);
+        $this->assertStringNotContainsString('probe-itkdev', $rows);
     }
 
     /**

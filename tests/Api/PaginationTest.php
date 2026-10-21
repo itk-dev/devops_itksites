@@ -22,7 +22,7 @@ class PaginationTest extends ApiTestCase
     protected static ?bool $alwaysBootKernel = true;
 
     /**
-     * Top the ten fixture servers up to 101, one more than a page.
+     * Top the fixture servers up to 101, one more than a page.
      */
     private function createClientWith101Servers(): Client
     {
@@ -30,7 +30,7 @@ class PaginationTest extends ApiTestCase
         $manager = static::getContainer()->get('doctrine')->getManager();
         self::assertInstanceOf(EntityManagerInterface::class, $manager);
 
-        for ($i = 0; $i < 91; ++$i) {
+        for ($i = $manager->getRepository(Server::class)->count([]); $i < 101; ++$i) {
             $manager->persist(new Server()
                 ->setName('server-'.$i.'.example.com')
                 ->setSystem('Ubuntu 24.04')

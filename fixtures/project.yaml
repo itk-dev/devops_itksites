@@ -1,0 +1,73 @@
+# Projects, code owners and security contracts, as synced from Economics.
+# All names, ids and contacts are made up.
+#
+# - The shop project has two repos, two code owners and an active contract
+#   on a dedicated server.
+# - The intranet contract has ended.
+# - One contract has no project.
+
+App\Entity\CodeOwner:
+    code_owner/alice:
+        economicsId: 9001
+        name: "Alice Example"
+        email: "alice@example.com"
+    code_owner/bob:
+        economicsId: 9002
+        name: "Bob Example"
+        email: "bob@example.com"
+
+App\Entity\Project:
+    project/shop:
+        economicsId: 8001
+        name: "Example shop"
+        leantimeId: "101"
+        leantimeUrl: "https://leantime.example.com/projects/showProject/101"
+        __calls:
+            - addCodeOwner: ["@code_owner/alice"]
+            - addCodeOwner: ["@code_owner/bob"]
+            - addGitRepo: ["@git_repo/shop"]
+            - addGitRepo: ["@git_repo/docs"]
+    project/intranet:
+        economicsId: 8002
+        name: "Example intranet"
+        leantimeId: "102"
+        leantimeUrl: "https://leantime.example.com/projects/showProject/102"
+        __calls:
+            - addCodeOwner: ["@code_owner/bob"]
+            - addGitRepo: ["@git_repo/intranet"]
+    project/legacy:
+        economicsId: 8003
+        name: "Example legacy app"
+
+App\Entity\SecurityContract:
+    security_contract/shop:
+        economicsId: 7001
+        project: "@project/shop"
+        hostingProvider: "HETZNER"
+        documentUrl: "https://example.com/contracts/7001.pdf"
+        monthlyPrice: 4500
+        validFrom: '<(new DateTimeImmutable("2026-01-01"))>'
+        validTo: '<(new DateTimeImmutable("2027-12-31"))>'
+        active: true
+        clientContactName: "Carol Example"
+        clientContactEmail: "carol@example.com"
+        dedicatedServer: true
+        serverSize: "custom"
+        systemOwnerNotices: ["Patch window is Tuesday evenings"]
+    security_contract/intranet:
+        economicsId: 7002
+        project: "@project/intranet"
+        hostingProvider: "DMZ"
+        monthlyPrice: 1100
+        validFrom: '<(new DateTimeImmutable("2024-01-01"))>'
+        validTo: '<(new DateTimeImmutable("2025-12-31"))>'
+        eol: true
+        clientContactName: "Dave Example"
+        clientContactEmail: "dave@example.com"
+        systemOwnerNotices: []
+    security_contract/unassigned:
+        economicsId: 7003
+        hostingProvider: "HETZNER"
+        monthlyPrice: 1100
+        validFrom: '<(new DateTimeImmutable("2026-06-01"))>'
+        active: true
