@@ -34,18 +34,21 @@
                             .setEntityId(advisory.id) %}
                         <tr data-advisory-id="{{ advisory.advisoryId }}" class="{{ assessment ? 'text-body-secondary' }}">
                             <td>{{ advisory.package }}</td>
-                            <td><a href="{{ url }}">{{ advisory.cve ?? advisory.advisoryId }}</a></td>
-                            <td>{{ advisory.title }}</td>
+                            <td class="text-nowrap"><a href="{{ url }}">{{ advisory.cve ?? advisory.advisoryId }}</a></td>
                             <td>
+                                {{ advisory.title }}
+                                {% if assessment %}
+                                    <div class="small">{{ assessment.reason }} ({{ assessment.assessedBy }}, {{ assessment.createdAt|date('Y-m-d') }})</div>
+                                {% endif %}
+                            </td>
+                            <td class="text-nowrap">
                                 {% if assessment %}
                                     <twig:ea:Badge variant="success">Not affected</twig:ea:Badge>
-                                    {{ assessment.reason }}
-                                    <small>({{ assessment.assessedBy }}, {{ assessment.createdAt|date('Y-m-d') }})</small>
                                     {% if git_repo %}
                                         <form class="advisory-remove d-inline" method="post" data-submit-once action="{{ path('admin_site_advisories_remove_mark', {id: site_id}) }}">
                                             <input type="hidden" name="_token" value="{{ token }}">
                                             <input type="hidden" name="advisoryId" value="{{ advisory.advisoryId }}">
-                                            <button type="submit" class="btn btn-sm btn-link">Remove mark</button>
+                                            <twig:ea:Button type="submit" size="sm">Unmark</twig:ea:Button>
                                         </form>
                                     {% endif %}
                                 {% elseif git_repo %}
