@@ -34,6 +34,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 
 class AdminSmokeTest extends WebTestCase
 {
@@ -121,7 +122,7 @@ class AdminSmokeTest extends WebTestCase
         // A reboot between requests drops the rows created above.
         $client->disableReboot();
 
-        foreach (['DESC' => true, 'ASC' => false] as $direction => $linkedFirst) {
+        foreach (['DESC', 'ASC'] as $direction) {
             $url = static::getContainer()->get(AdminUrlGenerator::class)
                 ->setController($controllerClass)
                 ->setAction(Crud::PAGE_INDEX)
@@ -131,8 +132,13 @@ class AdminSmokeTest extends WebTestCase
             $crawler = $client->request('GET', $url);
 
             $this->assertResponseIsSuccessful();
-            $firstId = $crawler->filter('tbody tr[data-id]')->first()->attr('data-id');
-            $this->assertSame($linkedFirst, $linkedId === $firstId, $direction);
+            // A row without advisories has no badge.
+            $counts = $crawler->filter('tbody tr[data-id]')->each(
+                static fn (Crawler $row): int => $row->filter('.badge-danger')->count() > 0 ? (int) $row->filter('.badge-danger')->text() : 0
+            );
+            $sorted = $counts;
+            'DESC' === $direction ? rsort($sorted) : sort($sorted);
+            $this->assertSame($sorted, $counts, $direction);
         }
         $this->assertSelectorTextContains('tr[data-id="'.$linkedId.'"] .badge-danger', '1');
 
@@ -208,9 +214,10 @@ class AdminSmokeTest extends WebTestCase
         $crawler = $client->request('GET', $url);
 
         $this->assertResponseIsSuccessful();
-        $rows = $crawler->filter('tbody tr[data-id]');
-        $this->assertCount(1, $rows);
-        $this->assertStringContainsString('probe-project', $rows->text());
+        // The fixtures hold ghcr.io images too.
+        $rows = implode("\n", $crawler->filter('tbody tr[data-id]')->each(static fn (Crawler $row): string => $row->text()));
+        $this->assertStringContainsString('probe-project', $rows);
+        $this->assertStringNotContainsString('probe-itkdev', $rows);
     }
 
     /**

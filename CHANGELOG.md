@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#168](https://github.com/itk-dev/devops_itksites/pull/168)
+  Rewrite the fixtures to cover all content with made-up data shaped like
+  production
 - [#167](https://github.com/itk-dev/devops_itksites/pull/167)
   Let the latest dir result decide which sites exist, so replays no longer
   revive removed sites or delete live ones, and purge detection results not
