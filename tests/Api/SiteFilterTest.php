@@ -25,8 +25,8 @@ class SiteFilterTest extends ApiTestCase
     protected static ?bool $alwaysBootKernel = true;
 
     /**
-     * Give the two fixture sites their own server and known values, so every
-     * filter has a predictable result.
+     * Give the two fixture sites their own server and known values, and remove
+     * the other fixture sites, so every filter has a predictable result.
      */
     private function createClientWithKnownSites(): Client
     {
@@ -41,6 +41,11 @@ class SiteFilterTest extends ApiTestCase
         $servers = $manager->getRepository(Server::class)->findAll();
 
         foreach ($manager->getRepository(Site::class)->findAll() as $site) {
+            if (!isset($sites[$site->getPrimaryDomain()])) {
+                $manager->remove($site);
+
+                continue;
+            }
             [$name, $type, $hostingProvider, $phpVersion, $configFilePath] = $sites[$site->getPrimaryDomain()];
             $server = array_shift($servers);
             self::assertInstanceOf(Server::class, $server);
