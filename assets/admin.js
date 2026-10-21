@@ -21,6 +21,16 @@ const tomSelectHandler = () => {
 window.addEventListener("DOMContentLoaded", tomSelectHandler);
 document.addEventListener("ea.collection.item-added", tomSelectHandler);
 
+// Disable the buttons of a [data-submit-once] form once it submits, so a
+// slow page load does not invite a second click.
+document.addEventListener("submit", (event) => {
+  if (event.target.matches("[data-submit-once]")) {
+    event.target
+      .querySelectorAll("button")
+      .forEach((button) => (button.disabled = true));
+  }
+});
+
 // Copy the text of a [data-copy-text] button to the clipboard, and show a
 // check mark for a moment, like GitHub's copy buttons.
 document.addEventListener("click", async (event) => {

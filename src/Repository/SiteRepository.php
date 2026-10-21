@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Admin\AdvisoryCountSort;
 use App\Entity\Site;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
@@ -35,5 +36,17 @@ class SiteRepository extends ServiceEntityRepository
             ->distinct()
             ->getQuery()
             ->getResult(AbstractQuery::HYDRATE_SCALAR_COLUMN);
+    }
+
+    /**
+     * The number of sites with advisories not marked as not affected.
+     */
+    public function countWithOpenAdvisories(): int
+    {
+        return (int) $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->where(sprintf('(%s) > 0', AdvisoryCountSort::subQuery('s')))
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

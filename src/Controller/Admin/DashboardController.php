@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Repository\AdvisoryRepository;
+use App\Repository\SiteRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -22,6 +23,7 @@ class DashboardController extends AbstractDashboardController
     public function __construct(
         private readonly AdminUrlGenerator $adminUrlGenerator,
         private readonly AdvisoryRepository $advisoryRepository,
+        private readonly SiteRepository $siteRepository,
     ) {
     }
 
@@ -57,7 +59,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkTo(ServerCrudController::class, 'Servers', 'fas fa-server');
         yield MenuItem::linkTo(InstallationCrudController::class, 'Installations', 'fas fa-folder');
-        yield MenuItem::linkTo(SiteCrudController::class, 'Sites', 'fas fa-bookmark');
+        yield MenuItem::linkTo(SiteCrudController::class, 'Sites', 'fas fa-bookmark')->setBadge($this->siteRepository->countWithOpenAdvisories() ?: null, 'danger');
         yield MenuItem::linkTo(DomainCrudController::class, 'Domains', 'fas fa-link');
         // OIDC and Service certificates are deprecated. The controllers and
         // entities are kept so existing rows stay reachable by URL, but the
