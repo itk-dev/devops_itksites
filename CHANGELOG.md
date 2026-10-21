@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#167](https://github.com/itk-dev/devops_itksites/pull/167)
+  Let the latest dir result decide which sites exist, so replays no longer
+  revive removed sites or delete live ones, and purge detection results not
+  seen for 30 days every night
 - [#166](https://github.com/itk-dev/devops_itksites/pull/166)
   Update EasyAdmin to 5.7, which adds the UI Kit at `/admin/_ea_ui_kit` in
   debug mode
