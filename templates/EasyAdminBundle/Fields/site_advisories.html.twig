@@ -38,7 +38,7 @@
                             <td>
                                 {{ advisory.title }}
                                 {% if assessment %}
-                                    <div class="small mt-1 mb-2"><twig:ea:Badge variant="success" class="me-1">Not affected</twig:ea:Badge>{{ assessment.reason }} ({{ assessment.assessedBy }}, {{ assessment.createdAt|date('Y-m-d') }})</div>
+                                    <div class="small mt-1 mb-2 opacity-75"><twig:ea:Badge variant="success" class="me-1">Not affected</twig:ea:Badge>{{ assessment.reason }} ({{ assessment.assessedBy }}, {{ assessment.createdAt|date('Y-m-d') }})</div>
                                 {% endif %}
                             </td>
                             <td class="text-nowrap">
