@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Admin;
 
 use App\Entity\Advisory;
+use App\Entity\AdvisoryAssessment;
+use App\Entity\GitRepo;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\SortOrder;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -34,10 +36,14 @@ final class AdvisoryCountSort
 
         // An advisory belongs to a single package and an installation holds a
         // single version of it, so the advisory cannot be counted twice.
+        // Advisories marked as not affected for the installation's git repo
+        // do not count, as in AdvisoryAssessor::openCount().
         $qb->addSelect(sprintf(
-            '(SELECT COUNT(adv.id) FROM %s adv JOIN adv.packageVersions advPackageVersion JOIN advPackageVersion.installations advInstallation WHERE advInstallation.id = IDENTITY(%s.installation)) AS HIDDEN %s',
+            '(SELECT COUNT(adv.id) FROM %1$s adv JOIN adv.packageVersions advPackageVersion JOIN advPackageVersion.installations advInstallation WHERE advInstallation.id = IDENTITY(%2$s.installation) AND NOT EXISTS (SELECT advAssessment.id FROM %3$s advAssessment JOIN %4$s advRepo WITH advRepo.provider = advAssessment.repoProvider AND advRepo.organization = advAssessment.repoOrganization AND advRepo.repo = advAssessment.repoName JOIN advRepo.gitTags advTag JOIN advTag.installations advTagInstallation WHERE advTagInstallation.id = advInstallation.id AND advAssessment.advisoryId = adv.advisoryId)) AS HIDDEN %5$s',
             Advisory::class,
             $rootAlias,
+            AdvisoryAssessment::class,
+            GitRepo::class,
             self::PROPERTY
         ));
 

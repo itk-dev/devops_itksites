@@ -16,6 +16,7 @@ use App\Entity\Site;
 use App\Form\Type\Admin\HostingProviderFilter;
 use App\Form\Type\Admin\SemverFilter;
 use App\Form\Type\Admin\ServerTypeFilter;
+use App\Service\AdvisoryAssessor;
 use App\Trait\ExportCrudControllerTrait;
 use App\Trait\SemverSortableCrudControllerTrait;
 use Doctrine\ORM\QueryBuilder;
@@ -43,8 +44,9 @@ class SiteCrudController extends AbstractCrudController
         createIndexQueryBuilder as private semverIndexQueryBuilder;
     }
 
-    public function __construct()
-    {
+    public function __construct(
+        private readonly AdvisoryAssessor $assessor,
+    ) {
     }
 
     public static function getEntityFqcn(): string
@@ -71,7 +73,13 @@ class SiteCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield DomainField::new('primaryDomain')->setColumns(12);
-        yield AdvisoryCountField::new('advisoryCount')->setLabel('Adv.')->setSortable(true);
+        // Advisories marked as not affected do not count. The detail page
+        // lists them all, with their marks.
+        yield AdvisoryCountField::new('advisoryCount')->setLabel('Adv.')->setSortable(true)
+            ->setTemplatePath('EasyAdminBundle/Fields/site_advisories.html.twig')
+            ->formatValue(Crud::PAGE_DETAIL === $pageName
+                ? fn (mixed $value, Site $site): array => ['gitRepo' => $this->assessor->gitRepo($site), 'advisories' => $this->assessor->advisories($site)]
+                : fn (mixed $value, Site $site): int => $this->assessor->openCount($site));
         yield AssociationField::new('domains')->hideOnIndex();
         yield SiteTypeField::new('type')->setLabel('Stack');
         yield ConfigFilePathField::new('configFilePath')->setColumns(12)->hideOnIndex();
