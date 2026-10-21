@@ -8,6 +8,7 @@ use App\Message\PersistDetectionResult;
 use App\Message\ProcessDetectionResult;
 use App\Repository\DetectionResultRepository;
 use App\Repository\ServerRepository;
+use App\Types\DetectionType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
@@ -58,6 +59,12 @@ final readonly class PersistDetectionResultHandler
             $existingResult->setLastContact($message->receivedAt);
 
             $this->entityManager->flush();
+
+            // Except dir results: they decide which installations exist, so re-apply them to
+            // remove anything recreated since they were first processed (e.g. by a replay).
+            if (DetectionType::DIRECTORY === $existingResult->getType() && null !== $id = $existingResult->getId()) {
+                $this->messageBus->dispatch(new ProcessDetectionResult($id));
+            }
         }
 
         $this->entityManager->clear();
