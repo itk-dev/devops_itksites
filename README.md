@@ -201,7 +201,7 @@ docker compose exec phpfpm composer queues
 or
 
 ```shell
-docker compose exec phpfpm bin/console messenger:consume async --failure-limit=1 -vvv
+docker compose exec phpfpm bin/console messenger:consume async -vvv
 ```
 
 ### Assets
