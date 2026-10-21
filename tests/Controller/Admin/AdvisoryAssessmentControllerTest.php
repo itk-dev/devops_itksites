@@ -57,6 +57,20 @@ class AdvisoryAssessmentControllerTest extends WebTestCase
         $this->assertSame('admin@example.com', $assessment?->getAssessedBy());
     }
 
+    public function testResubmittingAMarkSaysItIsAlreadyMarked(): void
+    {
+        $client = $this->loggedInClient();
+        $crawler = $client->request('GET', $this->detailUrl('shop.example.com'));
+        $form = $this->markForm($crawler, self::TWIG);
+        $client->submit($form, ['reason' => 'Reviewed']);
+
+        $client->submit($form, ['reason' => 'Reviewed']);
+
+        $client->followRedirect();
+        $this->assertSelectorTextContains('#flash-messages', 'already marked as not affected');
+        $this->assertSelectorTextNotContains('#flash-messages', 'Marked 0');
+    }
+
     public function testAcceptingAllCurrentAdvisories(): void
     {
         $client = $this->loggedInClient();

@@ -40,12 +40,16 @@ class AdvisoryAssessmentController extends AbstractController
                 $request->request->getString('reason'),
                 (string) $this->getUser()?->getUserIdentifier(),
             );
-            $this->addFlash('success', sprintf(
-                'Marked %d %s as not affected for all checkouts of %s.',
-                $marked,
-                1 === $marked ? 'advisory' : 'advisories',
-                $this->assessor->gitRepo($site),
-            ));
+            if (0 === $marked) {
+                $this->addFlash('info', 'These advisories are already marked as not affected.');
+            } else {
+                $this->addFlash('success', sprintf(
+                    'Marked %d %s as not affected for all checkouts of %s.',
+                    $marked,
+                    1 === $marked ? 'advisory' : 'advisories',
+                    $this->assessor->gitRepo($site),
+                ));
+            }
         } catch (\InvalidArgumentException $exception) {
             $this->addFlash('danger', $exception->getMessage());
         }

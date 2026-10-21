@@ -42,14 +42,14 @@
                                     {{ assessment.reason }}
                                     <small>({{ assessment.assessedBy }}, {{ assessment.createdAt|date('Y-m-d') }})</small>
                                     {% if git_repo %}
-                                        <form class="advisory-remove d-inline" method="post" action="{{ path('admin_site_advisories_remove_mark', {id: site_id}) }}">
+                                        <form class="advisory-remove d-inline" method="post" data-submit-once action="{{ path('admin_site_advisories_remove_mark', {id: site_id}) }}">
                                             <input type="hidden" name="_token" value="{{ token }}">
                                             <input type="hidden" name="advisoryId" value="{{ advisory.advisoryId }}">
                                             <button type="submit" class="btn btn-sm btn-link">Remove mark</button>
                                         </form>
                                     {% endif %}
                                 {% elseif git_repo %}
-                                    <form class="advisory-mark" method="post" action="{{ path('admin_site_advisories_not_affected', {id: site_id}) }}">
+                                    <form class="advisory-mark" method="post" data-submit-once action="{{ path('admin_site_advisories_not_affected', {id: site_id}) }}">
                                         <input type="hidden" name="_token" value="{{ token }}">
                                         <input type="hidden" name="advisoryIds[]" value="{{ advisory.advisoryId }}">
                                         {{ include('EasyAdminBundle/Fields/_advisory_reason_modal.html.twig', {id: 'advisory-mark-' ~ loop.index, title: 'Mark ' ~ (advisory.cve ?? advisory.advisoryId) ~ ' as not affected?'}) }}
@@ -62,7 +62,7 @@
             </table>
         {% endif %}
         {% if git_repo and open|length > 0 %}
-            <form class="advisory-accept-all" method="post" action="{{ path('admin_site_advisories_not_affected', {id: site_id}) }}">
+            <form class="advisory-accept-all" method="post" data-submit-once action="{{ path('admin_site_advisories_not_affected', {id: site_id}) }}">
                 <input type="hidden" name="_token" value="{{ token }}">
                 {% for row in open %}
                     <input type="hidden" name="advisoryIds[]" value="{{ row.advisory.advisoryId }}">
