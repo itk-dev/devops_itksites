@@ -3,7 +3,7 @@
 <twig:ea:Modal id="{{ id }}" size="lg" :title="title|e" :description="('The mark applies to all checkouts of ' ~ git_repo ~ '.')|e">
     <twig:block name="body">
         {# Blocks do not see the include's variables, so the label wraps the field instead of naming its id. #}
-        <label class="form-label w-100">
+        <label class="form-label w-100 mt-2">
             Reason
             <textarea name="reason" class="form-control" rows="3" required></textarea>
         </label>
