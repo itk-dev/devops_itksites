@@ -156,6 +156,40 @@ class AdvisoryAssessmentControllerTest extends WebTestCase
         $this->assertSame($sorted, $counts, 'Sorted by the open count');
     }
 
+    public function testTheIndexSortsByTheOpenCountByDefault(): void
+    {
+        $client = $this->loggedInClient();
+        $url = static::getContainer()->get(AdminUrlGenerator::class)
+            ->setController(SiteCrudController::class)
+            ->setAction(Crud::PAGE_INDEX)
+            ->generateUrl();
+
+        $crawler = $client->request('GET', $url);
+
+        $this->assertResponseIsSuccessful();
+        $counts = $crawler->filter('tbody tr[data-id]')->each(static fn (Crawler $row): int => (int) ($row->filter(self::BADGE)->count() > 0 ? $row->filter(self::BADGE)->text() : 0));
+        $sorted = $counts;
+        rsort($sorted);
+        $this->assertSame($sorted, $counts);
+        $this->assertGreaterThan(0, $counts[0], 'A site with open advisories comes first');
+    }
+
+    public function testTheSitesMenuItemCountsSitesWithOpenAdvisories(): void
+    {
+        $client = $this->loggedInClient();
+        $url = static::getContainer()->get(AdminUrlGenerator::class)
+            ->setController(SiteCrudController::class)
+            ->setAction(Crud::PAGE_INDEX)
+            ->generateUrl();
+        $crawler = $client->request('GET', $url);
+        $withOpen = $crawler->filter('tbody tr[data-id]')->reduce(static fn (Crawler $row): bool => $row->filter(self::BADGE)->count() > 0)->count();
+
+        $badge = $crawler->filter('a.ea-sidebar-item-link')
+            ->reduce(static fn (Crawler $link): bool => 'Sites' === $link->filter('.ea-sidebar-item-label')->text())
+            ->filter('.ea-sidebar-badge.badge-danger');
+        $this->assertSame((string) $withOpen, $badge->text());
+    }
+
     public function testTheRepoAdvisoriesPageCountsOnlyOpenAdvisories(): void
     {
         $client = $this->loggedInClient();
