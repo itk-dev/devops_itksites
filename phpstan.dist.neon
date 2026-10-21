@@ -23,4 +23,3 @@ parameters:
                 - src/Entity/
                 - src/Form/
                 - src/Service/
-                - src/Handler/

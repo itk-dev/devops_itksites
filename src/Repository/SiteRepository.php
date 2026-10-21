@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Server;
 use App\Entity\Site;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
@@ -23,18 +22,6 @@ class SiteRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Site::class);
-    }
-
-    public function findByRootDirAndServer(string $rootDir, Server $server): mixed
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.rootDir LIKE :rootDir')
-            ->setParameter('rootDir', $rootDir.'%')
-            ->andWhere('s.server = :server')
-            ->setParameter('server', $server->getId()->toBinary())
-            ->getQuery()
-            ->getResult()
-        ;
     }
 
     /**
