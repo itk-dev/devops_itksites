@@ -21,6 +21,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Clear two Doctrine deprecations: pass `SortDirection` to `orderBy()`, and
   run migrations without a transaction, which MariaDB never honoured
 
+- [#112](https://github.com/itk-dev/devops_itksites/pull/112)
+  Accept deploy reports from the deployment pipeline, so sites deployed from a
+  prebuilt artifact get the repository and tag the harvester cannot detect.
+  Installations now record whether they are a git working copy or a release
+  artifact
+
 ## [1.18.0] - 2026-10-19
 
 - [#162](https://github.com/itk-dev/devops_itksites/pull/162)
