@@ -1,4 +1,11 @@
 services:
+  nginx:
+    labels:
+      # Detailed health check protection. /health/live and /health/ready stay
+      # public; only /health/detail discloses internals.
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-health.rule=Host(`${COMPOSE_DOMAIN:?}`) && PathPrefix(`/health/detail`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-health.middlewares=ITKBasicAuth@file"
+
   # A mock identity provider, so the OpenID Connect login can be exercised locally.
   # The real one has no redirect URI registered for a developer machine.
   #

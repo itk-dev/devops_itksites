@@ -1,4 +1,12 @@
 services:
+  nginx:
+    labels:
+      # Detailed health check protection. /health/live and /health/ready stay
+      # public; only /health/detail discloses internals.
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-health.rule=Host(`${COMPOSE_SERVER_DOMAIN:?}`) && PathPrefix(`/health/detail`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-health.entrypoints=websecure"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-health.middlewares=ITKBasicAuth@file"
+
   rabbit:
     image: rabbitmq:4-management-alpine
     restart: unless-stopped
