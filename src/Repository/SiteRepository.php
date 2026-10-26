@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Server;
+use App\Admin\AdvisoryCountSort;
 use App\Entity\Site;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
@@ -25,18 +25,6 @@ class SiteRepository extends ServiceEntityRepository
         parent::__construct($registry, Site::class);
     }
 
-    public function findByRootDirAndServer(string $rootDir, Server $server): mixed
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.rootDir LIKE :rootDir')
-            ->setParameter('rootDir', $rootDir.'%')
-            ->andWhere('s.server = :server')
-            ->setParameter('server', $server->getId()->toBinary())
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
     /**
      * Get unique primary domains from existing sites.
      */
@@ -48,5 +36,17 @@ class SiteRepository extends ServiceEntityRepository
             ->distinct()
             ->getQuery()
             ->getResult(AbstractQuery::HYDRATE_SCALAR_COLUMN);
+    }
+
+    /**
+     * The number of sites with advisories not marked as not affected.
+     */
+    public function countWithOpenAdvisories(): int
+    {
+        return (int) $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->where(sprintf('(%s) > 0', AdvisoryCountSort::subQuery('s')))
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

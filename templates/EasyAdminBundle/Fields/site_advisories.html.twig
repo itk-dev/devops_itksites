@@ -1,0 +1,80 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% if ea().crud.currentAction == 'detail' %}
+    {% set git_repo = field.formattedValue.gitRepo %}
+    {% set advisories = field.formattedValue.advisories %}
+    {% set open = advisories|filter(row => row.assessment is null) %}
+    {% set site_id = entity.instance.id %}
+    {% set token = csrf_token('site_advisories_' ~ site_id) %}
+    <div class="advisory-assessments">
+        {% if git_repo %}
+            <p class="text-body-secondary">Marks apply to all checkouts of {{ git_repo }}.</p>
+        {% else %}
+            <p class="text-body-secondary"><twig:ea:Badge variant="warning">No git repo linked</twig:ea:Badge> Advisories cannot be marked as not affected.</p>
+        {% endif %}
+        {% if advisories|length > 0 %}
+            <table class="table table-sm table-borderless">
+                <thead>
+                    <tr>
+                        <th>Package</th>
+                        <th>CVE</th>
+                        <th>Title</th>
+                        <th><span class="visually-hidden">Action</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in advisories %}
+                        {% set advisory = row.advisory %}
+                        {% set assessment = row.assessment %}
+                        {% set url = ea_url()
+                            .unsetAll()
+                            .setController('App\\Controller\\Admin\\AdvisoryCrudController')
+                            .setAction('detail')
+                            .setEntityId(advisory.id) %}
+                        {# Fades the cells, not the row, so the Unmark button stays at full strength. #}
+                        {% set faded = assessment ? 'text-body-secondary opacity-50' %}
+                        <tr data-advisory-id="{{ advisory.advisoryId }}">
+                            <td class="{{ faded }}">{{ advisory.package }}</td>
+                            <td class="text-nowrap {{ faded }}"><a href="{{ url }}">{{ advisory.cve ?? advisory.advisoryId }}</a></td>
+                            <td class="{{ faded }}">
+                                {{ advisory.title }}
+                                {% if assessment %}
+                                    <div class="small mt-1 mb-2"><twig:ea:Badge variant="success" class="me-1">Not affected</twig:ea:Badge>{{ assessment.reason }} ({{ assessment.assessedBy }}, {{ assessment.createdAt|date('Y-m-d') }})</div>
+                                {% endif %}
+                            </td>
+                            <td class="text-nowrap">
+                                {% if assessment %}
+                                    {% if git_repo %}
+                                        <form class="advisory-remove d-inline" method="post" data-submit-once action="{{ path('admin_site_advisories_remove_mark', {id: site_id}) }}">
+                                            <input type="hidden" name="_token" value="{{ token }}">
+                                            <input type="hidden" name="advisoryId" value="{{ advisory.advisoryId }}">
+                                            <twig:ea:Button type="submit" size="sm">Unmark</twig:ea:Button>
+                                        </form>
+                                    {% endif %}
+                                {% elseif git_repo %}
+                                    <form class="advisory-mark" method="post" data-submit-once action="{{ path('admin_site_advisories_not_affected', {id: site_id}) }}">
+                                        <input type="hidden" name="_token" value="{{ token }}">
+                                        <input type="hidden" name="advisoryIds[]" value="{{ advisory.advisoryId }}">
+                                        {{ include('EasyAdminBundle/Fields/_advisory_reason_modal.html.twig', {id: 'advisory-mark-' ~ loop.index, title: 'Mark ' ~ (advisory.cve ?? advisory.advisoryId) ~ ' as not affected?'}) }}
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        {% if git_repo and open|length > 0 %}
+            <form class="advisory-accept-all" method="post" data-submit-once action="{{ path('admin_site_advisories_not_affected', {id: site_id}) }}">
+                <input type="hidden" name="_token" value="{{ token }}">
+                {% for row in open %}
+                    <input type="hidden" name="advisoryIds[]" value="{{ row.advisory.advisoryId }}">
+                {% endfor %}
+                {{ include('EasyAdminBundle/Fields/_advisory_reason_modal.html.twig', {id: 'advisory-accept-all', title: 'Mark all ' ~ open|length ~ ' open advisories as not affected?', label: 'Mark all'}) }}
+            </form>
+        {% endif %}
+    </div>
+{% elseif field.formattedValue != 0 %}
+    <twig:ea:Badge variant="danger">{{ field.formattedValue }}</twig:ea:Badge>
+{% endif %}

@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.19.0] - 2026-10-26
+
+- [#170](https://github.com/itk-dev/devops_itksites/pull/170)
+  Update the docker compose files from the itkdev-docker templates, which
+  use the maintained `nginx/nginx-unprivileged` image
+- [#169](https://github.com/itk-dev/devops_itksites/pull/169)
+  Mark advisories as not affected per git repo, so they stop counting towards
+  a site's advisories, and sort sites by their open advisories
+- [#168](https://github.com/itk-dev/devops_itksites/pull/168)
+  Rewrite the fixtures to cover all content with made-up data shaped like
+  production
+- [#167](https://github.com/itk-dev/devops_itksites/pull/167)
+  Let the latest dir result decide which sites exist, so replays no longer
+  revive removed sites or delete live ones, and purge detection results not
+  seen for 30 days every night
+- [#166](https://github.com/itk-dev/devops_itksites/pull/166)
+  Update EasyAdmin to 5.7, which adds the UI Kit at `/admin/_ea_ui_kit` in
+  debug mode
+- [#165](https://github.com/itk-dev/devops_itksites/pull/165)
+  Update Composer packages, including `symfony/expression-language` for
+  CVE-2026-109449
+- [#164](https://github.com/itk-dev/devops_itksites/pull/164)
+  Clear two Doctrine deprecations: pass `SortDirection` to `orderBy()`, and
+  run migrations without a transaction, which MariaDB never honoured
+
 ## [1.18.0] - 2026-10-19
 
 - [#162](https://github.com/itk-dev/devops_itksites/pull/162)
@@ -439,7 +464,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.18.0...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.19.0...HEAD
+[1.19.0]: https://github.com/itk-dev/devops_itksites/compare/1.18.0...1.19.0
 [1.18.0]: https://github.com/itk-dev/devops_itksites/compare/1.17.0...1.18.0
 [1.17.0]: https://github.com/itk-dev/devops_itksites/compare/1.16.0...1.17.0
 [1.16.0]: https://github.com/itk-dev/devops_itksites/compare/1.15.1...1.16.0

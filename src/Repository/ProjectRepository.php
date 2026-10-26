@@ -38,7 +38,7 @@ class ProjectRepository extends ServiceEntityRepository
             ->leftJoin('p.serviceAgreements', 'sc')
             ->where(':repoId MEMBER OF p.gitRepos')
             ->setParameter('repoId', $repo->getId(), 'ulid')
-            ->orderBy('p.name', 'ASC')
+            ->orderBy('p.name', \SortDirection::Ascending)
             ->getQuery()
             ->getResult();
 

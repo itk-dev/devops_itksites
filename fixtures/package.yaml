@@ -1,0 +1,197 @@
+# Composer packages, their versions and advisories, and Drupal modules linked
+# to them. All ids are made up: CVE ids use the year 2099.
+#
+# - http-foundation 6.4.10 is affected, 6.4.20 is not, so two checkouts of the
+#   same repo can differ.
+# - drupal/core has a drupal.org and a Packagist advisory for the same CVE.
+# - league/commonmark and drupal/webform have advisories without a CVE.
+# - guzzle has no advisories.
+# - example-org/intranet has the commonmark advisory marked as not affected.
+
+App\Entity\Package:
+    package/symfony-http-foundation:
+        vendor: "symfony"
+        name: "http-foundation"
+        description: "Defines an object-oriented layer for the HTTP specification"
+        license: "MIT"
+    package/twig:
+        vendor: "twig"
+        name: "twig"
+        description: "Twig, the flexible, fast, and secure template language for PHP"
+        license: "BSD-3-Clause"
+    package/league-commonmark:
+        vendor: "league"
+        name: "commonmark"
+        description: "Highly-extensible PHP Markdown parser"
+        license: "BSD-3-Clause"
+    package/guzzle:
+        vendor: "guzzlehttp"
+        name: "guzzle"
+        description: "Guzzle is a PHP HTTP client library"
+        license: "MIT"
+    package/drupal-core:
+        vendor: "drupal"
+        name: "core"
+        description: "Drupal is an open source content management platform"
+        license: "GPL-2.0-or-later"
+    package/drupal-webform:
+        vendor: "drupal"
+        name: "webform"
+        description: "Enables the creation of webforms and questionnaires"
+        license: "GPL-2.0-or-later"
+
+App\Entity\Advisory:
+    advisory/symfony-http-foundation:
+        advisoryId: "PKSA-x9q2-7fhd-3k1m"
+        package: "@package/symfony-http-foundation"
+        affectedVersions: ">=6.0.0,<6.4.18|>=7.0.0,<7.2.4"
+        title: "CVE-2099-10001: Example open redirect in Request::getUri()"
+        cve: "CVE-2099-10001"
+        link: "https://example.com/advisories/cve-2099-10001"
+        reportedAt: '<(new DateTimeImmutable("2026-02-11 10:00:00"))>'
+        sources:
+            - name: "FriendsOfPHP/security-advisories"
+              remoteId: "symfony/http-foundation/CVE-2099-10001.yaml"
+    advisory/twig:
+        advisoryId: "PKSA-b4n7-2wqz-8c5r"
+        package: "@package/twig"
+        affectedVersions: ">=3.0.0,<3.11.2"
+        title: "CVE-2099-10002: Example sandbox bypass"
+        cve: "CVE-2099-10002"
+        link: "https://example.com/advisories/cve-2099-10002"
+        reportedAt: '<(new DateTimeImmutable("2026-03-04 09:30:00"))>'
+        sources:
+            - name: "FriendsOfPHP/security-advisories"
+              remoteId: "twig/twig/CVE-2099-10002.yaml"
+    advisory/league-commonmark:
+        advisoryId: "PKSA-m3r8-5tyv-1h6p"
+        package: "@package/league-commonmark"
+        affectedVersions: ">=2.0.0,<2.6.0"
+        title: "Example denial of service through nested lists"
+        link: "https://example.com/advisories/ghsa-7f3m-q2kx-9w4c"
+        reportedAt: '<(new DateTimeImmutable("2026-04-20 14:15:00"))>'
+        sources:
+            - name: "GitHub"
+              remoteId: "GHSA-7f3m-q2kx-9w4c"
+    advisory/drupal-core-sa:
+        advisoryId: "SA-CORE-2099-001"
+        package: "@package/drupal-core"
+        affectedVersions: ">= 8.0.0 < 10.3.9 || >= 10.4.0 < 10.4.2"
+        title: "Drupal core - Moderately critical - Example access bypass"
+        cve: "CVE-2099-10003"
+        link: "https://example.com/advisories/sa-core-2099-001"
+        reportedAt: '<(new DateTimeImmutable("2026-05-13 17:00:00"))>'
+        sources:
+            - name: "Drupal"
+              remoteId: "SA-CORE-2099-001"
+    # The same CVE as SA-CORE-2099-001, reported to Packagist.
+    advisory/drupal-core-pksa:
+        advisoryId: "PKSA-d8k2-6vnp-4j9t"
+        package: "@package/drupal-core"
+        affectedVersions: ">=8.0.0,<10.3.9|>=10.4.0,<10.4.2"
+        title: "Drupal core - Moderately critical - Example access bypass"
+        cve: "CVE-2099-10003"
+        link: "https://example.com/advisories/sa-core-2099-001"
+        reportedAt: '<(new DateTimeImmutable("2026-05-13 17:00:00"))>'
+        sources:
+            - name: "FriendsOfPHP/security-advisories"
+              remoteId: "drupal/core/CVE-2099-10003.yaml"
+    advisory/drupal-webform:
+        advisoryId: "SA-CONTRIB-2099-001"
+        package: "@package/drupal-webform"
+        affectedVersions: "<6.2.10"
+        title: "Webform - Critical - Example cross site scripting"
+        link: "https://example.com/advisories/sa-contrib-2099-001"
+        reportedAt: '<(new DateTimeImmutable("2026-06-03 16:45:00"))>'
+        sources:
+            - name: "Drupal"
+              remoteId: "SA-CONTRIB-2099-001"
+
+# Advisories a developer has marked as not affected, per git repo.
+App\Entity\AdvisoryAssessment:
+    advisory_assessment/intranet-commonmark:
+        advisoryId: "PKSA-m3r8-5tyv-1h6p"
+        reason: "Markdown is only rendered from editor input"
+        assessedBy: "user@example.com"
+        __calls:
+            - setGitRepo: ["@git_repo/intranet"]
+
+App\Entity\PackageVersion:
+    package_version/symfony-http-foundation-6.4.10:
+        package: "@package/symfony-http-foundation"
+        version: "6.4.10"
+        latest: "6.4.20"
+        latestStatus: "semver-safe-update"
+        __calls:
+            - addAdvisory: ["@advisory/symfony-http-foundation"]
+    package_version/symfony-http-foundation-6.4.20:
+        package: "@package/symfony-http-foundation"
+        version: "6.4.20"
+        latest: "7.2.4"
+        latestStatus: "update-possible"
+    package_version/twig-3.8.0:
+        package: "@package/twig"
+        version: "3.8.0"
+        latest: "3.11.2"
+        latestStatus: "semver-safe-update"
+        __calls:
+            - addAdvisory: ["@advisory/twig"]
+    package_version/league-commonmark-2.4.0:
+        package: "@package/league-commonmark"
+        version: "2.4.0"
+        latest: "2.6.0"
+        latestStatus: "semver-safe-update"
+        __calls:
+            - addAdvisory: ["@advisory/league-commonmark"]
+    package_version/guzzle-7.9.2:
+        package: "@package/guzzle"
+        version: "7.9.2"
+        latest: "7.9.2"
+        latestStatus: "up-to-date"
+    package_version/drupal-core-10.3.5:
+        package: "@package/drupal-core"
+        version: "10.3.5"
+        latest: "10.4.2"
+        latestStatus: "semver-safe-update"
+        drupalReleaseTerms: ["Bug fixes", "Security update"]
+        drupalInsecure: true
+        drupalReleaseCheckedAt: '<(new DateTimeImmutable("2026-10-20 06:00:00"))>'
+        __calls:
+            - addAdvisory: ["@advisory/drupal-core-sa"]
+            - addAdvisory: ["@advisory/drupal-core-pksa"]
+    package_version/drupal-webform-6.2.9:
+        package: "@package/drupal-webform"
+        version: "6.2.9"
+        latest: "6.2.10"
+        latestStatus: "semver-safe-update"
+        drupalReleaseTerms: ["Security update"]
+        drupalInsecure: true
+        drupalReleaseCheckedAt: '<(new DateTimeImmutable("2026-10-20 06:00:00"))>'
+        __calls:
+            - addAdvisory: ["@advisory/drupal-webform"]
+
+App\Entity\Module:
+    module/node:
+        package: "Core"
+        name: "node"
+        displayName: "Node"
+        project: "drupal"
+        enabled: true
+        composerPackage: "@package/drupal-core"
+    module/webform:
+        package: "Webform"
+        name: "webform"
+        displayName: "Webform"
+        project: "webform"
+        enabled: true
+        composerPackage: "@package/drupal-webform"
+
+App\Entity\ModuleVersion:
+    module_version/node-10.3.5:
+        module: "@module/node"
+        version: "10.3.5"
+        composerPackageVersion: "@package_version/drupal-core-10.3.5"
+    module_version/webform-6.2.9:
+        module: "@module/webform"
+        version: "6.2.9"
+        composerPackageVersion: "@package_version/drupal-webform-6.2.9"

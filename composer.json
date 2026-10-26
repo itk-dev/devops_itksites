@@ -13,7 +13,7 @@
         "doctrine/doctrine-bundle": "^3.2",
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.0",
-        "easycorp/easyadmin-bundle": "^5.0",
+        "easycorp/easyadmin-bundle": "^5.7",
         "itk-dev/openid-connect-bundle": "^6.1",
         "itk-dev/vault-bundle": "^1.0.0",
         "nelmio/cors-bundle": "^2.2",
@@ -139,7 +139,7 @@
             "bin/console hautelook:fixtures:load --no-interaction"
         ],
         "queues": [
-            "bin/console messenger:consume async scheduler_drupal_releases --failure-limit=1 -vvv"
+            "bin/console messenger:consume async scheduler_default -vvv"
         ],
         "tests": [
             "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",

@@ -126,8 +126,9 @@ class DrupalPackageLinkerTest extends KernelTestCase
         $packageVersion = $this->entityManager->getRepository(PackageVersion::class)->findOneBy(['version' => '6.2.3']);
         self::getContainer()->get(DrupalPackageLinker::class)->linkPackageVersion($packageVersion);
 
-        $this->assertNull($moduleVersion->getComposerPackageVersion());
-        $this->assertNull($moduleVersion->getModule()->getComposerPackage());
+        // It may link to its project, drupal/webform, which the fixtures hold.
+        $this->assertNotSame($packageVersion, $moduleVersion->getComposerPackageVersion());
+        $this->assertNotSame('webform_ui', $moduleVersion->getModule()->getComposerPackage()?->getName());
     }
 
     /**

@@ -48,7 +48,7 @@ services:
       - .:/app
 
   nginx:
-    image: nginxinc/nginx-unprivileged:alpine
+    image: nginx/nginx-unprivileged:alpine
     networks:
       - app
       - frontend
@@ -75,10 +75,6 @@ services:
       # Cron-metrics protection.
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-metrics.rule=Host(`${COMPOSE_DOMAIN:?}`) && PathPrefix(`/cron-metrics`) "
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-metrics.middlewares=ITKMetricsAuth@file"
-      # Detailed health check protection. /health/live and /health/ready stay
-      # public; only /health/detail discloses internals.
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-health.rule=Host(`${COMPOSE_DOMAIN:?}`) && PathPrefix(`/health/detail`)"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME:?}-health.middlewares=ITKBasicAuth@file"
 
   mail:
     image: axllent/mailpit
@@ -103,7 +99,7 @@ services:
       - ./:/md
 
   prettier:
-    # Prettier does not (yet, fcf.
+    # Prettier does not (yet, cf.
     # https://github.com/prettier/prettier/issues/15206) have an official
     # docker image.
     # https://hub.docker.com/r/jauderho/prettier is good candidate (cf. https://hub.docker.com/search?q=prettier&sort=updated_at&order=desc)

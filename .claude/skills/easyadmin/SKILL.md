@@ -17,7 +17,7 @@ description: >-
 license: MIT
 metadata:
   author: EasyCorp
-  easyadmin-version: '5.6.1'
+  easyadmin-version: '5.7.0'
   installed-by: 'easyadmin:ai:install'
 ---
 

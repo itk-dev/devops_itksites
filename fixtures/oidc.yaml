@@ -1,8 +1,14 @@
-# @see https://fakerphp.github.io/formatters/
 App\Entity\OIDC:
-    oidcservice_certificate/dev.example.com:
-        domain: "dev.example.com"
+    oidc/intranet.example.com:
+        domain: "intranet.example.com"
         expirationTime: <(new DateTime('+2 years'))>
         onePasswordUrl: "https://example.com/1password"
-        usageDocumentationUrl: https://example.com/example.com/README.md#oidc
+        usageDocumentationUrl: https://example.com/intranet/README.md#oidc
+        type: "prod"
+    oidc/stg.shop.example.com:
+        domain: "stg.shop.example.com"
+        expirationTime: <(new DateTime('+20 days'))>
+        onePasswordUrl: "https://example.com/1password"
+        usageDocumentationUrl: https://example.com/shop/README.md#oidc
         type: "stg"
+        notes: "Renew before the next release"

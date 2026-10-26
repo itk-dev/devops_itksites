@@ -12,6 +12,7 @@ use App\MessageHandler\PersistDetectionResultHandler;
 use App\Repository\DetectionResultRepository;
 use App\Repository\ServerRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -19,10 +20,10 @@ use Symfony\Component\Uid\Ulid;
 
 class PersistDetectionResultHandlerTest extends KernelTestCase
 {
-    private ServerRepository $serverRepositoryMock;
-    private DetectionResultRepository $detectionResultRepositoryMock;
-    private EntityManagerInterface $entityManagerMock;
-    private MessageBusInterface $messageBusMock;
+    private ServerRepository&MockObject $serverRepositoryMock;
+    private DetectionResultRepository&MockObject $detectionResultRepositoryMock;
+    private EntityManagerInterface&MockObject $entityManagerMock;
+    private MessageBusInterface&MockObject $messageBusMock;
 
     private PersistDetectionResultHandler $handler;
     private DetectionResult $detectionResult;
@@ -78,6 +79,8 @@ class PersistDetectionResultHandlerTest extends KernelTestCase
 
     public function testInvokeExistingDetectionResult(): void
     {
+        $this->detectionResult->setType('docker');
+
         $apiKey = '12345678';
         $receivedAt = new \DateTimeImmutable();
         $detectionResultReceived = new PersistDetectionResult($this->detectionResult, $apiKey, $receivedAt);
@@ -97,6 +100,29 @@ class PersistDetectionResultHandlerTest extends KernelTestCase
         $this->handler->__invoke($detectionResultReceived);
 
         // "lastContact" should only be updated for the existing result
+        $this->assertEquals($receivedAt, $existingResult->getLastContact());
+    }
+
+    public function testInvokeExistingDirDetectionResultIsReprocessed(): void
+    {
+        $receivedAt = new \DateTimeImmutable();
+        $detectionResultReceived = new PersistDetectionResult($this->detectionResult, '12345678', $receivedAt);
+
+        $existingResult = new DetectionResult();
+        $existingResult->setId(new Ulid());
+        $existingResult->setType('dir');
+
+        $this->detectionResultRepositoryMock->expects($this->once())->method('findOneBy')
+            ->willReturn($existingResult);
+        $this->entityManagerMock->expects($this->never())->method('persist');
+
+        // The dir list decides which installations exist, so it is re-applied on every harvest.
+        $this->messageBusMock->expects($this->once())->method('dispatch')
+            ->with(new ProcessDetectionResult($existingResult->getId()))
+            ->willReturn(new Envelope(new ProcessDetectionResult(new Ulid())));
+
+        $this->handler->__invoke($detectionResultReceived);
+
         $this->assertEquals($receivedAt, $existingResult->getLastContact());
     }
 }
