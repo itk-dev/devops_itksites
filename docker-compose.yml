@@ -48,7 +48,7 @@ services:
       - .:/app
 
   nginx:
-    image: nginxinc/nginx-unprivileged:alpine
+    image: nginx/nginx-unprivileged:alpine
     networks:
       - app
       - frontend
@@ -103,7 +103,7 @@ services:
       - ./:/md
 
   prettier:
-    # Prettier does not (yet, fcf.
+    # Prettier does not (yet, cf.
     # https://github.com/prettier/prettier/issues/15206) have an official
     # docker image.
     # https://hub.docker.com/r/jauderho/prettier is good candidate (cf. https://hub.docker.com/search?q=prettier&sort=updated_at&order=desc)
