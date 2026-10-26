@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.19.0] - 2026-10-26
+
+- [#170](https://github.com/itk-dev/devops_itksites/pull/170)
+  Update the docker compose files from the itkdev-docker templates, which
+  use the maintained `nginx/nginx-unprivileged` image
 - [#169](https://github.com/itk-dev/devops_itksites/pull/169)
   Mark advisories as not affected per git repo, so they stop counting towards
   a site's advisories, and sort sites by their open advisories
@@ -459,7 +464,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.18.0...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.19.0...HEAD
+[1.19.0]: https://github.com/itk-dev/devops_itksites/compare/1.18.0...1.19.0
 [1.18.0]: https://github.com/itk-dev/devops_itksites/compare/1.17.0...1.18.0
 [1.17.0]: https://github.com/itk-dev/devops_itksites/compare/1.16.0...1.17.0
 [1.16.0]: https://github.com/itk-dev/devops_itksites/compare/1.15.1...1.16.0
