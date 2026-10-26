@@ -23,6 +23,12 @@ class DrupalLinkPackagesCommandTest extends KernelTestCase
     {
         self::bootKernel();
         $entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $tester = new CommandTester(new Application(self::$kernel)->find('app:drupal:link-packages'));
+
+        // The fixtures hold modules the command links too.
+        $tester->execute([]);
+        preg_match('/Linked (\d+) modules/', $tester->getDisplay(), $matches);
+        $expected = sprintf('Linked %1$d modules and %1$d module versions.', (int) $matches[1] + 1);
 
         // Rows written without the factories, as before the linker existed.
         $package = new Package()->setVendor('drupal')->setName('backfill_probe');
@@ -40,17 +46,15 @@ class DrupalLinkPackagesCommandTest extends KernelTestCase
             ->addModuleVersion($moduleVersion);
         $entityManager->flush();
 
-        $tester = new CommandTester(new Application(self::$kernel)->find('app:drupal:link-packages'));
-
         $tester->execute([]);
         $tester->assertCommandIsSuccessful();
-        $this->assertStringContainsString('Linked 1 modules and 1 module versions.', $tester->getDisplay());
+        $this->assertStringContainsString($expected, $tester->getDisplay());
         $this->assertSame($packageVersion, $moduleVersion->getComposerPackageVersion());
         $this->assertSame($package, $module->getComposerPackage());
 
         $tester->execute([]);
         $tester->assertCommandIsSuccessful();
-        $this->assertStringContainsString('Linked 1 modules and 1 module versions.', $tester->getDisplay());
+        $this->assertStringContainsString($expected, $tester->getDisplay());
         $this->assertSame($packageVersion, $moduleVersion->getComposerPackageVersion());
     }
 }

@@ -1,0 +1,46 @@
+# Git repos and the tags installations are checked out at. All repos belong to
+# the made-up example-org organization.
+#
+# - example-org/shop is checked out twice, stg on a branch and prod on a tag.
+# - example-org/clean has no advisories.
+# - example-org/docs belongs to a project but is not deployed anywhere.
+
+App\Entity\GitRepo:
+    git_repo/shop:
+        provider: "github.com"
+        organization: "example-org"
+        repo: "shop"
+    git_repo/intranet:
+        provider: "github.com"
+        organization: "example-org"
+        repo: "intranet"
+    git_repo/clean:
+        provider: "github.com"
+        organization: "example-org"
+        repo: "clean"
+    git_repo/legacy:
+        provider: "github.com"
+        organization: "example-org"
+        repo: "legacy"
+    git_repo/docs:
+        provider: "github.com"
+        organization: "example-org"
+        repo: "docs"
+
+App\Entity\GitTag:
+    # A branch checkout has no tag.
+    git_tag/shop-unknown:
+        tag: "unknown"
+        repo: "@git_repo/shop"
+    git_tag/shop-2.4.1:
+        tag: "2.4.1"
+        repo: "@git_repo/shop"
+    git_tag/intranet-1.8.0:
+        tag: "1.8.0"
+        repo: "@git_repo/intranet"
+    git_tag/clean-1.0.0:
+        tag: "1.0.0"
+        repo: "@git_repo/clean"
+    git_tag/legacy-0.9.3:
+        tag: "0.9.3"
+        repo: "@git_repo/legacy"

@@ -29,7 +29,8 @@ class DirectoryHandlerTest extends KernelTestCase
     {
         self::bootKernel();
         $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        $this->serverId = (string) $this->entityManager->getRepository(Server::class)->findOneBy([])->getId();
+        // A server without results of its own, so the tests decide which dir result is the latest.
+        $this->serverId = (string) $this->entityManager->getRepository(Server::class)->findOneBy(['name' => 'gpu-01.example.com'])->getId();
     }
 
     public function testRemovesInstallationsNoLongerInDirResult(): void
