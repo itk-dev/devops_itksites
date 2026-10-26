@@ -6,6 +6,7 @@
 # - drupal/core has a drupal.org and a Packagist advisory for the same CVE.
 # - league/commonmark and drupal/webform have advisories without a CVE.
 # - guzzle has no advisories.
+# - example-org/intranet has the commonmark advisory marked as not affected.
 
 App\Entity\Package:
     package/symfony-http-foundation:
@@ -105,6 +106,15 @@ App\Entity\Advisory:
         sources:
             - name: "Drupal"
               remoteId: "SA-CONTRIB-2099-001"
+
+# Advisories a developer has marked as not affected, per git repo.
+App\Entity\AdvisoryAssessment:
+    advisory_assessment/intranet-commonmark:
+        advisoryId: "PKSA-m3r8-5tyv-1h6p"
+        reason: "Markdown is only rendered from editor input"
+        assessedBy: "user@example.com"
+        __calls:
+            - setGitRepo: ["@git_repo/intranet"]
 
 App\Entity\PackageVersion:
     package_version/symfony-http-foundation-6.4.10:

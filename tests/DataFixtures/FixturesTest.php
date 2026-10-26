@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\DataFixtures;
 
 use App\Entity\Advisory;
+use App\Entity\AdvisoryAssessment;
 use App\Entity\CodeOwner;
 use App\Entity\DetectionResult;
 use App\Entity\DockerImage;
@@ -199,6 +200,7 @@ class FixturesTest extends KernelTestCase
             ...array_map(static fn (User $user): string => (string) $user->getEmail(), $this->entityManager->getRepository(User::class)->findAll()),
             ...array_map(static fn (CodeOwner $owner): string => $owner->getEmail(), $this->entityManager->getRepository(CodeOwner::class)->findAll()),
             ...array_filter(array_map(static fn (SecurityContract $contract): ?string => $contract->getClientContactEmail(), $this->entityManager->getRepository(SecurityContract::class)->findAll())),
+            ...array_map(static fn (AdvisoryAssessment $assessment): string => $assessment->getAssessedBy(), $this->entityManager->getRepository(AdvisoryAssessment::class)->findAll()),
         ];
         foreach ($emails as $email) {
             $this->assertMatchesRegularExpression('/@example\.com$/', $email);

@@ -1,0 +1,16 @@
+{# A button opening a modal that asks for the reason and submits the enclosing form. #}
+<twig:ea:Modal:Trigger target="#{{ id }}" size="sm">{{ label|default('Mark') }}</twig:ea:Modal:Trigger>
+{# text-wrap: the modal sits in a text-nowrap table cell and would inherit it. #}
+<twig:ea:Modal id="{{ id }}" class="text-wrap" size="lg" :title="title|e" :description="('The mark applies to all checkouts of ' ~ git_repo ~ '.')|e">
+    <twig:block name="body">
+        {# Blocks do not see the include's variables, so the label wraps the field instead of naming its id. #}
+        <label class="form-label w-100 mt-2">
+            Reason
+            <textarea name="reason" class="form-control" rows="3" required></textarea>
+        </label>
+    </twig:block>
+    <twig:block name="footer">
+        <twig:ea:Modal:Close>Cancel</twig:ea:Modal:Close>
+        <twig:ea:Button type="submit" variant="primary">Mark as not affected</twig:ea:Button>
+    </twig:block>
+</twig:ea:Modal>

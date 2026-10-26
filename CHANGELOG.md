@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#169](https://github.com/itk-dev/devops_itksites/pull/169)
+  Mark advisories as not affected per git repo, so they stop counting towards
+  a site's advisories, and sort sites by their open advisories
 - [#168](https://github.com/itk-dev/devops_itksites/pull/168)
   Rewrite the fixtures to cover all content with made-up data shaped like
   production

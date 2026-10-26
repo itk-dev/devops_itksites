@@ -29,6 +29,33 @@ class AdvisoryCountSortTest extends KernelTestCase
     }
 
     /**
+     * As the default sort, EasyAdmin orders by the column, which does not
+     * exist, so the sub query has to replace it.
+     */
+    public function testItReplacesTheColumnOrderOfTheDefaultSort(): void
+    {
+        $qb = $this->queryBuilder()
+            ->addOrderBy('entity.primaryDomain', 'ASC')
+            ->addOrderBy('entity.advisoryCount', 'DESC');
+
+        AdvisoryCountSort::apply($qb, $this->searchDto([], ['advisoryCount' => 'DESC']));
+
+        $dql = $qb->getQuery()->getDQL();
+        $this->assertStringContainsString('ORDER BY entity.primaryDomain ASC, advisoryCount DESC', $dql);
+        $this->assertStringNotContainsString('entity.advisoryCount', $dql);
+        $this->assertNotEmpty($qb->getQuery()->getSQL());
+    }
+
+    public function testTheUrlSortWinsOverTheDefaultSort(): void
+    {
+        $qb = $this->queryBuilder()->addOrderBy('entity.advisoryCount', 'DESC');
+
+        AdvisoryCountSort::apply($qb, $this->searchDto(['advisoryCount' => 'ASC'], ['advisoryCount' => 'DESC']));
+
+        $this->assertStringContainsString('ORDER BY advisoryCount ASC', $qb->getQuery()->getDQL());
+    }
+
+    /**
      * The direction reaches DQL as a string, so anything but ASC or DESC is
      * ignored rather than passed through.
      */
@@ -58,8 +85,8 @@ class AdvisoryCountSortTest extends KernelTestCase
             ->createQueryBuilder('entity');
     }
 
-    private function searchDto(array $customSort): SearchDto
+    private function searchDto(array $customSort, array $defaultSort = []): SearchDto
     {
-        return new SearchDto(new Request(), null, null, [], $customSort, null);
+        return new SearchDto(new Request(), null, null, $defaultSort, $customSort, null);
     }
 }

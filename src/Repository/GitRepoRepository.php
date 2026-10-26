@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\AdvisoryAssessment;
 use App\Entity\GitRepo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Ulid;
 
@@ -25,7 +27,8 @@ class GitRepoRepository extends ServiceEntityRepository
     }
 
     /**
-     * Repos reachable from any package-version advisory, with their advisory count.
+     * Repos reachable from any package-version advisory, with their count of
+     * advisories not marked as not affected for the repo.
      *
      * Path: GitRepo → GitTag → Installation → PackageVersion → Advisory.
      *
@@ -40,6 +43,8 @@ class GitRepoRepository extends ServiceEntityRepository
             ->innerJoin('gt.installations', 'i')
             ->innerJoin('i.packageVersions', 'pv')
             ->innerJoin('pv.advisories', 'a')
+            ->leftJoin(AdvisoryAssessment::class, 'aa', Join::WITH, 'aa.advisoryId = a.advisoryId AND aa.repoProvider = r.provider AND aa.repoOrganization = r.organization AND aa.repoName = r.repo')
+            ->andWhere('aa.id IS NULL')
             ->groupBy('r.id')
             ->having('COUNT(DISTINCT a.id) > 0')
             ->orderBy('r.organization', \SortDirection::Ascending)
