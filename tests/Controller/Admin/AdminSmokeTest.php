@@ -21,6 +21,7 @@ use App\Controller\Admin\ServerCrudController;
 use App\Controller\Admin\ServiceCertificateCrudController;
 use App\Controller\Admin\SiteCrudController;
 use App\Entity\Advisory;
+use App\Entity\DetectionResult;
 use App\Entity\Installation;
 use App\Entity\Module;
 use App\Entity\ModuleVersion;
@@ -191,6 +192,32 @@ class AdminSmokeTest extends WebTestCase
     {
         yield 'Package' => [PackageCrudController::class, 2, 0];
         yield 'PackageVersion' => [PackageVersionCrudController::class, 3, 1];
+    }
+
+    public function testDetectionResultDetailShowsErrorMessageInFull(): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get('doctrine')->getManager();
+        $client->loginUser($entityManager->getRepository(User::class)->findOneBy([]));
+
+        $result = $entityManager->getRepository(DetectionResult::class)->findOneBy([]);
+        $message = "In CooldownPolicyConfig.php line 117:\n  bower-asset/jquery 4.0.0 has no published-time";
+        $result->setErrors([['source' => 'composer', 'message' => $message, 'container' => 'phpfpm', 'command' => 'composer outdated --all --format=json', 'exitCode' => 1]]);
+        $entityManager->flush();
+
+        $url = static::getContainer()->get(AdminUrlGenerator::class)
+            ->setController(DetectionResultCrudController::class)
+            ->setAction(Crud::PAGE_DETAIL)
+            ->setEntityId($result->getId())
+            ->generateUrl();
+
+        $client->request('GET', $url);
+
+        $this->assertResponseIsSuccessful();
+        // The message keeps its line breaks instead of showing a JSON-escaped "\n".
+        $this->assertSelectorTextContains('pre', 'has no published-time');
+        $this->assertStringContainsString($message, $client->getCrawler()->filter('pre')->text(null, false));
+        $this->assertSelectorTextContains('li code', 'composer outdated --all --format=json');
     }
 
     public function testDockerImagesFilterByRegistry(): void

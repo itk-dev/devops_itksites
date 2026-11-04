@@ -1,0 +1,22 @@
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# Errors or warnings from the harvester: a list of {source, message} with
+   optional container, command and exitCode. #}
+{% if field.value is empty %}
+    <span class="text-muted">None</span>
+{% else %}
+    <ul class="list-unstyled mb-0">
+        {% for item in field.value %}
+            <li class="mb-3">
+                <div>
+                    <strong>{{ item.source }}</strong>
+                    {%- if item.container is defined %} in {{ item.container }}{% endif %}
+                    {%- if item.exitCode is defined %} (exit {{ item.exitCode }}){% endif %}
+                </div>
+                {% if item.command is defined %}
+                    <code>{{ item.command }}</code>
+                {% endif %}
+                <pre class="mb-0" style="white-space: pre-wrap; overflow-wrap: anywhere">{{ item.message }}</pre>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
