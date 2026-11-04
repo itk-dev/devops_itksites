@@ -12,6 +12,7 @@ use App\Repository\AdvisoryRepository;
 use Composer\Semver\Semver;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AdvisoryFactory
 {
@@ -19,11 +20,16 @@ class AdvisoryFactory
         private readonly EntityManagerInterface $entityManager,
         private readonly AdvisoryRepository $advisoryRepository,
         private readonly LoggerInterface $logger,
+        private readonly ValidatorInterface $validator,
     ) {
     }
 
-    public function setAdvisories(Installation $installation, object $audit): void
+    /**
+     * @return list<string> why advisories of the audit were skipped, for the detection result
+     */
+    public function setAdvisories(Installation $installation, object $audit): array
     {
+        $skipped = [];
         if (isset($audit->advisories) && is_object($audit->advisories)) {
             foreach ($audit->advisories as $package => $advisories) {
                 foreach ($advisories as $advisory) {
@@ -36,24 +42,19 @@ class AdvisoryFactory
                             'package' => $advisory->packageName,
                             'installation' => (string) $installation,
                         ]);
+                        $skipped[] = sprintf('Skipped advisory %s for %s, which the installation does not list', $advisory->advisoryId, $advisory->packageName);
                         continue;
                     }
                     $entity = $this->advisoryRepository->findOneBy(['advisoryId' => $advisory->advisoryId]);
 
                     if (null === $entity) {
                         $entity = new Advisory();
-                        $this->entityManager->persist($entity);
-
-                        $entity->addPackageVersion($packageVersion);
 
                         if (isset($advisory->advisoryId)) {
                             $entity->setAdvisoryId($advisory->advisoryId);
                         }
                         if (isset($advisory->affectedVersions)) {
                             $entity->setAffectedVersions($advisory->affectedVersions);
-                        }
-                        if (isset($advisory->title)) {
-                            $entity->setTitle($advisory->title);
                         }
                         if (isset($advisory->title)) {
                             $entity->setTitle($advisory->title);
@@ -75,12 +76,44 @@ class AdvisoryFactory
                         if (!empty($advisory->sources)) {
                             $entity->setSources($advisory->sources);
                         }
+
+                        // Persisted with the rest of the result, so one that does not fit would fail them all.
+                        $reason = $this->unstorableReason($entity);
+                        if (null !== $reason) {
+                            $skipped[] = $reason;
+                            continue;
+                        }
+
+                        $this->entityManager->persist($entity);
+                        $entity->addPackageVersion($packageVersion);
                     }
 
                     $this->setAdvisoryForAffectedVersions($packageVersion->getPackage(), $entity);
                 }
             }
         }
+
+        return $skipped;
+    }
+
+    /**
+     * Why the advisory does not fit the database, or null when it does. Only
+     * the advisory id and CVE have a fixed size, so only values that cannot be
+     * real ids are refused. Logged as an error: prod writes nothing below it.
+     */
+    public function unstorableReason(Advisory $advisory): ?string
+    {
+        $violations = $this->validator->validate($advisory);
+        if (0 === count($violations)) {
+            return null;
+        }
+
+        $this->logger->error('Skipped advisory {advisory}, which does not fit the database: {violations}', [
+            'advisory' => $advisory->getAdvisoryId(),
+            'violations' => (string) $violations,
+        ]);
+
+        return sprintf('Skipped advisory %s, which does not fit the database: %s', $advisory->getAdvisoryId(), trim((string) $violations));
     }
 
     private function getInstalledPackageVersion(Installation $installation, string $vendorPackage): ?PackageVersion

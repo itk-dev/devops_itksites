@@ -64,7 +64,9 @@ class ReleaseChecker
                 $constraint = DrupalVersion::constraintToComposer($securityAdvisory->affectedVersions);
                 if ($this->matchesAny($insecureVersions, $constraint)) {
                     $advisory = $this->upsert($package, $securityAdvisory, $constraint);
-                    $this->advisoryFactory->setAdvisoryForAffectedVersions($package, $advisory);
+                    if (null !== $advisory) {
+                        $this->advisoryFactory->setAdvisoryForAffectedVersions($package, $advisory);
+                    }
                 }
             }
         }
@@ -90,14 +92,13 @@ class ReleaseChecker
         return false;
     }
 
-    private function upsert(Package $package, SecurityAdvisory $securityAdvisory, string $constraint): Advisory
+    /**
+     * Null when the advisory does not fit the database; flushing it would fail the whole package.
+     */
+    private function upsert(Package $package, SecurityAdvisory $securityAdvisory, string $constraint): ?Advisory
     {
-        $advisory = $this->advisoryRepository->findOneBy(['advisoryId' => $securityAdvisory->advisoryId]);
-        if (null === $advisory) {
-            $advisory = new Advisory()->setAdvisoryId($securityAdvisory->advisoryId);
-            $this->entityManager->persist($advisory);
-            $package->addAdvisory($advisory);
-        }
+        $existing = $this->advisoryRepository->findOneBy(['advisoryId' => $securityAdvisory->advisoryId]);
+        $advisory = $existing ?? new Advisory()->setAdvisoryId($securityAdvisory->advisoryId);
 
         $advisory
             ->setAffectedVersions($constraint)
@@ -107,6 +108,20 @@ class ReleaseChecker
             ->setSources([['name' => self::SOURCE_NAME, 'remoteId' => $securityAdvisory->advisoryId]]);
         if (null !== $securityAdvisory->cve) {
             $advisory->setCve($securityAdvisory->cve);
+        }
+
+        if (null !== $this->advisoryFactory->unstorableReason($advisory)) {
+            if (null !== $existing) {
+                // Drop the changes so the stored advisory is flushed unchanged.
+                $this->entityManager->refresh($existing);
+            }
+
+            return null;
+        }
+
+        if (null === $existing) {
+            $this->entityManager->persist($advisory);
+            $package->addAdvisory($advisory);
         }
 
         return $advisory;

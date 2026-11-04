@@ -61,6 +61,8 @@ class DetectionResultCrudController extends AbstractCrudController
         yield Field::new('prettyWarnings')->onlyOnDetail()->setLabel('Warnings')
             ->setTemplatePath('EasyAdminBundle/Fields/code_highlight.html.twig')
             ->setCustomOption('language', 'json');
+        yield Field::new('processingErrors')->onlyOnDetail()
+            ->setTemplatePath('EasyAdminBundle/Fields/sources.html.twig');
         yield Field::new('prettyData')->onlyOnDetail()->setLabel('Data')
             ->setTemplatePath('EasyAdminBundle/Fields/code_highlight.html.twig')
             ->setCustomOption('language', 'json');
