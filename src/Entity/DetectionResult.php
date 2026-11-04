@@ -227,16 +227,6 @@ class DetectionResult extends AbstractBaseEntity implements \Stringable
         return $this;
     }
 
-    public function getPrettyErrors(): string
-    {
-        return json_encode($this->errors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
-    }
-
-    public function getPrettyWarnings(): string
-    {
-        return json_encode($this->warnings, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
-    }
-
     /** @return list<string> */
     public function getProcessingErrors(): array
     {

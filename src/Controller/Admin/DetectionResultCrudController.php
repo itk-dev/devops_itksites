@@ -55,12 +55,10 @@ class DetectionResultCrudController extends AbstractCrudController
         yield DateTimeField::new('modifiedAt')->hideOnIndex();
         yield DateTimeField::new('lastContact');
         yield TextMonospaceField::new('harvesterVersion');
-        yield Field::new('prettyErrors')->onlyOnDetail()->setLabel('Errors')
-            ->setTemplatePath('EasyAdminBundle/Fields/code_highlight.html.twig')
-            ->setCustomOption('language', 'json');
-        yield Field::new('prettyWarnings')->onlyOnDetail()->setLabel('Warnings')
-            ->setTemplatePath('EasyAdminBundle/Fields/code_highlight.html.twig')
-            ->setCustomOption('language', 'json');
+        yield Field::new('errors')->onlyOnDetail()
+            ->setTemplatePath('EasyAdminBundle/Fields/harvester_messages.html.twig');
+        yield Field::new('warnings')->onlyOnDetail()
+            ->setTemplatePath('EasyAdminBundle/Fields/harvester_messages.html.twig');
         yield Field::new('processingErrors')->onlyOnDetail()
             ->setTemplatePath('EasyAdminBundle/Fields/sources.html.twig');
         yield Field::new('prettyData')->onlyOnDetail()->setLabel('Data')
