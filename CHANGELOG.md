@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#172](https://github.com/itk-dev/devops_itksites/pull/172)
+  Store the harvester version, errors and warnings sent with detection
+  results, and show them on detection results in the admin
+
 ## [1.19.0] - 2026-10-26
 
 - [#170](https://github.com/itk-dev/devops_itksites/pull/170)
