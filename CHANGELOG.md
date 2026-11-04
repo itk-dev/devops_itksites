@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.21.0] - 2026-11-04
+
 - [#175](https://github.com/itk-dev/devops_itksites/pull/175)
   Store long advisory constraints, titles and links in full, so one long
   advisory no longer blocks the others, and mark detection results with the
@@ -478,7 +480,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2022-09-15
 
-[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.20.0...HEAD
+[Unreleased]: https://github.com/itk-dev/devops_itksites/compare/1.21.0...HEAD
+[1.21.0]: https://github.com/itk-dev/devops_itksites/compare/1.20.0...1.21.0
 [1.20.0]: https://github.com/itk-dev/devops_itksites/compare/1.19.0...1.20.0
 [1.19.0]: https://github.com/itk-dev/devops_itksites/compare/1.18.0...1.19.0
 [1.18.0]: https://github.com/itk-dev/devops_itksites/compare/1.17.0...1.18.0
