@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AdvisoryRepository::class)]
 class Advisory extends AbstractBaseEntity implements \Stringable
@@ -20,18 +21,20 @@ class Advisory extends AbstractBaseEntity implements \Stringable
     private const string DRUPAL_ADVISORY_URL_PATTERN = 'https://www.drupal.org/%s';
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Assert\Length(max: 255)]
     private ?string $advisoryId = null;
 
-    #[ORM\Column(length: 500)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $affectedVersions = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $title = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Length(max: 50)]
     private ?string $cve = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $link = null;
 
     #[ORM\Column]

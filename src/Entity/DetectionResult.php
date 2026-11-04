@@ -108,6 +108,14 @@ class DetectionResult extends AbstractBaseEntity implements \Stringable
     )]
     private array $warnings = [];
 
+    /**
+     * Why parts of the result could not be processed, e.g. advisories that were skipped. Set by ITKsites, not the harvester.
+     *
+     * @var list<string>
+     */
+    #[ORM\Column(type: Types::JSON)]
+    private array $processingErrors = [];
+
     #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     private string $hash;
 
@@ -219,14 +227,25 @@ class DetectionResult extends AbstractBaseEntity implements \Stringable
         return $this;
     }
 
-    public function getPrettyErrors(): string
+    /** @return list<string> */
+    public function getProcessingErrors(): array
     {
-        return json_encode($this->errors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+        return $this->processingErrors;
     }
 
-    public function getPrettyWarnings(): string
+    /** @param list<string> $processingErrors */
+    public function setProcessingErrors(array $processingErrors): self
     {
-        return json_encode($this->warnings, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+        $this->processingErrors = $processingErrors;
+
+        return $this;
+    }
+
+    public function addProcessingError(string $processingError): self
+    {
+        $this->processingErrors[] = $processingError;
+
+        return $this;
     }
 
     public function getHash(): ?string
