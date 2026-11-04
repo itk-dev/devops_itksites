@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#174](https://github.com/itk-dev/devops_itksites/pull/174)
+  Show detection result errors and warnings as readable messages instead of
+  JSON, so long messages are no longer cut off
+
 ## [1.20.0] - 2026-11-04
 
 - [#172](https://github.com/itk-dev/devops_itksites/pull/172)
