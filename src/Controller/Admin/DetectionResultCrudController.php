@@ -59,6 +59,8 @@ class DetectionResultCrudController extends AbstractCrudController
             ->setTemplatePath('EasyAdminBundle/Fields/harvester_messages.html.twig');
         yield Field::new('warnings')->onlyOnDetail()
             ->setTemplatePath('EasyAdminBundle/Fields/harvester_messages.html.twig');
+        yield Field::new('processingErrors')->onlyOnDetail()
+            ->setTemplatePath('EasyAdminBundle/Fields/sources.html.twig');
         yield Field::new('prettyData')->onlyOnDetail()->setLabel('Data')
             ->setTemplatePath('EasyAdminBundle/Fields/code_highlight.html.twig')
             ->setCustomOption('language', 'json');

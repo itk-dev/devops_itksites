@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#175](https://github.com/itk-dev/devops_itksites/pull/175)
+  Store long advisory constraints, titles and links in full, so one long
+  advisory no longer blocks the others, and mark detection results with the
+  advisories they could not store
 - [#174](https://github.com/itk-dev/devops_itksites/pull/174)
   Show detection result errors and warnings as readable messages instead of
   JSON, so long messages are no longer cut off

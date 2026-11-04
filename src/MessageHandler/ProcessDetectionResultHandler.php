@@ -26,6 +26,9 @@ final readonly class ProcessDetectionResultHandler
         $detectionResult = $this->detectionResultRepository->find($message->detectionResultId);
 
         if (null !== $detectionResult) {
+            // Each run records its own problems, so a replay shows the current state.
+            $detectionResult->setProcessingErrors([]);
+
             /** @var DetectionResultHandlerInterface $handler */
             foreach ($this->resultHandlers as $handler) {
                 if ($handler->supportsType($detectionResult->getType())) {
