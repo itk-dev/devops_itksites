@@ -103,6 +103,30 @@ class PersistDetectionResultHandlerTest extends KernelTestCase
         $this->assertEquals($receivedAt, $existingResult->getLastContact());
     }
 
+    public function testInvokeExistingDetectionResultTakesTheEnvelope(): void
+    {
+        $this->detectionResult->setType('docker');
+        $this->detectionResult->setHarvesterVersion('1.0.0');
+        $this->detectionResult->setErrors([['source' => 'composer', 'message' => 'failed']]);
+        $this->detectionResult->setWarnings([['source' => 'docker', 'message' => 'no containers']]);
+
+        $existingResult = new DetectionResult();
+        $existingResult->setHarvesterVersion('0.3.3');
+        $existingResult->setErrors([['source' => 'git', 'message' => 'old']]);
+
+        $this->detectionResultRepositoryMock->expects($this->once())->method('findOneBy')
+            ->willReturn($existingResult);
+        $this->entityManagerMock->expects($this->never())->method('persist');
+        $this->messageBusMock->expects($this->never())->method('dispatch');
+
+        $this->handler->__invoke(new PersistDetectionResult($this->detectionResult, '12345678', new \DateTimeImmutable()));
+
+        // The envelope is not hashed, so the existing result shows the latest one.
+        $this->assertSame('1.0.0', $existingResult->getHarvesterVersion());
+        $this->assertSame([['source' => 'composer', 'message' => 'failed']], $existingResult->getErrors());
+        $this->assertSame([['source' => 'docker', 'message' => 'no containers']], $existingResult->getWarnings());
+    }
+
     public function testInvokeExistingDirDetectionResultIsReprocessed(): void
     {
         $receivedAt = new \DateTimeImmutable();

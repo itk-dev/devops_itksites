@@ -82,6 +82,32 @@ class DetectionResult extends AbstractBaseEntity implements \Stringable
     )]
     private string $data = '';
 
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    #[Groups(['write'])]
+    #[ApiProperty(
+        description: 'Version of the harvester that sent the result. Absent in results from the TypeScript harvester.',
+        example: '1.0.0',
+    )]
+    private ?string $harvesterVersion = null;
+
+    /** @var list<array<string, mixed>> */
+    #[ORM\Column(type: Types::JSON)]
+    #[Groups(['write'])]
+    #[ApiProperty(
+        description: 'What failed while collecting this finding. Each error has a source and message, and optionally container, command and exitCode.',
+        example: [['source' => 'composer', 'message' => 'composer: not found', 'container' => 'phpfpm', 'command' => 'composer audit --format=json', 'exitCode' => 127]],
+    )]
+    private array $errors = [];
+
+    /** @var list<array<string, mixed>> */
+    #[ORM\Column(type: Types::JSON)]
+    #[Groups(['write'])]
+    #[ApiProperty(
+        description: 'What looked wrong about this finding without stopping its collection. Each warning has a source and message.',
+        example: [['source' => 'docker', 'message' => 'No service of the Compose site has a container']],
+    )]
+    private array $warnings = [];
+
     #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     private string $hash;
 
@@ -151,6 +177,56 @@ class DetectionResult extends AbstractBaseEntity implements \Stringable
         $this->data = $data;
 
         return $this;
+    }
+
+    public function getHarvesterVersion(): ?string
+    {
+        return $this->harvesterVersion;
+    }
+
+    public function setHarvesterVersion(?string $harvesterVersion): self
+    {
+        $this->harvesterVersion = $harvesterVersion;
+
+        return $this;
+    }
+
+    /** @return list<array<string, mixed>> */
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
+
+    /** @param list<array<string, mixed>> $errors */
+    public function setErrors(array $errors): self
+    {
+        $this->errors = $errors;
+
+        return $this;
+    }
+
+    /** @return list<array<string, mixed>> */
+    public function getWarnings(): array
+    {
+        return $this->warnings;
+    }
+
+    /** @param list<array<string, mixed>> $warnings */
+    public function setWarnings(array $warnings): self
+    {
+        $this->warnings = $warnings;
+
+        return $this;
+    }
+
+    public function getPrettyErrors(): string
+    {
+        return json_encode($this->errors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+    }
+
+    public function getPrettyWarnings(): string
+    {
+        return json_encode($this->warnings, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
     }
 
     public function getHash(): ?string

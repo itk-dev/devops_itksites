@@ -56,7 +56,7 @@ class DetectionResultTest extends ApiTestCase
 
     /**
      * @param array<string, string> $extraHeaders
-     * @param array<string, string> $body
+     * @param array<string, mixed>  $body
      */
     private function post(Client $client, ?string $apiKey, array $body, array $extraHeaders = []): void
     {
@@ -126,6 +126,39 @@ class DetectionResultTest extends ApiTestCase
         self::assertInstanceOf(PersistDetectionResult::class, $message);
         self::assertSame($this->server()->getApiKey(), $message->serverApiKey);
         self::assertSame(DetectionType::NGINX, $message->detectionResult->getType());
+    }
+
+    public function testEnvelopeReachesThePersistMessage(): void
+    {
+        $error = ['source' => 'composer', 'message' => 'composer: not found', 'container' => 'phpfpm', 'command' => 'composer audit --format=json', 'exitCode' => 127];
+        $warning = ['source' => 'docker', 'message' => 'No service has a container'];
+
+        $client = static::createClient();
+        $this->post($client, $this->server()->getApiKey(), $this->validPayload() + [
+            'harvesterVersion' => '1.0.0',
+            'errors' => [$error],
+            'warnings' => [$warning],
+        ]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_ACCEPTED);
+
+        $message = $this->asyncTransport()->getSent()[0]->getMessage();
+        self::assertInstanceOf(PersistDetectionResult::class, $message);
+        self::assertSame('1.0.0', $message->detectionResult->getHarvesterVersion());
+        self::assertSame([$error], $message->detectionResult->getErrors());
+        self::assertSame([$warning], $message->detectionResult->getWarnings());
+    }
+
+    public function testEnvelopeIsOptional(): void
+    {
+        $client = static::createClient();
+        $this->post($client, $this->server()->getApiKey(), $this->validPayload());
+        $this->assertResponseStatusCodeSame(Response::HTTP_ACCEPTED);
+
+        $message = $this->asyncTransport()->getSent()[0]->getMessage();
+        self::assertInstanceOf(PersistDetectionResult::class, $message);
+        self::assertNull($message->detectionResult->getHarvesterVersion());
+        self::assertSame([], $message->detectionResult->getErrors());
+        self::assertSame([], $message->detectionResult->getWarnings());
     }
 
     public function testNothingIsPersistedDuringTheRequest(): void

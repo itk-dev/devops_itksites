@@ -704,6 +704,39 @@
                         "default": "",
                         "example": "{\"packages\":{\"symfony/framework-bundle\":{\"version\":\"7.2.1\"}}}",
                         "type": "string"
+                    },
+                    "harvesterVersion": {
+                        "description": "Version of the harvester that sent the result. Absent in results from the TypeScript harvester.",
+                        "example": "1.0.0",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "errors": {
+                        "description": "What failed while collecting this finding. Each error has a source and message, and optionally container, command and exitCode.",
+                        "example": [
+                            {
+                                "source": "composer",
+                                "message": "composer: not found",
+                                "container": "phpfpm",
+                                "command": "composer audit --format=json",
+                                "exitCode": 127
+                            }
+                        ],
+                        "type": "array",
+                        "items": {}
+                    },
+                    "warnings": {
+                        "description": "What looked wrong about this finding without stopping its collection. Each warning has a source and message.",
+                        "example": [
+                            {
+                                "source": "docker",
+                                "message": "No service of the Compose site has a container"
+                            }
+                        ],
+                        "type": "array",
+                        "items": {}
                     }
                 }
             },
