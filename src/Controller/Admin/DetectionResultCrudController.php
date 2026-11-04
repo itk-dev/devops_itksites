@@ -54,6 +54,13 @@ class DetectionResultCrudController extends AbstractCrudController
         yield DateTimeField::new('createdAt')->hideOnIndex();
         yield DateTimeField::new('modifiedAt')->hideOnIndex();
         yield DateTimeField::new('lastContact');
+        yield TextMonospaceField::new('harvesterVersion');
+        yield Field::new('prettyErrors')->onlyOnDetail()->setLabel('Errors')
+            ->setTemplatePath('EasyAdminBundle/Fields/code_highlight.html.twig')
+            ->setCustomOption('language', 'json');
+        yield Field::new('prettyWarnings')->onlyOnDetail()->setLabel('Warnings')
+            ->setTemplatePath('EasyAdminBundle/Fields/code_highlight.html.twig')
+            ->setCustomOption('language', 'json');
         yield Field::new('prettyData')->onlyOnDetail()->setLabel('Data')
             ->setTemplatePath('EasyAdminBundle/Fields/code_highlight.html.twig')
             ->setCustomOption('language', 'json');

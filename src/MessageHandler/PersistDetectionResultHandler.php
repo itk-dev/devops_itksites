@@ -54,9 +54,13 @@ final readonly class PersistDetectionResultHandler
                     new ProcessDetectionResult($id)
                 );
             }
-        // Existing results will only update timestamps
+        // Existing results only take the timestamp and the envelope, which is not part of the hash
         } else {
-            $existingResult->setLastContact($message->receivedAt);
+            $existingResult
+                ->setLastContact($message->receivedAt)
+                ->setHarvesterVersion($result->getHarvesterVersion())
+                ->setErrors($result->getErrors())
+                ->setWarnings($result->getWarnings());
 
             $this->entityManager->flush();
 
